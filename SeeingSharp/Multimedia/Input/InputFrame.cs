@@ -29,6 +29,7 @@ namespace SeeingSharp.Multimedia.Input
 {
     /// <summary>
     /// An InputFrame describes states of all input devices on one specific time frame.
+    /// Each view produces its own input states, therefore in a multi-view scenario you get more state objects of the same type.
     /// </summary>
     public class InputFrame
     {
@@ -47,7 +48,7 @@ namespace SeeingSharp.Multimedia.Input
         public IEnumerable<InputStateBase> InputStates => _inputStates;
 
         /// <summary>
-        /// Gets the first MouseOrPointerState.
+        /// Gets the <see cref="MouseOrPointerState"/> from the first view.
         /// </summary>
         public MouseOrPointerState DefaultMouseOrPointer
         {
@@ -56,7 +57,7 @@ namespace SeeingSharp.Multimedia.Input
         }
 
         /// <summary>
-        /// Gets the default GamepadState.
+        /// Gets the <see cref="GamepadState"/> from the first view.
         /// </summary>
         public GamepadState DefaultGamepad
         {
@@ -65,7 +66,7 @@ namespace SeeingSharp.Multimedia.Input
         }
 
         /// <summary>
-        /// Gets the default KeyboardState.
+        /// Gets the <see cref="KeyboardState"/> from the first view.
         /// </summary>
         public KeyboardState DefaultKeyboard
         {
@@ -105,32 +106,70 @@ namespace SeeingSharp.Multimedia.Input
 
         /// <summary>
         /// Gets all <see cref="KeyboardState"/> objects.
+        /// The returned collection may contain no elements if there is no suitable state object available.
         /// </summary>
-        public IEnumerable<KeyboardState> GetKeyboardStates(ViewInformation viewInfo = null)
+        /// <param name="viewInfo">The view for which to get the requested input state objects</param>
+        public IEnumerable<KeyboardState> TryGetKeyboardStates(ViewInformation viewInfo = null)
         {
-            return this.GetStates<KeyboardState>(viewInfo);
+            return this.TryGetStates<KeyboardState>(viewInfo);
+        }
+
+        /// <summary>
+        /// Gets the <see cref="KeyboardState"/> for the given view.
+        /// This method may return null if there is no <see cref="KeyboardState"/> available.
+        /// </summary>
+        /// <param name="viewInfo">The view for which to get the requested input state object</param>
+        public KeyboardState TryGetKeyboardState(ViewInformation viewInfo)
+        {
+            return this.TryGetState<KeyboardState>(viewInfo);
         }
 
         /// <summary>
         /// Gets all <see cref="MouseOrPointerState"/> objects.
+        /// The returned collection may contain no elements if there is no suitable state object available.
         /// </summary>
-        public IEnumerable<MouseOrPointerState> GetMouseOrPointerStates(ViewInformation viewInfo = null)
+        /// <param name="viewInfo">The view for which to get the requested input state objects</param>
+        public IEnumerable<MouseOrPointerState> TryGetMouseOrPointerStates(ViewInformation viewInfo = null)
         {
-            return this.GetStates<MouseOrPointerState>(viewInfo);
+            return this.TryGetStates<MouseOrPointerState>(viewInfo);
+        }
+
+        /// <summary>
+        /// Gets the <see cref="MouseOrPointerState"/> for the given view.
+        /// This method may return null if there is no <see cref="MouseOrPointerState"/> available.
+        /// </summary>
+        /// <param name="viewInfo">The view for which to get the requested input state object</param>
+        public MouseOrPointerState TryGetMouseOrPointerState(ViewInformation viewInfo)
+        {
+            return this.TryGetState<MouseOrPointerState>(viewInfo);
         }
 
         /// <summary>
         /// Gets all <see cref="GamepadState"/> objects.
+        /// The returned collection may contain no elements if there is no suitable state object available.
         /// </summary>
-        public IEnumerable<GamepadState> GetGamepadStates(ViewInformation viewInfo = null)
+        /// <param name="viewInfo">The view for which to get the requested input state objects</param>
+        public IEnumerable<GamepadState> TryGetGamepadStates(ViewInformation viewInfo = null)
         {
-            return this.GetStates<GamepadState>(viewInfo);
+            return this.TryGetStates<GamepadState>(viewInfo);
+        }
+
+        /// <summary>
+        /// Gets the <see cref="GamepadState"/> for the given view.
+        /// This method may return null if there is no <see cref="GamepadState"/> available.
+        /// </summary>
+        /// <param name="viewInfo">The view for which to get the requested input state object</param>
+        public GamepadState TryGetGamepadState(ViewInformation viewInfo)
+        {
+            return this.TryGetState<GamepadState>(viewInfo);
         }
 
         /// <summary>
         /// Gets all states of the given type.
+        /// The returned collection may contain no elements if there is no suitable state object available.
         /// </summary>
-        public IEnumerable<T> GetStates<T>(ViewInformation viewInfo = null)
+        /// <param name="viewInfo">The view for which to get the requested input state objects</param>
+        public IEnumerable<T> TryGetStates<T>(ViewInformation viewInfo = null)
             where T : InputStateBase
         {
             var inputStateCount = _inputStates.Count;
@@ -146,6 +185,29 @@ namespace SeeingSharp.Multimedia.Input
 
                 yield return actStateCasted;
             }
+        }
+
+        /// <summary>
+        /// Gets the input state of the given type for the given view.
+        /// </summary>
+        /// <param name="viewInfo">The view for which to get the requested input state object</param>
+        public T TryGetState<T>(ViewInformation viewInfo)
+            where T : InputStateBase
+        {
+            viewInfo.EnsureNotNull(nameof(viewInfo));
+
+            var inputStateCount = _inputStates.Count;
+            for (var loop = 0; loop < inputStateCount; loop++)
+            {
+                var actStateCasted = _inputStates[loop] as T;
+                if(actStateCasted == null){ continue; }
+
+                if(actStateCasted.RelatedView != viewInfo) { continue; }
+
+                return actStateCasted;
+            }
+
+            return null;
         }
 
         /// <summary>

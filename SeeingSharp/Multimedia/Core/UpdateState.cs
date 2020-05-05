@@ -93,6 +93,99 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
+        /// Handles keyboard input.
+        /// </summary>
+        /// <param name="inputHandlingAction">The action which reacts on input.</param>
+        public void HandleKeyboardInput(Action<KeyboardState> inputHandlingAction)
+        {
+            foreach (var actInputFame in _inputFrames)
+            {
+                foreach (var actInputState in actInputFame.TryGetStates<KeyboardState>())
+                {
+                    inputHandlingAction(actInputState);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handles keyboard input from the given view.
+        /// </summary>
+        /// <param name="viewInfo">The view for which to handle input.</param>
+        /// <param name="inputHandlingAction">The action which reacts on input.</param>
+        public void HandleKeyboardInput(ViewInformation viewInfo, Action<KeyboardState> inputHandlingAction)
+        {
+            foreach (var actInputFame in _inputFrames)
+            {
+                foreach (var actInputState in actInputFame.TryGetStates<KeyboardState>(viewInfo))
+                {
+                    inputHandlingAction(actInputState);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handles mouse or pointer input.
+        /// </summary>
+        /// <param name="inputHandlingAction">The action which reacts on input.</param>
+        public void HandleMouseOrPointerInput(Action<MouseOrPointerState> inputHandlingAction)
+        {
+            foreach (var actInputFame in _inputFrames)
+            {
+                foreach (var actInputState in actInputFame.TryGetStates<MouseOrPointerState>())
+                {
+                    inputHandlingAction(actInputState);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handles mouse or pointer input from the given view.
+        /// </summary>
+        /// <param name="viewInfo">The view for which to handle input.</param>
+        /// <param name="inputHandlingAction">The action which reacts on input.</param>
+        public void HandleMouseOrPointerInput(ViewInformation viewInfo, Action<MouseOrPointerState> inputHandlingAction)
+        {
+            foreach (var actInputFame in _inputFrames)
+            {
+                foreach (var actInputState in actInputFame.TryGetStates<MouseOrPointerState>(viewInfo))
+                {
+                    inputHandlingAction(actInputState);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handles gamepad input.
+        /// </summary>
+        /// <param name="inputHandlingAction">The action which reacts on input.</param>
+        public void HandleGamepadInput(Action<GamepadState> inputHandlingAction)
+        {
+            foreach (var actInputFame in _inputFrames)
+            {
+                foreach (var actInputState in actInputFame.TryGetStates<GamepadState>())
+                {
+                    inputHandlingAction(actInputState);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handles gamepad input from the given view.
+        /// </summary>
+        /// <param name="viewInfo">The view for which to handle input.</param>
+        /// <param name="inputHandlingAction">The action which reacts on input.</param>
+        public void HandleGamepadInput(ViewInformation viewInfo, Action<GamepadState> inputHandlingAction)
+        {
+            foreach (var actInputFame in _inputFrames)
+            {
+                foreach (var actInputState in actInputFame.TryGetStates<GamepadState>(viewInfo))
+                {
+                    inputHandlingAction(actInputState);
+                }
+            }
+        }
+
+        /// <summary>
         /// Called internally by EngineMainLoop and creates a copy of this object
         /// for each updated scene.
         /// </summary>

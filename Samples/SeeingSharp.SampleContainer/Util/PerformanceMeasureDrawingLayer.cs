@@ -70,26 +70,22 @@ namespace SeeingSharp.SampleContainer.Util
         {
             base.Update(updateState);
 
-            foreach (var actInputFrame in updateState.InputFrames)
+            updateState.HandleKeyboardInput(_view, (keyboardState) =>
             {
-                foreach (var actKeyboardState in actInputFrame.GetKeyboardStates(_view))
+                foreach (var actHitKey in keyboardState.KeysHit)
                 {
-                    foreach (var actHitKey in actKeyboardState.KeysHit)
+                    switch (actHitKey)
                     {
-                        switch (actHitKey)
-                        {
-                            case WinVirtualKey.D1:
-                                _enabled = true;
-                                break;
+                        case WinVirtualKey.D1:
+                            _enabled = true;
+                            break;
 
-                            case WinVirtualKey.D0:
-                                _enabled = false;
-                                break;
-                        }
+                        case WinVirtualKey.D0:
+                            _enabled = false;
+                            break;
                     }
                 }
-
-            }
+            });
         }
 
         /// <inheritdoc />
