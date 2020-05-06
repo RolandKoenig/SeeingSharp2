@@ -313,7 +313,14 @@ namespace SeeingSharp.Multimedia.Core
 
                             // Raise generic input event (if registered)
                             _cachedInputEventArgs.NotifyNewPass(inputFrames);
-                            this.GenericInput?.Raise(this, _cachedInputEventArgs);
+                            try
+                            {
+                                this.GenericInput?.Raise(this, _cachedInputEventArgs);
+                            }
+                            catch (Exception ex)
+                            {
+                                GraphicsCore.PublishInternalExceptionInfo(ex, InternalExceptionLocation.EngineMainLoop_GenericInputEvent);
+                            }
 
                             // Clear unreferenced Scenes finally
                             lock (_scenesForUnloadLock)

@@ -85,6 +85,8 @@ namespace SeeingSharp.Multimedia.Core
 
         EngineMainLoop_Render,
 
+        EngineMainLoop_GenericInputEvent,
+
         EngineMainLoop_Loop
     }
 
