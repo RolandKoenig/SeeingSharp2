@@ -129,14 +129,86 @@ namespace SeeingSharp.Multimedia.Input
         {
             if (_rendererElement == null) { return; }
 
-            _stateKeyboard.Internals.NotifyKeyDown((WinVirtualKey)KeyInterop.VirtualKeyFromKey(e.Key));
+            var keyToProcess = e.Key;
+            if (keyToProcess == Key.System) { keyToProcess = e.SystemKey;}
+
+            switch (keyToProcess)
+            {
+                // Discard none
+                case Key.None:
+                    break;
+
+                // Discard Oem keys
+                case Key.Oem1:
+                case Key.Oem2:
+                case Key.Oem3:
+                case Key.Oem4:
+                case Key.Oem5:
+                case Key.Oem6:
+                case Key.Oem7:
+                case Key.Oem8:
+                case Key.Oem102:
+                case Key.OemAttn:
+                case Key.OemAuto:
+                case Key.OemBackTab:
+                case Key.OemClear:
+                case Key.OemComma:
+                case Key.OemCopy:
+                case Key.OemEnlw:
+                case Key.OemFinish:
+                case Key.OemMinus:
+                case Key.OemPeriod:
+                case Key.OemPlus:
+                    break;
+
+                // Process all other keys
+                default:
+                    _stateKeyboard.Internals.NotifyKeyDown((WinVirtualKey) KeyInterop.VirtualKeyFromKey(keyToProcess));
+                    break;
+            }
         }
 
         private void OnRendererElement_KeyUp(object sender, KeyEventArgs e)
         {
             if (_rendererElement == null) { return; }
 
-            _stateKeyboard.Internals.NotifyKeyUp((WinVirtualKey)KeyInterop.VirtualKeyFromKey(e.Key));
+            var keyToProcess = e.Key;
+            if (keyToProcess == Key.System) { keyToProcess = e.SystemKey;}
+
+            switch (keyToProcess)
+            {
+                // Discard none
+                case Key.None:
+                    break;
+
+                // Discard Oem keys
+                case Key.Oem1:
+                case Key.Oem2:
+                case Key.Oem3:
+                case Key.Oem4:
+                case Key.Oem5:
+                case Key.Oem6:
+                case Key.Oem7:
+                case Key.Oem8:
+                case Key.Oem102:
+                case Key.OemAttn:
+                case Key.OemAuto:
+                case Key.OemBackTab:
+                case Key.OemClear:
+                case Key.OemComma:
+                case Key.OemCopy:
+                case Key.OemEnlw:
+                case Key.OemFinish:
+                case Key.OemMinus:
+                case Key.OemPeriod:
+                case Key.OemPlus:
+                    break;
+
+                // Process all other keys
+                default:
+                    _stateKeyboard.Internals.NotifyKeyUp((WinVirtualKey)KeyInterop.VirtualKeyFromKey(keyToProcess));
+                    break;
+            }
         }
 
         /// <summary>

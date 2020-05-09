@@ -131,11 +131,15 @@ namespace SeeingSharp.Multimedia.Input
 
             public void NotifyKeyDown(WinVirtualKey key)
             {
+                if (key == WinVirtualKey.None) { return; }
+
                 _host.NotifyKeyDown(key);
             }
 
             public void NotifyKeyUp(WinVirtualKey key)
             {
+                if (key == WinVirtualKey.None) { return; }
+
                 _host.NotifyKeyUp(key);
             }
 
