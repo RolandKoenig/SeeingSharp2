@@ -105,9 +105,6 @@ namespace SeeingSharp.ModelViewer
                     CameraHRotationInitial = 2f
                 });
 
-            await _renderLoop.Register2DDrawingLayerAsync(
-                new PerformanceMeasureDrawingLayer(10f));
-
             await this.LoadSceneInternalAsync(null, null);
         }
 
