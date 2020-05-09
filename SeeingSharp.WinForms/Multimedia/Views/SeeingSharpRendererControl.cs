@@ -173,7 +173,7 @@ namespace SeeingSharp.Multimedia.Views
             _renderLoop.Internals.CallPresentInUIThread = false;
             this.Disposed += (sender, eArgs) =>
             {
-                _renderLoop.Dispose();
+                _renderLoop?.Dispose();
             };
 
             // Perform default initialization logic (if not called before)
@@ -532,22 +532,30 @@ namespace SeeingSharp.Multimedia.Views
             if (this.Width <= 0) { return false; }
             if (this.Height <= 0) { return false; }
 
+            // Find parent form
             Form parentForm = null;
             var actParent = this.Parent;
-
             while (parentForm == null && actParent != null)
             {
                 parentForm = actParent as Form;
                 actParent = actParent.Parent;
             }
 
+            // Find top level parent
+            Control topLevelParent = this;
+            while (topLevelParent.Parent != null)
+            {
+                topLevelParent = topLevelParent.Parent;
+            }
+
             // Check parent form
             if (parentForm == null)
             {
-                // TODO: Handle the case where we are hosted inside a wpf environment
+                // In this case we may be hosted inside a wpf environment
+                if (topLevelParent.IsDisposed) { return false; }
+                if (!topLevelParent.Visible) { return false;}
 
-                // Control's parent chain is broken -> it is not visible.
-                return false;
+                return true;
             }
             if (parentForm.WindowState == FormWindowState.Minimized) { return false; }
 
