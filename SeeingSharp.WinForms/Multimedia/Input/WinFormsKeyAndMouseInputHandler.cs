@@ -134,17 +134,17 @@ namespace SeeingSharp.Multimedia.Input
                     return;
                 }
 
-                _currentControl.MouseEnter += this.OnMouseEnter;
-                _currentControl.MouseClick += this.OnMouseClick;
-                _currentControl.MouseUp += this.OnMouseUp;
-                _currentControl.MouseDown += this.OnMouseDown;
-                _currentControl.MouseLeave += this.OnMouseLeave;
-                _currentControl.MouseMove += this.OnMouseMove;
-                _currentControl.MouseWheel += this.OnMouseWheel;
-                _currentControl.KeyUp += this.OnKeyUp;
-                _currentControl.KeyDown += this.OnKeyDown;
-                _currentControl.LostFocus += this.OnLostFocus;
-                _currentControl.GotFocus += this.OnGotFocus;
+                _currentControl.MouseEnter += this.OnCurrentControl_MouseEnter;
+                _currentControl.MouseClick += this.OnCurrentControl_MouseClick;
+                _currentControl.MouseUp += this.OnCurrentControl_MouseUp;
+                _currentControl.MouseDown += this.OnCurrentControl_MouseDown;
+                _currentControl.MouseLeave += this.OnCurrentControl_MouseLeave;
+                _currentControl.MouseMove += this.OnCurrentControl_MouseMove;
+                _currentControl.MouseWheel += this.OnCurrentControl_MouseWheel;
+                _currentControl.KeyUp += this.OnCurrentControl_KeyUp;
+                _currentControl.PreviewKeyDown += this.OnCurrentControl_PreviewKeyDown;
+                _currentControl.LostFocus += this.OnCurrentControl_LostFocus;
+                _currentControl.GotFocus += this.OnCurrentControl_GotFocus;
 
                 // Handle initial focus state
                 if (_currentControl.Focused || _currentControl.ContainsFocus)
@@ -168,17 +168,17 @@ namespace SeeingSharp.Multimedia.Input
                 {
                     if (currentControl == null) { return; }
 
-                    currentControl.MouseEnter -= this.OnMouseEnter;
-                    currentControl.MouseClick -= this.OnMouseClick;
-                    currentControl.MouseLeave -= this.OnMouseLeave;
-                    currentControl.MouseMove -= this.OnMouseMove;
-                    currentControl.MouseWheel -= this.OnMouseWheel;
-                    currentControl.MouseUp -= this.OnMouseUp;
-                    currentControl.MouseDown -= this.OnMouseDown;
-                    currentControl.KeyUp -= this.OnKeyUp;
-                    currentControl.KeyDown -= this.OnKeyDown;
-                    currentControl.LostFocus -= this.OnLostFocus;
-                    currentControl.GotFocus -= this.OnGotFocus;
+                    currentControl.MouseEnter -= this.OnCurrentControl_MouseEnter;
+                    currentControl.MouseClick -= this.OnCurrentControl_MouseClick;
+                    currentControl.MouseLeave -= this.OnCurrentControl_MouseLeave;
+                    currentControl.MouseMove -= this.OnCurrentControl_MouseMove;
+                    currentControl.MouseWheel -= this.OnCurrentControl_MouseWheel;
+                    currentControl.MouseUp -= this.OnCurrentControl_MouseUp;
+                    currentControl.MouseDown -= this.OnCurrentControl_MouseDown;
+                    currentControl.KeyUp -= this.OnCurrentControl_KeyUp;
+                    currentControl.PreviewKeyDown -= this.OnCurrentControl_PreviewKeyDown;
+                    currentControl.LostFocus -= this.OnCurrentControl_LostFocus;
+                    currentControl.GotFocus -= this.OnCurrentControl_GotFocus;
                 });
 
                 if (_currentControl.IsHandleCreated) { _currentControl.BeginInvoke(removeEventRegistrationsAction); }
@@ -203,7 +203,7 @@ namespace SeeingSharp.Multimedia.Input
         /// <summary>
         /// Called when the mouse enters the screen.
         /// </summary>
-        private void OnMouseEnter(object sender, EventArgs e)
+        private void OnCurrentControl_MouseEnter(object sender, EventArgs e)
         {
             if (_currentControl == null) { return; }
 
@@ -216,12 +216,12 @@ namespace SeeingSharp.Multimedia.Input
         /// <summary>
         /// Called when user clicks on this panel.
         /// </summary>
-        private void OnMouseClick(object sender, WinForms.MouseEventArgs e)
+        private void OnCurrentControl_MouseClick(object sender, WinForms.MouseEventArgs e)
         {
             _currentControl?.Focus();
         }
 
-        private void OnMouseDown(object sender, WinForms.MouseEventArgs e)
+        private void OnCurrentControl_MouseDown(object sender, WinForms.MouseEventArgs e)
         {
             if (_currentControl == null) { return; }
 
@@ -249,7 +249,7 @@ namespace SeeingSharp.Multimedia.Input
             }
         }
 
-        private void OnMouseUp(object sender, WinForms.MouseEventArgs e)
+        private void OnCurrentControl_MouseUp(object sender, WinForms.MouseEventArgs e)
         {
             if (_currentControl == null) { return; }
 
@@ -280,7 +280,7 @@ namespace SeeingSharp.Multimedia.Input
         /// <summary>
         /// Called when the mouse leaves the screen.
         /// </summary>
-        private void OnMouseLeave(object sender, EventArgs e)
+        private void OnCurrentControl_MouseLeave(object sender, EventArgs e)
         {
             if (_currentControl == null)
             {
@@ -296,7 +296,7 @@ namespace SeeingSharp.Multimedia.Input
         /// <summary>
         /// Called when the mouse moves on the screen.
         /// </summary>
-        private void OnMouseMove(object sender, WinForms.MouseEventArgs e)
+        private void OnCurrentControl_MouseMove(object sender, WinForms.MouseEventArgs e)
         {
             if (_currentControl == null)
             {
@@ -318,7 +318,7 @@ namespace SeeingSharp.Multimedia.Input
         /// <summary>
         /// Called when mouse wheel is used.
         /// </summary>
-        private void OnMouseWheel(object sender, WinForms.MouseEventArgs e)
+        private void OnCurrentControl_MouseWheel(object sender, WinForms.MouseEventArgs e)
         {
             if (_currentControl == null)
             {
@@ -334,7 +334,7 @@ namespace SeeingSharp.Multimedia.Input
         /// <summary>
         /// Called when a key is up
         /// </summary>
-        private void OnKeyUp(object sender, WinForms.KeyEventArgs e)
+        private void OnCurrentControl_KeyUp(object sender, WinForms.KeyEventArgs e)
         {
             if (_currentControl == null)
             {
@@ -353,7 +353,7 @@ namespace SeeingSharp.Multimedia.Input
         /// <summary>
         /// Called when a key is down.
         /// </summary>
-        private void OnKeyDown(object sender, WinForms.KeyEventArgs e)
+        private void OnCurrentControl_PreviewKeyDown(object sender, WinForms.PreviewKeyDownEventArgs e)
         {
             if (_currentControl == null)
             {
@@ -362,7 +362,6 @@ namespace SeeingSharp.Multimedia.Input
 
             // Notify event to keyboard state
             var actKeyCode = s_keyMappingDict[e.KeyCode];
-
             if (actKeyCode != WinVirtualKey.None)
             {
                 _stateKeyboard.Internals.NotifyKeyDown(actKeyCode);
@@ -372,14 +371,14 @@ namespace SeeingSharp.Multimedia.Input
         /// <summary>
         /// Called when the focus on the target control is lost.
         /// </summary>
-        private void OnLostFocus(object sender, EventArgs e)
+        private void OnCurrentControl_LostFocus(object sender, EventArgs e)
         {
             if (_currentControl == null) { return; }
 
             _stateKeyboard.Internals.NotifyFocusLost();
         }
 
-        private void OnGotFocus(object sender, EventArgs e)
+        private void OnCurrentControl_GotFocus(object sender, EventArgs e)
         {
             if (_currentControl == null) { return; }
 

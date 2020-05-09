@@ -86,7 +86,7 @@ namespace SeeingSharp.Multimedia.Input
                 _rendererElement.LostKeyboardFocus += this.OnRendererElement_LostKeyboardFocus;
                 _rendererElement.PreviewMouseUp += this.OnRendererElement_PreviewMouseUp;
                 _rendererElement.KeyUp += this.OnRendererElement_KeyUp;
-                _rendererElement.KeyDown += this.OnRendererElement_KeyDown;
+                _rendererElement.PreviewKeyDown += this.OnRendererElement_PreviewKeyDown;
             }));
         }
 
@@ -108,6 +108,9 @@ namespace SeeingSharp.Multimedia.Input
                 rendererElement.LostKeyboardFocus -= this.OnRendererElement_LostKeyboardFocus;
                 rendererElement.GotFocus -= this.OnRenderElement_GotFocus;
                 rendererElement.PreviewMouseUp -= this.OnRendererElement_PreviewMouseUp;
+                rendererElement.KeyUp -= this.OnRendererElement_KeyUp;
+                rendererElement.PreviewKeyDown -= this.OnRendererElement_PreviewKeyDown;
+
             }));
 
             _rendererElement = null;
@@ -125,7 +128,7 @@ namespace SeeingSharp.Multimedia.Input
             target.Add(_stateKeyboard);
         }
 
-        private void OnRendererElement_KeyDown(object sender, KeyEventArgs e)
+        private void OnRendererElement_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (_rendererElement == null) { return; }
 
@@ -166,6 +169,8 @@ namespace SeeingSharp.Multimedia.Input
                     _stateKeyboard.Internals.NotifyKeyDown((WinVirtualKey) KeyInterop.VirtualKeyFromKey(keyToProcess));
                     break;
             }
+
+            e.Handled = true;
         }
 
         private void OnRendererElement_KeyUp(object sender, KeyEventArgs e)
