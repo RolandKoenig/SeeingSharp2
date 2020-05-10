@@ -9,6 +9,7 @@
 ### Nuget
  - [SeeingSharp2](https://www.nuget.org/packages/SeeingSharp2/)
  - [SeeingSharp2.AssimpImporter](https://www.nuget.org/packages/SeeingSharp2.AssimpImporter/)
+ - [SeeingSharp2.Uwp](https://www.nuget.org/packages/SeeingSharp2.Uwp/)
  - [SeeingSharp2.WinForms](https://www.nuget.org/packages/SeeingSharp2.WinForms/)
  - [SeeingSharp2.WinFormsCore](https://www.nuget.org/packages/SeeingSharp2.WinFormsCore/)
  - [SeeingSharp2.Wpf](https://www.nuget.org/packages/SeeingSharp2.Wpf/)
