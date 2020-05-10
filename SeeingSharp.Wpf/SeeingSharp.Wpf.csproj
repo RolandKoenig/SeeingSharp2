@@ -4,6 +4,7 @@
     <LangVersion>8.0</LangVersion>
     <RootNamespace>SeeingSharp.Wpf</RootNamespace>
     <PackageId>SeeingSharp2.Wpf</PackageId>
+    <UserSecretsId>a36e22e2-82a1-4d5a-894b-0b7c21e10a28</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,7 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="PropertyTools" Version="3.0.0" />
     <PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
     <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0" />

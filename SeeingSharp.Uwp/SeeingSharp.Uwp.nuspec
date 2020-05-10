@@ -15,6 +15,8 @@
 
     <dependencies>
       <group targetFramework="UAP1.0">
+        <dependency id="SeeingSharp2" version="0.6.1" exclude="Build,Analyzers" />
+        
         <dependency id="Microsoft.NETCore.UniversalWindowsPlatform" version="6.2.10" exclude="Build,Analyzers" />
         <dependency id="SharpDX" version="4.2.0" exclude="Build,Analyzers" />
         <dependency id="SharpDX.D3DCompiler" version="4.2.0" exclude="Build,Analyzers" />
@@ -29,7 +31,7 @@
   <files>
     <file src="bin\Release\SeeingSharp.Uwp.dll" target="lib/uap10" />
     <file src="bin\Release\SeeingSharp.Uwp.pri" target="lib/uap10" />
-    <file src="../License.md" target="License.md" />
+    <file src="../License.md" target="LICENSE.md" />
   </files>
 
 </package>
