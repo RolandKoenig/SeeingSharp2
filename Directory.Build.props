@@ -8,8 +8,8 @@
     <RepositoryUrl>https://github.com/RolandKoenig/SeeingSharp2</RepositoryUrl>
     <RepositoryType>Git</RepositoryType>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Version>0.6.0</Version>
-    <PackageVersion>0.6.0</PackageVersion>
+    <Version>0.6.1</Version>
+    <PackageVersion>0.6.1</PackageVersion>
     <Product>SeeingSharp 2</Product>
     <PackageLicenseFile>LICENSE.md</PackageLicenseFile>
   </PropertyGroup>
