@@ -80,7 +80,7 @@ namespace SeeingSharp.ModelViewer
             _renderLoop = renderLoop;
             _loadedModel = null;
             _loadedFile = string.Empty;
-            
+
             this.SceneBrowserViewModel = new SceneBrowserViewModel(renderLoop.Scene);
 
             this.Command_OpenFile = new DelegateCommand(this.OpenFile);

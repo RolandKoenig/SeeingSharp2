@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>SeeingSharp2.Uwp</id>
+    <version>0.6.0</version>
+    <authors>Roland König</authors>
+    <owners>Roland König</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="file">LICENSE.md</license>
+    <projectUrl>https://github.com/RolandKoenig/SeeingSharp2</projectUrl>
+    <repository type="Git" url="https://github.com/RolandKoenig/SeeingSharp2" />
+    <description>Seeing# is a 3D/2D rendering library for C# powered by Direct3D. It is meant for desktop applications (Win.Forms, Wpf) or Windows Store Apps</description>
+    <copyright>©2020 by Roland König</copyright>
+    <tags></tags>
+
+    <dependencies>
+      <group targetFramework="UAP1.0">
+        <dependency id="Microsoft.NETCore.UniversalWindowsPlatform" version="6.2.10" exclude="Build,Analyzers" />
+        <dependency id="SharpDX" version="4.2.0" exclude="Build,Analyzers" />
+        <dependency id="SharpDX.D3DCompiler" version="4.2.0" exclude="Build,Analyzers" />
+        <dependency id="SharpDX.Direct2D1" version="4.2.0" exclude="Build,Analyzers" />
+        <dependency id="SharpDX.Direct3D11" version="4.2.0" exclude="Build,Analyzers" />
+        <dependency id="SharpDX.Direct3D9" version="4.2.0" exclude="Build,Analyzers" />
+        <dependency id="System.Numerics.Vectors" version="4.5.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+
+  <files>
+    <file src="bin\Release\SeeingSharp.Uwp.dll" target="lib/uap10" />
+    <file src="bin\Release\SeeingSharp.Uwp.pri" target="lib/uap10" />
+    <file src="../License.md" target="License.md" />
+  </files>
+
+</package>
