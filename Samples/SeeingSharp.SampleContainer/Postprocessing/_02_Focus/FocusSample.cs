@@ -20,7 +20,6 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
-using System;
 using System.ComponentModel;
 using System.Numerics;
 using System.Threading.Tasks;
@@ -53,10 +52,11 @@ namespace SeeingSharp.SampleContainer.Postprocessing._02_Focus
                 this.BuildStandardFloor(
                     manipulator, Scene.DEFAULT_LAYER_NAME);
 
+                    var defaultLayer = manipulator.GetLayer(Scene.DEFAULT_LAYER_NAME);
+
+                    // Create the focus effect and attach it to a new 'Focus' layer
                     var keyPostprocess = manipulator.AddResource(
                         device => new FocusPostprocessEffectResource());
-
-                    var defaultLayer = manipulator.GetLayer(Scene.DEFAULT_LAYER_NAME);
                     var focusLayer = manipulator.AddLayer("Focus");
                     focusLayer.PostprocessEffectKey = keyPostprocess;
 
@@ -74,6 +74,7 @@ namespace SeeingSharp.SampleContainer.Postprocessing._02_Focus
                     backMesh.Scaling = new Vector3(2f, 2f, 2f);
                     backMesh.Color = Color4.RedColor;
 
+                    // This mesh will render the focus effect itself (it is placed on the focus layer)
                     _focusMesh = manipulator.AddMeshObject(resGeometry, focusLayer.Name, resMaterial);
                     _focusMesh.TransformSourceObject = backMesh;
                     _focusMesh.TransformationType = SpacialTransformationType.TakeFromOtherObject;
@@ -96,19 +97,18 @@ namespace SeeingSharp.SampleContainer.Postprocessing._02_Focus
             return Task.FromResult<object>(null);
         }
 
-        /// <inheritdoc />
         public override void Update()
         {
             base.Update();
 
+            // Show/Hide the focus mesh depending on the user's configuration
             if (_sampleSettings.ShowFocusEffect)
             {
-                _focusMesh.TransformationType = SpacialTransformationType.TakeFromOtherObject;
+                _focusMesh.VisibilityTestMethod = VisibilityTestMethod.ByViewFilters;
             }
             else
             {
-                _focusMesh.TransformationType = SpacialTransformationType.ScalingTranslationEulerAngles;
-                _focusMesh.Scaling = _sampleSettings.ShowFocusEffect ? Vector3.One : Vector3.Zero;
+                _focusMesh.VisibilityTestMethod = VisibilityTestMethod.ForceHidden;
             }
         }
 

@@ -115,6 +115,27 @@ namespace SeeingSharp.Multimedia.Core
     }
 
     /// <summary>
+    /// Controls how a SceneObject's visibility is calculated.
+    /// </summary>
+    public enum VisibilityTestMethod
+    {
+        /// <summary>
+        /// Default. The object is visible when it passes all filters on a view.
+        /// </summary>
+        ByViewFilters,
+
+        /// <summary>
+        /// The object will be rendered always.
+        /// </summary>
+        ForceVisible,
+
+        /// <summary>
+        /// The object is hidden always.
+        /// </summary>
+        ForceHidden
+    }
+
+    /// <summary>
     /// EventArgs class for Rendering3DHandler.
     /// </summary>
     public class Rendering3DArgs : EventArgs

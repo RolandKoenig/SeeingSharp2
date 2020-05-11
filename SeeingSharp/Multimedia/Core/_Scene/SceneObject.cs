@@ -37,6 +37,7 @@ namespace SeeingSharp.Multimedia.Core
         private IndexBasedDynamicCollection<VisibilityCheckData> _visibilityData;
         private DetailLevel _targetDetailLevel;
         private bool _isStatic;
+        private VisibilityTestMethod _prevVisibilityTestMethod;
 
         // Some information about parent containers
         private Scene _scene;
@@ -125,6 +126,11 @@ namespace SeeingSharp.Multimedia.Core
         public SceneObject Parent => _parent;
 
         /// <summary>
+        /// Gets or sets the method how visibility of this object is calculated.
+        /// </summary>
+        public VisibilityTestMethod VisibilityTestMethod { get; set; }
+
+        /// <summary>
         /// Does this object have any child?
         /// </summary>
         public bool HasChildren
@@ -151,9 +157,15 @@ namespace SeeingSharp.Multimedia.Core
 
         /// <summary>
         /// Indicates whether transformation data has changed during last update calls.
-        /// This member is used for viewbox-culling to ignore objects which haven't changed their state.
+        /// This member is used for per-view object-filtering to ignore objects which haven't changed their state.
         /// </summary>
         internal bool TransformationChanged;
+
+        /// <summary>
+        /// Indicates whether visibility test method has changed.
+        /// This member is used for per-view object-filtering to ignore objects which haven't changed their state.
+        /// </summary>
+        internal bool VisibilityTestMethodChanged;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneObject"/> class.
@@ -576,6 +588,13 @@ namespace SeeingSharp.Multimedia.Core
         {
             // Update current animation state
             _animationHandler?.Update(updateState);
+
+            // Check for changed visibility test method
+            if (_prevVisibilityTestMethod != this.VisibilityTestMethod)
+            {
+                _prevVisibilityTestMethod = this.VisibilityTestMethod;
+                this.VisibilityTestMethodChanged = true;
+            }
 
             // Update the object
             this.UpdateInternal(updateState);

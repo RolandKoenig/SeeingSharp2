@@ -393,11 +393,9 @@ namespace SeeingSharp.Multimedia.Core
 
             // Perform some pre-logic on filters
             var anyFilterChanged = false;
-
             foreach (var actFilter in filters)
             {
                 actFilter.SetEnvironmentData(_sceneLayer, this.ViewInformation);
-
                 if (actFilter.ConfigurationChanged)
                 {
                     anyFilterChanged = true;
@@ -407,7 +405,7 @@ namespace SeeingSharp.Multimedia.Core
             // Check whether we have to update all objects
             var refreshAllObjects = this.ViewInformation.Camera.StateChanged || anyFilterChanged;
 
-            // Perform viewbox culling for all standard objects
+            // Perform filtering for all standard objects
             var allObjects = _sceneLayer.ObjectsInternal;
             var allObjectsLength = allObjects.Count;
             if (allObjectsLength > 0)
@@ -420,12 +418,17 @@ namespace SeeingSharp.Multimedia.Core
                     // Don't handle static objects here if we don't want to handle them
                     if (!refreshAllObjects)
                     {
-                        if (actObject.IsStatic) { continue; }
-                        if (!actObject.TransformationChanged) { continue; }
+                        switch (actObject.VisibilityTestMethod)
+                        {
+                            case VisibilityTestMethod.ByViewFilters:
+                                if (actObject.IsStatic) { continue; }
+                                if ((!actObject.TransformationChanged) && (!actObject.VisibilityTestMethodChanged)) { continue; }
+                                break;
+                        }
                     }
 
                     // Perform culling
-                    this.PerformViewboxCulling(actObject, filters);
+                    this.PerformViewDependentFiltering(actObject, filters);
                 }
             }
 
@@ -437,7 +440,7 @@ namespace SeeingSharp.Multimedia.Core
                 for (var loop = 0; loop < singleUpdateCallCount; loop++)
                 {
                     // Perform culling
-                    this.PerformViewboxCulling(singleUpdateArray[loop], filters);
+                    this.PerformViewDependentFiltering(singleUpdateArray[loop], filters);
                 }
             }
 
@@ -695,7 +698,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="actObject">The object to be tested.</param>
         /// <param name="filters">All currently active filters.</param>
-        private void PerformViewboxCulling(SceneObject actObject, IReadOnlyList<SceneObjectFilter> filters)
+        private void PerformViewDependentFiltering(SceneObject actObject, IReadOnlyList<SceneObjectFilter> filters)
         {
             if (!actObject.IsLayerViewSubsetRegistered(ViewIndex)) { return; }
             if (_invalidObjects.ContainsKey(actObject)) { return; }
@@ -704,63 +707,81 @@ namespace SeeingSharp.Multimedia.Core
             var checkData = actObject.GetVisibilityCheckData(this.ViewInformation);
             if (checkData == null) { return; }
 
-            // Execute all filters in configured order step by step
-            var filterCount = filters.Count;
-            var previousFilterExecuted = false;
-            var previousFilterResult = true;
-            VisibilityCheckFilterStageData lastFilterStageData = null;
-            for (var actFilterIndex = 0; actFilterIndex < filterCount; actFilterIndex++)
+            var oldVisible = checkData.IsVisible;
+            var newVisible = oldVisible;
+            switch (actObject.VisibilityTestMethod)
             {
-                var actFilter = filters[actFilterIndex];
+                case VisibilityTestMethod.ByViewFilters:
 
-                // Get data about current filter stage
-                var filterStageData = checkData.FilterStageData[actFilterIndex];
-                if (filterStageData == null)
-                {
-                    filterStageData = checkData.FilterStageData.AddObject(
-                        new VisibilityCheckFilterStageData(),
-                        actFilterIndex);
-                }
-
-                // Remember last filter stage data
-                lastFilterStageData = filterStageData;
-
-                // Execute filter if needed
-                if (!filterStageData.HasExecuted ||     // <-- Execute the filter if it was not executed for this object before
-                    actFilter.ConfigurationChanged ||   // <-- Execute the filter if its configuration has changed
-                    previousFilterExecuted ||           // <-- Execute the filter if one of the previous was executed
-                    actFilter.UpdateEachFrame)          // <-- Execute the filter if it requests it on each frame (e. g. clipping filter)
-                {
-                    if (previousFilterResult)
+                    // Execute all filters in configured order step by step
+                    var filterCount = filters.Count;
+                    var previousFilterExecuted = false;
+                    var previousFilterResult = true;
+                    VisibilityCheckFilterStageData lastFilterStageData = null;
+                    for (var actFilterIndex = 0; actFilterIndex < filterCount; actFilterIndex++)
                     {
-                        // Re-Filter this object because any above condition has passed and
-                        // this object successfully past the previous filter
-                        var isObjectVisible = actFilter.IsObjectVisible(actObject, this.ViewInformation);
+                        var actFilter = filters[actFilterIndex];
 
-                        filterStageData.HasExecuted = true;
-                        filterStageData.HasPassed = isObjectVisible;
+                        // Get data about current filter stage
+                        var filterStageData = checkData.FilterStageData[actFilterIndex];
+                        if (filterStageData == null)
+                        {
+                            filterStageData = checkData.FilterStageData.AddObject(
+                                new VisibilityCheckFilterStageData(),
+                                actFilterIndex);
+                        }
 
-                        previousFilterResult = isObjectVisible;
-                        previousFilterExecuted = true;
+                        // Remember last filter stage data
+                        lastFilterStageData = filterStageData;
+
+                        // Execute filter if needed
+                        if (!filterStageData.HasExecuted ||   // <-- Execute the filter if it was not executed for this object before
+                            actFilter.ConfigurationChanged || // <-- Execute the filter if its configuration has changed
+                            previousFilterExecuted ||         // <-- Execute the filter if one of the previous was executed
+                            actFilter.UpdateEachFrame         // <-- Execute the filter if it requests it on each frame (e. g. clipping filter)
+                        ) 
+                        {
+                            if (previousFilterResult)
+                            {
+                                // Re-Filter this object because any above condition has passed and
+                                // this object successfully past the previous filter
+                                var isObjectVisible = actFilter.IsObjectVisible(actObject, this.ViewInformation);
+
+                                filterStageData.HasExecuted = true;
+                                filterStageData.HasPassed = isObjectVisible;
+
+                                previousFilterResult = isObjectVisible;
+                                previousFilterExecuted = true;
+                            }
+                            else
+                            {
+                                // Set this object to invisible because previous filter has thrown out
+                                // this object
+                                filterStageData.HasExecuted = true;
+                                filterStageData.HasPassed = false;
+                            }
+                        }
+                        else
+                        {
+                            previousFilterResult = filterStageData.HasPassed;
+                            previousFilterExecuted = false;
+                        }
                     }
-                    else
-                    {
-                        // Set this object to invisible because previous filter has thrown out
-                        // this object
-                        filterStageData.HasExecuted = true;
-                        filterStageData.HasPassed = false;
-                    }
-                }
-                else
-                {
-                    previousFilterResult = filterStageData.HasPassed;
-                    previousFilterExecuted = false;
-                }
+                    newVisible = lastFilterStageData?.HasPassed ?? true;
+                    break;
+
+                case VisibilityTestMethod.ForceVisible:
+                    if(checkData.FilterStageData.Count > 0){ checkData.FilterStageData.Clear(); }
+                    newVisible = true;
+                    break;
+
+                case VisibilityTestMethod.ForceHidden:
+                    if(checkData.FilterStageData.Count > 0){ checkData.FilterStageData.Clear(); }
+                    newVisible = false;
+                    break;
             }
 
             // Handle changed visibility of the object
-            var oldVisible = checkData.IsVisible;
-            var newVisible = lastFilterStageData?.HasPassed ?? true;
             if (oldVisible != newVisible)
             {
                 checkData.IsVisible = newVisible;
