@@ -37,6 +37,7 @@
     <None Remove="Basics3D\_09_WireframeMaterial\PreviewImage.png" />
     <None Remove="MassScenes\_01_StaticCubes\PreviewImage.png" />
     <None Remove="MassScenes\_01_StaticCubes\SimpleTexture.png" />
+    <None Remove="Postprocessing\_02_Focus\PreviewImage.png" />
     <None Remove="Primitives3D\PrimitiveTexture.png" />
     <None Remove="Primitives3D\_01_Cube\PreviewImage.png" />
     <None Remove="Primitives3D\_02_Cylinder\PreviewImage.png" />
@@ -69,6 +70,7 @@
     <EmbeddedResource Include="Basics3D\_09_WireframeMaterial\PreviewImage.png" />
     <EmbeddedResource Include="MassScenes\_01_StaticCubes\PreviewImage.png" />
     <EmbeddedResource Include="MassScenes\_01_StaticCubes\SimpleTexture.png" />
+    <EmbeddedResource Include="Postprocessing\_02_Focus\PreviewImage.png" />
     <EmbeddedResource Include="Primitives3D\PrimitiveTexture.png" />
     <EmbeddedResource Include="Primitives3D\_01_Cube\PreviewImage.png" />
     <EmbeddedResource Include="Primitives3D\_02_Cylinder\PreviewImage.png" />
