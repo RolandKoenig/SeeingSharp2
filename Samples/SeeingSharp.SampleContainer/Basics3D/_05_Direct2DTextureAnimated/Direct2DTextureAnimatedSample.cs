@@ -117,12 +117,15 @@ namespace SeeingSharp.SampleContainer.Basics3D._05_Direct2DTextureAnimated
             // Append camera behavior
             mainOrChildRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
 
+            // Add object filter for viewbox culling
+            mainOrChildRenderLoop.Filters.Add(new SceneViewboxObjectFilter());
+
             return Task.FromResult<object>(null);
         }
 
-        public override void OnClosed()
+        public override void OnSampleClosed()
         {
-            base.OnClosed();
+            base.OnSampleClosed();
 
             SeeingSharpUtil.SafeDispose(ref _solidBrush);
             SeeingSharpUtil.SafeDispose(ref _animatedRectBrush);

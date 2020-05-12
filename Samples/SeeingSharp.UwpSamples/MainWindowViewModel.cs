@@ -133,8 +133,6 @@ namespace SeeingSharp.UwpSamples
                 this.SampleGroups.Add(actSampleGroupName);
             }
             this.SelectedGroup = this.SampleGroups.FirstOrDefault();
-
-            _renderLoop.Filters.Add(new SceneViewboxObjectFilter());
         }
 
         private void UpdateSampleCollection()

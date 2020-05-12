@@ -83,13 +83,14 @@ namespace SeeingSharp.UwpSamples
                         manipulator.Clear(true);
                     });
                     await CtrlSwapChain.RenderLoop.Clear2DDrawingLayersAsync();
+                    CtrlSwapChain.RenderLoop.Filters.Clear();
 
                     foreach (var actChildWindow in _childPages)
                     {
                         await actChildWindow.ClearAsync();
                     }
 
-                    _actSample.OnClosed();
+                    _actSample.OnSampleClosed();
                 }
                 if (_actSampleSettings != null)
                 {

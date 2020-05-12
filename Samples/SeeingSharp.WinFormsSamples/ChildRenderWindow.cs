@@ -33,6 +33,7 @@ namespace SeeingSharp.WinFormsSamples
         public async Task ClearAsync()
         {
             await _ctrlRenderer.RenderLoop.Clear2DDrawingLayersAsync();
+            _ctrlRenderer.RenderLoop.Filters.Clear();
         }
 
         protected override void OnLoad(EventArgs e)
@@ -45,9 +46,6 @@ namespace SeeingSharp.WinFormsSamples
             }
 
             this.Text = $@"{this.Text} ({Assembly.GetExecutingAssembly().GetName().Version})";
-
-            // Register viewbox filter
-            _ctrlRenderer.RenderLoop.Filters.Add(new SceneViewboxObjectFilter());
         }
 
         private void OnRefreshTimer_Tick(object sender, EventArgs e)

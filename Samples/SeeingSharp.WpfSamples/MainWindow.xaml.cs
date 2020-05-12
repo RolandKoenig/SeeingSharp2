@@ -65,9 +65,6 @@ namespace SeeingSharp.WpfSamples
             viewModel.ReloadRequest += this.OnViewModel_ReloadRequest;
             this.DataContext = viewModel;
 
-            // Register viewbox filter
-            CtrlRenderer.RenderLoop.Filters.Add(new SceneViewboxObjectFilter());
-
             CtrlRenderer.RenderLoop.PrepareRender += this.OnRenderLoop_PrepareRender;
         }
 
@@ -114,13 +111,14 @@ namespace SeeingSharp.WpfSamples
                         manipulator.Clear(true);
                     });
                     await CtrlRenderer.RenderLoop.Clear2DDrawingLayersAsync();
+                    CtrlRenderer.RenderLoop.Filters.Clear();
 
                     foreach (var actChildWindow in _childWindows)
                     {
                         await actChildWindow.ClearAsync();
                     }
 
-                    _actSample.OnClosed();
+                    _actSample.OnSampleClosed();
                 }
 
                 // Reset members

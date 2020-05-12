@@ -35,8 +35,6 @@ namespace SeeingSharp.UwpSamples
         {
             CtrlSwapChain.Scene = scene;
             CtrlSwapChain.Camera.ApplyViewPoint(viewPoint);
-
-            CtrlSwapChain.RenderLoop.Filters.Add(new SceneViewboxObjectFilter());
         }
 
         public async Task SetRenderingDataAsync(SampleBase actSample)
@@ -50,6 +48,7 @@ namespace SeeingSharp.UwpSamples
         public async Task ClearAsync()
         {
             await CtrlSwapChain.RenderLoop.Clear2DDrawingLayersAsync();
+            CtrlSwapChain.RenderLoop.Filters.Clear();
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)

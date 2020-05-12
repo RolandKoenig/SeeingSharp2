@@ -78,6 +78,9 @@ namespace SeeingSharp.SampleContainer.Basics3D._02_Text3D
             // Append camera behavior
             mainOrChildRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
 
+            // Add object filter for viewbox culling
+            mainOrChildRenderLoop.Filters.Add(new SceneViewboxObjectFilter());
+
             return Task.FromResult<object>(null);
         }
     }

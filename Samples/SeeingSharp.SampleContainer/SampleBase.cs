@@ -26,6 +26,7 @@ using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
+using SharpDX.WIC;
 
 namespace SeeingSharp.SampleContainer
 {
@@ -45,7 +46,7 @@ namespace SeeingSharp.SampleContainer
 
         }
 
-        public virtual void OnClosed()
+        public virtual void OnSampleClosed()
         {
 
         }
@@ -87,8 +88,7 @@ namespace SeeingSharp.SampleContainer
 
             // AddObject floor to scene
             var resFloorGeometry = manipulator.AddResource(device => new GeometryResource(floorType));
-            var floorObject = manipulator.AddMeshObject(resFloorGeometry, sceneLayer, resTileMaterial);
-            floorObject.Tag1 = "Floor";
+            manipulator.AddMeshObject(resFloorGeometry, sceneLayer, resTileMaterial);
         }
     }
 }

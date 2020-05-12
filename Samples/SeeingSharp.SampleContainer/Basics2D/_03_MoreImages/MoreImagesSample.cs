@@ -88,9 +88,9 @@ namespace SeeingSharp.SampleContainer.Basics2D._03_MoreImages
             });
         }
 
-        public override void OnClosed()
+        public override void OnSampleClosed()
         {
-            base.OnClosed();
+            base.OnSampleClosed();
 
             SeeingSharpUtil.SafeDispose(ref _bitmap);
         }

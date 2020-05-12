@@ -58,6 +58,9 @@ namespace SeeingSharp.SampleContainer.MassScenes._01_StaticCubes
             // Append camera behavior
             mainOrChildRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
 
+            // Add object filter for viewbox culling
+            mainOrChildRenderLoop.Filters.Add(new SceneViewboxObjectFilter());
+
             return Task.FromResult<object>(null);
         }
 

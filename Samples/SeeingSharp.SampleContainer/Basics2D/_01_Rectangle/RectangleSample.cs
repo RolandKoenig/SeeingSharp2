@@ -85,9 +85,9 @@ namespace SeeingSharp.SampleContainer.Basics2D._01_Rectangle
             });
         }
 
-        public override void OnClosed()
+        public override void OnSampleClosed()
         {
-            base.OnClosed();
+            base.OnSampleClosed();
 
             SeeingSharpUtil.SafeDispose(ref _fillBrush);
             SeeingSharpUtil.SafeDispose(ref _fillBrushTransparent);

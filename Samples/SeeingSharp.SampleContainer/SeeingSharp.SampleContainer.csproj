@@ -35,6 +35,7 @@
     <None Remove="Basics3D\_08_MultiMaterial\PreviewImage.png" />
     <None Remove="Basics3D\_08_MultiMaterial\SimpleTexture.png" />
     <None Remove="Basics3D\_09_WireframeMaterial\PreviewImage.png" />
+    <None Remove="Basics3D\_10_ObjectFiltering\PreviewImage.png" />
     <None Remove="MassScenes\_01_StaticCubes\PreviewImage.png" />
     <None Remove="MassScenes\_01_StaticCubes\SimpleTexture.png" />
     <None Remove="Postprocessing\_02_Focus\PreviewImage.png" />
@@ -68,6 +69,7 @@
     <EmbeddedResource Include="Basics3D\_08_MultiMaterial\PreviewImage.png" />
     <EmbeddedResource Include="Basics3D\_08_MultiMaterial\SimpleTexture.png" />
     <EmbeddedResource Include="Basics3D\_09_WireframeMaterial\PreviewImage.png" />
+    <EmbeddedResource Include="Basics3D\_10_ObjectFiltering\PreviewImage.png" />
     <EmbeddedResource Include="MassScenes\_01_StaticCubes\PreviewImage.png" />
     <EmbeddedResource Include="MassScenes\_01_StaticCubes\SimpleTexture.png" />
     <EmbeddedResource Include="Postprocessing\_02_Focus\PreviewImage.png" />

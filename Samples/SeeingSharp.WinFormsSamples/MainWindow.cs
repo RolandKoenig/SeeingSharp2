@@ -59,9 +59,6 @@ namespace SeeingSharp.WinFormsSamples
 
             this.Text = $@"{this.Text} ({Assembly.GetExecutingAssembly().GetName().Version})";
 
-            // Register viewbox filter
-            _ctrlRenderPanel.RenderLoop.Filters.Add(new SceneViewboxObjectFilter());
-
             _ctrlRenderPanel.RenderLoop.PrepareRender += this.OnRenderLoop_PrepareRender;
 
             // AddObject all sample pages
@@ -158,13 +155,14 @@ namespace SeeingSharp.WinFormsSamples
                         manipulator.Clear(true);
                     });
                     await _ctrlRenderPanel.RenderLoop.Clear2DDrawingLayersAsync();
+                    _ctrlRenderPanel.RenderLoop.Filters.Clear();
 
                     foreach (var actChildWindow in _childWindows)
                     {
                         await actChildWindow.ClearAsync();
                     }
 
-                    _actSample.OnClosed();
+                    _actSample.OnSampleClosed();
                 }
                 if (_actSampleSettings != null)
                 {
