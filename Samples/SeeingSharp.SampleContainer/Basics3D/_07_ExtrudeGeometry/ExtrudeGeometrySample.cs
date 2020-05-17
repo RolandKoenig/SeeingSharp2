@@ -99,7 +99,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._07_ExtrudeGeometry
             mainOrChildRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
 
             // Add object filter for viewbox culling
-            mainOrChildRenderLoop.Filters.Add(new SceneViewboxObjectFilter());
+            mainOrChildRenderLoop.ObjectFilters.Add(new SceneViewboxObjectFilter());
 
             return Task.FromResult<object>(null);
         }

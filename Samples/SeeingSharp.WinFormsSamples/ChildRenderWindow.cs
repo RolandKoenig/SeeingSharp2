@@ -33,7 +33,7 @@ namespace SeeingSharp.WinFormsSamples
         public async Task ClearAsync()
         {
             await _ctrlRenderer.RenderLoop.Clear2DDrawingLayersAsync();
-            _ctrlRenderer.RenderLoop.Filters.Clear();
+            _ctrlRenderer.RenderLoop.ObjectFilters.Clear();
         }
 
         protected override void OnLoad(EventArgs e)

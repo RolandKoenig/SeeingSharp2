@@ -47,7 +47,7 @@ namespace SeeingSharp.Multimedia.Core
                 if (_enableYFilter != value)
                 {
                     _enableYFilter = value;
-                    this.RaiseFilterConfigurationChanged();
+                    this.NotifyFilterConfigurationChanged();
                 }
             }
         }
@@ -63,7 +63,7 @@ namespace SeeingSharp.Multimedia.Core
                 if (!EngineMath.EqualsWithTolerance(_yFilterMin, value))
                 {
                     _yFilterMin = value;
-                    this.RaiseFilterConfigurationChanged();
+                    this.NotifyFilterConfigurationChanged();
                 }
             }
         }
@@ -79,7 +79,7 @@ namespace SeeingSharp.Multimedia.Core
                 if (!EngineMath.EqualsWithTolerance(_yFilterMax, value))
                 {
                     _yFilterMax = value;
-                    this.RaiseFilterConfigurationChanged();
+                    this.NotifyFilterConfigurationChanged();
                 }
             }
         }

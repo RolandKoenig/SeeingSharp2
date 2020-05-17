@@ -35,16 +35,23 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Has filter configuration changed?
         /// </summary>
-        internal bool ConfigurationChanged;
+        internal bool ConfigurationChangedInternal;
+
+        internal ulong ConfigurationCheckedCycleID;
 
         /// <summary>
         /// Has filter configuration changed? (temporary flag on UI because of thread synchronization)
         /// </summary>
-        internal bool ConfigurationChangedUi;
-        /// <summary>
-        /// An event that notifies changed filter configuration.
-        /// </summary>
-        public event EventHandler FilterConfigurationChanged;
+        public bool ConfigurationChanged
+        {
+            get;
+            internal set;
+        }
+
+        protected SceneObjectFilter()
+        {
+            this.ConfigurationChanged = true;
+        }
 
         /// <summary>
         /// Checks for visibility of the given object.
@@ -66,10 +73,9 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Raises the FilterConfigurationChanged event.
         /// </summary>
-        protected void RaiseFilterConfigurationChanged()
+        public void NotifyFilterConfigurationChanged()
         {
-            ConfigurationChangedUi = true;
-            this.FilterConfigurationChanged.Raise(this, EventArgs.Empty);
+            this.ConfigurationChanged = true;
         }
     }
 }

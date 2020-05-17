@@ -111,7 +111,7 @@ namespace SeeingSharp.WpfSamples
                         manipulator.Clear(true);
                     });
                     await CtrlRenderer.RenderLoop.Clear2DDrawingLayersAsync();
-                    CtrlRenderer.RenderLoop.Filters.Clear();
+                    CtrlRenderer.RenderLoop.ObjectFilters.Clear();
 
                     foreach (var actChildWindow in _childWindows)
                     {

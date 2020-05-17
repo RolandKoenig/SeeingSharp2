@@ -155,7 +155,7 @@ namespace SeeingSharp.WinFormsSamples
                         manipulator.Clear(true);
                     });
                     await _ctrlRenderPanel.RenderLoop.Clear2DDrawingLayersAsync();
-                    _ctrlRenderPanel.RenderLoop.Filters.Clear();
+                    _ctrlRenderPanel.RenderLoop.ObjectFilters.Clear();
 
                     foreach (var actChildWindow in _childWindows)
                     {

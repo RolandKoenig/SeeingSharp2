@@ -396,7 +396,7 @@ namespace SeeingSharp.Multimedia.Core
             foreach (var actFilter in filters)
             {
                 actFilter.SetEnvironmentData(_sceneLayer, this.ViewInformation);
-                if (actFilter.ConfigurationChanged)
+                if (actFilter.ConfigurationChangedInternal)
                 {
                     anyFilterChanged = true;
                 }
@@ -736,7 +736,7 @@ namespace SeeingSharp.Multimedia.Core
 
                         // Execute filter if needed
                         if (!filterStageData.HasExecuted ||   // <-- Execute the filter if it was not executed for this object before
-                            actFilter.ConfigurationChanged || // <-- Execute the filter if its configuration has changed
+                            actFilter.ConfigurationChangedInternal || // <-- Execute the filter if its configuration has changed
                             previousFilterExecuted ||         // <-- Execute the filter if one of the previous was executed
                             actFilter.UpdateEachFrame         // <-- Execute the filter if it requests it on each frame (e. g. clipping filter)
                         ) 

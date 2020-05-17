@@ -83,7 +83,7 @@ namespace SeeingSharp.UwpSamples
                         manipulator.Clear(true);
                     });
                     await CtrlSwapChain.RenderLoop.Clear2DDrawingLayersAsync();
-                    CtrlSwapChain.RenderLoop.Filters.Clear();
+                    CtrlSwapChain.RenderLoop.ObjectFilters.Clear();
 
                     foreach (var actChildWindow in _childPages)
                     {

@@ -60,7 +60,7 @@ namespace SeeingSharp.WpfSamples
         public async Task ClearAsync()
         {
             await CtrlRenderer.RenderLoop.Clear2DDrawingLayersAsync();
-            CtrlRenderer.RenderLoop.Filters.Clear();
+            CtrlRenderer.RenderLoop.ObjectFilters.Clear();
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)

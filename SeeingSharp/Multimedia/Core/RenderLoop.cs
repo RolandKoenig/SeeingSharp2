@@ -74,6 +74,7 @@ namespace SeeingSharp.Multimedia.Core
         private RenderState _renderState;
         private List<SeeingSharpVideoWriter> _videoWriters;
         private bool _callPresentInUiThread;
+        private ObjectFilterCollection _objectFilters;
 
         // Direct3D resources and other values gathered during graphics loading
         private List<Custom2DDrawingLayer> _2dDrawingLayers;
@@ -271,6 +272,11 @@ namespace SeeingSharp.Multimedia.Core
         public bool IsDeviceLost => _currentDevice?.IsLost == true;
 
         /// <summary>
+        /// Gets a collection containing all object filters.
+        /// </summary>
+        public ObjectFilterCollection ObjectFilters => _objectFilters;
+
+        /// <summary>
         /// Internal properties and methods that should be used with care.
         /// </summary>
         public RenderLoopInternals Internals { get; }
@@ -279,11 +285,6 @@ namespace SeeingSharp.Multimedia.Core
         /// Gets the current target scene.
         /// </summary>
         internal Scene TargetScene => _targetScene;
-
-        /// <summary>
-        /// Gets a list containing all filters for this view.
-        /// </summary>
-        public List<SceneObjectFilter> Filters { get; } = new List<SceneObjectFilter>();
 
         /// <summary>
         /// Gets the collection containing all filters.
@@ -338,6 +339,7 @@ namespace SeeingSharp.Multimedia.Core
 
             this.ViewInformation = new ViewInformation(this);
             _configuration = new GraphicsViewConfiguration();
+            _objectFilters = new ObjectFilterCollection(this.ViewInformation);
 
             _videoWriters = new List<SeeingSharpVideoWriter>();
 
@@ -1367,16 +1369,20 @@ namespace SeeingSharp.Multimedia.Core
             }
 
             // Let UI manipulate current filter list
-            try
+            if (_objectFilters.ObjectFilterCollectionChanged)
             {
-                this.FiltersInternal.Clear();
-                this.FiltersInternal.AddRange(this.Filters);
-            }
-            catch (Exception ex)
-            {
-                // Publish exception info
-                GraphicsCore.PublishInternalExceptionInfo(ex,
-                    InternalExceptionLocation.RenderLoop_ManipulateFilterList);
+                _objectFilters.ObjectFilterCollectionChanged = false;
+                try
+                {
+                    this.FiltersInternal.Clear();
+                    _objectFilters.CopyTo(this.FiltersInternal);
+                }
+                catch (Exception ex)
+                {
+                    // Publish exception info
+                    GraphicsCore.PublishInternalExceptionInfo(ex,
+                        InternalExceptionLocation.RenderLoop_ManipulateFilterList);
+                }
             }
 
             // Raise prepare render event

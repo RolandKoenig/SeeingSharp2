@@ -37,7 +37,7 @@ namespace SeeingSharp.ModelViewer.Util
                 if (_showUnitCube != value)
                 {
                     _showUnitCube = value;
-                    this.RaiseFilterConfigurationChanged();
+                    this.NotifyFilterConfigurationChanged();
                 }
             }
         }
@@ -50,7 +50,7 @@ namespace SeeingSharp.ModelViewer.Util
                 if (_showGrid != value)
                 {
                     _showGrid = value;
-                    this.RaiseFilterConfigurationChanged();
+                    this.NotifyFilterConfigurationChanged();
                 }
             }
         }

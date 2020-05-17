@@ -100,8 +100,8 @@ namespace SeeingSharp.SampleContainer.Basics3D._10_ObjectFiltering
             mainOrChildRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
             
             // Register our custom filter (first step) and the filter for viewbox culling (second step)
-            mainOrChildRenderLoop.Filters.Add(_settings.Filter);
-            mainOrChildRenderLoop.Filters.Add(new SceneViewboxObjectFilter());
+            mainOrChildRenderLoop.ObjectFilters.Add(_settings.Filter);
+            mainOrChildRenderLoop.ObjectFilters.Add(new SceneViewboxObjectFilter());
 
             return Task.FromResult<object>(null);
         }
@@ -151,7 +151,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._10_ObjectFiltering
                 set
                 {
                     _showSpheres = value;
-                    this.RaiseFilterConfigurationChanged();
+                    this.NotifyFilterConfigurationChanged();
                 }
             }
 
@@ -161,7 +161,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._10_ObjectFiltering
                 set
                 {
                     _showCubes = value;
-                    this.RaiseFilterConfigurationChanged();
+                    this.NotifyFilterConfigurationChanged();
                 }
             }
 
@@ -171,7 +171,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._10_ObjectFiltering
                 set
                 {
                     _showPyramids = value;
-                    this.RaiseFilterConfigurationChanged();
+                    this.NotifyFilterConfigurationChanged();
                 }
             }
 

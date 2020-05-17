@@ -90,7 +90,7 @@ namespace SeeingSharp.SampleContainer.Postprocessing._01_EdgeDetect
             mainOrChildRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
 
             // Add object filter for viewbox culling
-            mainOrChildRenderLoop.Filters.Add(new SceneViewboxObjectFilter());
+            mainOrChildRenderLoop.ObjectFilters.Add(new SceneViewboxObjectFilter());
 
             return Task.FromResult<object>(null);
         }

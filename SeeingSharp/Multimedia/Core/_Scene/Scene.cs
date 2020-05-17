@@ -998,6 +998,26 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
+        /// Updates states of object filters. This is done before UpdateBesideRender for all scenes synchronously.
+        /// </summary>
+        internal void UpdateObjectFilterState(UpdateState updateState)
+        {
+            // Reset all filter flags before continue to next step
+            foreach (var actView in _registeredViews)
+            {
+                foreach (var actFilter in actView.FiltersInternal)
+                {
+                    // Check whether we've done this already on another scene/view on the same pass
+                    if(actFilter.ConfigurationCheckedCycleID == updateState.MainLoopCycleId){ continue; }
+
+                    actFilter.ConfigurationCheckedCycleID = updateState.MainLoopCycleId;
+                    actFilter.ConfigurationChangedInternal = actFilter.ConfigurationChanged;
+                    actFilter.ConfigurationChanged = false;
+                }
+            }
+        }
+
+        /// <summary>
         /// Updates the scene (called beside rendering).
         /// </summary>
         internal void UpdateBesideRender(SceneRelatedUpdateState updateState)
@@ -1010,16 +1030,6 @@ namespace SeeingSharp.Multimedia.Core
             {
                 actAsyncAction();
                 actIndex++;
-            }
-
-            // Reset all filter flags before continue to next step
-            foreach (var actView in _registeredViews)
-            {
-                foreach (var actFilter in actView.FiltersInternal)
-                {
-                    actFilter.ConfigurationChanged = actFilter.ConfigurationChangedUi;
-                    actFilter.ConfigurationChangedUi = false;
-                }
             }
 
             // Performs update logic beside rendering

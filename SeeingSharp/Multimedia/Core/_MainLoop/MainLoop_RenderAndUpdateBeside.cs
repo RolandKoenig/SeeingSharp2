@@ -95,6 +95,11 @@ namespace SeeingSharp.Multimedia.Core
         {
             using (_core.BeginMeasureActivityDuration(SeeingSharpConstants.PERF_GLOBAL_RENDER_AND_UPDATE_BESIDE))
             {
+                for (var loop = 0; loop < _scenesToRender.Count; loop++)
+                {
+                    _scenesToRender[loop].UpdateObjectFilterState(_updateState);
+                }
+
                 // Trigger all tasks for 'Update' pass
                 Parallel.For(0, _devicesInUse.Count + _scenesToRender.Count, _actionTriggerRenderOrUpdateBesideTask);
 
