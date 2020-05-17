@@ -107,7 +107,7 @@ namespace SeeingSharp.SampleContainer.Postprocessing._02_Focus
             // Show/Hide the focus mesh depending on the user's configuration
             if (_sampleSettings.ShowFocusEffect)
             {
-                _focusMesh.VisibilityTestMethod = VisibilityTestMethod.ByViewFilters;
+                _focusMesh.VisibilityTestMethod = VisibilityTestMethod.ByObjectFilters;
             }
             else
             {

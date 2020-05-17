@@ -420,7 +420,7 @@ namespace SeeingSharp.Multimedia.Core
                     {
                         switch (actObject.VisibilityTestMethod)
                         {
-                            case VisibilityTestMethod.ByViewFilters:
+                            case VisibilityTestMethod.ByObjectFilters:
                                 if (actObject.IsStatic) { continue; }
                                 if ((!actObject.TransformationChanged) && (!actObject.VisibilityTestMethodChanged)) { continue; }
                                 break;
@@ -711,7 +711,7 @@ namespace SeeingSharp.Multimedia.Core
             var newVisible = oldVisible;
             switch (actObject.VisibilityTestMethod)
             {
-                case VisibilityTestMethod.ByViewFilters:
+                case VisibilityTestMethod.ByObjectFilters:
 
                     // Execute all filters in configured order step by step
                     var filterCount = filters.Count;

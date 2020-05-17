@@ -122,7 +122,7 @@ namespace SeeingSharp.Multimedia.Core
         /// <summary>
         /// Default. The object is visible when it passes all filters on a view.
         /// </summary>
-        ByViewFilters,
+        ByObjectFilters,
 
         /// <summary>
         /// The object will be rendered always.
