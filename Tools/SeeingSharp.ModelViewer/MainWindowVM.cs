@@ -88,7 +88,7 @@ namespace SeeingSharp.ModelViewer
             this.Command_Exit = new DelegateCommand(() => Environment.Exit(0));
 
             var sceneDetailFilter = new SceneDetailsFilter();
-            renderLoop.Filters.Add(sceneDetailFilter);
+            renderLoop.ObjectFilters.Add(sceneDetailFilter);
 
             this.OptionsRendering = new RenderingOptions(renderLoop, sceneDetailFilter);
 

@@ -115,6 +115,8 @@ namespace SeeingSharp.WpfSamples
             _sampleSettings = null;
             _renderLoop = renderLoop;
 
+            _renderLoop.ObjectFilters.Add(new SceneViewboxObjectFilter());
+
             // Load samples
             _sampleRepo = sampleRepo;
             foreach (var actSampleGroupName in _sampleRepo.SampleGroups
