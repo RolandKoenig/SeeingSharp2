@@ -83,7 +83,7 @@ namespace SeeingSharp.ModelViewer
 
             this.SceneBrowserViewModel = new SceneBrowserViewModel(renderLoop.Scene);
 
-            this.Command_OpenFile = new DelegateCommand(this.OpenFile);
+            this.Command_OpenFile = new DelegateCommand(this.OnCommand_OpenFile);
             this.Command_CloseFile = new DelegateCommand(async () => await this.LoadSceneInternalAsync(null, null));
             this.Command_Exit = new DelegateCommand(() => Environment.Exit(0));
 
@@ -95,7 +95,13 @@ namespace SeeingSharp.ModelViewer
             this.UpdateTitle();
         }
 
-        public async Task LoadInitialScene()
+        public Task LoadFileAsync(ResourceLink modelLink)
+        {
+            var importOptions = GraphicsCore.Current.ImportersAndExporters.CreateImportOptions(modelLink);
+            return this.LoadSceneInternalAsync(modelLink, importOptions);
+        }
+
+        public Task LoadInitialScene()
         {
             _renderLoop.SceneComponents.Add(
                 new FocusedPointCameraComponent
@@ -105,19 +111,16 @@ namespace SeeingSharp.ModelViewer
                     CameraHRotationInitial = 2f
                 });
 
-            await this.LoadSceneInternalAsync(null, null);
+            return this.LoadSceneInternalAsync(null, null);
         }
 
-        private async void OpenFile()
+        private async void OnCommand_OpenFile()
         {
             var eArgs = new OpenFileDialogEventArgs(GraphicsCore.Current.ImportersAndExporters.GetOpenFileDialogFilter());
             this.OpenFileDialogRequest?.Invoke(this, eArgs);
             if(!string.IsNullOrEmpty(eArgs.SelectedFile))
             {
-                var modelLink = (ResourceLink)eArgs.SelectedFile;
-                var importOptions = GraphicsCore.Current.ImportersAndExporters.CreateImportOptions(modelLink);
-
-                await this.LoadSceneInternalAsync(modelLink, importOptions);
+                await this.LoadFileAsync(eArgs.SelectedFile);
             }
         }
 

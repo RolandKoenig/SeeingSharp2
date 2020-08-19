@@ -44,8 +44,42 @@ namespace SeeingSharp.ModelViewer
                 _viewModel.OpenFileDialogRequest += this.OnViewModel_OpenFileDialogRequest;
                 this.DataContext = _viewModel;
 
+                this.AllowDrop = true;
                 this.Loaded += this.OnLoaded;
+
+                // Drag / drop of external files
+                this.DragOver += this.OnDragOver;
+                this.Drop += this.OnDrop;
             }
+        }
+
+        private void OnDragOver(object sender, DragEventArgs e)
+        {
+            if (_viewModel == null) { e.Effects = DragDropEffects.None; }
+
+            var fileNames = (string[])e.Data.GetData(DataFormats.FileDrop, true);
+            if ((fileNames == null) ||
+                (fileNames.Length != 1) ||
+                (string.IsNullOrEmpty(fileNames[0])))
+            {
+                e.Effects = DragDropEffects.None;
+                e.Handled = true;
+            }
+        }
+
+        private async void OnDrop(object sender, DragEventArgs e)
+        {
+            if (_viewModel == null) { return; }
+
+            var fileNames = (string[]) e.Data.GetData(DataFormats.FileDrop, true);
+            if ((fileNames == null) ||
+                (fileNames.Length != 1) ||
+                (string.IsNullOrEmpty(fileNames[0])))
+            {
+                return;
+            }
+
+            await _viewModel.LoadFileAsync(fileNames[0]);
         }
 
         private async void OnLoaded(object sender, RoutedEventArgs e)
