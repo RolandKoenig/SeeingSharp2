@@ -19,8 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
-using System;
 using System.Numerics;
 
 namespace SeeingSharp.Multimedia.Drawing3D
@@ -28,7 +26,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class PerspectiveCamera3D : Camera3DBase
     {
         // Configuration
-        private float _fov = (float)Math.PI / 4.0f;
+        private float _fov = FOV.defaultFOV;
         private float _aspectRatio;
 
         /// <summary>
@@ -85,13 +83,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
             Vector3 position, Vector3 target, Vector3 upVector, float zNear, float zFar, int screenWidth, int screenHeight,
             out Matrix4x4 viewMatrix, out Matrix4x4 projMatrix)
         {
-            _aspectRatio = screenWidth / (float)screenHeight;
+            this._aspectRatio = screenWidth / (float)screenHeight;
             Matrix4x4Ex.CreateLookAtLH(
                 ref position, ref target, ref upVector,
                 out viewMatrix);
             Matrix4x4Ex.CreatePerspectiveFovLH(
-                _fov,
-                _aspectRatio,
+                FOV.CalculateFieldOfView(this._aspectRatio),
+                this._aspectRatio,
                 zNear, zFar, out projMatrix);
         }
     }
