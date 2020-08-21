@@ -26,18 +26,19 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class PerspectiveCamera3D : Camera3DBase
     {
         // Configuration
-        private float _fov = FOV.defaultFOV;
+        //... see wide high-resolution film gauge https://en.wikipedia.org/wiki/70_mm_film, human eye focal 50 mm, default 35 mm
+        private float _filmGauge = 35; //mm
         private float _aspectRatio;
-
+                     
         /// <summary>
-        /// Gets or sets the field of view value.
+        /// Gets or sets the FilmGauge.
         /// </summary>
-        public float FieldOfView
+        public float FilmGauge
         {
-            get => _fov;
+            get => _filmGauge;
             set
             {
-                _fov = value;
+                this._filmGauge = value;
                 this.UpdateCamera();
             }
         }
@@ -88,7 +89,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 ref position, ref target, ref upVector,
                 out viewMatrix);
             Matrix4x4Ex.CreatePerspectiveFovLH(
-                FOV.CalculateFieldOfView(this._aspectRatio),
+                FOV.CalculateFieldOfView(this._aspectRatio, this._filmGauge),
                 this._aspectRatio,
                 zNear, zFar, out projMatrix);
         }
