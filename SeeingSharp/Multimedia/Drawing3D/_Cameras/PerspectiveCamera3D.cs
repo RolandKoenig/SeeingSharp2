@@ -27,7 +27,9 @@ namespace SeeingSharp.Multimedia.Drawing3D
     {
         // Configuration
         //... see wide high-resolution film gauge https://en.wikipedia.org/wiki/70_mm_film, human eye focal 50 mm, default 35 mm
-        private float _filmGauge = 35; //mm
+        private float _filmGauge = 70; //mm
+        //... as focal length changes, the amount of the subject captured by the lens (the viewing angle) also changes. 
+        private float _focalLength = 30; //mm
         private float _aspectRatio;
                      
         /// <summary>
@@ -35,10 +37,23 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         public float FilmGauge
         {
-            get => _filmGauge;
+            get => this._filmGauge;
             set
             {
                 this._filmGauge = value;
+                this.UpdateCamera();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the FocalLength.
+        /// </summary>
+        public float FocalLength
+        {
+            get => this._focalLength;
+            set
+            {
+                this._focalLength = value;
                 this.UpdateCamera();
             }
         }
@@ -89,7 +104,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 ref position, ref target, ref upVector,
                 out viewMatrix);
             Matrix4x4Ex.CreatePerspectiveFovLH(
-                FOV.CalculateFieldOfView(this._aspectRatio, this._filmGauge),
+                FOV.CalculateFieldOfView(this._aspectRatio, this._filmGauge, this._focalLength),
                 this._aspectRatio,
                 zNear, zFar, out projMatrix);
         }

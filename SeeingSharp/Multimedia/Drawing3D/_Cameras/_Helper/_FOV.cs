@@ -15,11 +15,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         /// <param name="aspectRatio">width to its height of a image</param>
         /// <param name="filmGauge">physical property of photographic or motion picture film stock which defines its width</param>
-        public static float CalculateFieldOfView(float aspectRatio, float filmGauge)
+        /// <param name="focalLength">focal length in respect to the <paramref name="filmGauge"/></param>
+        public static float CalculateFieldOfView(float aspectRatio, float filmGauge, float focalLength)
         {
             float filmHeight = filmGauge / (float)Math.Max(aspectRatio, 1);
-            float focalLength = 0.5f * filmHeight / filmGauge;
-            return 2.0f * (float)Math.Atan((filmHeight / 2.0f) / focalLength) * 180.0f / (float)Math.PI;
+            float filmSlope = 0.5f * filmHeight / focalLength;
+            return (180.0f / (float)Math.PI) * 2.0f * (float)Math.Atan((0.5f * filmHeight / filmSlope));
         }
     }
 }
