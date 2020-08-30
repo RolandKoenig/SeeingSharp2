@@ -19,6 +19,7 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
+using System;
 using System.Numerics;
 
 namespace SeeingSharp.Multimedia.Drawing3D
@@ -26,8 +27,13 @@ namespace SeeingSharp.Multimedia.Drawing3D
     public class PerspectiveCamera3D : Camera3DBase
     {
         // Configuration
-        private float _fov = FOV.defaultFOV;
         private float _aspectRatio;
+        private float _fov = (float)Math.PI / 4.0f; // default value for an aspect of 4:3 and an horizontal fov of 90°
+
+        /// <summary>
+        /// Gets the current aspect ratio.
+        /// </summary>
+        public float AspectRatio => _aspectRatio;
 
         /// <summary>
         /// Gets or sets the field of view value.
@@ -41,11 +47,6 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 this.UpdateCamera();
             }
         }
-
-        /// <summary>
-        /// Gets the current aspect ratio.
-        /// </summary>
-        public float AspectRatio => _aspectRatio;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PerspectiveCamera3D"/> class.
@@ -88,9 +89,24 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 ref position, ref target, ref upVector,
                 out viewMatrix);
             Matrix4x4Ex.CreatePerspectiveFovLH(
-                FOV.CalculateFieldOfView(this._aspectRatio),
+                this._fov,
                 this._aspectRatio,
                 zNear, zFar, out projMatrix);
+        }
+
+        /// <summary>
+        /// Calculates the Field of View by focal length in respect to the current film gauge used them and update the camera
+        /// </summary>
+        /// <param name="filmGauge">physical property of photographic or motion picture film stock which defines its width - see wide high-resolution film gauge https://en.wikipedia.org/wiki/70_mm_film, human eye focal 50 mm, full frame movie 35 mm, default 70 mm</param>
+        /// <param name="focalLength">focal length in respect to the <paramref name="filmGauge"/> - as focal length changes, the amount of the subject captured by the lens (the viewing angle) also changes, default 30 mm</param>
+        public void SetFieldOfView(float filmGauge = 70, float focalLength = 30)
+        {
+            //...see http://www.bobatkins.com/photography/technical/field_of_view.html
+            var filmHeight = filmGauge / Math.Max(this._aspectRatio, 1);
+            var filmSlope = 0.5f * filmHeight / focalLength;
+            this._fov = (180.0f / (float)Math.PI) * 2.0f * (float)Math.Atan((0.5f * filmHeight / filmSlope));
+
+            this.UpdateCamera();
         }
     }
 }
