@@ -99,12 +99,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// </summary>
         /// <param name="filmGauge">physical property of photographic or motion picture film stock which defines its width - see wide high-resolution film gauge https://en.wikipedia.org/wiki/70_mm_film, human eye focal 50 mm, full frame movie 35 mm, default 70 mm</param>
         /// <param name="focalLength">focal length in respect to the <paramref name="filmGauge"/> - as focal length changes, the amount of the subject captured by the lens (the viewing angle) also changes, default 30 mm</param>
-        public void CustomFieldOfView(float filmGauge = 70, float focalLength = 30)
+        public void SetFieldOfView(float filmGauge = 70, float focalLength = 30)
         {
-            float filmHeight = filmGauge / (float)Math.Max(this._aspectRatio, 1);
-            float filmSlope = 0.5f * filmHeight / focalLength;
-            this._fov = (180.0f / (float)Math.PI) * 2.0f * (float)Math.Atan((0.5f * filmHeight / filmSlope));
             //...see http://www.bobatkins.com/photography/technical/field_of_view.html
+            var filmHeight = filmGauge / Math.Max(this._aspectRatio, 1);
+            var filmSlope = 0.5f * filmHeight / focalLength;
+            this._fov = (180.0f / (float)Math.PI) * 2.0f * (float)Math.Atan((0.5f * filmHeight / filmSlope));
 
             this.UpdateCamera();
         }
