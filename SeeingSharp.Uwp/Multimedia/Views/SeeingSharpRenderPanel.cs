@@ -63,6 +63,15 @@ namespace SeeingSharp.Multimedia.Views
             set => _painter.DiscardRendering = value;
         }
 
+        /// <summary>
+        /// Discard presenting frames?
+        /// </summary>
+        public bool DiscardPresent
+        {
+            get => _painter.DiscardPresent;
+            set => _painter.DiscardPresent = value;
+        }
+
         public EngineDevice SelectedDevice
         {
             get => _painter.RenderLoop.Device;

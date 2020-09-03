@@ -21,18 +21,21 @@
                                  and specific light or dark resources provided as needed. -->
                             <muxm:AcrylicBrush x:Key="NavigationViewDefaultPaneBackground"
                                                BackgroundSource="Backdrop"
+                                               FallbackColor="WhiteSmoke"
                                                TintColor="White"
-                                               TintOpacity=".6" />
+                                               TintOpacity=".4" />
                             <muxm:AcrylicBrush x:Key="NavigationViewExpandedPaneBackground"
                                                BackgroundSource="Backdrop"
+                                               FallbackColor="WhiteSmoke"
                                                TintColor="White"
-                                               TintOpacity=".6" />
+                                               TintOpacity=".4" />
 
 
                             <muxm:AcrylicBrush x:Key="GenericAcrylicBrush"
                                                BackgroundSource="Backdrop"
+                                               FallbackColor="WhiteSmoke"
                                                TintColor="White"
-                                               TintOpacity=".6" />
+                                               TintOpacity=".4" />
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="HighContrast">
                             <!-- Always include a "HighContrast" dictionary when you override

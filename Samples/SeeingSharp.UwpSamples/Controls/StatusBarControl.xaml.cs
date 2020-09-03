@@ -5,8 +5,6 @@ using Windows.UI.Xaml.Controls;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Views;
 
-// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
-
 namespace SeeingSharp.UwpSamples.Controls
 {
     public sealed partial class StatusBarControl : UserControl, INotifyPropertyChanged

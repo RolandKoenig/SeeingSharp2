@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using SeeingSharp.Multimedia.Core;
@@ -8,8 +10,6 @@ using SeeingSharp.SampleContainer;
 using SeeingSharp.SampleContainer.Util;
 using SeeingSharp.UwpSamples.Util;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace SeeingSharp.UwpSamples
 {
     /// <summary>
@@ -17,6 +17,12 @@ namespace SeeingSharp.UwpSamples
     /// </summary>
     public sealed partial class ChildRenderPage : Page
     {
+        public bool DiscardPresent
+        {
+            get => this.CtrlSwapChain.DiscardPresent;
+            set => this.CtrlSwapChain.DiscardPresent = value;
+        }
+
         public ChildRenderPage()
         {
             this.InitializeComponent();
@@ -30,6 +36,20 @@ namespace SeeingSharp.UwpSamples
         {
             CtrlSwapChain.Scene = scene;
             CtrlSwapChain.Camera.ApplyViewPoint(viewPoint);
+        }
+
+        public async void TriggerRenderControlFadeInAnimation()
+        {
+            try
+            {
+                await this.Dispatcher.RunAsync(
+                    CoreDispatcherPriority.Normal,
+                    () => { this.SwapChainFadeInStoryboard.Begin(); });
+            }
+            catch (Exception)
+            {
+                // We cane safely ignore exceptions here (only an optional animation)
+            }
         }
 
         public async Task SetRenderingDataAsync(SampleBase actSample)

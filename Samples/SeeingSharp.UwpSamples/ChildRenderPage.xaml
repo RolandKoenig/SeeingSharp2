@@ -15,6 +15,12 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
+        <Grid.Resources>
+            <Storyboard x:Name="SwapChainFadeInStoryboard">
+                <RepositionThemeAnimation Storyboard.TargetName="CtrlSwapChain" FromHorizontalOffset="-30" />
+            </Storyboard>
+        </Grid.Resources>
+
         <!-- Renderer -->
         <sSharp:SeeingSharpRenderPanel x:Name="CtrlSwapChain"
                                        Grid.Row="0" Grid.RowSpan="2" />

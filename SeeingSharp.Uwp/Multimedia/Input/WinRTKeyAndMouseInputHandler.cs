@@ -133,14 +133,15 @@ namespace SeeingSharp.Multimedia.Input
                     Width = 0,
                     Height = 0,
                     HorizontalAlignment = HorizontalAlignment.Left,
-                    VerticalAlignment = VerticalAlignment.Top
+                    VerticalAlignment = VerticalAlignment.Top,
+                    BorderThickness = new Thickness(0.0)
                 };
 
                 _dummyButtonForFocus.KeyDown += this.OnDummyButtonForFocus_KeyDown;
                 _dummyButtonForFocus.KeyUp += this.OnDummyButtonForFocus_KeyUp;
                 _dummyButtonForFocus.LostFocus += this.OnDummyButtonForFocus_LostFocus;
                 _dummyButtonForFocus.GotFocus += this.OnDummyButtonForFocus_GotFocus;
-                _targetPanel.Children.Add(_dummyButtonForFocus);
+                _targetPanel.Children.Insert(0, _dummyButtonForFocus);
 
                 _coreWindow = CoreWindow.GetForCurrentThread();
                 _coreWindow.KeyDown += this.OnCoreWindow_KeyDown;

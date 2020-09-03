@@ -20,6 +20,14 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
+using SeeingSharp.Checking;
+using SeeingSharp.Multimedia.Drawing2D;
+using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.DrawingVideo;
+using SeeingSharp.Multimedia.Input;
+using SeeingSharp.Util;
+using SharpDX.DXGI;
+using SharpDX.Mathematics.Interop;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -29,14 +37,6 @@ using System.Linq;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
-using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Drawing2D;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.DrawingVideo;
-using SeeingSharp.Multimedia.Input;
-using SeeingSharp.Util;
-using SharpDX.DXGI;
-using SharpDX.Mathematics.Interop;
 using D2D = SharpDX.Direct2D1;
 using D3D11 = SharpDX.Direct3D11;
 
@@ -77,7 +77,7 @@ namespace SeeingSharp.Multimedia.Core
         private ObjectFilterCollection _objectFilters;
 
         // Direct3D resources and other values gathered during graphics loading
-        private List<Custom2DDrawingLayer> _2dDrawingLayers;
+        private UnsafeList<Custom2DDrawingLayer> _2dDrawingLayers;
         private DebugDrawingLayer _debugDrawingLayer;
         private EngineDevice _currentDevice;
         private Size2 _currentViewSize;
@@ -325,7 +325,7 @@ namespace SeeingSharp.Multimedia.Core
             this.SceneComponents.CollectionChanged += this.OnSceneComponents_Changed;
 
             this.FiltersInternal = new List<SceneObjectFilter>();
-            _2dDrawingLayers = new List<Custom2DDrawingLayer>();
+            _2dDrawingLayers = new UnsafeList<Custom2DDrawingLayer>();
 
             // Load DebugDrawingLayer if debug mode is enabled
             if (!isDesignMode)
@@ -910,9 +910,14 @@ namespace SeeingSharp.Multimedia.Core
             // Trigger prepare rendering on GUI thread
             var guiRefreshTask = this.UiSynchronizationContext.PostAsync(_cachedPrepareRenderOnGui);
 
-            // Update overlays
-            foreach (var actOverlay in _2dDrawingLayers)
+            // Update overlays (use backing array because of possible multi threading issues)
+            var drawingLayers2D = _2dDrawingLayers.BackingArray;
+            var drawingLayers2DLength = _2dDrawingLayers.Count;
+            for(var actDrawingLayer2DIndex = 0; (actDrawingLayer2DIndex < drawingLayers2DLength) && (actDrawingLayer2DIndex < drawingLayers2D.Length); actDrawingLayer2DIndex++)
             {
+                var actOverlay = drawingLayers2D[actDrawingLayer2DIndex];
+                if(actOverlay == null){ continue; }
+
                 try
                 {
                     actOverlay.UpdateInternal(updateState);
@@ -923,12 +928,13 @@ namespace SeeingSharp.Multimedia.Core
                 }
             }
 
-            // Update debug overlay
-            if (_debugDrawingLayer != null)
+            // Update debug overlay (copy reference because of possible multi threading issues)
+            var debugDrawingLayer = _debugDrawingLayer;
+            if (debugDrawingLayer != null)
             {
                 try
                 {
-                    _debugDrawingLayer.UpdateInternal(updateState);
+                    debugDrawingLayer.UpdateInternal(updateState);
                 }
                 catch (Exception ex)
                 {

@@ -93,6 +93,11 @@ namespace SeeingSharp.Multimedia.Views
         }
 
         /// <summary>
+        /// Discard presenting frames?
+        /// </summary>
+        public bool DiscardPresent { get; set; }
+
+        /// <summary>
         /// Should we detach automatically if the TargetPanel gets unloaded?
         /// </summary>
         public bool DetachOnUnload { get; set; }
@@ -511,6 +516,8 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         void IRenderLoopHost.OnRenderLoop_Present(EngineDevice engineDevice)
         {
+            if (this.DiscardPresent) { return; }
+
             // Copy contents of the backbuffer if in multisampling mode
             if (_backBufferMultisampled != null)
             {

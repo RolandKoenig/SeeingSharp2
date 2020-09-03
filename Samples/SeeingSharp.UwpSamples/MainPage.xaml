@@ -18,6 +18,12 @@
     </Page.DataContext>
 
     <Grid>
+        <Grid.Resources>
+            <Storyboard x:Name="SwapChainFadeInStoryboard">
+                <RepositionThemeAnimation Storyboard.TargetName="CtrlSwapChain" FromHorizontalOffset="-30" />
+            </Storyboard>
+        </Grid.Resources>
+
         <sSharp:SeeingSharpRenderPanel x:Name="CtrlSwapChain" />
 
         <muxc:NavigationView IsBackButtonVisible="Collapsed"

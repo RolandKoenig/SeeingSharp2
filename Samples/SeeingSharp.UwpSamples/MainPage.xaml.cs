@@ -33,7 +33,6 @@ using SeeingSharp.Multimedia.Core;
 using SeeingSharp.SampleContainer;
 using SeeingSharp.SampleContainer.Util;
 using SeeingSharp.UwpSamples.Util;
-using NavigationViewItem = Microsoft.UI.Xaml.Controls.NavigationViewItem;
 
 namespace SeeingSharp.UwpSamples
 {
@@ -69,6 +68,13 @@ namespace SeeingSharp.UwpSamples
             try
             {
                 if (_actSampleInfo == sampleInfo) { return; }
+
+                // Discard presenting before updating current sample
+                this.CtrlSwapChain.DiscardPresent = true;
+                foreach (var actChildWindow in _childPages)
+                {
+                    actChildWindow.DiscardPresent = true;
+                }
 
                 // Clear previous sample
                 if (_actSampleInfo != null)
@@ -130,6 +136,21 @@ namespace SeeingSharp.UwpSamples
             }
             finally
             {
+                // Continue presenting
+                this.CtrlSwapChain.DiscardPresent = false;
+                foreach (var actChildWindow in _childPages)
+                {
+                    actChildWindow.DiscardPresent = false;
+                }
+
+                // Do a simple fade in for the rendering control
+                SwapChainFadeInStoryboard.Begin();
+                foreach (var actChildWindow in _childPages)
+                {
+                    actChildWindow.TriggerRenderControlFadeInAnimation();
+                }
+
+                // Reset lock for 'ApplySample' method
                 _isChangingSample = false;
             }
         }
@@ -241,7 +262,7 @@ namespace SeeingSharp.UwpSamples
 
         private void OnSampleCommand_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if (!(sender is NavigationViewItem navViewItem)) { return; }
+            if (!(sender is Microsoft.UI.Xaml.Controls.NavigationViewItem navViewItem)) { return; }
             if (!(navViewItem.Tag is SampleCommand sampleCommand)) { return; }
 
             sampleCommand.Execute(null);
