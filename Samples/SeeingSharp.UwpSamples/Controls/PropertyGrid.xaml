@@ -15,8 +15,8 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-
+        <Grid.ChildrenTransitions>
+            <EntranceThemeTransition FromHorizontalOffset="-5" FromVerticalOffset="0" IsStaggeringEnabled="True" />
+        </Grid.ChildrenTransitions>
     </Grid>
-
-
 </UserControl>

@@ -11,8 +11,8 @@
                 <!-- Theme from WinUI 2.x -->
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
 
-                <!-- Custom theme overrides -->
                 <ResourceDictionary>
+                    <!-- Custom theme overrides -->
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Default">
                             <!-- The "Default" theme dictionary is used unless a specific
@@ -21,12 +21,18 @@
                                  and specific light or dark resources provided as needed. -->
                             <muxm:AcrylicBrush x:Key="NavigationViewDefaultPaneBackground"
                                                BackgroundSource="Backdrop"
-                                               TintColor="WhiteSmoke"
-                                               TintOpacity=".6" TintLuminosityOpacity=".3"/>
+                                               TintColor="White"
+                                               TintOpacity=".6"/>
                             <muxm:AcrylicBrush x:Key="NavigationViewExpandedPaneBackground"
                                                BackgroundSource="Backdrop"
-                                               TintColor="WhiteSmoke"
+                                               TintColor="White"
                                                TintOpacity=".6"/>
+
+
+                            <muxm:AcrylicBrush x:Key="GenericAcrylicBrush"
+                                               BackgroundSource="Backdrop"
+                                               TintColor="White"
+                                               TintOpacity=".6" />
                         </ResourceDictionary>
                         <ResourceDictionary x:Key="HighContrast">
                             <!-- Always include a "HighContrast" dictionary when you override
@@ -36,6 +42,8 @@
                         </ResourceDictionary>
                     </ResourceDictionary.ThemeDictionaries>
                 </ResourceDictionary>
+
+
             </ResourceDictionary.MergedDictionaries>
             <!-- Other app resources here -->
         </ResourceDictionary>

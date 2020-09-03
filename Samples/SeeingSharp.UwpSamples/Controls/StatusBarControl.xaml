@@ -6,19 +6,20 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     d:DesignHeight="300"
-    d:DesignWidth="400">
+    d:DesignWidth="600">
 
     <StackPanel Orientation="Horizontal"
-                Background="#EBD3D3D3"
+                Background="{ThemeResource GenericAcrylicBrush}"
                 VerticalAlignment="Bottom">
         <StackPanel.Resources>
             <Style TargetType="TextBlock">
                 <Setter Property="VerticalAlignment" Value="Center" />
                 <Setter Property="Margin" Value="2" />
             </Style>
-            <Style TargetType="Image">
+            <Style TargetType="FontIcon">
                 <Setter Property="VerticalAlignment" Value="Center" />
-                <Setter Property="Margin" Value="2" />
+                <Setter Property="Margin" Value="24,2,2,2" />
+                <Setter Property="Width" Value="24" />
             </Style>
             <Style TargetType="ComboBox">
                 <Setter Property="VerticalAlignment" Value="Center" />
@@ -29,34 +30,27 @@
             </Style>
         </StackPanel.Resources>
 
-        <Image Source="/Assets/Icons/Output16x16.png"
-               Width="16" />
+        <FontIcon Margin="2" FontFamily="Segoe MDL2 Assets" Glyph="&#xE7F4;"></FontIcon>
         <TextBlock Text="Resolution:" />
         <TextBlock Text="{x:Bind Path=CtrlRenderer.CurrentViewSize.Width, Mode=OneWay}" />
         <TextBlock Text="x" />
         <TextBlock Text="{x:Bind Path=CtrlRenderer.CurrentViewSize.Height, Mode=OneWay}" />
         <TextBlock Text="px" />
-        <Rectangle Width="1"
-                   Fill="Gray" />
 
+        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEA86;"></FontIcon>
         <TextBlock Text="# Resources:" />
         <TextBlock Text="{x:Bind Path=CountResources, Mode=OneWay}" />
-        <Rectangle Width="1"
-                   Fill="Gray" />
 
+        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8FD;"></FontIcon>
         <TextBlock Text="# 3D-Objects:" />
         <TextBlock Text="{x:Bind Path=CountObjects, Mode=OneWay}" />
-        <Rectangle Width="1"
-                   Fill="Gray" />
 
+        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEC87;"></FontIcon>
         <TextBlock Text="# Draw calls:" />
         <TextBlock Text="{x:Bind Path=CountDrawCalls, Mode=OneWay}" />
-        <Rectangle Width="1"
-                   Fill="Gray" />
 
-        <Image Source="/Assets/Icons/Adapter16x16.png"
-               Width="16" />
-        <TextBlock Text="Device:" />
+        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE950;"></FontIcon>
+        <TextBlock Text="Graphics Device:" />
         <ComboBox ItemsSource="{x:Bind Path=CtrlRenderer.PossibleDevices, Mode=OneWay}"
                   SelectedItem="{x:Bind Path=CtrlRenderer.SelectedDevice, Mode=TwoWay}"
                   Width="250" />

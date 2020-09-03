@@ -60,14 +60,15 @@
                 </StackPanel>
             </muxc:NavigationView.PaneFooter>
 
-            <Grid x:Name="MainGrid" >
+            <Grid>
                 <ListBox VerticalAlignment="Top"
-                         Background="#E0D3D3D3" Foreground="Black"
+                         Background="{ThemeResource GenericAcrylicBrush}"
                          ItemsSource="{Binding Path=Samples}"
                          SelectedItem="{Binding Path=SelectedSample, Mode=TwoWay}"
                          SelectionChanged="OnSelectedSampleChanged"
                          SelectionMode="Single"
                          VerticalContentAlignment="Top"
+                         ScrollViewer.HorizontalScrollMode="Enabled"
                          ScrollViewer.HorizontalScrollBarVisibility="Auto"
                          Height="125">
                     <ListBox.ItemsPanel>
@@ -79,6 +80,12 @@
                         <DataTemplate>
                             <StackPanel Orientation="Vertical"
                                         Margin="5">
+                                <StackPanel.Transitions>
+                                    <TransitionCollection>
+                                        <EntranceThemeTransition />
+                                    </TransitionCollection>
+                                </StackPanel.Transitions>
+
                                 <Image Source="{Binding Path=BitmapSource}"
                                        Width="64" Height="64"
                                        Margin="5" />
@@ -88,9 +95,6 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <Rectangle VerticalAlignment="Top"
-                           Height="1" Fill="DarkGray"
-                           Margin="0,125,0,0" />
 
                 <!-- PropertyGrid on the left -->
                 <Border BorderBrush="DarkGray" BorderThickness="1"

@@ -34,6 +34,8 @@ namespace SeeingSharp.UwpSamples.Util
             titleBar.ForegroundColor = Windows.UI.Color.FromArgb(0xFF, 0xFE, 0xFE, 0xFE);
             titleBar.ButtonBackgroundColor = Windows.UI.Color.FromArgb(0xFF, 0x00, 0xCC, 0xFF);
             titleBar.ButtonForegroundColor = Windows.UI.Color.FromArgb(0xFF, 0xFE, 0xFE, 0xFE);
+            titleBar.InactiveBackgroundColor = Windows.UI.Color.FromArgb(0xFF, 0xBF, 0xF2, 0xFF);
+            titleBar.ButtonInactiveBackgroundColor = Windows.UI.Color.FromArgb(0xFF, 0xBF, 0xF2, 0xFF);
         }
     }
 }

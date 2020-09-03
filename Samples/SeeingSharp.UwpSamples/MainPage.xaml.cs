@@ -33,6 +33,7 @@ using SeeingSharp.Multimedia.Core;
 using SeeingSharp.SampleContainer;
 using SeeingSharp.SampleContainer.Util;
 using SeeingSharp.UwpSamples.Util;
+using CoreWindow = Windows.UI.Core.CoreWindow;
 using NavigationViewItem = Microsoft.UI.Xaml.Controls.NavigationViewItem;
 
 namespace SeeingSharp.UwpSamples
