@@ -21,10 +21,8 @@
 */
 
 using System;
-using System.Reflection;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.ApplicationModel.Core;
 using Windows.System;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;

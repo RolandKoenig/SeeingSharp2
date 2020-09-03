@@ -20,6 +20,7 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Windows.UI;
@@ -66,7 +67,7 @@ namespace SeeingSharp.UwpSamples.Controls
             GridMain.Children.Clear();
 
             var lstProperties = new List<ConfigurablePropertyMetadata>(_propertyGridVM.PropertyMetadata);
-            lstProperties.Sort((left, right) => left.CategoryName.CompareTo(right.CategoryName));
+            lstProperties.Sort((left, right) => string.Compare(left.CategoryName, right.CategoryName, StringComparison.Ordinal));
             var lstPropertyCategories = lstProperties
                 .Select(actProperty => actProperty.CategoryName)
                 .Distinct()

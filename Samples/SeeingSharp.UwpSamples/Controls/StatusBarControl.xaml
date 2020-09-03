@@ -30,26 +30,26 @@
             </Style>
         </StackPanel.Resources>
 
-        <FontIcon Margin="2" FontFamily="Segoe MDL2 Assets" Glyph="&#xE7F4;"></FontIcon>
+        <FontIcon Margin="2" FontFamily="Segoe MDL2 Assets" Glyph="&#xE7F4;" />
         <TextBlock Text="Resolution:" />
         <TextBlock Text="{x:Bind Path=CtrlRenderer.CurrentViewSize.Width, Mode=OneWay}" />
         <TextBlock Text="x" />
         <TextBlock Text="{x:Bind Path=CtrlRenderer.CurrentViewSize.Height, Mode=OneWay}" />
         <TextBlock Text="px" />
 
-        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEA86;"></FontIcon>
+        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEA86;" />
         <TextBlock Text="# Resources:" />
         <TextBlock Text="{x:Bind Path=CountResources, Mode=OneWay}" />
 
-        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8FD;"></FontIcon>
-        <TextBlock Text="# 3D-Objects:" />
+        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE8FD;" />
+        <TextBlock Text="# Visible 3D-Objects:" />
         <TextBlock Text="{x:Bind Path=CountObjects, Mode=OneWay}" />
 
-        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEC87;"></FontIcon>
+        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xEC87;" />
         <TextBlock Text="# Draw calls:" />
         <TextBlock Text="{x:Bind Path=CountDrawCalls, Mode=OneWay}" />
 
-        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE950;"></FontIcon>
+        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE950;" />
         <TextBlock Text="Graphics Device:" />
         <ComboBox ItemsSource="{x:Bind Path=CtrlRenderer.PossibleDevices, Mode=OneWay}"
                   SelectedItem="{x:Bind Path=CtrlRenderer.SelectedDevice, Mode=TwoWay}"

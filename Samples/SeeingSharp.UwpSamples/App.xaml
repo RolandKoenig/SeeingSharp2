@@ -2,7 +2,6 @@
     x:Class="SeeingSharp.UwpSamples.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:SeeingSharp.UwpSamples"
     xmlns:muxm="using:Microsoft.UI.Xaml.Media">
 
     <Application.Resources>
@@ -12,6 +11,7 @@
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
 
                 <ResourceDictionary>
+
                     <!-- Custom theme overrides -->
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Default">
@@ -22,11 +22,11 @@
                             <muxm:AcrylicBrush x:Key="NavigationViewDefaultPaneBackground"
                                                BackgroundSource="Backdrop"
                                                TintColor="White"
-                                               TintOpacity=".6"/>
+                                               TintOpacity=".6" />
                             <muxm:AcrylicBrush x:Key="NavigationViewExpandedPaneBackground"
                                                BackgroundSource="Backdrop"
                                                TintColor="White"
-                                               TintOpacity=".6"/>
+                                               TintOpacity=".6" />
 
 
                             <muxm:AcrylicBrush x:Key="GenericAcrylicBrush"
@@ -41,6 +41,7 @@
                                  turns on high contrast mode. -->
                         </ResourceDictionary>
                     </ResourceDictionary.ThemeDictionaries>
+
                 </ResourceDictionary>
 
 

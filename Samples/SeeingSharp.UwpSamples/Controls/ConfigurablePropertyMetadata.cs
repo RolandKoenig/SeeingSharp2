@@ -29,7 +29,6 @@ namespace SeeingSharp.UwpSamples.Controls
     public class ConfigurablePropertyMetadata
     {
         private object _hostObject;
-        private Type _hostType;
         private PropertyInfo _propertyInfo;
 
         public object ValueAccessor
@@ -65,7 +64,6 @@ namespace SeeingSharp.UwpSamples.Controls
         internal ConfigurablePropertyMetadata(PropertyInfo propertyInfo, object hostObject)
         {
             _propertyInfo = propertyInfo;
-            _hostType = hostObject.GetType();
             _hostObject = hostObject;
 
             this.CategoryName = propertyInfo.GetCustomAttribute<CategoryAttribute>()?.Category ?? string.Empty;

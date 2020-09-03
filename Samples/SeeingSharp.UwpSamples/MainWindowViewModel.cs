@@ -41,7 +41,6 @@ namespace SeeingSharp.UwpSamples
         public ObservableCollection<SampleGroupMetadata> SampleGroups
         {
             get;
-            private set;
         } = new ObservableCollection<SampleGroupMetadata>();
 
         public SampleGroupMetadata SelectedGroup
@@ -62,7 +61,6 @@ namespace SeeingSharp.UwpSamples
         public ObservableCollection<SampleViewModel> Samples
         {
             get;
-            private set;
         } = new ObservableCollection<SampleViewModel>();
 
         public SampleViewModel SelectedSample
@@ -104,7 +102,6 @@ namespace SeeingSharp.UwpSamples
         public ObservableCollection<SampleCommand> SampleCommands
         {
             get;
-            private set;
         } = new ObservableCollection<SampleCommand>();
 
         public SampleSettings SampleSettings => _sampleSettings;
