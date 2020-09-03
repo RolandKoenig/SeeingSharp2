@@ -7,6 +7,7 @@ using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.SampleContainer;
 using SeeingSharp.SampleContainer.Util;
+using SeeingSharp.UwpSamples.Util;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -21,12 +22,7 @@ namespace SeeingSharp.UwpSamples
         {
             this.InitializeComponent();
 
-            // Manipulate titlebar
-            //  see https://social.msdn.microsoft.com/Forums/windows/en-US/08462adc-a7ba-459f-9d2b-32a14c7a7de1/uwp-how-to-change-the-text-of-the-application-title-bar?forum=wpdevelop
-            var package = Package.Current;
-            var appName = package.DisplayName;
-            TextAppTitle.Text = $@"{appName} - Child window - {Assembly.GetExecutingAssembly().GetName().Version}";
-            Window.Current.SetTitleBar(TextAppTitleRow);
+            CommonUtil.UpdateApplicationTitleBar("Child window");
 
             this.Loaded += this.OnLoaded;
         }

@@ -21,6 +21,7 @@
 */
 
 using System;
+using System.Reflection;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Core;
@@ -58,10 +59,6 @@ namespace SeeingSharp.UwpSamples
                 .Load();
 
             ApplicationView.TerminateAppOnFinalViewClose = true;
-
-            // Hide default title bar.
-            var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
-            coreTitleBar.ExtendViewIntoTitleBar = true;
 
             if (!(Window.Current.Content is Frame rootFrame))
             {

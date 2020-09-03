@@ -5,7 +5,8 @@
     xmlns:local="using:SeeingSharp.UwpSamples"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:muxm="using:Microsoft.UI.Xaml.Media"
     xmlns:localControls="using:SeeingSharp.UwpSamples.Controls"
     xmlns:sSharp="using:SeeingSharp.Multimedia.Views"
     mc:Ignorable="d"
@@ -16,120 +17,133 @@
     </Page.DataContext>
 
     <Grid>
+        <Grid.Background>
+            <muxm:AcrylicBrush BackgroundSource="HostBackdrop"
+                               TintColor="WhiteSmoke"
+                               TintOpacity=".6" TintLuminosityOpacity=".3"/>
+        </Grid.Background>
+
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="50" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <!-- Title bar -->
-        <Grid Background="Transparent"
+        <!-- Title bar --><!--
+        <Grid Background="#00CCFF"
               Grid.Row="0"
               x:Name="TextAppTitleRow">
             <TextBlock Text="Custom Title Bar"
                        x:Name="TextAppTitle"
                        Style="{StaticResource CaptionTextBlockStyle}"
-                       Margin="12,8,0,0" />
-        </Grid>
+                       Margin="12,8,0,8" />
+        </Grid>-->
 
-        <!-- Menu bar -->
-        <StackPanel Grid.Row="1"
-                    Orientation="Horizontal">
-            <Button Content="New Child Window"
-                    Click="OnCmdNewChildWindow_Click"
-                    Margin="2,2,2,0" />
-        </StackPanel>
+        <muxc:NavigationView Grid.Row="0"
+                             IsBackButtonVisible="Collapsed">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-        <!-- List of sample groups -->
-        <ListBox Grid.Row="2"
-                 Background="#00CCFF" Foreground="White" FontWeight="Bold" BorderThickness="0"
-                 ItemsSource="{Binding Path=SampleGroups}"
-                 SelectedItem="{Binding Path=SelectedGroup, Mode=TwoWay}">
+                <!-- Menu bar -->
+                <StackPanel Grid.Row="0"
+                            Orientation="Horizontal">
+                    <Button Content="New Child Window"
+                            Click="OnCmdNewChildWindow_Click"
+                            Margin="2,2,2,0" />
+                </StackPanel>
 
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal" />
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
+                <!-- List of sample groups -->
+                <ListBox Grid.Row="1"
+                         Background="#00CCFF" Foreground="White" FontWeight="Bold" BorderThickness="0"
+                         ItemsSource="{Binding Path=SampleGroups}"
+                         SelectedItem="{Binding Path=SelectedGroup, Mode=TwoWay}">
 
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding}" Foreground="White" />
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
 
-        <Grid Grid.Row="3"
-              x:Name="MainGrid">
-            <sSharp:SeeingSharpRenderPanel x:Name="CtrlSwapChain" />
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" Foreground="White" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
 
-            <ListBox VerticalAlignment="Top"
-                     Background="#E0D3D3D3" Foreground="Black"
-                     ItemsSource="{Binding Path=Samples}"
-                     SelectedItem="{Binding Path=SelectedSample, Mode=TwoWay}"
-                     SelectionChanged="OnSelectedSampleChanged"
-                     SelectionMode="Single"
-                     VerticalContentAlignment="Top"
-                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                     Height="125">
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Vertical"
-                                    Margin="5">
-                            <Image Source="{Binding Path=BitmapSource}"
-                                   Width="64" Height="64"
-                                   Margin="5" />
-                            <TextBlock Text="{Binding Path=Name}"
-                                       HorizontalAlignment="Center" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            <Rectangle VerticalAlignment="Top"
-                       Height="1" Fill="DarkGray"
-                       Margin="0,125,0,0" />
+                <Grid Grid.Row="2"
+                      x:Name="MainGrid">
+                    <sSharp:SeeingSharpRenderPanel x:Name="CtrlSwapChain" />
 
-            <!-- Command bar -->
-            <ItemsControl ItemsSource="{Binding Path=SampleCommands}"
-                          VerticalAlignment="Top">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Button Margin="10,135,10,40"
-                                Background="#E0D3D3D3"
-                                BorderThickness="1" BorderBrush="DarkGray"
-                                MinWidth="200"
-                                Command="{Binding}">
-                            <TextBlock Text="{Binding Path=CommandText}"
-                                       Margin="2" />
-                        </Button>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                    <ListBox VerticalAlignment="Top"
+                             Background="#E0D3D3D3" Foreground="Black"
+                             ItemsSource="{Binding Path=Samples}"
+                             SelectedItem="{Binding Path=SelectedSample, Mode=TwoWay}"
+                             SelectionChanged="OnSelectedSampleChanged"
+                             SelectionMode="Single"
+                             VerticalContentAlignment="Top"
+                             ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                             Height="125">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Vertical"
+                                            Margin="5">
+                                    <Image Source="{Binding Path=BitmapSource}"
+                                           Width="64" Height="64"
+                                           Margin="5" />
+                                    <TextBlock Text="{Binding Path=Name}"
+                                               HorizontalAlignment="Center" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Rectangle VerticalAlignment="Top"
+                               Height="1" Fill="DarkGray"
+                               Margin="0,125,0,0" />
 
-            <!-- PropertyGrid on the left -->
-            <Border BorderBrush="DarkGray" BorderThickness="1"
-                    Margin="10,180,10,40"
-                    MaxWidth="530"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Top">
-                <localControls:PropertyGrid SelectedObject="{Binding Path=SampleSettings, Mode=TwoWay}" />
-            </Border>
+                    <!-- Command bar -->
+                    <ItemsControl ItemsSource="{Binding Path=SampleCommands}"
+                                  VerticalAlignment="Top">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Margin="10,135,10,40"
+                                        Background="#E0D3D3D3"
+                                        BorderThickness="1" BorderBrush="DarkGray"
+                                        MinWidth="200"
+                                        Command="{Binding}">
+                                    <TextBlock Text="{Binding Path=CommandText}"
+                                               Margin="2" />
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
 
-            <!-- Status bar -->
-            <localControls:StatusBarControl CtrlRenderer="{Binding ElementName=CtrlSwapChain}"
-                                            VerticalAlignment="Bottom" />
-        </Grid>
+                    <!-- PropertyGrid on the left -->
+                    <Border BorderBrush="DarkGray" BorderThickness="1"
+                            Margin="10,180,10,40"
+                            MaxWidth="530"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Top">
+                        <localControls:PropertyGrid SelectedObject="{Binding Path=SampleSettings, Mode=TwoWay}" />
+                    </Border>
+
+                    <!-- Status bar -->
+                    <localControls:StatusBarControl CtrlRenderer="{Binding ElementName=CtrlSwapChain}"
+                                                    VerticalAlignment="Bottom" />
+                </Grid>
+            </Grid>
+        </muxc:NavigationView>
     </Grid>
-
 </Page>
