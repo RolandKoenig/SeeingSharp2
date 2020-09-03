@@ -31,10 +31,26 @@ namespace SeeingSharp.SampleContainer.Util
             get;
         }
 
-        public SampleCommand(string commandText, Action execute, Func<bool> canExecute)
+        public bool CanExecuteAsProperty => this.CanExecute(null);
+
+        public string IconFontFamily { get; }
+
+        public char IconFontGlyph { get; }
+
+        public SampleCommand(
+            string commandText, Action execute, Func<bool> canExecute,
+            string iconFontFamily, char iconFontGlyph)
             : base(execute, canExecute)
         {
             this.CommandText = commandText;
+            this.IconFontFamily = iconFontFamily;
+            this.IconFontGlyph = iconFontGlyph;
+        }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return this.CommandText;
         }
     }
 }

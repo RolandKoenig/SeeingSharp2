@@ -22,17 +22,18 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.SampleContainer;
 using SeeingSharp.SampleContainer.Util;
 using SeeingSharp.UwpSamples.Util;
+using NavigationViewItem = Microsoft.UI.Xaml.Controls.NavigationViewItem;
 
 namespace SeeingSharp.UwpSamples
 {
@@ -44,14 +45,12 @@ namespace SeeingSharp.UwpSamples
         private bool _isChangingSample;
 
         private List<ChildRenderPage> _childPages;
-        private object _childPagesLock;
 
         public MainPage()
         {
             this.InitializeComponent();
 
             _childPages = new List<ChildRenderPage>();
-            _childPagesLock = new object();
 
             CommonUtil.UpdateApplicationTitleBar("Main window");
 
@@ -158,8 +157,9 @@ namespace SeeingSharp.UwpSamples
             var sampleRepo = new SampleRepository();
             sampleRepo.LoadSampleData();
 
-            var viewModel = this.DataContext as MainWindowViewModel;
-            viewModel?.LoadSampleData(sampleRepo, CtrlSwapChain.RenderLoop);
+            var viewModel = (MainWindowViewModel)this.DataContext;
+            viewModel.NewChildWindowRequest += this.OnViewModel_NewChildWindowRequest;
+            viewModel.LoadSampleData(sampleRepo, CtrlSwapChain.RenderLoop);
 
             // Start update loop
             CtrlSwapChain.RenderLoop.Configuration.AlphaEnabledSwapChain = true;
@@ -181,7 +181,7 @@ namespace SeeingSharp.UwpSamples
             this.ApplySample(selectedSample.SampleMetadata, viewModel.SampleSettings);
         }
 
-        private async void OnCmdNewChildWindow_Click(object sender, RoutedEventArgs e)
+        private async void OnViewModel_NewChildWindowRequest(object sender, EventArgs eArgs)
         {
             // Get current scene and camera viewpoint
             var currentScene = CtrlSwapChain.Scene;
@@ -237,6 +237,14 @@ namespace SeeingSharp.UwpSamples
                 // Should be thread save
                 await childPage.SetRenderingDataAsync(_actSample);
             }
+        }
+
+        private void OnSampleCommand_Tapped(object sender, TappedRoutedEventArgs e)
+        {
+            if (!(sender is NavigationViewItem navViewItem)) { return; }
+            if (!(navViewItem.Tag is SampleCommand sampleCommand)) { return; }
+
+            sampleCommand.Execute(null);
         }
     }
 }

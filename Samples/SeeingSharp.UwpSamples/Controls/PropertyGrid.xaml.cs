@@ -77,9 +77,9 @@ namespace SeeingSharp.UwpSamples.Controls
             var rowCount = lstProperties.Count + lstPropertyCategories.Count;
             for (var loop = 0; loop < rowCount; loop++)
             {
-                GridMain.RowDefinitions.Add(new RowDefinition { Height = new GridLength(45.0) });
+                GridMain.RowDefinitions.Add(new RowDefinition { Height = new GridLength(35.0) });
             }
-            this.Height = rowCount * 45d;
+            this.Height = rowCount * 35d;
 
             // Create all controls
             var actRowIndex = 0;

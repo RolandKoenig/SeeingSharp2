@@ -55,7 +55,8 @@ namespace SeeingSharp.SampleContainer
             yield return new SampleCommand(
                 "Show Source",
                 () => PlatformDependentMethods.OpenUrlInBrowser(this.SampleMetadata.SourceCodeUrl),
-                () => !string.IsNullOrEmpty(this.SampleMetadata?.SourceCodeUrl));
+                () => !string.IsNullOrEmpty(this.SampleMetadata?.SourceCodeUrl),
+                "Segoe MDL2 Assets", (char) 0xE71B);
         }
 
         public virtual void SetEnvironment(RenderLoop renderLoop, SampleMetadata sampleMetadata)

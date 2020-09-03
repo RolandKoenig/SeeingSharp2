@@ -20,11 +20,11 @@
                                  resources should be tested with both the light and dark themes,
                                  and specific light or dark resources provided as needed. -->
                             <muxm:AcrylicBrush x:Key="NavigationViewDefaultPaneBackground"
-                                               BackgroundSource="HostBackdrop"
+                                               BackgroundSource="Backdrop"
                                                TintColor="WhiteSmoke"
                                                TintOpacity=".6" TintLuminosityOpacity=".3"/>
                             <muxm:AcrylicBrush x:Key="NavigationViewExpandedPaneBackground"
-                                               BackgroundSource="HostBackdrop"
+                                               BackgroundSource="Backdrop"
                                                TintColor="WhiteSmoke"
                                                TintOpacity=".6"/>
                         </ResourceDictionary>

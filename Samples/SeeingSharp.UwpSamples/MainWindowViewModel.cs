@@ -20,6 +20,7 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Windows.ApplicationModel;
@@ -34,16 +35,16 @@ namespace SeeingSharp.UwpSamples
         private RenderLoop _renderLoop;
         private SampleRepository _sampleRepo;
         private SampleSettings _sampleSettings;
-        private string _selectedGroup;
+        private SampleGroupMetadata _selectedGroup;
         private SampleViewModel _selectedSample;
 
-        public ObservableCollection<string> SampleGroups
+        public ObservableCollection<SampleGroupMetadata> SampleGroups
         {
             get;
             private set;
-        } = new ObservableCollection<string>();
+        } = new ObservableCollection<SampleGroupMetadata>();
 
-        public string SelectedGroup
+        public SampleGroupMetadata SelectedGroup
         {
             get => _selectedGroup;
             set
@@ -85,6 +86,12 @@ namespace SeeingSharp.UwpSamples
                     this.SampleCommands.Clear();
                     if (_sampleSettings != null)
                     {
+                        this.SampleCommands.Add(new SampleCommand(
+                            "New Child Window",
+                            () => this.NewChildWindowRequest?.Invoke(this, EventArgs.Empty), 
+                            () => true,
+                            "Segoe MDL2 Assets", (char) 0xE78B));
+
                         foreach (var actSampleCommand in _sampleSettings.GetCommands())
                         {
                             this.SampleCommands.Add(actSampleCommand);
@@ -102,35 +109,19 @@ namespace SeeingSharp.UwpSamples
 
         public SampleSettings SampleSettings => _sampleSettings;
 
-        public MainWindowViewModel()
-        {
-            if (!DesignMode.DesignModeEnabled) { return; }
-
-            for (var loop = 1; loop < 5; loop++)
-            {
-                this.SampleGroups.Add($"DummyGroup {loop}");
-            }
-            this.SelectedGroup = "DummyGroup 2";
-
-            for (var loop = 1; loop < 5; loop++)
-            {
-                this.Samples.Add(new SampleViewModel(new SampleMetadata(
-                    new SampleDescriptionAttribute($"DummySample {loop}", 3, "DummyGroup 2"), this.GetType())));
-            }
-        }
+        public event EventHandler NewChildWindowRequest;
 
         public void LoadSampleData(SampleRepository sampleRepo, RenderLoop renderLoop)
         {
-            _selectedGroup = string.Empty;
+            _selectedGroup = null;
 
             _sampleRepo = sampleRepo;
             _renderLoop = renderLoop;
 
             // Load samples
-            foreach (var actSampleGroupName in _sampleRepo.SampleGroups
-                .Select(actGroup => actGroup.GroupName))
+            foreach (var actSampleGroup in _sampleRepo.SampleGroups)
             {
-                this.SampleGroups.Add(actSampleGroupName);
+                this.SampleGroups.Add(actSampleGroup);
             }
             this.SelectedGroup = this.SampleGroups.FirstOrDefault();
         }
@@ -140,7 +131,7 @@ namespace SeeingSharp.UwpSamples
             if (DesignMode.DesignModeEnabled) { return; }
 
             var sampleGroup = _sampleRepo.SampleGroups
-                .FirstOrDefault(actGroup => actGroup.GroupName == _selectedGroup);
+                .FirstOrDefault(actGroup => actGroup == _selectedGroup);
             if (sampleGroup == null) { return; }
 
             this.Samples.Clear();
