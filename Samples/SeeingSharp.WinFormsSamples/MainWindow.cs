@@ -147,6 +147,13 @@ namespace SeeingSharp.WinFormsSamples
             {
                 if (_actSampleInfo == sampleInfo) { return; }
 
+                // Discard presenting before updating current sample
+                _ctrlRenderPanel.DiscardPresent = true;
+                foreach (var actChildWindow in _childWindows)
+                {
+                    actChildWindow.DiscardPresent = true;
+                }
+
                 // Clear previous sample
                 if (_actSampleInfo != null)
                 {
@@ -218,6 +225,13 @@ namespace SeeingSharp.WinFormsSamples
             }
             finally
             {
+                // Continue presenting
+                _ctrlRenderPanel.DiscardPresent = false;
+                foreach (var actChildWindow in _childWindows)
+                {
+                    actChildWindow.DiscardPresent = false;
+                }
+
                 _isChangingSample = false;
             }
         }
@@ -268,7 +282,7 @@ namespace SeeingSharp.WinFormsSamples
             actListView.EnsureNotNull(nameof(actListView));
             e.Item.EnsureNotNull($"{nameof(e)}.{nameof(e.Item)}");
 
-            var sampleInfo = e.Item.Tag as SampleMetadata;
+            var sampleInfo = (SampleMetadata)e.Item.Tag;
             sampleInfo.EnsureNotNull(nameof(sampleInfo));
 
             var sampleSettings = sampleInfo.CreateSampleSettingsObject();
@@ -300,16 +314,41 @@ namespace SeeingSharp.WinFormsSamples
         {
             var sample = _actSample;
             var sampleSettings = _actSampleSettings;
-            if (sample == null)
-            {
-                return;
-            }
-            if (sampleSettings == null)
-            {
-                return;
-            }
+            if (sample == null) { return; }
+            if (sampleSettings == null) { return; }
 
-            await sample.OnReloadAsync(_ctrlRenderPanel.RenderLoop, sampleSettings);
+            if (_isChangingSample) { return; }
+            _isChangingSample = true;
+            try
+            {
+                // Discard presenting before updating current sample
+                _ctrlRenderPanel.DiscardPresent = true;
+                foreach (var actChildWindow in _childWindows)
+                {
+                    actChildWindow.DiscardPresent = true;
+                }
+
+                // Update current sample
+                await sample.OnReloadAsync(_ctrlRenderPanel.RenderLoop, sampleSettings);
+
+                // Wait for next finished rendering
+                await _ctrlRenderPanel.RenderLoop.WaitForNextFinishedRenderAsync();
+                if (this.IsDisposed || !this.IsHandleCreated) { return; }
+
+                await _ctrlRenderPanel.RenderLoop.WaitForNextFinishedRenderAsync();
+                if (this.IsDisposed || !this.IsHandleCreated) { }
+            }
+            finally
+            {
+                // Continue presenting
+                _ctrlRenderPanel.DiscardPresent = false;
+                foreach (var actChildWindow in _childWindows)
+                {
+                    actChildWindow.DiscardPresent = false;
+                }
+
+                _isChangingSample = false;
+            }
         }
 
         private async void OnCmdNewChildWindow_Click(object sender, EventArgs e)

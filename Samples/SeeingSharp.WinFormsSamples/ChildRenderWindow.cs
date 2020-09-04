@@ -11,6 +11,12 @@ namespace SeeingSharp.WinFormsSamples
 {
     public partial class ChildRenderWindow : Form
     {
+        public bool DiscardPresent
+        {
+            get => _ctrlRenderer.DiscardPresent;
+            set => _ctrlRenderer.DiscardPresent = value;
+        }
+
         public ChildRenderWindow()
         {
             this.InitializeComponent();

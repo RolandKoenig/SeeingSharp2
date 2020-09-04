@@ -131,7 +131,6 @@ namespace SeeingSharp.UwpSamples
 
                 // Wait for next finished rendering
                 await CtrlSwapChain.RenderLoop.WaitForNextFinishedRenderAsync();
-
                 await CtrlSwapChain.RenderLoop.WaitForNextFinishedRenderAsync();
             }
             finally
@@ -168,7 +167,36 @@ namespace SeeingSharp.UwpSamples
                 return;
             }
 
-            await sample.OnReloadAsync(CtrlSwapChain.RenderLoop, sampleSettings);
+            if (_isChangingSample) { return; }
+            _isChangingSample = true;
+            try
+            {
+                // Discard presenting before updating current sample
+                this.CtrlSwapChain.DiscardPresent = true;
+                foreach (var actChildWindow in _childPages)
+                {
+                    actChildWindow.DiscardPresent = true;
+                }
+
+                // Reload sample
+                await sample.OnReloadAsync(CtrlSwapChain.RenderLoop, sampleSettings);
+
+                // Wait for next finished rendering
+                await CtrlSwapChain.RenderLoop.WaitForNextFinishedRenderAsync();
+                await CtrlSwapChain.RenderLoop.WaitForNextFinishedRenderAsync();
+            }
+            finally
+            {
+                // Continue presenting
+                this.CtrlSwapChain.DiscardPresent = false;
+                foreach (var actChildWindow in _childPages)
+                {
+                    actChildWindow.DiscardPresent = false;
+                }
+
+                // Reset lock for 'ApplySample' method
+                _isChangingSample = false;
+            }
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)

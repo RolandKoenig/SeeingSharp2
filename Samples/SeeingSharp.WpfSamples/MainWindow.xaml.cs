@@ -74,10 +74,38 @@ namespace SeeingSharp.WpfSamples
             {
                 return;
             }
+            if (_actSample == null) { return; }
 
-            if (_actSample != null)
+            if (_isChangingSample) { return; }
+            _isChangingSample = true;
+
+            try
             {
+                // Discard presenting before updating current sample
+                this.CtrlRenderer.DiscardPresent = true;
+                foreach (var actChildWindow in _childWindows)
+                {
+                    actChildWindow.DiscardPresent = true;
+                }
+
+                // Update the sample
                 await _actSample.OnReloadAsync(CtrlRenderer.RenderLoop, viewModel.SampleSettings);
+
+                // Wait for next finished rendering
+                await CtrlRenderer.RenderLoop.WaitForNextFinishedRenderAsync();
+                await CtrlRenderer.RenderLoop.WaitForNextFinishedRenderAsync();
+            }
+            finally
+            {
+                // Continue presenting
+                this.CtrlRenderer.DiscardPresent = false;
+                foreach (var actChildWindow in _childWindows)
+                {
+                    actChildWindow.DiscardPresent = false;
+                }
+
+                // Reset lock for 'ApplySample' method
+                _isChangingSample = false;
             }
         }
 
@@ -102,6 +130,13 @@ namespace SeeingSharp.WpfSamples
             try
             {
                 if (_actSampleInfo == sampleInfo) { return; }
+
+                // Discard presenting before updating current sample
+                this.CtrlRenderer.DiscardPresent = true;
+                foreach (var actChildWindow in _childWindows)
+                {
+                    actChildWindow.DiscardPresent = true;
+                }
 
                 // Clear previous sample
                 if (_actSampleInfo != null)
@@ -147,11 +182,17 @@ namespace SeeingSharp.WpfSamples
 
                 // Wait for next finished rendering
                 await CtrlRenderer.RenderLoop.WaitForNextFinishedRenderAsync();
-
                 await CtrlRenderer.RenderLoop.WaitForNextFinishedRenderAsync();
             }
             finally
             {
+                // Continue presenting
+                this.CtrlRenderer.DiscardPresent = false;
+                foreach (var actChildWindow in _childWindows)
+                {
+                    actChildWindow.DiscardPresent = false;
+                }
+
                 _isChangingSample = false;
             }
         }

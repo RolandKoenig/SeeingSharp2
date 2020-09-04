@@ -36,6 +36,12 @@ namespace SeeingSharp.WpfSamples
     /// </summary>
     public partial class ChildRenderWindow : Window
     {
+        public bool DiscardPresent
+        {
+            get => this.CtrlRenderer.DiscardPresent;
+            set => this.CtrlRenderer.DiscardPresent = value;
+        }
+
         public ChildRenderWindow()
         {
             this.InitializeComponent();

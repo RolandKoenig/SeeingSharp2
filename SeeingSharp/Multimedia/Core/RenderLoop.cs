@@ -142,8 +142,6 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public bool DiscardRendering { get; set; }
 
-        public bool DiscardPresent { get; set; }
-
         /// <summary>
         /// Gets the current SynchronizationContext.
         /// </summary>
@@ -900,10 +898,7 @@ namespace SeeingSharp.Multimedia.Core
                 _currentDevice != null &&
                 _loadDeviceIndex == _currentDevice.LoadDeviceIndex)
             {
-                if (!this.DiscardPresent)
-                {
-                    this.PresentFrameInternal();
-                }
+                this.PresentFrameInternal();
                 _lastRenderSuccessfully = false;
             }
 
@@ -1170,8 +1165,7 @@ namespace SeeingSharp.Multimedia.Core
             // Call present from UI thread (if configured)
             if (_callPresentInUiThread)
             {
-                if (!this.DiscardPresent &&
-                    _currentDevice != null &&
+                if (_currentDevice != null &&
                     _loadDeviceIndex == _currentDevice.LoadDeviceIndex)
                 {
                     this.PresentFrameInternal();

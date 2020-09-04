@@ -74,7 +74,7 @@ namespace SeeingSharp.SampleContainer
             {
                 var myId = Interlocked.Increment(ref _lastRecreateRequestId);
 
-                await Task.Delay(2000);
+                await Task.Delay(500);
 
                 if (_lastRecreateRequestId == myId)
                 {

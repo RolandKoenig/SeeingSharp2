@@ -9,11 +9,12 @@
     d:DesignWidth="400">
 
     <Grid x:Name="GridMain"
-          Background="#E0D3D3D3">
+          Background="{ThemeResource GenericAcrylicBrush}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
+
         <Grid.ChildrenTransitions>
             <EntranceThemeTransition FromHorizontalOffset="-5" FromVerticalOffset="0" IsStaggeringEnabled="True" />
         </Grid.ChildrenTransitions>

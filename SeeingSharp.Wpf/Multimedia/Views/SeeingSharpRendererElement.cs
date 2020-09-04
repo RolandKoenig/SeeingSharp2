@@ -107,6 +107,15 @@ namespace SeeingSharp.Multimedia.Views
         }
 
         /// <summary>
+        /// Discard presenting to the screen?
+        /// </summary>
+        public bool DiscardPresent
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Gets or sets the clear color of this 3D view.
         /// </summary>
         public System.Windows.Media.Color ClearColor
@@ -567,6 +576,7 @@ namespace SeeingSharp.Multimedia.Views
         void IRenderLoopHost.OnRenderLoop_Present(EngineDevice engineDevice)
         {
             if (!this.IsLoaded) { return; }
+            if (this.DiscardPresent) { return; }
 
             if (_d3dImageSource != null)
             {

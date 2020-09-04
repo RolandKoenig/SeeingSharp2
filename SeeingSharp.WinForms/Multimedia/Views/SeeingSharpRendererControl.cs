@@ -106,11 +106,7 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         [Category(SeeingSharpConstantsWinForms.DESIGNER_CATEGORY_RENDERER)]
         [DefaultValue(false)]
-        public bool DiscardPresent
-        {
-            get => _renderLoop.DiscardPresent;
-            set => _renderLoop.DiscardPresent = value;
-        }
+        public bool DiscardPresent { get; set; }
 
         /// <summary>
         /// Gets the view configuration.
@@ -587,6 +583,8 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         void IRenderLoopHost.OnRenderLoop_Present(EngineDevice device)
         {
+            if (this.DiscardPresent) { return; }
+
             //Present all rendered stuff on screen
             try
             {
