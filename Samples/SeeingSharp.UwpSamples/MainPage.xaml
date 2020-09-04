@@ -115,5 +115,9 @@
                                                 VerticalAlignment="Bottom" />
             </Grid>
         </muxc:NavigationView>
+
+        <muxc:ProgressRing Visibility="{x:Bind ProgressRingVisibility, Mode=OneWay}"
+                           IsActive="True"
+                           Width="250" Height="250"/>
     </Grid>
 </Page>

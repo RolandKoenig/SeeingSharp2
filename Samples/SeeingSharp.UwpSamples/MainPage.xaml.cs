@@ -22,6 +22,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.UI.Core;
@@ -36,7 +38,7 @@ using SeeingSharp.UwpSamples.Util;
 
 namespace SeeingSharp.UwpSamples
 {
-    public sealed partial class MainPage : Page
+    public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
         private SampleBase _actSample;
         private SampleSettings _actSampleSettings;
@@ -44,6 +46,24 @@ namespace SeeingSharp.UwpSamples
         private bool _isChangingSample;
 
         private List<ChildRenderPage> _childPages;
+
+        public bool IsChangingSample
+        {
+            get => _isChangingSample;
+            set
+            {
+                if (_isChangingSample != value)
+                {
+                    _isChangingSample = value;
+                    this.RaisePropertyChanged(nameof(this.IsChangingSample));
+                    this.RaisePropertyChanged(nameof(this.ProgressRingVisibility));
+                }
+            }
+        }
+
+        public Visibility ProgressRingVisibility => _isChangingSample ? Visibility.Visible : Visibility.Collapsed;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public MainPage()
         {
@@ -62,9 +82,9 @@ namespace SeeingSharp.UwpSamples
         private async void ApplySample(SampleMetadata sampleInfo, SampleSettings sampleSettings)
         {
             if (DesignMode.DesignModeEnabled) { return; }
-            if (_isChangingSample) { return; }
+            if (this.IsChangingSample) { return; }
 
-            _isChangingSample = true;
+            this.IsChangingSample = true;
             try
             {
                 if (_actSampleInfo == sampleInfo) { return; }
@@ -150,8 +170,13 @@ namespace SeeingSharp.UwpSamples
                 }
 
                 // Reset lock for 'ApplySample' method
-                _isChangingSample = false;
+                this.IsChangingSample = false;
             }
+        }
+
+        private void RaisePropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         private async void OnSampleSettings_RecreateRequest(object sender, EventArgs e)
@@ -167,8 +192,8 @@ namespace SeeingSharp.UwpSamples
                 return;
             }
 
-            if (_isChangingSample) { return; }
-            _isChangingSample = true;
+            if (this.IsChangingSample) { return; }
+            this.IsChangingSample = true;
             try
             {
                 // Discard presenting before updating current sample
@@ -195,7 +220,7 @@ namespace SeeingSharp.UwpSamples
                 }
 
                 // Reset lock for 'ApplySample' method
-                _isChangingSample = false;
+                this.IsChangingSample = false;
             }
         }
 
