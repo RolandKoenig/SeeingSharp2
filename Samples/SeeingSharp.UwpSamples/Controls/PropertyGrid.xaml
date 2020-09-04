@@ -15,6 +15,12 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
+        <Grid.Resources>
+            <Style TargetType="Rectangle">
+                <Setter Property="Fill" Value="{ThemeResource SystemBaseMediumColor}" />
+            </Style>
+        </Grid.Resources>
+
         <Grid.ChildrenTransitions>
             <EntranceThemeTransition FromHorizontalOffset="-5" FromVerticalOffset="0" IsStaggeringEnabled="True" />
         </Grid.ChildrenTransitions>

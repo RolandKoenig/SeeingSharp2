@@ -102,13 +102,11 @@
                 </ListBox>
 
                 <!-- PropertyGrid on the left -->
-                <Border BorderBrush="DarkGray" BorderThickness="1"
-                        Margin="10,135,10,40"
-                        MaxWidth="530"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top">
-                    <localControls:PropertyGrid SelectedObject="{Binding Path=SampleSettings, Mode=TwoWay}" />
-                </Border>
+                <localControls:PropertyGrid Margin="10,135,10,40" 
+                                            MaxWidth="530"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Top"
+                                            SelectedObject="{Binding Path=SampleSettings, Mode=TwoWay}" />
 
                 <!-- Status bar -->
                 <localControls:StatusBarControl CtrlRenderer="{Binding ElementName=CtrlSwapChain}"

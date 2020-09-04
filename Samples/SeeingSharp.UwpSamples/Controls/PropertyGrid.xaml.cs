@@ -107,7 +107,6 @@ namespace SeeingSharp.UwpSamples.Controls
                     var rect = new Windows.UI.Xaml.Shapes.Rectangle
                     {
                         Height = 2d,
-                        Fill = new SolidColorBrush(Colors.Black),
                         VerticalAlignment = VerticalAlignment.Bottom,
                         Margin = new Thickness(5d, 5d, 5d, 0d)
                     };
