@@ -8,6 +8,16 @@
     <PackageId>SeeingSharp2.Wpf</PackageId>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- For GitHub -->
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.0-beta-20204-02" PrivateAssets="All" />
+  </ItemGroup>
+
   <ItemGroup>
     <None Include="..\LICENSE.md" Link="LICENSE.md" Pack="true" PackagePath="LICENSE.md" />
     <None Include="..\_Misc\_SeeingSharp.Multimedia.licenseheader" Link="_SeeingSharp.Multimedia.licenseheader" />

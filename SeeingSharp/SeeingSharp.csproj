@@ -19,6 +19,16 @@
     <OutputPath>..\bin\Release.AnyCPU\</OutputPath>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- For GitHub -->
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.0-beta-20204-02" PrivateAssets="All" />
+  </ItemGroup>
+
   <ItemGroup>
     <None Remove="Resources\Shaders\Common\CommonPixelShader.hlsl" />
     <None Remove="Resources\Shaders\Common\CommonPixelShader.Ortho.hlsl" />

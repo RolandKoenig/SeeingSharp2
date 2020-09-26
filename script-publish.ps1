@@ -1,12 +1,10 @@
 Remove-Item -Path ./publish/* -Recurse -Force
 
 # Build and pack all projects on the new project format
-dotnet pack -c Release -o ./publish ./SeeingSharp
-dotnet pack -c Release -o ./publish ./SeeingSharp.AssimpImporter
-dotnet pack -c Release -o ./publish ./SeeingSharp.WinForms
-dotnet pack -c Release -o ./publish ./SeeingSharp.WinFormsCore
-dotnet pack -c Release -o ./publish ./SeeingSharp.Wpf
-dotnet pack -c Release -o ./publish ./SeeingSharp.WpfCore
+dotnet pack -c Release -o ./publish ./SeeingSharp /p:ContinuousIntegrationBuild=true /p:IncludeSymbols=true /p:EmbedUntrackedSources=true -p:SymbolPackageFormat=snupkg
+dotnet pack -c Release -o ./publish ./SeeingSharp.AssimpImporter /p:ContinuousIntegrationBuild=true /p:IncludeSymbols=true /p:EmbedUntrackedSources=true -p:SymbolPackageFormat=snupkg
+dotnet pack -c Release -o ./publish ./SeeingSharp.WinForms /p:ContinuousIntegrationBuild=true /p:IncludeSymbols=true /p:EmbedUntrackedSources=true -p:SymbolPackageFormat=snupkg
+dotnet pack -c Release -o ./publish ./SeeingSharp.Wpf /p:ContinuousIntegrationBuild=true /p:IncludeSymbols=true /p:EmbedUntrackedSources=true -p:SymbolPackageFormat=snupkg
 
 # Pack UWP library (still old project format)
 # Be carefull: This command does not build. You have to execute release build manually in VisualStudio
