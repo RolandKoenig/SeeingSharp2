@@ -29,17 +29,18 @@
         <muxc:NavigationView IsBackButtonVisible="Collapsed"
                              IsBackEnabled="False"
                              IsSettingsVisible="False"
-                             IsTabStop="False"
+                             IsTabStop="False" 
+                             PaneDisplayMode="LeftCompact"
                              PaneTitle="Sample Groups"
-                             MenuItemsSource="{Binding Path=SampleGroups, Mode=OneWay}"
-                             SelectedItem="{Binding Path=SelectedGroup, Mode=TwoWay}">
+                             MenuItemsSource="{x:Bind ViewModel.SampleGroups, Mode=OneWay}"
+                             SelectedItem="{x:Bind ViewModel.SelectedGroup, Mode=TwoWay}">
 
             <muxc:NavigationView.MenuItemTemplate>
                 <DataTemplate x:DataType="samples:SampleGroupMetadata">
-                    <muxc:NavigationViewItem Content="{Binding Path=GroupName}"
-                                             ToolTipService.ToolTip="{Binding Path=GroupName}">
+                    <muxc:NavigationViewItem Content="{x:Bind GroupName}"
+                                             ToolTipService.ToolTip="{x:Bind GroupName}">
                         <muxc:NavigationViewItem.Icon>
-                            <FontIcon FontFamily="{Binding IconFontFamily}" Glyph="{Binding IconFontGlyph}" />
+                            <FontIcon FontFamily="{x:Bind IconFontFamily}" Glyph="{x:Bind IconFontGlyph}" />
                         </muxc:NavigationViewItem.Icon>
                     </muxc:NavigationViewItem>
                 </DataTemplate>
@@ -48,7 +49,7 @@
             <muxc:NavigationView.PaneFooter>
                 <StackPanel Orientation="Vertical">
                     <muxc:NavigationViewItemHeader Content="Miscellaneous" Margin="32,0,0,0" />
-                    <ItemsControl ItemsSource="{Binding Path=SampleCommands}">
+                    <ItemsControl ItemsSource="{x:Bind ViewModel.SampleCommands}">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="samplesUtil:SampleCommand">
                                 <muxc:NavigationViewItem Content="{x:Bind CommandText}"
@@ -68,8 +69,8 @@
             <Grid>
                 <ListBox VerticalAlignment="Top"
                          Background="{ThemeResource GenericAcrylicBrush}"
-                         ItemsSource="{Binding Path=Samples}"
-                         SelectedItem="{Binding Path=SelectedSample, Mode=TwoWay}"
+                         ItemsSource="{x:Bind ViewModel.Samples}"
+                         SelectedItem="{x:Bind ViewModel.SelectedSample, Mode=TwoWay}"
                          SelectionChanged="OnSelectedSampleChanged"
                          SelectionMode="Single"
                          VerticalContentAlignment="Top"
@@ -82,7 +83,7 @@
                         </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
                     <ListBox.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate x:DataType="local:SampleViewModel">
                             <StackPanel Orientation="Vertical"
                                         Margin="5">
                                 <StackPanel.Transitions>
@@ -91,10 +92,10 @@
                                     </TransitionCollection>
                                 </StackPanel.Transitions>
 
-                                <Image Source="{Binding Path=BitmapSource}"
+                                <Image Source="{x:Bind BitmapSource, Mode=OneWay}"
                                        Width="64" Height="64"
                                        Margin="5" />
-                                <TextBlock Text="{Binding Path=Name}"
+                                <TextBlock Text="{x:Bind Name, Mode=OneWay}"
                                            HorizontalAlignment="Center" />
                             </StackPanel>
                         </DataTemplate>
@@ -106,7 +107,7 @@
                                             MaxWidth="530"
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Top"
-                                            SelectedObject="{Binding Path=SampleSettings, Mode=TwoWay}" />
+                                            SelectedObject="{x:Bind ViewModel.SampleSettings, Mode=OneWay}" />
 
                 <!-- Status bar -->
                 <localControls:StatusBarControl CtrlRenderer="{Binding ElementName=CtrlSwapChain}"

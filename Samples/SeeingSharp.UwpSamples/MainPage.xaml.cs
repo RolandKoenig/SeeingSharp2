@@ -63,6 +63,8 @@ namespace SeeingSharp.UwpSamples
 
         public Visibility ProgressRingVisibility => _isChangingSample ? Visibility.Visible : Visibility.Collapsed;
 
+        public MainWindowViewModel ViewModel => this.DataContext as MainWindowViewModel;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public MainPage()
