@@ -1,4 +1,4 @@
-# SeeingSharp2
+# SeeingSharp2 <img src="_Misc/WikiImages/SeeingSharp.svg" width="32" />
 ![alt tag](_Misc/WikiImages/SeeingSharp_Samples.png)
 
 ### Quick Links

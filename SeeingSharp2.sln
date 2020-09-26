@@ -63,6 +63,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp.ObjectLayoutIns
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WikiImages", "WikiImages", "{1FC1FF19-B0F1-44D2-9B6A-0784E29A3FD7}"
 	ProjectSection(SolutionItems) = preProject
+		_Misc\WikiImages\SeeingSharp.svg = _Misc\WikiImages\SeeingSharp.svg
 		_Misc\WikiImages\SeeingSharp_Samples.png = _Misc\WikiImages\SeeingSharp_Samples.png
 		_Misc\WikiImages\SimpleSampleWpf.png = _Misc\WikiImages\SimpleSampleWpf.png
 	EndProjectSection
