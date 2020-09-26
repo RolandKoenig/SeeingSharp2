@@ -37,7 +37,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\SeeingSharp.AssimpImporter\SeeingSharp.AssimpImporter.csproj" />
-    <ProjectReference Include="..\..\SeeingSharp.WpfCore\SeeingSharp.WpfCore.csproj" />
+    <ProjectReference Include="..\..\SeeingSharp.Wpf\SeeingSharp.Wpf.csproj" />
     <ProjectReference Include="..\..\SeeingSharp\SeeingSharp.csproj" />
   </ItemGroup>
 

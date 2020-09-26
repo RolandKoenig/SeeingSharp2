@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\SeeingSharp.WinFormsCore\SeeingSharp.WinFormsCore.csproj" />
+    <ProjectReference Include="..\..\..\SeeingSharp.WinForms\SeeingSharp.WinForms.csproj" />
     <ProjectReference Include="..\..\..\SeeingSharp\SeeingSharp.csproj" />
   </ItemGroup>
 

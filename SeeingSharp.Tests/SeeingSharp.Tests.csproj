@@ -136,7 +136,7 @@
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SeeingSharp.WinFormsCore\SeeingSharp.WinFormsCore.csproj" />
+    <ProjectReference Include="..\SeeingSharp.WinForms\SeeingSharp.WinForms.csproj" />
     <ProjectReference Include="..\SeeingSharp\SeeingSharp.csproj" />
   </ItemGroup>
 </Project>

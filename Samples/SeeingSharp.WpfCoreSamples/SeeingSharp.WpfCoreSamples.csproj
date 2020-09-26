@@ -38,8 +38,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\SeeingSharp.WpfCore\SeeingSharp.WpfCore.csproj" />
     <ProjectReference Include="..\..\SeeingSharp\SeeingSharp.csproj" />
+    <ProjectReference Include="..\GettingStarted\GettingStarted.Wpf\GettingStarted.Wpf.csproj" />
     <ProjectReference Include="..\SeeingSharp.SampleContainer\SeeingSharp.SampleContainer.csproj" />
   </ItemGroup>
 

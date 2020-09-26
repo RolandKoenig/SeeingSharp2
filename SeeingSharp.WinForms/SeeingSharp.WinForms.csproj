@@ -1,8 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFrameworks>net48;netcoreapp3.0;netcoreapp3.1</TargetFrameworks>
     <LangVersion>8.0</LangVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>SeeingSharp.WinForms</RootNamespace>
     <PackageId>SeeingSharp2.WinForms</PackageId>
   </PropertyGroup>
@@ -25,7 +26,7 @@
     <ProjectReference Include="..\SeeingSharp\SeeingSharp.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
 </Project>
