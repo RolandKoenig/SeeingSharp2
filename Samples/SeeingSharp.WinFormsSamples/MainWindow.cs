@@ -57,6 +57,8 @@ namespace SeeingSharp.WinFormsSamples
             if (this.DesignMode) { return; }
             if (!GraphicsCore.IsLoaded) { return; }
 
+            _cmdScreenshot.Image = Properties.Resources.Camera16x16;
+
             this.Text = $@"{this.Text} ({Assembly.GetExecutingAssembly().GetName().Version})";
 
             _ctrlRenderPanel.RenderLoop.PrepareRender += this.OnRenderLoop_PrepareRender;

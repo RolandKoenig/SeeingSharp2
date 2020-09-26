@@ -118,31 +118,34 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Adapter16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\seeingsharp.winformssamples\assets\icons\adapter16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Camera16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\seeingsharp.winformssamples\assets\icons\camera16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Copy16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\seeingsharp.winformssamples\assets\icons\copy16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Cross16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\seeingsharp.winformssamples\assets\icons\cross16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Help16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\seeingsharp.winformssamples\assets\icons\help16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Output16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\seeingsharp.winformssamples\assets\icons\output16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="OutputAdd16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\seeingsharp.winformssamples\assets\icons\outputadd16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="PerformanceMeasure16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\seeingsharp.winformssamples\assets\icons\performancemeasure16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="PageCSharp16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\..\seeingsharp.winformssamples\assets\icons\pagecsharp16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="PerformanceMeasure16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\seeingsharp.winformssamples\assets\icons\performancemeasure16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Camera16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\seeingsharp.winformssamples\assets\icons\camera16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="OutputAdd16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\seeingsharp.winformssamples\assets\icons\outputadd16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Cross16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\seeingsharp.winformssamples\assets\icons\cross16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Adapter16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\seeingsharp.winformssamples\assets\icons\adapter16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Help16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\seeingsharp.winformssamples\assets\icons\help16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Copy16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\seeingsharp.winformssamples\assets\icons\copy16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Output16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\seeingsharp.winformssamples\assets\icons\output16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Camera16x16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\..\SeeingSharp.WinFormsSamples\Assets\Icons\Camera16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

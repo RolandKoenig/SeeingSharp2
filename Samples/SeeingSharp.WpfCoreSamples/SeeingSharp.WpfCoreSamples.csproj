@@ -5,7 +5,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <LangVersion>8.0</LangVersion>
     <UseWPF>true</UseWPF>
-    <ApplicationIcon>Logo.ico</ApplicationIcon>
+    <ApplicationIcon>Assets\SeeingSharp.ico</ApplicationIcon>
     <RootNamespace>SeeingSharp.WpfSamples</RootNamespace>
   </PropertyGroup>
 
@@ -14,10 +14,6 @@
     <WarningsAsErrors />
     <NoWarn>1701;1702</NoWarn>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Logo.ico" />
-  </ItemGroup>
 
   <ItemGroup>
     <Compile Include="..\SeeingSharp.WpfSamples\ChildRenderWindow.xaml.cs" Link="ChildRenderWindow.xaml.cs" />
@@ -34,12 +30,11 @@
   <ItemGroup>
     <Resource Include="..\SeeingSharp.WpfSamples\Assets\Icons\Adapter16x16.png" Link="Assets\Icons\Adapter16x16.png" />
     <Resource Include="..\SeeingSharp.WpfSamples\Assets\Icons\Output16x16.png" Link="Assets\Icons\Output16x16.png" />
-    <Resource Include="Logo.ico" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\SeeingSharp.Wpf\SeeingSharp.Wpf.csproj" />
     <ProjectReference Include="..\..\SeeingSharp\SeeingSharp.csproj" />
-    <ProjectReference Include="..\GettingStarted\GettingStarted.Wpf\GettingStarted.Wpf.csproj" />
     <ProjectReference Include="..\SeeingSharp.SampleContainer\SeeingSharp.SampleContainer.csproj" />
   </ItemGroup>
 

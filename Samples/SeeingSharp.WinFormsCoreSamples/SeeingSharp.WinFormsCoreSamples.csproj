@@ -7,12 +7,8 @@
     <UseWindowsForms>true</UseWindowsForms>
     <AssemblyName>SeeingSharp.WinFormsCoreSamples</AssemblyName>
     <RootNamespace>SeeingSharp.WinFormsSamples</RootNamespace>
-    <ApplicationIcon>Logo.ico</ApplicationIcon>
+    <ApplicationIcon>Assets\SeeingSharp.ico</ApplicationIcon>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Logo.ico" />
-  </ItemGroup>
 
   <ItemGroup>
     <Compile Include="..\SeeingSharp.WinFormsSamples\ChildRenderWindow.cs" Link="ChildRenderWindow.cs" />
@@ -25,7 +21,7 @@
 
   <ItemGroup>
     <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Adapter16x16.png" Link="Assets\Icons\Adapter16x16.png" />
-    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Camera16x16.png" Link="Assets\Icons\Camera16x16.png" />
+    <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Camera16x16.png" Link="Camera16x16.png" />
     <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Copy16x16.png" Link="Assets\Icons\Copy16x16.png" />
     <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Cross16x16.png" Link="cross16x16.png" />
     <Content Include="..\SeeingSharp.WinFormsSamples\Assets\Icons\Help16x16.png" Link="Assets\Icons\Help16x16.png" />
@@ -62,10 +58,6 @@
 
   <ItemGroup>
     <None Include="..\..\_Misc\_SeeingSharp.Multimedia.licenseheader" Link="_SeeingSharp.Multimedia.licenseheader" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Logo.ico" />
   </ItemGroup>
 
   <ItemGroup>
