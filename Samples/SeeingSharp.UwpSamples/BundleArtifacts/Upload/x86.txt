@@ -1,3 +1,7 @@
-MainPackage=C:\Projekte\Github\SeeingSharp2\Samples\SeeingSharp.UwpSamples\bin\x86\Release\Upload\SeeingSharp.UwpSamples_0.6.1.0_x86.msix
-SymbolPackage=C:\Projekte\Github\SeeingSharp2\Samples\SeeingSharp.UwpSamples\bin\x86\Release\Upload\SeeingSharp.UwpSamples_0.6.1.0\SeeingSharp.UwpSamples_0.6.1.0_x86.appxsym
-ResourcePack=C:\Projekte\Github\SeeingSharp2\Samples\SeeingSharp.UwpSamples\bin\x86\Release\Upload\SeeingSharp.UwpSamples_0.6.1.0_language-de.msix
+MainPackage=C:\Projekte\Github\SeeingSharp2\Samples\SeeingSharp.UwpSamples\bin\x86\Release\Upload\SeeingSharp.UwpSamples_0.7.0.0_x86.msix
+SymbolPackage=C:\Projekte\Github\SeeingSharp2\Samples\SeeingSharp.UwpSamples\bin\x86\Release\Upload\SeeingSharp.UwpSamples_0.7.0.0\SeeingSharp.UwpSamples_0.7.0.0_x86.appxsym
+ResourcePack=C:\Projekte\Github\SeeingSharp2\Samples\SeeingSharp.UwpSamples\bin\x86\Release\Upload\SeeingSharp.UwpSamples_0.7.0.0_language-de.msix
+ResourcePack=C:\Projekte\Github\SeeingSharp2\Samples\SeeingSharp.UwpSamples\bin\x86\Release\Upload\SeeingSharp.UwpSamples_0.7.0.0_scale-100.msix
+ResourcePack=C:\Projekte\Github\SeeingSharp2\Samples\SeeingSharp.UwpSamples\bin\x86\Release\Upload\SeeingSharp.UwpSamples_0.7.0.0_scale-125.msix
+ResourcePack=C:\Projekte\Github\SeeingSharp2\Samples\SeeingSharp.UwpSamples\bin\x86\Release\Upload\SeeingSharp.UwpSamples_0.7.0.0_scale-150.msix
+ResourcePack=C:\Projekte\Github\SeeingSharp2\Samples\SeeingSharp.UwpSamples\bin\x86\Release\Upload\SeeingSharp.UwpSamples_0.7.0.0_scale-400.msix
