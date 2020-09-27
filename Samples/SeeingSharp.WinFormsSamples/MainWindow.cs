@@ -59,7 +59,7 @@ namespace SeeingSharp.WinFormsSamples
 
             _cmdScreenshot.Image = Properties.Resources.Camera16x16;
 
-            this.Text = $@"{this.Text} ({Assembly.GetExecutingAssembly().GetName().Version})";
+            this.Text = $@"{this.Text} ({Assembly.GetExecutingAssembly().GetName().Version.ToString(3)})";
 
             _ctrlRenderPanel.RenderLoop.PrepareRender += this.OnRenderLoop_PrepareRender;
 

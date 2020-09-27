@@ -56,7 +56,7 @@ namespace SeeingSharp.WpfSamples
                 return;
             }
 
-            this.Title = $@"{this.Title} ({Assembly.GetExecutingAssembly().GetName().Version})";
+            this.Title = $@"{this.Title} ({Assembly.GetExecutingAssembly().GetName().Version.ToString(3)})";
 
             var sampleRepo = new SampleRepository();
             sampleRepo.LoadSampleData();
