@@ -29,6 +29,14 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.0-beta-20204-02" PrivateAssets="All" />
   </ItemGroup>
 
+  <!-- Package icon -->
+  <PropertyGroup>
+    <PackageIcon>SeeingSharp_128.png</PackageIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="../_Misc/Nuget/SeeingSharp_128.png" Pack="true" PackagePath="\"/>
+  </ItemGroup>
+
   <ItemGroup>
     <None Remove="Resources\Shaders\Common\CommonPixelShader.hlsl" />
     <None Remove="Resources\Shaders\Common\CommonPixelShader.Ortho.hlsl" />

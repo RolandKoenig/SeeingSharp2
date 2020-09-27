@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SeeingSharp2.Uwp</id>
-    <version>0.6.1</version>
+    <version>0.7.0</version>
     <authors>Roland König</authors>
     <owners>Roland König</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -12,6 +12,7 @@
     <description>Seeing# is a 3D/2D rendering library for C# powered by Direct3D. It is meant for desktop applications (Win.Forms, Wpf) or Windows Store Apps</description>
     <copyright>©2020 by Roland König</copyright>
     <tags></tags>
+    <icon>SeeingSharp_128.png</icon>
 
     <dependencies>
       <group targetFramework="UAP1.0">
@@ -32,6 +33,7 @@
     <file src="bin\Release\SeeingSharp.Uwp.dll" target="lib/uap10" />
     <file src="bin\Release\SeeingSharp.Uwp.pri" target="lib/uap10" />
     <file src="../License.md" target="LICENSE.md" />
+    <file src="../_Misc/Nuget/SeeingSharp_128.png" />
   </files>
 
 </package>
