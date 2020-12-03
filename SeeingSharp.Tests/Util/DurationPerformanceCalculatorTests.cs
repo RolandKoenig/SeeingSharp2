@@ -7,10 +7,7 @@ namespace SeeingSharp.Tests.Util
     [TestClass]
     public class DurationPerformanceCalculatorTests
     {
-        public const string TEST_CATEGORY = "SeeingSharp Util PerformanceCalculator Duration";
-
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void Test_DurationCalculation_Default()
         {
             var calculator = new DurationPerformanceCalculator("Dummy", 1000);

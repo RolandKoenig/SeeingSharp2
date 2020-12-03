@@ -29,10 +29,7 @@ namespace SeeingSharp.Tests.AssemblyResourcesAndShaderTests
     [TestClass]
     public class ShaderCompileTests
     {
-        private const string TEST_CATEGORY = "SeeingSharp Core ShaderCompile";
-
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void Check_ReadAndMergeFromAssemblyResources()
         {
             var resLink = new AssemblyResourceLink(this.GetType(),

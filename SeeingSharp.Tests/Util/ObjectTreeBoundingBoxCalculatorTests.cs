@@ -29,10 +29,7 @@ namespace SeeingSharp.Tests.Util
     [TestClass]
     public class ObjectTreeBoundingBoxCalculatorTests
     {
-        public const string TEST_CATEGORY = "SeeingSharp Util ObjectTreeBoundingBoxCalculator";
-
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void Test_DefaultUsage()
         {
             var calculator = new ObjectTreeBoundingBoxCalculator(); 
@@ -48,7 +45,6 @@ namespace SeeingSharp.Tests.Util
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void Test_Empty()
         {
             var calculator = new ObjectTreeBoundingBoxCalculator(); 
@@ -57,7 +53,6 @@ namespace SeeingSharp.Tests.Util
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void Test_SingleCoordinate()
         {
             var calculator = new ObjectTreeBoundingBoxCalculator(); 
@@ -67,7 +62,6 @@ namespace SeeingSharp.Tests.Util
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void Test_MoreEqualCoordinates()
         {
             var calculator = new ObjectTreeBoundingBoxCalculator(); 
@@ -80,7 +74,6 @@ namespace SeeingSharp.Tests.Util
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         [ExpectedException(typeof(SeeingSharpException))]
         public void Test_MoreEqualCoordinates_CreateBoxException()
         {

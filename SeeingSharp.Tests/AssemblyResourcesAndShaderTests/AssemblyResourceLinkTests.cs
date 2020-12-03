@@ -29,10 +29,7 @@ namespace SeeingSharp.Tests.AssemblyResourcesAndShaderTests
     [TestClass]
     public class AssemblyResourceLinkTests
     {
-        private const string TEST_CATEGORY = "SeeingSharp Core AssemblyResourceLink";
-
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void Check_OpenForReading_RelativeNamespace()
         {
             var resLink = new AssemblyResourceLink(this.GetType(),
@@ -58,7 +55,6 @@ namespace SeeingSharp.Tests.AssemblyResourcesAndShaderTests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void Check_OpenForReading_AnotherFile()
         {
             var resLink = new AssemblyResourceLink(this.GetType(),
@@ -85,7 +81,6 @@ namespace SeeingSharp.Tests.AssemblyResourcesAndShaderTests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void Check_OpenForReading_FullNamespace()
         {
             var resLink = new AssemblyResourceLink(this.GetType().Assembly,

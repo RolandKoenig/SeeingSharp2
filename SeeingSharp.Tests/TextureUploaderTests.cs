@@ -32,10 +32,7 @@ namespace SeeingSharp.Tests
     [DoNotParallelize]
     public class TextureUploaderTests
     {
-        public const string TEST_CATEGORY = "SeeingSharp Multimedia TextureUploader";
-
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void SimpleUpload_ColorBitmap()
         {
             var coreConfig = new GraphicsCoreConfiguration();
@@ -58,7 +55,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         [ExpectedException(typeof(SeeingSharpGraphicsException))]
         public void SimpleUpload_ColorBitmap_WrongUploadFormat()
         {
@@ -79,7 +75,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         [ExpectedException(typeof(SeeingSharpGraphicsException))]
         public void SimpleUpload_ColorBitmap_WrongTextureSize()
         {

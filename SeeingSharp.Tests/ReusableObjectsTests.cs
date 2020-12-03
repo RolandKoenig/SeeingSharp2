@@ -30,10 +30,7 @@ namespace SeeingSharp.Tests
     [TestClass]
     public class ReusableObjectsTests
     {
-        private const string TEST_CATEGORY = "SeeingSharp Util Reusable Objects";
-
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void Check_ReusableStringBuilder()
         {
             var cache = new ReusableStringBuilders();
@@ -59,7 +56,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void Check_ReusableMemoryStream()
         {
             var cache = new ReusableMemoryStreams();

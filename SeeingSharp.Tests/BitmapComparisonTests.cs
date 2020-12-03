@@ -27,10 +27,7 @@ namespace SeeingSharp.Tests
     [TestClass]
     public class BitmapComparisonTests
     {
-        public const string TEST_CATEGORY = "SeeingSharp Util BitmapComparison";
-
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void BitmapComparison_Positive()
         {
             using (var leftBitmap = TestUtilities.LoadBitmapFromResource("BitmapComparison", "FlatShadedObject.png"))
@@ -42,7 +39,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void BitmapComparison_Negative_Without_Model()
         {
             using (var leftBitmap = TestUtilities.LoadBitmapFromResource("BitmapComparison", "ClearedScreen.png"))
@@ -55,7 +51,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void BitmapComparison_Negative_Inverted_Image()
         {
             using (var leftBitmap = TestUtilities.LoadBitmapFromResource("BitmapComparison", "FlatShadedObject.png"))
@@ -68,7 +63,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void BitmapComparison_Negative_BlackWhite()
         {
             using (var leftBitmap = TestUtilities.LoadBitmapFromResource("BitmapComparison", "WhiteScreen.png"))
@@ -80,7 +74,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void BitmapComparison_Negative_Enlighted()
         {
             using (var leftBitmap = TestUtilities.LoadBitmapFromResource("BitmapComparison", "FlatShadedObject.png"))
@@ -93,7 +86,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void BitmapComparison_Negative_Smaller()
         {
             using (var leftBitmap = TestUtilities.LoadBitmapFromResource("BitmapComparison", "FlatShadedObject.png"))

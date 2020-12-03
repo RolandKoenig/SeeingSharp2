@@ -33,10 +33,7 @@ namespace SeeingSharp.Tests
     [DoNotParallelize]
     public class ModelLoadingAndRenderingTests
     {
-        public const string TEST_CATEGORY = "SeeingSharp Multimedia Model Loading and Rendering";
-
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task LoadAndRender_StlFile()
         {
             await TestUtilities.InitializeWithGraphicsAsync();

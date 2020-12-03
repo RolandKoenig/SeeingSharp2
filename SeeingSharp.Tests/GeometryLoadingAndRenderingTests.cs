@@ -33,10 +33,7 @@ namespace SeeingSharp.Tests
     [DoNotParallelize]
     public class GeometryLoadingAndRenderingTests
     {
-        public const string TEST_CATEGORY = "SeeingSharp Multimedia Geometry Loading and Rendering";
-
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task LoadAndRender_ACFlatShadedObject()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -81,7 +78,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task LoadAndRender_ACShadedObject()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -124,7 +120,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task LoadAndRender_ACTwoSidedObject()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -169,7 +164,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task LoadAndRender_ACSingleSidedObject()
         {
             await TestUtilities.InitializeWithGraphicsAsync();

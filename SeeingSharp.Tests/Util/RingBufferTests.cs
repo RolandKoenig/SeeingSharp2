@@ -29,10 +29,7 @@ namespace SeeingSharp.Tests.Util
     [TestClass]
     public class RingBufferTests
     {
-        public const string TEST_CATEGORY = "SeeingSharp Util RingBuffer";
-
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void Test_RingBuffer_WriteSome()
         {
             var testRingBuffer = new RingBuffer<int>(10);
@@ -49,7 +46,6 @@ namespace SeeingSharp.Tests.Util
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void Test_RingBuffer_WriteSome_ByRef()
         {
             var testRingBuffer = new RingBuffer<int>(10);
@@ -67,7 +63,6 @@ namespace SeeingSharp.Tests.Util
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void Test_RingBuffer_WriteTwice()
         {
             var testRingBuffer = new RingBuffer<int>(10);
@@ -85,7 +80,6 @@ namespace SeeingSharp.Tests.Util
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void Test_RingBuffer_WriteTwice_ByRef()
         {
             var testRingBuffer = new RingBuffer<int>(10);
@@ -106,7 +100,6 @@ namespace SeeingSharp.Tests.Util
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void Test_RingBuffer_WriteTwice_AndRemoveFirst()
         {
             var testRingBuffer = new RingBuffer<int>(10);
@@ -126,7 +119,6 @@ namespace SeeingSharp.Tests.Util
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void Test_RingBuffer_RemoveFirst_SomeTimes()
         {
             var testRingBuffer = new RingBuffer<int>(10);
@@ -147,7 +139,6 @@ namespace SeeingSharp.Tests.Util
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void Test_RingBuffer_RemoveFirst_All()
         {
             var testRingBuffer = new RingBuffer<int>(10);
@@ -166,7 +157,6 @@ namespace SeeingSharp.Tests.Util
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         [ExpectedException(typeof(IndexOutOfRangeException))]
         public void Test_RingBuffer_RemoveFirst_ToMuch()
         {
@@ -183,7 +173,6 @@ namespace SeeingSharp.Tests.Util
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void Test_RingBuffer_Clear()
         {
             var testRingBuffer = new RingBuffer<int>(10);
@@ -199,7 +188,6 @@ namespace SeeingSharp.Tests.Util
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         [ExpectedException(typeof(IndexOutOfRangeException))]
         public void Test_RingBuffer_Get_WrongIndex()
         {

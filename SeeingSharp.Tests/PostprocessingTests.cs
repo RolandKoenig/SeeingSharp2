@@ -34,10 +34,8 @@ namespace SeeingSharp.Tests
     public class PostprocessingTests
     {
         public const string TEST_DUMMY_FILE_NAME = "UnitTest.Screenshot.png";
-        public const string TEST_CATEGORY = "SeeingSharp Multimedia Postprocessing";
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task Postprocessing_Focus()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -98,7 +96,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task Postprocessing_EdgeDetect()
         {
             await TestUtilities.InitializeWithGraphicsAsync();

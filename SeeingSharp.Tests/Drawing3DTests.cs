@@ -35,10 +35,7 @@ namespace SeeingSharp.Tests
     [DoNotParallelize]
     public class Drawing3DTests
     {
-        public const string TEST_CATEGORY = "SeeingSharp Multimedia Drawing 3D";
-
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task Render_ClearedScreen()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -64,7 +61,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleLine()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -119,7 +115,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleObject()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -163,8 +158,7 @@ namespace SeeingSharp.Tests
             Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
         }
 
-                [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
+        [TestMethod]
         public async Task QueryInfo_FromSimpleMesh()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -220,7 +214,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task Render_FullScreenTexture()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -262,7 +255,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleObject_DiffuseColorFromMaterial()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -312,7 +304,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleObject_StackedGeometry()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -364,7 +355,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleObject_Transparent()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -408,7 +398,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleObject_Orthographic()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -457,7 +446,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task Render_Skybox()
         {
             await TestUtilities.InitializeWithGraphicsAsync();

@@ -28,10 +28,7 @@ namespace SeeingSharp.Tests
     [TestClass]
     public class ResourceLinkTests
     {
-        public const string TEST_CATEGORY = "SeeingSharp Util ResourceLink";
-
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void GetFileExtension_StandardFile()
         {
             ResourceLink extCS = new FileSystemResourceLink("C:/Blub/Blub.cs");
@@ -46,7 +43,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void GetFileExtension_AssemblyResourceLink()
         {
             ResourceLink extPNG = new AssemblyResourceLink(this.GetType(), "DummyNamespace.DummyFile.png");

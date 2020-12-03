@@ -38,10 +38,7 @@ namespace SeeingSharp.Tests
     [DoNotParallelize]
     public class ErrorHandlingTests
     {
-        public const string TEST_CATEGORY = "SeeingSharp Multimedia ErrorHandling";
-
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task MemoryRenderTarget_2DInitError()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -113,7 +110,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task MemoryRenderTarget_GraphicsInitError()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -142,7 +138,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task WinForms_Parent_Child_Switch()
         {
             await TestUtilities.InitializeWithGraphicsAsync();

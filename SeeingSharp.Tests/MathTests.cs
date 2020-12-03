@@ -29,10 +29,7 @@ namespace SeeingSharp.Tests
     [TestClass]
     public class MathTests
     {
-        public const string TEST_CATEGORY = "SeeingSharp Mathematics";
-
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void Movemenet_SpeedBased()
         {
             var palletConveyorSpeed = new MovementSpeed(0.3f);
@@ -48,7 +45,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void Movement_SpeedBased_FixedTime()
         {
             var movementVector = new Vector3(10f, 0f, 8f);
@@ -62,7 +58,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void Movement_AccDecFull_ShortRun()
         {
             // Configuration
@@ -81,7 +76,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public void Movement_AccDecFull_LongRun()
         {
             // Configuration

@@ -37,10 +37,7 @@ namespace SeeingSharp.Tests
     [DoNotParallelize]
     public class Drawing2DTests
     {
-        public const string TEST_CATEGORY = "SeeingSharp Multimedia Drawing 2D";
-
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task Collision_Ellipse_to_Ellipse()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -66,7 +63,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task Collision_Ellipse_to_Polygon()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -92,7 +88,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleText_SimpleSingleColor()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -126,7 +121,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleRoundedRect_Filled_Solid()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -157,7 +151,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleGeometry()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -191,7 +184,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleGeometry_Ellipse()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -225,7 +217,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleRoundedRect_Filled_LinearGradient()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -267,7 +258,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleRoundedRect_Filled_RadialGradient()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -307,7 +297,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleRoundedRect_Filled_Over3D()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -367,7 +356,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task Render_DebugLayer()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -392,7 +380,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleObject_D2D_Texture()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -454,7 +441,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleBitmap_WithTransparency()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
@@ -488,7 +474,6 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
-        [TestCategory(TEST_CATEGORY)]
         public async Task Render_SimpleBitmap_Animated()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
