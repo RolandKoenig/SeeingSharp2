@@ -69,7 +69,7 @@ namespace SeeingSharp.Multimedia.Core
         /// Upload a texture from the graphics hardware.
         /// </summary>
         /// <param name="textureToUpload">The texture to be uploaded.</param>
-        public MemoryMappedTexture<T> UploadToMemoryMappedTexture<T>(D3D11.Texture2D textureToUpload)
+        internal MemoryMappedTexture<T> UploadToMemoryMappedTexture<T>(D3D11.Texture2D textureToUpload)
             where T : unmanaged
         {
             if (_isDisposed) { throw new ObjectDisposedException(nameof(TextureUploader)); }
@@ -85,7 +85,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         /// <param name="textureToUpload">The texture to be uploaded.</param>
         /// <param name="targetFloatBuffer">The target buffer to which to copy all data.</param>
-        public unsafe void UploadToMemoryMappedTexture<T>(D3D11.Texture2D textureToUpload, MemoryMappedTexture<T> targetFloatBuffer) 
+        internal unsafe void UploadToMemoryMappedTexture<T>(D3D11.Texture2D textureToUpload, MemoryMappedTexture<T> targetFloatBuffer) 
             where T : unmanaged
         {
             if (_isDisposed) { throw new ObjectDisposedException(nameof(TextureUploader)); }
