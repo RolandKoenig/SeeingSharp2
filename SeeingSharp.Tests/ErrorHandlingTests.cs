@@ -200,7 +200,7 @@ namespace SeeingSharp.Tests
                         hostPanel1.Dispose();
                         break;
 
-                    case 11:
+                    case 20:
                         fakeUIThread.Stop();
                         break;
                 }
