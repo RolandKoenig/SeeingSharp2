@@ -53,8 +53,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{9B532433
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp.StaticChecks", "Tools\SeeingSharp.StaticChecks\SeeingSharp.StaticChecks.csproj", "{23DF94AA-B58B-4B2A-9AE9-3350C0C3CA9A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Setups", "Setups", "{5D639872-DFEB-4B32-87EC-58CF12CC994B}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp.ModelViewer", "Tools\SeeingSharp.ModelViewer\SeeingSharp.ModelViewer.csproj", "{42DD13E3-5595-4CB3-9314-B8AE62999C58}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp.AssimpImporter", "SeeingSharp.AssimpImporter\SeeingSharp.AssimpImporter.csproj", "{CF98442B-2312-4520-9D94-8BFE3B90E4D2}"

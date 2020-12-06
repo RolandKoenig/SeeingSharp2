@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net5.0</TargetFrameworks>
     <LangVersion>8.0</LangVersion>
     <RootNamespace>SeeingSharp.AssimpImporter</RootNamespace>
     <PackageId>SeeingSharp2.AssimpImporter</PackageId>
@@ -32,7 +32,7 @@
     <PackageIcon>SeeingSharp_128.png</PackageIcon>
   </PropertyGroup>
   <ItemGroup>
-    <None Include="../_Misc/Nuget/SeeingSharp_128.png" Pack="true" PackagePath="\"/>
+    <None Include="../_Misc/Nuget/SeeingSharp_128.png" Pack="true" PackagePath="\" />
   </ItemGroup>
 
   <ItemGroup>

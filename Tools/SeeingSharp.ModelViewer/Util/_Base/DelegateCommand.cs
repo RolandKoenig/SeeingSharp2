@@ -48,13 +48,13 @@ namespace SeeingSharp.ModelViewer.Util
             this.CanExecuteChanged?.Invoke(this, EventArgs.Empty);
         }
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
             if (_canExecuteAction == null) { return true; }
             return _canExecuteAction();
         }
 
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
         {
             _executeAction();
         }
