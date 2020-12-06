@@ -89,11 +89,11 @@ namespace SeeingSharp.Tests
                 // Get and configure the camera
                 var camera = (PerspectiveCamera3D)memRenderTarget.Camera;
                 camera.Position = new Vector3(-1.5f, 3f, -1.5f);
-                camera.Target = new Vector3(1f, 0f, 1f);
+                camera.Target = new Vector3(1f, -1f, 1f);
                 camera.UpdateCamera();
 
                 // Define scene
-                SceneObject newMesh = null;
+                SceneSpacialObject newMesh = null;
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     var resGeometry = manipulator.AddResource(
@@ -102,12 +102,13 @@ namespace SeeingSharp.Tests
                     var resMaterial = manipulator.AddStandardMaterialResource();
 
                     newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
+                    newMesh.Scaling = new Vector3(0.5f, 0.5f, 0.5f);
                 });
                 await memRenderTarget.Scene.WaitUntilVisibleAsync(newMesh, memRenderTarget.RenderLoop);
 
                 // Take screenshot
                 var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
-                // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
+                //TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
                 var isNearEqual = BitmapComparison.IsNearEqual(
