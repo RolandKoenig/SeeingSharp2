@@ -21,7 +21,6 @@
 */
 
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Reflection;
@@ -60,7 +59,7 @@ namespace SeeingSharp.WinFormsSamples
 
             _cmdScreenshot.Image = Properties.Resources.Camera16x16;
 
-            this.Text = $@"{this.Text} ({Assembly.GetExecutingAssembly().GetName().Version.ToString(3)})";
+            this.Text = $@"{this.Text} ({Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "Unknown version"})";
 
             _ctrlRenderPanel.RenderLoop.PrepareRender += this.OnRenderLoop_PrepareRender;
 
