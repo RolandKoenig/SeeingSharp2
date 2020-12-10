@@ -59,93 +59,80 @@ namespace SeeingSharp.WinFormsSamples
 
             _cmdScreenshot.Image = Properties.Resources.Camera16x16;
 
-            this.Text = $@"{this.Text} ({Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "Unknown version"})";
+            this.Text =
+                $@"{this.Text} ({Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "Unknown version"})";
 
             _ctrlRenderPanel.RenderLoop.PrepareRender += this.OnRenderLoop_PrepareRender;
 
-            // Append dummy TabPage because of bug in .net 5.0
-            // Preview images in the first tab where not displayed. 
-            //
-            // TODO: Remote this try-finally block later when framework bug is fixed
-            var workaroundTabPage = new TabPage("BugWorkaround");
-            _tabControlSamples.TabPages.Add(workaroundTabPage); 
-            try
+            // AddObject all sample pages
+            var sampleRepo = new SampleRepository();
+            sampleRepo.LoadSampleData();
+            TabPage firstTabPage = null;
+            ListView firstListView = null;
+            ListViewItem firstListViewItem = null;
+            foreach (var actSampleGroup in sampleRepo.SampleGroups)
             {
+                var actTabPage = new TabPage(actSampleGroup.GroupName);
+                _tabControlSamples.TabPages.Add(actTabPage);
 
-                // AddObject all sample pages
-                var sampleRepo = new SampleRepository();
-                sampleRepo.LoadSampleData();
-                TabPage firstTabPage = null;
-                ListView firstListView = null;
-                ListViewItem firstListViewItem = null;
-                foreach (var actSampleGroup in sampleRepo.SampleGroups)
+                if (firstTabPage == null)
                 {
-                    var actTabPage = new TabPage(actSampleGroup.GroupName);
-                    _tabControlSamples.TabPages.Add(actTabPage);
+                    firstTabPage = actTabPage;
+                }
 
-                    if (firstTabPage == null)
-                    {
-                        firstTabPage = actTabPage;
-                    }
+                var actListView = new ListView
+                {
+                    Dock = DockStyle.Fill,
+                    Activation = ItemActivation.OneClick
+                };
 
-                    var actListView = new ListView
+                actListView.ItemSelectionChanged += this.OnListView_ItemSelectionChanged;
+                actListView.MultiSelect = false;
+                actListView.LargeImageList = _images;
+                actListView.SmallImageList = _images;
+                actTabPage.Controls.Add(actListView);
+
+                if (firstListView == null)
+                {
+                    firstListView = actListView;
+                }
+
+                foreach (var actSample in actSampleGroup.Samples)
+                {
+                    // Generate the new list entry for the current sample
+                    var newListItem = new ListViewItem
                     {
-                        Dock = DockStyle.Fill,
-                        Activation = ItemActivation.OneClick
+                        Text = actSample.Name,
+                        Tag = actSample
                     };
 
-                    actListView.ItemSelectionChanged += this.OnListView_ItemSelectionChanged;
-                    actListView.MultiSelect = false;
-                    actListView.LargeImageList = _images;
-                    actListView.SmallImageList = _images;
-                    actTabPage.Controls.Add(actListView);
-
-                    if (firstListView == null)
+                    actListView.Items.Add(newListItem);
+                    if (firstListViewItem == null)
                     {
-                        firstListView = actListView;
+                        firstListViewItem = newListItem;
                     }
 
-                    foreach (var actSample in actSampleGroup.Samples)
+                    // Load the item's image
+                    var sampleImageLink = actSample.TryGetSampleImageLink();
+                    if (sampleImageLink != null)
                     {
-                        // Generate the new list entry for the current sample
-                        var newListItem = new ListViewItem
+                        using (var inStream = sampleImageLink.OpenRead())
                         {
-                            Text = actSample.Name,
-                            Tag = actSample
-                        };
-
-                        actListView.Items.Add(newListItem);
-                        if (firstListViewItem == null)
-                        {
-                            firstListViewItem = newListItem;
-                        }
-
-                        // Load the item's image
-                        var sampleImageLink = actSample.TryGetSampleImageLink();
-                        if (sampleImageLink != null)
-                        {
-                            using (var inStream = sampleImageLink.OpenRead())
-                            {
-                                _images.Images.Add(Image.FromStream(inStream));
-                                newListItem.ImageIndex = _images.Images.Count - 1;
-                            }
+                            _images.Images.Add(Image.FromStream(inStream));
+                            newListItem.ImageIndex = _images.Images.Count - 1;
                         }
                     }
-                }
-
-                if (firstTabPage != null)
-                {
-                    _tabControlSamples.SelectedTab = firstTabPage;
-                }
-
-                if (firstListViewItem != null)
-                {
-                    firstListView.SelectedIndices.Add(0);
                 }
             }
-            finally
+
+            if (firstTabPage != null)
             {
-                _tabControlSamples.TabPages.Remove(workaroundTabPage);
+                _tabControlSamples.SelectedTab = firstTabPage;
+            }
+
+            if (firstListViewItem != null)
+            {
+                firstListView.SelectedIndices.Add(0);
             }
         }
 
