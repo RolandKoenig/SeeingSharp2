@@ -47,13 +47,13 @@ dotnet pack -c Release -o ./publish ./SeeingSharp.Wpf /p:ContinuousIntegrationBu
 nuget pack SeeingSharp.Uwp/SeeingSharp.Uwp.nuspec -OutputDirectory publish
 
 # Publish sample applications
-dotnet publish -c Release -f net5.0-windows -o ./publish/WinFormsCoreSamples ./Samples/SeeingSharp.WinFormsCoreSamples
-dotnet publish -c Release -f net5.0-windows -o ./publish/WpfCoreSamples ./Samples/SeeingSharp.WpfCoreSamples
+dotnet publish -c Release -f net5.0-windows -o ./publish/WinFormsSamples ./Samples/SeeingSharp.WinFormsSamples
+dotnet publish -c Release -f net5.0-windows -o ./publish/WpfSamples ./Samples/SeeingSharp.WpfSamples
 dotnet publish -c Release -f net5.0-windows -o ./publish/ModelViewer ./Tools/SeeingSharp.ModelViewer
 
 # Compress sample applications to have one zip archive for each
 $compress = @{
-  Path = "./publish/WinFormsCoreSamples", "./publish/WpfCoreSamples"
+  Path = "./publish/WinFormsSamples", "./publish/WpfSamples"
   CompressionLevel = "Optimal"
   DestinationPath = "./publish/SeeingSharp.Samples.zip"
 }

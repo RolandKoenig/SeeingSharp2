@@ -1,22 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFrameworks>net48;net5.0-windows</TargetFrameworks>
+    <UseWPF>true</UseWPF>
     <OutputType>WinExe</OutputType>
     <LangVersion>8.0</LangVersion>
     <ApplicationIcon>Assets\SeeingSharp.ico</ApplicationIcon>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="App.xaml" />
-    <None Remove="ChildRenderWindow.xaml" />
-    <None Remove="MainWindow.xaml" />
-    <None Remove="StatusBarControl.xaml" />
-    <None Remove="_Dialogs\PerformanceOverviewDialog.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ApplicationDefinition Include="App.xaml" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\..\_Misc\_SeeingSharp.Multimedia.licenseheader" Link="_SeeingSharp.Multimedia.licenseheader" />
@@ -24,7 +13,9 @@
 
   <ItemGroup>
     <PackageReference Include="PropertyTools" Version="3.0.0" />
-    <PackageReference Include="PropertyTools.Wpf" Version="3.0.0" />
+    <PackageReference Include="PropertyTools.Wpf" Version="3.0.0">
+      <NoWarn>NU1701</NoWarn>
+    </PackageReference>
     <PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
     <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0" />
@@ -34,37 +25,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Page Include="ChildRenderWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MainWindow.xaml" />
-    <Page Include="StatusBarControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="_Dialogs\PerformanceOverviewDialog.xaml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\SeeingSharp.Wpf\SeeingSharp.Wpf.csproj" />
     <ProjectReference Include="..\..\SeeingSharp\SeeingSharp.csproj" />
     <ProjectReference Include="..\SeeingSharp.SampleContainer\SeeingSharp.SampleContainer.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="ChildRenderWindow.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="StatusBarControl.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
   </ItemGroup>
 </Project>
