@@ -7,9 +7,44 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
-                <!-- Other merged dictionaries here -->
+
+                <!-- Custom theme overrides -->
+                <ResourceDictionary>
+                    <ResourceDictionary.ThemeDictionaries>
+                        <ResourceDictionary x:Key="Default">
+                            <!-- The "Default" theme dictionary is used unless a specific
+                                 light, dark, or high contrast dictionary is provided. These
+                                 resources should be tested with both the light and dark themes,
+                                 and specific light or dark resources provided as needed. -->
+                            <AcrylicBrush x:Key="NavigationViewDefaultPaneBackground"
+                                          BackgroundSource="Backdrop"
+                                          FallbackColor="{ThemeResource SystemAltMediumColor}"
+                                          TintColor="{ThemeResource SystemAltMediumColor}"
+                                          TintOpacity=".6" />
+                            <AcrylicBrush x:Key="NavigationViewExpandedPaneBackground"
+                                          BackgroundSource="Backdrop"
+                                          FallbackColor="{ThemeResource SystemAltMediumColor}"
+                                          TintColor="{ThemeResource SystemAltMediumColor}"
+                                          TintOpacity=".6" />
+
+
+                            <AcrylicBrush x:Key="GenericAcrylicBrush"
+                                          BackgroundSource="Backdrop"
+                                          FallbackColor="{ThemeResource SystemAltMediumColor}"
+                                          TintColor="{ThemeResource SystemAltMediumColor}"
+                                          TintOpacity=".6" />
+                        </ResourceDictionary>
+                        <ResourceDictionary x:Key="HighContrast">
+                            <!-- Always include a "HighContrast" dictionary when you override
+                                 theme resources. This empty dictionary ensures that the 
+                                 default high contrast resources are used when the user
+                                 turns on high contrast mode. -->
+                        </ResourceDictionary>
+                    </ResourceDictionary.ThemeDictionaries>
+
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
-            <!-- Other app resources here -->
         </ResourceDictionary>
+
     </Application.Resources>
 </Application>
