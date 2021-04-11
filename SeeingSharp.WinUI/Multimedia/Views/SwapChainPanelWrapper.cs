@@ -19,7 +19,6 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-
 using System;
 using Windows.Foundation;
 using Windows.Graphics.Display;
@@ -29,6 +28,8 @@ using Microsoft.UI.Xaml.Controls;
 using SeeingSharp.Util;
 using SharpDX;
 using SharpDX.DXGI;
+using WinRT;
+using IInspectable = WinRT.IInspectable;
 
 namespace SeeingSharp.Multimedia.Views
 {
@@ -73,7 +74,7 @@ namespace SeeingSharp.Multimedia.Views
                 else if (_panelNative != null) { _panelNative.SwapChain = value; }
                 else
                 {
-                    throw new ObjectDisposedException(nameof(SwapChainPanelWrapper));
+                    //throw new ObjectDisposedException(nameof(SwapChainPanelWrapper));
                 }
             }
         }
@@ -126,9 +127,11 @@ namespace SeeingSharp.Multimedia.Views
 
         public SwapChainPanelWrapper()
         {
-            var displayInfo = DisplayInformation.GetForCurrentView();
-            _currentDpiX = displayInfo.LogicalDpi;
-            _currentDpiY = displayInfo.LogicalDpi;
+            //var displayInfo = DisplayInformation.GetForCurrentView();
+            //_currentDpiX = displayInfo.LogicalDpi;
+            //_currentDpiY = displayInfo.LogicalDpi;
+            _currentDpiX = 96f;
+            _currentDpiY = 96f;
         }
 
         /// <summary>
@@ -139,11 +142,11 @@ namespace SeeingSharp.Multimedia.Views
             : this()
         {
             _bgPanel = bgPanel;
-            _bgPanelNative = ComObject.As<ISwapChainBackgroundPanelNative>(_bgPanel);
+            //_bgPanelNative = ComObject.As<ISwapChainBackgroundPanelNative>(_bgPanel);
 
-            _bgPanel.SizeChanged += this.OnAnyPanel_SizeChanged;
-            _bgPanel.Loaded += this.OnAnyPanel_Loaded;
-            _bgPanel.Unloaded += this.OnAnyPanel_Unloaded;
+            //_bgPanel.SizeChanged += this.OnAnyPanel_SizeChanged;
+            //_bgPanel.Loaded += this.OnAnyPanel_Loaded;
+            //_bgPanel.Unloaded += this.OnAnyPanel_Unloaded;
         }
 
         /// <summary>
@@ -154,7 +157,7 @@ namespace SeeingSharp.Multimedia.Views
             : this()
         {
             _panel = panel;
-            _panelNative = ComObject.As<ISwapChainPanelNative>(_panel);
+            //_panelNative = ComObject.As<ISwapChainPanelNative>(_panel);
 
             _panel.SizeChanged += this.OnAnyPanel_SizeChanged;
             _panel.Loaded += this.OnAnyPanel_Loaded;

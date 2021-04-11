@@ -2,12 +2,119 @@
     x:Class="SeeingSharp.WinUIDesktopSamples.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:SeeingSharp.WinUIDesktopSamples"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="using:SeeingSharp.WinUIDesktopSamples"
+    xmlns:localControls="using:SeeingSharp.WinUIDesktopSamples.Controls"
+    xmlns:samples="using:SeeingSharp.SampleContainer"
+    xmlns:samplesUtil="using:SeeingSharp.SampleContainer.Util"
+    xmlns:sSharp="using:SeeingSharp.Multimedia.Views"
     mc:Ignorable="d">
 
-    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <Button x:Name="myButton" Click="myButton_Click">Click Me</Button>
-    </StackPanel>
+    <Grid x:Name="CtrlMainContent">
+        <Grid.DataContext>
+            <local:MainWindowViewModel />
+        </Grid.DataContext>
+
+        <Grid.Resources>
+            <Storyboard x:Name="SwapChainFadeInStoryboard">
+                <RepositionThemeAnimation Storyboard.TargetName="CtrlSwapChain" FromHorizontalOffset="-30" />
+            </Storyboard>
+        </Grid.Resources>
+
+        <sSharp:SeeingSharpRenderPanel x:Name="CtrlSwapChain" />
+
+        <NavigationView IsBackButtonVisible="Collapsed"
+                        IsBackEnabled="False"
+                        IsSettingsVisible="False"
+                        IsTabStop="False" 
+                        PaneDisplayMode="LeftCompact"
+                        PaneTitle="Sample Groups"
+                        MenuItemsSource="{x:Bind ViewModel.SampleGroups, Mode=OneWay}"
+                        SelectedItem="{x:Bind ViewModel.SelectedGroup, Mode=TwoWay}">
+
+            <NavigationView.MenuItemTemplate>
+                <DataTemplate x:DataType="samples:SampleGroupMetadata">
+                    <NavigationViewItem Content="{x:Bind GroupName}"
+                                             ToolTipService.ToolTip="{x:Bind GroupName}">
+                        <NavigationViewItem.Icon>
+                            <FontIcon FontFamily="{x:Bind IconFontFamily}" Glyph="{x:Bind IconFontGlyph}" />
+                        </NavigationViewItem.Icon>
+                    </NavigationViewItem>
+                </DataTemplate>
+            </NavigationView.MenuItemTemplate>
+
+            <NavigationView.PaneFooter>
+                <StackPanel Orientation="Vertical">
+                    <NavigationViewItemHeader Content="Miscellaneous" Margin="32,0,0,0" />
+                    <ItemsControl ItemsSource="{x:Bind ViewModel.SampleCommands}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="samplesUtil:SampleCommand">
+                                <NavigationViewItem Content="{x:Bind CommandText}"
+                                                         ToolTipService.ToolTip="{x:Bind CommandText}"
+                                                         Tag="{x:Bind}"
+                                                         Tapped="OnSampleCommand_Tapped">
+                                    <NavigationViewItem.Icon>
+                                        <FontIcon FontFamily="{x:Bind IconFontFamily}" Glyph="{x:Bind IconFontGlyph}" />
+                                    </NavigationViewItem.Icon>
+                                </NavigationViewItem>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </NavigationView.PaneFooter>
+
+            <Grid>
+                <ListBox VerticalAlignment="Top"
+                         Background="{ThemeResource GenericAcrylicBrush}"
+                         ItemsSource="{x:Bind ViewModel.Samples}"
+                         SelectedItem="{x:Bind ViewModel.SelectedSample, Mode=TwoWay}"
+                         SelectionChanged="OnSelectedSampleChanged"
+                         SelectionMode="Single"
+                         VerticalContentAlignment="Top"
+                         ScrollViewer.HorizontalScrollMode="Enabled"
+                         ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                         Height="125">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate x:DataType="local:SampleViewModel">
+                            <StackPanel Orientation="Vertical"
+                                        Margin="5">
+                                <StackPanel.Transitions>
+                                    <TransitionCollection>
+                                        <EntranceThemeTransition />
+                                    </TransitionCollection>
+                                </StackPanel.Transitions>
+
+                                <Image Source="{x:Bind BitmapSource, Mode=OneWay}"
+                                       Width="64" Height="64"
+                                       Margin="5" />
+                                <TextBlock Text="{x:Bind Name, Mode=OneWay}"
+                                           HorizontalAlignment="Center" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <!-- PropertyGrid on the left -->
+                <localControls:PropertyGrid Margin="10,135,10,40" 
+                                            MaxWidth="530"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Top"
+                                            SelectedObject="{x:Bind ViewModel.SampleSettings, Mode=OneWay}" />
+
+                <!-- Status bar -->
+                <localControls:StatusBarControl CtrlRenderer="{Binding ElementName=CtrlSwapChain}"
+                                                VerticalAlignment="Bottom" />
+            </Grid>
+        </NavigationView>
+
+        <ProgressRing Visibility="{x:Bind ProgressRingVisibility, Mode=OneWay}"
+                      IsActive="True"
+                      Width="250" Height="250"/>
+    </Grid>
 </Window>

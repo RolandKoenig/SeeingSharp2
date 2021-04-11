@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows10.0.19041.0</TargetFramework>
@@ -17,8 +17,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\..\..\_Misc\_SeeingSharp.Multimedia.licenseheader" Link="_SeeingSharp.Multimedia.licenseheader" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\SeeingSharp.WinUI\SeeingSharp.WinUI.csproj" />
     <ProjectReference Include="..\..\..\SeeingSharp\SeeingSharp.csproj" />
     <ProjectReference Include="..\..\SeeingSharp.SampleContainer\SeeingSharp.SampleContainer.csproj" />
   </ItemGroup>
+
 </Project>

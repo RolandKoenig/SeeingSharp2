@@ -19,18 +19,14 @@
     You should have received a copy of the GNU Lesser General Public License
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-
 namespace SeeingSharp.WinUIDesktopSamples
 {
-    public class ViewModelBase : INotifyPropertyChanged
+    public enum PropertyValueType
     {
-        public event PropertyChangedEventHandler PropertyChanged;
+        Bool,
 
-        protected void RaisePropertyChanged([CallerMemberName] string propName = "")
-        {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
-        }
+        String,
+
+        Enum
     }
 }
