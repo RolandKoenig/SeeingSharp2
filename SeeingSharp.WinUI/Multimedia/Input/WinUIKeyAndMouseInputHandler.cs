@@ -22,8 +22,6 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using Windows.UI.Core;
-using Microsoft.UI.Input;
 using Microsoft.System;
 using Microsoft.UI.Input.Experimental;
 using Microsoft.UI.Xaml;
@@ -48,10 +46,10 @@ namespace SeeingSharp.Multimedia.Input
         private Panel _targetPanel;
         private IInputEnabledView _viewInterface;
         private RenderLoop _renderLoop;
-        //private Window _coreWindow;
         private DispatcherQueue _dispatcherQueue;
 
         // Local resources
+        private Button _dummyButtonForFocus;
         private bool _hasFocus;
 
         // Input states
@@ -124,17 +122,26 @@ namespace SeeingSharp.Multimedia.Input
                 _targetPanel.PointerReleased += this.OnTargetPanel_PointerReleased;
                 _targetPanel.PointerMoved += this.OnTargetPanel_PointerMoved;
 
-                _targetPanel.KeyDown += this.OnTargetPanel_KeyDown;
-                _targetPanel.KeyUp += this.OnTargetPanel_KeyUp;
-                _targetPanel.LostFocus += this.OnTargetPanel_LostFocus;
-                _targetPanel.GotFocus += this.OnTargetPanel_GotFocus;
-                
-                //_coreWindow = CoreWindow.GetForCurrentThread();
-                //_coreWindow.KeyDown += this.OnCoreWindow_KeyDown;
-                //_coreWindow.KeyUp += this.OnCoreWindow_KeyUp;
+                // Create the dummy button for focus management
+                //  see posts on: https://social.msdn.microsoft.com/Forums/en-US/54e4820d-d782-45d9-a2b1-4e3a13340788/set-focus-on-swapchainpanel-control?forum=winappswithcsharp
+                _dummyButtonForFocus = new Button
+                {
+                    Content = "Button",
+                    Width = 0,
+                    Height = 0,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    BorderThickness = new Thickness(0.0)
+                };
+
+                _dummyButtonForFocus.KeyDown += this.OnDummyButtonForFocus_KeyDown;
+                _dummyButtonForFocus.KeyUp += this.OnDummyButtonForFocus_KeyUp;
+                _dummyButtonForFocus.LostFocus += this.OnDummyButtonForFocus_LostFocus;
+                _dummyButtonForFocus.GotFocus += this.OnDummyButtonForFocus_GotFocus;
+                _targetPanel.Children.Insert(0, _dummyButtonForFocus);
 
                 // Set focus on the target
-                _targetPanel.Focus(FocusState.Programmatic);
+                _dummyButtonForFocus.Focus(FocusState.Programmatic);
             });
             if (!queued)
             {
@@ -153,11 +160,21 @@ namespace SeeingSharp.Multimedia.Input
             if (_dispatcherQueue == null) { return; }
 
             // Deregister all events on UI thread
+            var dummyButtonForFocus = _dummyButtonForFocus;
             var painter = _painter;
-            //var coreWindow = _coreWindow;
-
-            var uiTask = _dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, () =>
+            var dequeued = _dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, () =>
             {
+                // RemoveObject the dummy button
+                if (dummyButtonForFocus != null)
+                {
+                    dummyButtonForFocus.KeyDown -= this.OnDummyButtonForFocus_KeyDown;
+                    dummyButtonForFocus.KeyUp -= this.OnDummyButtonForFocus_KeyUp;
+                    dummyButtonForFocus.LostFocus -= this.OnDummyButtonForFocus_LostFocus;
+                    dummyButtonForFocus.GotFocus -= this.OnDummyButtonForFocus_GotFocus;
+
+                    _targetPanel.Children.Remove(dummyButtonForFocus);
+                }
+
                 // Deregister all events
                 _targetPanel.PointerExited -= this.OnTargetPanel_PointerExited;
                 _targetPanel.PointerEntered -= this.OnTargetPanel_PointerEntered;
@@ -166,21 +183,17 @@ namespace SeeingSharp.Multimedia.Input
                 _targetPanel.PointerReleased -= this.OnTargetPanel_PointerReleased;
                 _targetPanel.PointerMoved -= this.OnTargetPanel_PointerMoved;
 
-                _targetPanel.KeyDown -= this.OnTargetPanel_KeyDown;
-                _targetPanel.KeyUp -= this.OnTargetPanel_KeyUp;
-                _targetPanel.LostFocus -= this.OnTargetPanel_LostFocus;
-                _targetPanel.GotFocus -= this.OnTargetPanel_GotFocus;
-
                 _targetPanel = null;
-
-                //// Deregister events from CoreWindow
-                //coreWindow.KeyDown -= this.OnCoreWindow_KeyDown;
-                //coreWindow.KeyUp -= this.OnCoreWindow_KeyUp;
             });
+            if (!dequeued)
+            {
+                throw new SeeingSharpException(
+                    $"Unable to detach {nameof(WinUIKeyAndMouseInputHandler)} from view {painter}!");
+            }
 
             // set all references to zero
+            _dummyButtonForFocus = null;
             _painter = null;
-            //_coreWindow = null;
             _dispatcherQueue = null;
         }
 
@@ -193,23 +206,25 @@ namespace SeeingSharp.Multimedia.Input
             target.Add(_stateKeyboard);
         }
 
-        private void OnTargetPanel_KeyUp(object sender, KeyRoutedEventArgs e)
+        private void OnDummyButtonForFocus_KeyUp(object sender, KeyRoutedEventArgs e)
         {
             if (_painter == null) { return; }
 
-            // This enables bubbling of the keyboard event
-            e.Handled = false;
+            _stateKeyboard.Internals.NotifyKeyUp(s_keyMappingDict[e.Key]);
+
+            e.Handled = true;
         }
 
-        private void OnTargetPanel_KeyDown(object sender, KeyRoutedEventArgs e)
+        private void OnDummyButtonForFocus_KeyDown(object sender, KeyRoutedEventArgs e)
         {
             if (_painter == null) { return; }
 
-            // This enables bubbling of the keyboard event
-            e.Handled = false;
+            _stateKeyboard.Internals.NotifyKeyDown(s_keyMappingDict[e.Key]);
+
+            e.Handled = true;
         }
 
-        private void OnTargetPanel_LostFocus(object sender, RoutedEventArgs e)
+        private void OnDummyButtonForFocus_LostFocus(object sender, RoutedEventArgs e)
         {
             if (_painter == null) { return; }
 
@@ -218,25 +233,7 @@ namespace SeeingSharp.Multimedia.Input
             _hasFocus = false;
         }
 
-        private void OnCoreWindow_KeyDown(CoreWindow sender, KeyEventArgs e)
-        {
-            if (_painter == null) { return; }
-            if (!_hasFocus) { return; }
-            if (!s_keyMappingDict.ContainsKey(e.VirtualKey)) { return; }
-
-            _stateKeyboard.Internals.NotifyKeyDown(s_keyMappingDict[e.VirtualKey]);
-        }
-
-        private void OnCoreWindow_KeyUp(CoreWindow sender, KeyEventArgs e)
-        {
-            if (_painter == null) { return; }
-            if (!_hasFocus) { return; }
-            if (!s_keyMappingDict.ContainsKey(e.VirtualKey)) { return; }
-
-            _stateKeyboard.Internals.NotifyKeyUp(s_keyMappingDict[e.VirtualKey]);
-        }
-
-        private void OnTargetPanel_GotFocus(object sender, RoutedEventArgs e)
+        private void OnDummyButtonForFocus_GotFocus(object sender, RoutedEventArgs e)
         {
             if (_painter == null) { return; }
 
