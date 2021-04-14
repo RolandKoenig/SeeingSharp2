@@ -20,11 +20,13 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using System;
+using System.Runtime.InteropServices;
 using Windows.Foundation;
 using Windows.UI.Core;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using SeeingSharp.Util;
+using SharpDX;
 using SharpDX.DXGI;
 using WinRT;
 
@@ -32,11 +34,15 @@ namespace SeeingSharp.Multimedia.Views
 {
     internal class SwapChainPanelWrapper : IDisposable
     {
-        // UI objects
+        // UI objects (SwapChainBackgroundPanel)
         private SwapChainBackgroundPanel _bgPanel;
-        private WinUIDesktopInterop.ISwapChainPanelNative _bgPanelNative;
+        private ISwapChainBackgroundPanelNative _bgPanelNative;
+        private WinUIDesktopInterop.ISwapChainBackgroundPanelNative _bgPanelNativeDesktop;
+
+        // UI objects (SwapChainPanel)
         private SwapChainPanel _panel;
         private ISwapChainPanelNative _panelNative;
+        private WinUIDesktopInterop.ISwapChainPanelNative _panelNativeDesktop;
 
         // Configuration
         private float _currentDpiX;
@@ -69,9 +75,10 @@ namespace SeeingSharp.Multimedia.Views
         {
             set
             {
-                if (_bgPanelNative != null) { _bgPanelNative.SetSwapChain(value?.NativePointer ?? IntPtr.Zero).CheckError(); }
-                //if (_bgPanelNative != null) { _bgPanelNative.SetSwapChain(value); }
-                else if (_panelNative != null) { _panelNative.SwapChain = value; }
+                if (_panelNative != null) { _panelNative.SwapChain = value; }
+                else if (_panelNativeDesktop != null) { _panelNativeDesktop.SetSwapChain(value?.NativePointer ?? IntPtr.Zero); }
+                else if (_bgPanelNative != null) { _bgPanelNative.SwapChain = value; }
+                else if (_bgPanelNativeDesktop != null) { _bgPanelNativeDesktop.SetSwapChain(value?.NativePointer ?? IntPtr.Zero); }
                 else
                 {
                     throw new ObjectDisposedException(nameof(SwapChainPanelWrapper));
@@ -142,12 +149,19 @@ namespace SeeingSharp.Multimedia.Views
             : this()
         {
             _bgPanel = bgPanel;
-            //_bgPanelNative = bgPanel.
-            //_bgPanelNative = ComObject.As<WinUIDesktopInterop.ISwapChainBackgroundPanelNative>(_bgPanel);
+            try
+            {
+                _bgPanelNative = ComObject.As<ISwapChainBackgroundPanelNative>(bgPanel);
+            }
+            catch (SharpDXException ex)
+            {
+                if (ex.ResultCode != Result.NoInterface) { throw; }
+                _bgPanelNativeDesktop = bgPanel.As<WinUIDesktopInterop.ISwapChainBackgroundPanelNative>();
+            }
 
-            //_bgPanel.SizeChanged += this.OnAnyPanel_SizeChanged;
-            //_bgPanel.Loaded += this.OnAnyPanel_Loaded;
-            //_bgPanel.Unloaded += this.OnAnyPanel_Unloaded;
+            _bgPanel.SizeChanged += this.OnAnyPanel_SizeChanged;
+            _bgPanel.Loaded += this.OnAnyPanel_Loaded;
+            _bgPanel.Unloaded += this.OnAnyPanel_Unloaded;
         }
 
         /// <summary>
@@ -158,9 +172,15 @@ namespace SeeingSharp.Multimedia.Views
             : this()
         {
             _panel = panel;
-            _bgPanelNative = panel.As<WinUIDesktopInterop.ISwapChainPanelNative>();
-            //_bgPanelNative = ComObject.As<WinUIDesktopInterop.ISwapChainPanelNative>(_panel);
-            //_panelNative = ComObject.As<ISwapChainPanelNative>(_panel);
+            try
+            {
+                _panelNative = ComObject.As<ISwapChainPanelNative>(panel);
+            }
+            catch (SharpDXException ex)
+            {
+                if (ex.ResultCode != Result.NoInterface) { throw; }
+                _panelNativeDesktop = panel.As<WinUIDesktopInterop.ISwapChainPanelNative>();
+            }
 
             _panel.SizeChanged += this.OnAnyPanel_SizeChanged;
             _panel.Loaded += this.OnAnyPanel_Loaded;
@@ -170,9 +190,11 @@ namespace SeeingSharp.Multimedia.Views
 
         public void Dispose()
         {
-            //SeeingSharpUtil.SafeDispose(ref _bgPanelNative);
-            _bgPanelNative = null;
             SeeingSharpUtil.SafeDispose(ref _panelNative);
+            _panelNativeDesktop = null;
+
+            SeeingSharpUtil.SafeDispose(ref _bgPanelNative);
+            _bgPanelNative = null;
         }
 
         private void OnAnyPanel_Unloaded(object sender, RoutedEventArgs e)
