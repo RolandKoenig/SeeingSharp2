@@ -22,7 +22,7 @@
         </Grid.Resources>
 
         <Grid.ChildrenTransitions>
-            <EntranceThemeTransition FromHorizontalOffset="-5" FromVerticalOffset="0" IsStaggeringEnabled="True" />
+            <ContentThemeTransition HorizontalOffset="-10" VerticalOffset="0" />
         </Grid.ChildrenTransitions>
     </Grid>
 </UserControl>

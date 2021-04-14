@@ -22,9 +22,9 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
-using Windows.System;
 using Windows.UI.Core;
 using Microsoft.UI.Input;
+using Microsoft.System;
 using Microsoft.UI.Input.Experimental;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -38,7 +38,7 @@ namespace SeeingSharp.Multimedia.Input
     {
         private const float MOVEMENT = 0.3f;
         private const float ROTATION = 0.01f;
-        private static readonly Dictionary<VirtualKey, WinVirtualKey> s_keyMappingDict;
+        private static readonly Dictionary<Windows.System.VirtualKey, WinVirtualKey> s_keyMappingDict;
 
         // State variables for camera movement
         private ExpPointerPoint _lastDragPoint;
@@ -49,10 +49,9 @@ namespace SeeingSharp.Multimedia.Input
         private IInputEnabledView _viewInterface;
         private RenderLoop _renderLoop;
         //private Window _coreWindow;
-        private CoreDispatcher _dispatcher;
+        private DispatcherQueue _dispatcherQueue;
 
         // Local resources
-        //private Button _dummyButtonForFocus;
         private bool _hasFocus;
 
         // Input states
@@ -64,8 +63,8 @@ namespace SeeingSharp.Multimedia.Input
         /// </summary>
         static WinUIKeyAndMouseInputHandler()
         {
-            s_keyMappingDict = new Dictionary<VirtualKey, WinVirtualKey>();
-            foreach (VirtualKey actVirtualKey in Enum.GetValues(typeof(VirtualKey)))
+            s_keyMappingDict = new Dictionary<Windows.System.VirtualKey, WinVirtualKey>();
+            foreach (Windows.System.VirtualKey actVirtualKey in Enum.GetValues(typeof(Windows.System.VirtualKey)))
             {
                 var actVirtualKeyCode = (short)actVirtualKey;
                 var actWinVirtualKey = (WinVirtualKey)actVirtualKeyCode;
@@ -110,11 +109,11 @@ namespace SeeingSharp.Multimedia.Input
             _renderLoop = _viewInterface.RenderLoop;
             if (_renderLoop == null) { throw new ArgumentException("Unable to handle given view object!"); }
 
-            _dispatcher = _painter.Dispatcher;
-            if (_dispatcher == null) { throw new ArgumentException("Unable to get CoreDispatcher from target panel!"); }
+            _dispatcherQueue = _painter.DispatcherQueue;
+            if (_dispatcherQueue == null) { throw new ArgumentException("Unable to get CoreDispatcher from target panel!"); }
 
             // Delegate start logic to UI thread
-            var uiTask = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            var queued = _dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, () =>
             {
                 // Register all events
                 _targetPanel = _painter.TargetPanel;
@@ -125,31 +124,23 @@ namespace SeeingSharp.Multimedia.Input
                 _targetPanel.PointerReleased += this.OnTargetPanel_PointerReleased;
                 _targetPanel.PointerMoved += this.OnTargetPanel_PointerMoved;
 
-                //// Create the dummy button for focus management
-                ////  see posts on: https://social.msdn.microsoft.com/Forums/en-US/54e4820d-d782-45d9-a2b1-4e3a13340788/set-focus-on-swapchainpanel-control?forum=winappswithcsharp
-                //_dummyButtonForFocus = new Button
-                //{
-                //    Content = "Button",
-                //    Width = 0,
-                //    Height = 0,
-                //    HorizontalAlignment = HorizontalAlignment.Left,
-                //    VerticalAlignment = VerticalAlignment.Top,
-                //    BorderThickness = new Thickness(0.0)
-                //};
-
-                //_dummyButtonForFocus.KeyDown += this.OnDummyButtonForFocus_KeyDown;
-                //_dummyButtonForFocus.KeyUp += this.OnDummyButtonForFocus_KeyUp;
-                //_dummyButtonForFocus.LostFocus += this.OnDummyButtonForFocus_LostFocus;
-                //_dummyButtonForFocus.GotFocus += this.OnDummyButtonForFocus_GotFocus;
-                //_targetPanel.Children.Insert(0, _dummyButtonForFocus);
-
+                _targetPanel.KeyDown += this.OnTargetPanel_KeyDown;
+                _targetPanel.KeyUp += this.OnTargetPanel_KeyUp;
+                _targetPanel.LostFocus += this.OnTargetPanel_LostFocus;
+                _targetPanel.GotFocus += this.OnTargetPanel_GotFocus;
+                
                 //_coreWindow = CoreWindow.GetForCurrentThread();
                 //_coreWindow.KeyDown += this.OnCoreWindow_KeyDown;
                 //_coreWindow.KeyUp += this.OnCoreWindow_KeyUp;
 
-                //// Set focus on the target
-                //_dummyButtonForFocus.Focus(FocusState.Programmatic);
+                // Set focus on the target
+                _targetPanel.Focus(FocusState.Programmatic);
             });
+            if (!queued)
+            {
+                throw new SeeingSharpException(
+                    $"Unable to attach {nameof(WinUIKeyAndMouseInputHandler)} to view {viewObject}!");
+            }
         }
 
         /// <summary>
@@ -159,26 +150,14 @@ namespace SeeingSharp.Multimedia.Input
         {
             _hasFocus = false;
             if (_painter == null) { return; }
-            if (_dispatcher == null) { return; }
+            if (_dispatcherQueue == null) { return; }
 
             // Deregister all events on UI thread
-            //var dummyButtonForFocus = _dummyButtonForFocus;
             var painter = _painter;
             //var coreWindow = _coreWindow;
 
-            var uiTask = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            var uiTask = _dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, () =>
             {
-                //// RemoveObject the dummy button
-                //if (dummyButtonForFocus != null)
-                //{
-                //    dummyButtonForFocus.KeyDown -= this.OnDummyButtonForFocus_KeyDown;
-                //    dummyButtonForFocus.KeyUp -= this.OnDummyButtonForFocus_KeyUp;
-                //    dummyButtonForFocus.LostFocus -= this.OnDummyButtonForFocus_LostFocus;
-                //    dummyButtonForFocus.GotFocus -= this.OnDummyButtonForFocus_GotFocus;
-
-                //    _targetPanel.Children.Remove(dummyButtonForFocus);
-                //}
-
                 // Deregister all events
                 _targetPanel.PointerExited -= this.OnTargetPanel_PointerExited;
                 _targetPanel.PointerEntered -= this.OnTargetPanel_PointerEntered;
@@ -186,6 +165,11 @@ namespace SeeingSharp.Multimedia.Input
                 _targetPanel.PointerPressed -= this.OnTargetPanel_PointerPressed;
                 _targetPanel.PointerReleased -= this.OnTargetPanel_PointerReleased;
                 _targetPanel.PointerMoved -= this.OnTargetPanel_PointerMoved;
+
+                _targetPanel.KeyDown -= this.OnTargetPanel_KeyDown;
+                _targetPanel.KeyUp -= this.OnTargetPanel_KeyUp;
+                _targetPanel.LostFocus -= this.OnTargetPanel_LostFocus;
+                _targetPanel.GotFocus -= this.OnTargetPanel_GotFocus;
 
                 _targetPanel = null;
 
@@ -195,10 +179,9 @@ namespace SeeingSharp.Multimedia.Input
             });
 
             // set all references to zero
-            //_dummyButtonForFocus = null;
             _painter = null;
             //_coreWindow = null;
-            _dispatcher = null;
+            _dispatcherQueue = null;
         }
 
         /// <summary>
@@ -210,64 +193,61 @@ namespace SeeingSharp.Multimedia.Input
             target.Add(_stateKeyboard);
         }
 
-        //private void OnDummyButtonForFocus_KeyUp(object sender, KeyRoutedEventArgs e)
-        //{
-        //    if (_painter == null) { return; }
+        private void OnTargetPanel_KeyUp(object sender, KeyRoutedEventArgs e)
+        {
+            if (_painter == null) { return; }
 
-        //    // This enables bubbling of the keyboard event
-        //    e.Handled = false;
-        //}
+            // This enables bubbling of the keyboard event
+            e.Handled = false;
+        }
 
-        //private void OnDummyButtonForFocus_KeyDown(object sender, KeyRoutedEventArgs e)
-        //{
-        //    if (_painter == null) { return; }
+        private void OnTargetPanel_KeyDown(object sender, KeyRoutedEventArgs e)
+        {
+            if (_painter == null) { return; }
 
-        //    // This enables bubbling of the keyboard event
-        //    e.Handled = false;
-        //}
+            // This enables bubbling of the keyboard event
+            e.Handled = false;
+        }
 
-        //private void OnDummyButtonForFocus_LostFocus(object sender, RoutedEventArgs e)
-        //{
-        //    if (_painter == null) { return; }
+        private void OnTargetPanel_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (_painter == null) { return; }
 
-        //    _stateKeyboard.Internals.NotifyFocusLost();
+            _stateKeyboard.Internals.NotifyFocusLost();
 
-        //    _hasFocus = false;
-        //}
+            _hasFocus = false;
+        }
 
-        //private void OnCoreWindow_KeyDown(CoreWindow sender, KeyEventArgs e)
-        //{
-        //    if (_painter == null) { return; }
-        //    if (!_hasFocus) { return; }
-        //    if (!s_keyMappingDict.ContainsKey(e.VirtualKey)) { return; }
+        private void OnCoreWindow_KeyDown(CoreWindow sender, KeyEventArgs e)
+        {
+            if (_painter == null) { return; }
+            if (!_hasFocus) { return; }
+            if (!s_keyMappingDict.ContainsKey(e.VirtualKey)) { return; }
 
-        //    _stateKeyboard.Internals.NotifyKeyDown(s_keyMappingDict[e.VirtualKey]);
-        //}
+            _stateKeyboard.Internals.NotifyKeyDown(s_keyMappingDict[e.VirtualKey]);
+        }
 
-        //private void OnCoreWindow_KeyUp(CoreWindow sender, KeyEventArgs e)
-        //{
-        //    if (_painter == null) { return; }
-        //    if (!_hasFocus) { return; }
-        //    if (!s_keyMappingDict.ContainsKey(e.VirtualKey)) { return; }
+        private void OnCoreWindow_KeyUp(CoreWindow sender, KeyEventArgs e)
+        {
+            if (_painter == null) { return; }
+            if (!_hasFocus) { return; }
+            if (!s_keyMappingDict.ContainsKey(e.VirtualKey)) { return; }
 
-        //    _stateKeyboard.Internals.NotifyKeyUp(s_keyMappingDict[e.VirtualKey]);
-        //}
+            _stateKeyboard.Internals.NotifyKeyUp(s_keyMappingDict[e.VirtualKey]);
+        }
 
-        //private void OnDummyButtonForFocus_GotFocus(object sender, RoutedEventArgs e)
-        //{
-        //    if (_painter == null) { return; }
+        private void OnTargetPanel_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (_painter == null) { return; }
 
-        //    _stateKeyboard.Internals.NotifyFocusGot();
-        //    _hasFocus = true;
-        //}
+            _stateKeyboard.Internals.NotifyFocusGot();
+            _hasFocus = true;
+        }
 
         private void OnTargetPanel_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
             if (_painter == null) { return; }
             if (_targetPanel == null) { return; }
-
-            //// Set focus on target
-            //_dummyButtonForFocus?.Focus(FocusState.Programmatic);
 
             // Track mouse/pointer state
             var currentPoint = e.GetCurrentPoint(_targetPanel);
@@ -292,8 +272,8 @@ namespace SeeingSharp.Multimedia.Input
             if (_painter == null) { return; }
             if (_targetPanel == null) { return; }
 
-            //// Set focus on target
-            //_dummyButtonForFocus?.Focus(FocusState.Programmatic);
+            // Set focus on target
+            _targetPanel.Focus(FocusState.Programmatic);
 
             // Track mouse/pointer state
             var currentPoint = e.GetCurrentPoint(_targetPanel);

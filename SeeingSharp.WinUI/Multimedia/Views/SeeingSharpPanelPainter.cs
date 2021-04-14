@@ -23,6 +23,7 @@ using System;
 using System.Threading;
 using Windows.Foundation;
 using Windows.UI.Core;
+using Microsoft.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
@@ -134,7 +135,7 @@ namespace SeeingSharp.Multimedia.Views
         /// </summary>
         public bool IsOperational => this.RenderLoop.IsOperational;
 
-        public CoreDispatcher Dispatcher => _targetPanel?.Dispatcher;
+        public DispatcherQueue DispatcherQueue => _targetPanel?.DispatcherQueue;
 
         /// <summary>
         /// Does the target control have focus?

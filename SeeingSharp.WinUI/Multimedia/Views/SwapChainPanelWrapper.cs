@@ -23,6 +23,7 @@ using System;
 using System.Runtime.InteropServices;
 using Windows.Foundation;
 using Windows.UI.Core;
+using Microsoft.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using SeeingSharp.Util;
@@ -106,12 +107,12 @@ namespace SeeingSharp.Multimedia.Views
             }
         }
 
-        public CoreDispatcher Dispatcher
+        public DispatcherQueue DispatcherQueue
         {
             get
             {
-                if (_bgPanel != null) { return _bgPanel.Dispatcher; }
-                if (_panel != null) { return _panel.Dispatcher; }
+                if (_bgPanel != null) { return _bgPanel.DispatcherQueue; }
+                if (_panel != null) { return _panel.DispatcherQueue; }
                 throw new ObjectDisposedException(nameof(SwapChainPanelWrapper));
             }
         }
