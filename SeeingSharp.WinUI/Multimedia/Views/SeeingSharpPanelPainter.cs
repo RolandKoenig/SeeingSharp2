@@ -458,6 +458,7 @@ namespace SeeingSharp.Multimedia.Views
         bool IRenderLoopHost.OnRenderLoop_CheckCanRender(EngineDevice engineDevice)
         {
             if (_targetPanel == null) { return false; }
+            if (!_targetPanel.IsPanelLoaded) { return false;}
             if (_targetPanel.ActualWidth <= 0) { return false; }
             if (_targetPanel.ActualHeight <= 0) { return false; }
             if (_targetPanel.Visibility != Visibility.Visible) { return false; }
