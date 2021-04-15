@@ -51,7 +51,6 @@
     <Compile Include="Multimedia\Input\WinRTKeyAndMouseInputHandler.cs" />
     <Compile Include="Multimedia\Views\SeeingSharpPanelPainter.cs" />
     <Compile Include="Multimedia\Views\SeeingSharpRenderPanel.cs" />
-    <Compile Include="Multimedia\Views\SwapChainPanelWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SeeingSharpConstantsUwp.cs" />
     <Compile Include="SeeingSharpUwpExtensions.cs" />

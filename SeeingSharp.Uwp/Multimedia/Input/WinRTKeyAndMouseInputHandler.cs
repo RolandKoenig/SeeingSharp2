@@ -114,7 +114,7 @@ namespace SeeingSharp.Multimedia.Input
             if (_dispatcher == null) { throw new ArgumentException("Unable to get CoreDispatcher from target panel!"); }
 
             // Delegate start logic to UI thread
-            var uiTask = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 // Register all events
                 _targetPanel = _painter.TargetPanel;
@@ -163,10 +163,8 @@ namespace SeeingSharp.Multimedia.Input
 
             // Deregister all events on UI thread
             var dummyButtonForFocus = _dummyButtonForFocus;
-            var painter = _painter;
             var coreWindow = _coreWindow;
-
-            var uiTask = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 // RemoveObject the dummy button
                 if (dummyButtonForFocus != null)
