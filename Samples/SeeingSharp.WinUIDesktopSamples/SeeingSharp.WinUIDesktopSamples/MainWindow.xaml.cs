@@ -52,7 +52,7 @@ namespace SeeingSharp.WinUIDesktopSamples
         private SampleMetadata _actSampleInfo;
         private bool _isChangingSample;
 
-        //private List<ChildRenderPage> _childPages;
+        private List<ChildRenderWindow> _childPages;
 
         public bool IsChangingSample
         {
@@ -78,7 +78,7 @@ namespace SeeingSharp.WinUIDesktopSamples
         {
             this.InitializeComponent();
 
-            //_childPages = new List<ChildRenderPage>();
+            _childPages = new List<ChildRenderWindow>();
 
             //CommonUtil.UpdateApplicationTitleBar("Main window");
 
@@ -100,10 +100,10 @@ namespace SeeingSharp.WinUIDesktopSamples
 
                 // Discard presenting before updating current sample
                 this.CtrlSwapChain.DiscardPresent = true;
-                //foreach (var actChildWindow in _childPages)
-                //{
-                //    actChildWindow.DiscardPresent = true;
-                //}
+                foreach (var actChildWindow in _childPages)
+                {
+                    actChildWindow.DiscardPresent = true;
+                }
 
                 // Clear previous sample
                 if (_actSampleInfo != null)
@@ -115,10 +115,10 @@ namespace SeeingSharp.WinUIDesktopSamples
                     await CtrlSwapChain.RenderLoop.Clear2DDrawingLayersAsync();
                     CtrlSwapChain.RenderLoop.ObjectFilters.Clear();
 
-                    //foreach (var actChildWindow in _childPages)
-                    //{
-                    //    await actChildWindow.ClearAsync();
-                    //}
+                    foreach (var actChildWindow in _childPages)
+                    {
+                        await actChildWindow.ClearAsync();
+                    }
 
                     _actSample.OnSampleClosed();
                 }
@@ -139,11 +139,11 @@ namespace SeeingSharp.WinUIDesktopSamples
                     await sampleObject.OnStartupAsync(CtrlSwapChain.RenderLoop, sampleSettings);
                     await sampleObject.OnInitRenderingWindowAsync(CtrlSwapChain.RenderLoop);
                     await sampleObject.OnReloadAsync(CtrlSwapChain.RenderLoop, sampleSettings);
-                    
-                    //foreach (var actChildWindow in _childPages)
-                    //{
-                    //    await actChildWindow.SetRenderingDataAsync(sampleObject);
-                    //}
+
+                    foreach (var actChildWindow in _childPages)
+                    {
+                        await actChildWindow.SetRenderingDataAsync(sampleObject);
+                    }
 
                     _actSample = sampleObject;
                     _actSampleSettings = sampleSettings;
@@ -166,17 +166,17 @@ namespace SeeingSharp.WinUIDesktopSamples
             {
                 // Continue presenting
                 this.CtrlSwapChain.DiscardPresent = false;
-                //foreach (var actChildWindow in _childPages)
-                //{
-                //    actChildWindow.DiscardPresent = false;
-                //}
+                foreach (var actChildWindow in _childPages)
+                {
+                    actChildWindow.DiscardPresent = false;
+                }
 
                 // Do a simple fade in for the rendering control
                 SwapChainFadeInStoryboard.Begin();
-                //foreach (var actChildWindow in _childPages)
-                //{
-                //    actChildWindow.TriggerRenderControlFadeInAnimation();
-                //}
+                foreach (var actChildWindow in _childPages)
+                {
+                    actChildWindow.TriggerRenderControlFadeInAnimation();
+                }
 
                 // Reset lock for 'ApplySample' method
                 this.IsChangingSample = false;
@@ -207,10 +207,10 @@ namespace SeeingSharp.WinUIDesktopSamples
             {
                 // Discard presenting before updating current sample
                 this.CtrlSwapChain.DiscardPresent = true;
-                //foreach (var actChildWindow in _childPages)
-                //{
-                //    actChildWindow.DiscardPresent = true;
-                //}
+                foreach (var actChildWindow in _childPages)
+                {
+                    actChildWindow.DiscardPresent = true;
+                }
 
                 // Reload sample
                 await sample.OnReloadAsync(CtrlSwapChain.RenderLoop, sampleSettings);
@@ -223,10 +223,10 @@ namespace SeeingSharp.WinUIDesktopSamples
             {
                 // Continue presenting
                 this.CtrlSwapChain.DiscardPresent = false;
-                //foreach (var actChildWindow in _childPages)
-                //{
-                //    actChildWindow.DiscardPresent = false;
-                //}
+                foreach (var actChildWindow in _childPages)
+                {
+                    actChildWindow.DiscardPresent = false;
+                }
 
                 // Reset lock for 'ApplySample' method
                 this.IsChangingSample = false;
@@ -264,62 +264,12 @@ namespace SeeingSharp.WinUIDesktopSamples
             this.ApplySample(selectedSample.SampleMetadata, viewModel.SampleSettings);
         }
 
-        //private async void OnViewModel_NewChildWindowRequest(object sender, EventArgs eArgs)
+        //private void OnViewModel_NewChildWindowRequest(object sender, EventArgs eArgs)
         //{
-        //    // Get current scene and camera viewpoint
-        //    var currentScene = CtrlSwapChain.Scene;
-        //    var currentViewPoint = CtrlSwapChain.Camera.GetViewPoint();
+        //    var childWindow = new ChildRenderWindow();
+        //    _childPages.Add(childWindow);
 
-        //    // Create the child window and the page
-        //    // Be careful: the child view has it's own UI thread. See https://docs.microsoft.com/en-us/windows/uwp/design/layout/application-view
-        //    var newView = CoreApplication.CreateNewView();
-        //    var newViewId = 0;
-        //    ChildRenderPage childPage = null;
-        //    var hostDispatcher = this.Dispatcher;
-        //    await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-        //    {
-        //        childPage = new ChildRenderPage();
-        //        childPage.InitializeChildWindow(currentScene, currentViewPoint);
-
-        //        Window.Current.Content = childPage;
-        //        Window.Current.Activate();
-        //        Window.Current.VisibilityChanged += async (o, args) =>
-        //        {
-        //            // 'Visible == false' means that the user closed the window
-        //            if (args.Visible == false)
-        //            {
-        //                // Set content to null --> This ensures that SeeingSharp gets the unloaded event from the view internally
-        //                Window.Current.Content = null;
-
-        //                //// Notify the host that the ChildRenderPage was removed
-        //                //await hostDispatcher.RunAsync(
-        //                //    CoreDispatcherPriority.Normal,
-        //                //    () => _childPages.Remove(childPage));
-
-        //                // Wait some loop passes to ensure that all references to this additional view are cleared
-        //                await GraphicsCore.Current.MainLoop.WaitForNextPassedLoopAsync();
-        //                await GraphicsCore.Current.MainLoop.WaitForNextPassedLoopAsync();
-        //                await GraphicsCore.Current.MainLoop.WaitForNextPassedLoopAsync();
-                        
-        //                // Finally close the window
-        //                Window.Current.Close();
-        //            }
-        //        };
-
-        //        newViewId = ApplicationView.GetForCurrentView().Id;
-        //    });
-
-        //    // Show the child window
-        //    var viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
-        //    if (viewShown)
-        //    {
-        //        //// Register the child page
-        //        //_childPages.Add(childPage);
-
-        //        // We can call this one in the current thread
-        //        // Should be thread save
-        //        await childPage.SetRenderingDataAsync(_actSample);
-        //    }
+        //    childWindow.Activate();
         //}
 
         private void OnSampleCommand_Tapped(object sender, TappedRoutedEventArgs e)

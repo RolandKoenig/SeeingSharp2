@@ -83,11 +83,11 @@ namespace SeeingSharp.WinUIDesktopSamples
                     this.SampleCommands.Clear();
                     if (_sampleSettings != null)
                     {
-                        this.SampleCommands.Add(new SampleCommand(
-                            "New Child Window",
-                            () => this.NewChildWindowRequest?.Invoke(this, EventArgs.Empty), 
-                            () => true,
-                            "Segoe MDL2 Assets", (char) 0xE78B));
+                        //this.SampleCommands.Add(new SampleCommand(
+                        //    "New Child Window",
+                        //    () => this.NewChildWindowRequest?.Invoke(this, EventArgs.Empty), 
+                        //    () => true,
+                        //    "Segoe MDL2 Assets", (char) 0xE78B));
 
                         foreach (var actSampleCommand in _sampleSettings.GetCommands())
                         {

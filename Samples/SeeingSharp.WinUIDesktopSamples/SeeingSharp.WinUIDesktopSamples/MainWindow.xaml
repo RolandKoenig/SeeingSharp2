@@ -36,7 +36,7 @@
             <NavigationView.MenuItemTemplate>
                 <DataTemplate x:DataType="samples:SampleGroupMetadata">
                     <NavigationViewItem Content="{x:Bind GroupName}"
-                                             ToolTipService.ToolTip="{x:Bind GroupName}">
+                                        ToolTipService.ToolTip="{x:Bind GroupName}">
                         <NavigationViewItem.Icon>
                             <FontIcon FontFamily="{x:Bind IconFontFamily}" Glyph="{x:Bind IconFontGlyph}" />
                         </NavigationViewItem.Icon>
@@ -51,9 +51,9 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate x:DataType="samplesUtil:SampleCommand">
                                 <NavigationViewItem Content="{x:Bind CommandText}"
-                                                         ToolTipService.ToolTip="{x:Bind CommandText}"
-                                                         Tag="{x:Bind}"
-                                                         Tapped="OnSampleCommand_Tapped">
+                                                    ToolTipService.ToolTip="{x:Bind CommandText}"
+                                                    Tag="{x:Bind}"
+                                                    Tapped="OnSampleCommand_Tapped">
                                     <NavigationViewItem.Icon>
                                         <FontIcon FontFamily="{x:Bind IconFontFamily}" Glyph="{x:Bind IconFontGlyph}" />
                                     </NavigationViewItem.Icon>
