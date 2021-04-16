@@ -31,6 +31,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
@@ -80,7 +81,12 @@ namespace SeeingSharp.WinUIDesktopSamples
 
             _childPages = new List<ChildRenderWindow>();
 
-            //CommonUtil.UpdateApplicationTitleBar("Main window");
+            // Set window title
+            var package = Package.Current;
+            var appName = package.DisplayName;
+            this.Title = $@"{appName} - Main window - {Assembly.GetExecutingAssembly().GetName().Version}";
+
+            //this.ExtendsContentIntoTitleBar = true;
 
             this.CtrlMainContent.Loaded += this.OnLoaded;
         }
