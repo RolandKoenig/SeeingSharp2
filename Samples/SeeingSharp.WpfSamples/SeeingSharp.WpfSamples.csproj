@@ -3,7 +3,7 @@
     <TargetFrameworks>net48;net5.0-windows</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <OutputType>WinExe</OutputType>
-    <LangVersion>8.0</LangVersion>
+    <LangVersion>9.0</LangVersion>
     <ApplicationIcon>Assets\SeeingSharp.ico</ApplicationIcon>
   </PropertyGroup>
 
