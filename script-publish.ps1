@@ -41,6 +41,7 @@ dotnet pack -c Release -o ./publish ./SeeingSharp /p:ContinuousIntegrationBuild=
 dotnet pack -c Release -o ./publish ./SeeingSharp.AssimpImporter /p:ContinuousIntegrationBuild=true /p:IncludeSymbols=true /p:EmbedUntrackedSources=true -p:SymbolPackageFormat=snupkg
 dotnet pack -c Release -o ./publish ./SeeingSharp.WinForms /p:ContinuousIntegrationBuild=true /p:IncludeSymbols=true /p:EmbedUntrackedSources=true -p:SymbolPackageFormat=snupkg
 dotnet pack -c Release -o ./publish ./SeeingSharp.Wpf /p:ContinuousIntegrationBuild=true /p:IncludeSymbols=true /p:EmbedUntrackedSources=true -p:SymbolPackageFormat=snupkg
+dotnet pack -c Release -o ./publish ./SeeingSharp.WinUI /p:ContinuousIntegrationBuild=true /p:IncludeSymbols=true /p:EmbedUntrackedSources=true -p:SymbolPackageFormat=snupkg
 
 # Build and pack SeeingSharp.Uwp by MSBuild (still old project format)
 &$msbuildExe SeeingSharp.Uwp/SeeingSharp.Uwp.csproj /t:Build /p:Configuration=Release /p:ContinuousIntegrationBuild=true

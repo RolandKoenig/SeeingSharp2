@@ -4,7 +4,7 @@ extensions: MS.cs
 extensions: .rd.xml
 extensions: .cs .cpp .h .hlsl .xaml.cs
 /*
-    Seeing# and all applications distributed together with it. 
+    SeeingSharp and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
@@ -32,7 +32,7 @@ extensions: .vb
 'Sample license text.
 extensions:  .xml .config .xsd .wxs
 <!--
-    Seeing# and all applications distributed together with it. 
+    SeeingSharp and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
