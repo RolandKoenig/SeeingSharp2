@@ -1,4 +1,4 @@
-Seeing# and all applications distributed together with it. 
+SeeingSharp and all applications distributed together with it. 
 Exceptions are projects where it is noted otherwise.
 More info at 
  - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)

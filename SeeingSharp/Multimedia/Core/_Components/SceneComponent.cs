@@ -30,7 +30,7 @@ namespace SeeingSharp.Multimedia.Core
     {
         /// <summary>
         /// Attaches this component to a scene.
-        /// Be careful, this method gets called from a background thread of seeing#!
+        /// Be careful, this method gets called from a background thread of SeeingSharp!
         /// It may also be called from multiple scenes in parallel or simply without previous Detach call.
         /// </summary>
         /// <param name="manipulator">The manipulator of the scene we attach to.</param>
@@ -39,7 +39,7 @@ namespace SeeingSharp.Multimedia.Core
 
         /// <summary>
         /// Detaches this component from a scene.
-        /// Be careful, this method gets called from a background thread of seeing#!
+        /// Be careful, this method gets called from a background thread of SeeingSharp!
         /// It may also be called from multiple scenes in parallel.
         /// </summary>
         /// <param name="manipulator">The manipulator of the scene we attach to.</param>
@@ -82,7 +82,7 @@ namespace SeeingSharp.Multimedia.Core
     {
         /// <summary>
         /// Attaches this component to a scene.
-        /// Be careful, this method gets called from a background thread of seeing#!
+        /// Be careful, this method gets called from a background thread of SeeingSharp!
         /// It may also be called from multiple scenes in parallel or simply without previous Detach call.
         /// </summary>
         /// <param name="manipulator">The manipulator of the scene we attach to.</param>
@@ -91,7 +91,7 @@ namespace SeeingSharp.Multimedia.Core
 
         /// <summary>
         /// Detaches this component from a scene.
-        /// Be careful, this method gets called from a background thread of seeing#!
+        /// Be careful, this method gets called from a background thread of SeeingSharp!
         /// It may also be called from multiple scenes in parallel.
         /// </summary>
         /// <param name="manipulator">The manipulator of the scene we attach to.</param>

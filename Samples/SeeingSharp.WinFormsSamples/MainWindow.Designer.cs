@@ -334,7 +334,7 @@ namespace SeeingSharp.WinFormsSamples
             this.Controls.Add(this._barStatus);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainWindow";
-            this.Text = "Seeing# 2 - Windows.Forms samples - Main window";
+            this.Text = "SeeingSharp 2 - Windows.Forms samples - Main window";
             this._barStatus.ResumeLayout(false);
             this._barStatus.PerformLayout();
             this._barTools.ResumeLayout(false);

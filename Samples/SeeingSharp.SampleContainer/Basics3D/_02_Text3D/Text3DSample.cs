@@ -53,7 +53,7 @@ namespace SeeingSharp.SampleContainer.Basics3D._02_Text3D
                 textOptions.SurfaceVertexColor = Color.Blue;
                 textOptions.VolumetricSideSurfaceVertexColor = Color4.CornflowerBlue;
                 var resGeometry = manipulator.Add3DTextGeometryResource(
-                    $"Seeing# 2 {Environment.NewLine} Text3D Sample",
+                    $"SeeingSharp 2 {Environment.NewLine} Text3D Sample",
                     textOptions);
 
                 // Create material

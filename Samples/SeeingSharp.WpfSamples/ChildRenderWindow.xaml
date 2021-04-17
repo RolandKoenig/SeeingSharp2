@@ -6,7 +6,7 @@
         xmlns:sSharp="http://www.rolandk.de/seeingsharp"
         xmlns:local="clr-namespace:SeeingSharp.WpfSamples"
         mc:Ignorable="d"
-        Title="Seeing# 2 - Wpf samples - Child window" Height="450" Width="800">
+        Title="SeeingSharp 2 - Wpf samples - Child window" Height="450" Width="800">
 
     <DockPanel LastChildFill="True">
         <Grid>

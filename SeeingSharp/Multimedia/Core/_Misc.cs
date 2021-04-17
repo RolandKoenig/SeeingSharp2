@@ -32,7 +32,7 @@ namespace SeeingSharp.Multimedia.Core
         public Exception Exception { get; }
 
         /// <summary>
-        /// The location inside Seeing# where the exception occurred.
+        /// The location inside SeeingSharp where the exception occurred.
         /// </summary>
         public InternalExceptionLocation Location { get; }
 

@@ -29,7 +29,7 @@ namespace SeeingSharp.Util
 {
     // Original code from .Net Core source
     // Changes:
-    //  - Some naming changes to meet coding style of Seeing#
+    //  - Some naming changes to meet coding style of SeeingSharp
     //  - Access to the backing array through the BackingArray property
 
     /// <summary>

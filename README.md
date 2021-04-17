@@ -16,7 +16,7 @@
  - [SeeingSharp2.WpfCore](https://www.nuget.org/packages/SeeingSharp2.WpfCore/)
 
 ### Common Information
-Seeing# is a 3D/2D rendering library for C# powered by Direct3D 11. It is meant for desktop applications (Win.Forms, Wpf) or Windows Store Apps.
+SeeingSharp is a 3D/2D rendering library for C# powered by Direct3D 11. It is meant for desktop applications (Win.Forms, Wpf) or Windows Store Apps.
 The base library is separated into the following projects:
  - SeeingSharp (.Net Standard 2.0)
  - SeeingSharp.Uwp (Universal Windows)

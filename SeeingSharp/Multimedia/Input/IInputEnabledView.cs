@@ -24,7 +24,7 @@ using SeeingSharp.Multimedia.Core;
 namespace SeeingSharp.Multimedia.Input
 {
     /// <summary>
-    /// This interfaces is used by Seeing# internally to abstract input relevant
+    /// This interfaces is used by SeeingSharp internally to abstract input relevant
     /// information of a view.
     /// </summary>
     public interface IInputEnabledView

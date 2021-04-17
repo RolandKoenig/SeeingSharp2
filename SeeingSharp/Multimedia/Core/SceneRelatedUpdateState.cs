@@ -68,7 +68,7 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Gets the overall update state of Seeing#.
+        /// Gets the overall update state of SeeingSharp.
         /// </summary>
         public UpdateState UpdateState => _updateState;
 

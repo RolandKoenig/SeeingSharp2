@@ -291,7 +291,7 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
-        /// Creates a software based device which is not managed by Seeing#.
+        /// Creates a software based device which is not managed by SeeingSharp.
         /// This method is meant to be used during unit testing.
         /// </summary>
         public static EngineDevice CreateSoftwareDevice(EngineFactory factory)

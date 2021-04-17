@@ -29,7 +29,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// The resource may have a different coordinate system.
         /// This property ensures that the coordinate system is mapped correctly to the one that
-        /// Seeing# uses. Default is LeftHanded_UpY.
+        /// SeeingSharp uses. Default is LeftHanded_UpY.
         /// </summary>
         public CoordinateSystem ResourceCoordinateSystem
         {

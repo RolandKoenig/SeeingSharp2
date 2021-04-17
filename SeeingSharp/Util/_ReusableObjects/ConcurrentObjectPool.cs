@@ -26,7 +26,7 @@ namespace SeeingSharp.Util
 {
     // Original code from book "Pro .Net Memory Management" by Konrad Kokosa (sample sourcecode chapter 6)
     // Changes:
-    //  - Only some namings to meet coding style of Seeing#
+    //  - Only some namings to meet coding style of SeeingSharp
     //
     // Based on ObjectPool<T> from Roslyn source code (with comments reused):
     // https://github.com/dotnet/roslyn/blob/d4dab355b96955aca5b4b0ebf6282575fad78ba8/src/Dependencies/PooledObjects/ObjectPool%601.cs

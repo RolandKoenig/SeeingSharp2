@@ -9,7 +9,7 @@
     <license type="file">LICENSE.md</license>
     <projectUrl>https://github.com/RolandKoenig/SeeingSharp2</projectUrl>
     <repository type="Git" url="https://github.com/RolandKoenig/SeeingSharp2" />
-    <description>Seeing# is a 3D/2D rendering library for C# powered by Direct3D. It is meant for desktop applications (Win.Forms, Wpf) or Windows Store Apps</description>
+    <description>SeeingSharp is a 3D/2D rendering library for C# powered by Direct3D. It is meant for desktop applications (Win.Forms, Wpf) or Windows Store Apps</description>
     <copyright>©2020 by Roland König</copyright>
     <tags></tags>
     <icon>SeeingSharp_128.png</icon>

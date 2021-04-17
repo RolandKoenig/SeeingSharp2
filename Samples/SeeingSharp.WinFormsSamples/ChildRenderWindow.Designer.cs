@@ -259,7 +259,7 @@
             this.Controls.Add(this._barStatus);
             this.Controls.Add(this._barTools);
             this.Name = "ChildRenderWindow";
-            this.Text = "Seeing# 2 - Windows.Forms samples - Child window";
+            this.Text = "SeeingSharp 2 - Windows.Forms samples - Child window";
             this._barTools.ResumeLayout(false);
             this._barTools.PerformLayout();
             this._barStatus.ResumeLayout(false);

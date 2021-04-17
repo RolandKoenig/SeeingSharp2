@@ -514,7 +514,7 @@ namespace SeeingSharp.Multimedia.Core
             }
             if (handlers == null) { return; }
 
-            // Trigger event in separate ThreadPool task to ensure that Seeing# logic runs further without interruption
+            // Trigger event in separate ThreadPool task to ensure that SeeingSharp logic runs further without interruption
             ThreadPool.QueueUserWorkItem(
                 state =>
                 {

@@ -25,7 +25,7 @@ using SeeingSharp.Checking;
 namespace SeeingSharp.Util
 {
     /// <summary>
-    /// This is a simple RingBuffer implementation for Seeing#,
+    /// This is a simple RingBuffer implementation for SeeingSharp,
     /// originally created for the Input event system.
     /// 
     /// More info on cyclic buffers: https://en.wikipedia.org/wiki/Circular_buffer
