@@ -1,5 +1,5 @@
 ﻿/*
-    Seeing# and all applications distributed together with it. 
+    SeeingSharp and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
@@ -21,7 +21,6 @@
 */
 using System;
 using System.Threading;
-using Windows.Foundation;
 using Microsoft.System;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -37,8 +36,6 @@ using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Multimedia.Views
 {
-    // Using SwapChainBackgroundPanel to render to the background of the WinRT app
-    //  see http://msdn.microsoft.com/en-us/library/windows/apps/hh825871.aspx
     public class SeeingSharpPanelPainter : ISeeingSharpPainter, IDisposable, IInputEnabledView, IRenderLoopHost
     {
         private const double MIN_PIXEL_SIZE_HEIGHT = 100.0;
@@ -48,7 +45,7 @@ namespace SeeingSharp.Multimedia.Views
         private SwapChainPanel _targetPanel;
         private DXGI.ISwapChainPanelNative _panelNative;
         private WinUIDesktopInterop.ISwapChainPanelNative _panelNativeDesktop;
-        private Size _lastRefreshTargetSize;
+        private Size2F _lastRefreshTargetSize;
         private bool _compositionScaleChanged;
         private DateTime _lastSizeChange;
 
@@ -180,7 +177,7 @@ namespace SeeingSharp.Multimedia.Views
         {
             if (_targetPanel != null) { throw new InvalidOperationException("Unable to attach to new SwapChainBackgroundPanel: Renderer is already attached to another one!"); }
 
-            _lastRefreshTargetSize = new Size(0.0, 0.0);
+            _lastRefreshTargetSize = new Size2F(0f, 0f);
             _targetPanel = targetPanel;
 
             try
@@ -440,7 +437,7 @@ namespace SeeingSharp.Multimedia.Views
 
             //Define the viewport for rendering
             var viewPort = GraphicsHelper.Internals.CreateDefaultViewport(viewSize.Width, viewSize.Height);
-            _lastRefreshTargetSize = new Size(viewSize.Width, viewSize.Height);
+            _lastRefreshTargetSize = new Size2F(viewSize.Width, viewSize.Height);
 
             var dpiScaling = new DpiScaling
             {

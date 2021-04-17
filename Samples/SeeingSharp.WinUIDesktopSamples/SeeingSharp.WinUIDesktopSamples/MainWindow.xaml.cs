@@ -1,5 +1,5 @@
 ﻿/*
-    Seeing# and all applications distributed together with it. 
+    SeeingSharp and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
@@ -270,13 +270,13 @@ namespace SeeingSharp.WinUIDesktopSamples
             this.ApplySample(selectedSample.SampleMetadata, viewModel.SampleSettings);
         }
 
-        //private void OnViewModel_NewChildWindowRequest(object sender, EventArgs eArgs)
-        //{
-        //    var childWindow = new ChildRenderWindow();
-        //    _childPages.Add(childWindow);
+        private void OnViewModel_NewChildWindowRequest(object sender, EventArgs eArgs)
+        {
+            var childWindow = new ChildRenderWindow();
+            _childPages.Add(childWindow);
 
-        //    childWindow.Activate();
-        //}
+            childWindow.Activate();
+        }
 
         private void OnSampleCommand_Tapped(object sender, TappedRoutedEventArgs e)
         {

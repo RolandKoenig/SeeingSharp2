@@ -1,5 +1,5 @@
 ﻿/*
-    Seeing# and all applications distributed together with it. 
+    SeeingSharp and all applications distributed together with it. 
 	Exceptions are projects where it is noted otherwise.
     More info at 
      - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
@@ -27,17 +27,6 @@ namespace SeeingSharp.Multimedia.Views
 {
     internal static class WinUIDesktopInterop
     {
-        /// <summary>
-        /// Interface from microsoft.ui.xaml.media.dxinterop.h
-        /// </summary>
-        [ComImport]
-        [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-        [Guid("24d43d84-4246-4aa7-9774-8604cb73d90d")]
-        public interface ISwapChainBackgroundPanelNative
-        {
-            [PreserveSig] Result SetSwapChain([In]IntPtr swapChain);
-        }
-
         /// <summary>
         /// Interface from microsoft.ui.xaml.media.dxinterop.h
         /// </summary>
