@@ -11,26 +11,26 @@
  - [SeeingSharp2.AssimpImporter](https://www.nuget.org/packages/SeeingSharp2.AssimpImporter/)
  - [SeeingSharp2.Uwp](https://www.nuget.org/packages/SeeingSharp2.Uwp/)
  - [SeeingSharp2.WinForms](https://www.nuget.org/packages/SeeingSharp2.WinForms/)
- - [SeeingSharp2.WinFormsCore](https://www.nuget.org/packages/SeeingSharp2.WinFormsCore/)
+ - [SeeingSharp2.WinFormsCore](https://www.nuget.org/packages/SeeingSharp2.WinFormsCore/) (obsolete, .Net Core support moved to SeeingSharp2.WinForms)
  - [SeeingSharp2.Wpf](https://www.nuget.org/packages/SeeingSharp2.Wpf/)
- - [SeeingSharp2.WpfCore](https://www.nuget.org/packages/SeeingSharp2.WpfCore/)
+ - [SeeingSharp2.WpfCore](https://www.nuget.org/packages/SeeingSharp2.WpfCore/) (obsolete, .Net Core support moved to SeeingSharp2.Wpf)
+ - [SeeingSharp2.WinUI](https://www.nuget.org/packages/SeeingSharp2.WinUI/)
 
 ### Common Information
-SeeingSharp is a 3D/2D rendering library for C# powered by Direct3D 11. It is meant for desktop applications (Win.Forms, Wpf) or Windows Store Apps.
+SeeingSharp is a 3D/2D rendering library for C# powered by Direct3D 11. It is meant for desktop applications (Win.Forms, Wpf, WinUI) or Windows Store Apps.
 The base library is separated into the following projects:
  - SeeingSharp (.Net Standard 2.0)
- - SeeingSharp.Uwp (Universal Windows)
- - SeeingSharp.Wpf (.Net Framework 4.8)
- - SeeingSharp.WpfCore (.Net Core 3.0)
- - SeeingSharp.WinForms (.Net Framework 4.8)
- - SeeingSharp.WinFormsCore (.Net Core 3.0)
+ - SeeingSharp.Uwp (Universal Windows Platform)
+ - SeeingSharp.Wpf (.Net Framework 4.8, .Net Core 3.1, .Net 5.0)
+ - SeeingSharp.WinForms (.Net Framework 4.8, .Net Core 3.1, .Net 5.0)
+ - SeeingSharp.WinUI (.Net 5.0)
  
-The first one is the core library which contains all logic for 2D/3D-rendering. The others contain classes to integrate SeeingSharp into 
+The first one is the core library which contains all logic for 2D/3D-rendering. The others contain classes to integrate SeeingSharp 2 into 
 the particular gui framework. 
  
 ### Feature overview
  - Support .Net Core (.Net Standard 2.0) and the classic .Net Framework
- - Full integration into Windows.Forms, WPF and WinRT
+ - Full integration into Windows.Forms, WPF, UWP and WinUI
  - Heavy multithreading (all calculations and rendering is done in background threads)
  - Working with multiple graphics devices at once (dynamically configure the target device per view)
  - Working with multiple scenegraphs at once (dynamically configure the current scene per view)
@@ -47,7 +47,7 @@ To give SeeingSharp2 a short try you can look into the [Getting Started samples 
 source code](/../../tree/master/Samples/GettingStarted).  
 Here the steps for WPF:
 
-1. Download Nuget package (SeeingSharp2.WpfCore oder SeeingSharp2.Wpf, depending on your target framework
+1. Download Nuget package (SeeingSharp2, SeeingSharp2.Wpf)
 2. Include bootstrap code into your App.xaml.cs
 
 ```csharp
