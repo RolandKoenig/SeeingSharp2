@@ -42,16 +42,20 @@ namespace SeeingSharp.UwpSamples.Util
             var package = Package.Current;
             var appName = package.DisplayName;
             var appView = ApplicationView.GetForCurrentView();
-            appView.Title = $@"{appName} - {windowName} - {Assembly.GetExecutingAssembly().GetName().Version}";
+            appView.Title = $@"{windowName} - {Assembly.GetExecutingAssembly().GetName().Version}";
 
+            // 0975C6
+            // 3689C4
             // Set titlebar colors
             var titleBar = appView.TitleBar;
-            titleBar.BackgroundColor = Windows.UI.Color.FromArgb(0xFF, 0x00, 0xCC, 0xFF);
+            titleBar.BackgroundColor = Windows.UI.Color.FromArgb(0xFF, 0x09, 0x75, 0xC6);
             titleBar.ForegroundColor = Windows.UI.Color.FromArgb(0xFF, 0xFE, 0xFE, 0xFE);
-            titleBar.ButtonBackgroundColor = Windows.UI.Color.FromArgb(0xFF, 0x00, 0xCC, 0xFF);
+            titleBar.ButtonBackgroundColor = Windows.UI.Color.FromArgb(0xFF, 0x09, 0x75, 0xC6);
             titleBar.ButtonForegroundColor = Windows.UI.Color.FromArgb(0xFF, 0xFE, 0xFE, 0xFE);
-            titleBar.InactiveBackgroundColor = Windows.UI.Color.FromArgb(0xFF, 0xBF, 0xF2, 0xFF);
-            titleBar.ButtonInactiveBackgroundColor = Windows.UI.Color.FromArgb(0xFF, 0xBF, 0xF2, 0xFF);
+            titleBar.InactiveBackgroundColor = Windows.UI.Color.FromArgb(0xFF, 0x36, 0x89, 0xC4);
+            titleBar.ButtonInactiveBackgroundColor = Windows.UI.Color.FromArgb(0xFF, 0x36, 0x89, 0xC4);
+            titleBar.InactiveForegroundColor = Windows.UI.Color.FromArgb(0xFF, 0xFE, 0xFE, 0xFE);
+            titleBar.ButtonInactiveForegroundColor = Windows.UI.Color.FromArgb(0xFF, 0xFE, 0xFE, 0xFE);
         }
     }
 }

@@ -364,9 +364,11 @@
     <MainPackageIdentityName>35049RolandK.Seeing2Samples</MainPackageIdentityName>
     <ReservedNames>
       <ReservedName>Seeing# 2 Samples</ReservedName>
+      <ReservedName>SeeingSharp 2 UWP Samples</ReservedName>
     </ReservedNames>
   </ProductReservedInfo>
   <AccountPackageIdentityNames>
+    <MainPackageIdentityName>35049RolandK.MessageCommunicator</MainPackageIdentityName>
     <MainPackageIdentityName>35049RolandK.RK2048</MainPackageIdentityName>
     <MainPackageIdentityName>35049RolandK.RKMosaicSnake3D</MainPackageIdentityName>
     <MainPackageIdentityName>35049RolandK.RKSensorMonitor</MainPackageIdentityName>

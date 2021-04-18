@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SeeingSharp2.Uwp</id>
-    <version>0.7.0</version>
+    <version>0.8.0</version>
     <authors>Roland König</authors>
     <owners>Roland König</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>

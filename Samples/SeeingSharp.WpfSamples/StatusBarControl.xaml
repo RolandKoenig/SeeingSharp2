@@ -29,7 +29,7 @@
             </Style>
         </StackPanel.Resources>
 
-        <Image Source="/Assets/Icons/Output16x16.png"
+        <Image Source="Assets/Icons/Output16x16.png"
                Width="16" />
         <TextBlock Text="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.CurrentViewSize}" />
         <TextBlock Text="px" />
@@ -54,7 +54,7 @@
         <Rectangle Width="1"
                    Fill="Gray" />
 
-        <Image Source="/Assets/Icons/Adapter16x16.png"
+        <Image Source="Assets/Icons/Adapter16x16.png"
                Width="16" />
         <ComboBox ItemsSource="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.PossibleDevices}"
                   SelectedItem="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.SelectedDevice, Mode=TwoWay}"
