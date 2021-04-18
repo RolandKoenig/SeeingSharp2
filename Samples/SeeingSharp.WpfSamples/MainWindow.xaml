@@ -38,7 +38,7 @@
 
         <!-- List of sample groups -->
         <ListBox DockPanel.Dock="Top"
-                 Background="#00CCFF" Foreground="White" FontWeight="Bold" BorderThickness="0"
+                 Background="#0975C6" Foreground="White" BorderThickness="0"
                  ItemsSource="{Binding Path=SampleGroups}"
                  SelectedItem="{Binding Path=SelectedGroup, Mode=TwoWay}">
             <ListBox.Resources>
