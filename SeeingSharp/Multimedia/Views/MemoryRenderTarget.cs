@@ -112,7 +112,7 @@ namespace SeeingSharp.Multimedia.Views
         {
             if (!this.IsOperational) { return Task.Delay(100); }
 
-            var result = new TaskCompletionSource<object>();
+            var result = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
             this.RenderLoop.EnqueueAfterPresentAction(() =>
             {
                 result.TrySetResult(null);

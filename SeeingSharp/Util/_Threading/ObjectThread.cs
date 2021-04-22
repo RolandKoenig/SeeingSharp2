@@ -162,7 +162,7 @@ namespace SeeingSharp.Util
 
                 case ObjectThreadState.Running:
                 case ObjectThreadState.Starting:
-                    var taskSource = new TaskCompletionSource<object>();
+                    var taskSource = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
                     this.Stopping += (sender, eArgs) =>
                     {
                         taskSource.TrySetResult(null);
@@ -236,7 +236,7 @@ namespace SeeingSharp.Util
             actionToInvoke.EnsureNotNull(nameof(actionToInvoke));
 
             // Enqueue the given action
-            var taskCompletionSource = new TaskCompletionSource<object>();
+            var taskCompletionSource = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             _taskQueue.Enqueue(() =>
             {

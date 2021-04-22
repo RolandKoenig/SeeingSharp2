@@ -367,7 +367,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public Task<RenderPassDump> DumpRenderPassesAsync()
         {
-            var taskSource = new TaskCompletionSource<RenderPassDump>();
+            var taskSource = new TaskCompletionSource<RenderPassDump>(TaskCreationOptions.RunContinuationsAsynchronously);
             _dumpRequests.Enqueue(taskSource);
             return taskSource.Task;
         }
@@ -448,7 +448,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public Task WaitForNextFinishedRenderAsync()
         {
-            var result = new TaskCompletionSource<object>();
+            var result = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             _afterPresentActions.Enqueue(() =>
             {
@@ -558,7 +558,7 @@ namespace SeeingSharp.Multimedia.Core
                 throw new SeeingSharpGraphicsException("The given VideoWriter is not associated with this RenderLoop!");
             }
 
-            var result = new TaskCompletionSource<object>();
+            var result = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
             _afterPresentActions.Enqueue(() =>
             {
                 try
@@ -598,7 +598,7 @@ namespace SeeingSharp.Multimedia.Core
             if (_currentDevice == null) { throw new SeeingSharpGraphicsException("No device associated to RenderLoop!"); }
             if (videoWriter.AssociatedRenderLoop != null) { throw new SeeingSharpGraphicsException("Given VideoWriter is associated to another RenderLoop!"); }
 
-            var result = new TaskCompletionSource<object>();
+            var result = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
             _afterPresentActions.Enqueue(() =>
             {
                 try
@@ -629,7 +629,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             drawingLayer.EnsureNotNull(nameof(drawingLayer));
 
-            var result = new TaskCompletionSource<object>();
+            var result = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             _afterPresentActions.Enqueue(() =>
             {
@@ -656,7 +656,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public Task Clear2DDrawingLayersAsync()
         {
-            var result = new TaskCompletionSource<object>();
+            var result = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             _afterPresentActions.Enqueue(() =>
             {
@@ -682,7 +682,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             drawingLayer.EnsureNotNull(nameof(drawingLayer));
 
-            var result = new TaskCompletionSource<object>();
+            var result = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             _afterPresentActions.Enqueue(() =>
             {
@@ -757,7 +757,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             newViewConfiguration.EnsureNotNull(nameof(newViewConfiguration));
 
-            var result = new TaskCompletionSource<object>();
+            var result = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             _afterPresentActions.Enqueue(() =>
             {

@@ -116,8 +116,8 @@ namespace SeeingSharp.Multimedia.Core
         {
             if (_suspendWaiter == null)
             {
-                _suspendCallWaiterSource = new TaskCompletionSource<object>();
-                _suspendWaiterSource = new TaskCompletionSource<object>();
+                _suspendCallWaiterSource = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
+                _suspendWaiterSource = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
                 _suspendWaiter = _suspendWaiterSource.Task;
             }
 
@@ -144,7 +144,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public Task WaitForNextPassedLoopAsync()
         {
-            var result = new TaskCompletionSource<object>();
+            var result = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
             _globalLoopAwaitors.Enqueue(() =>
             {
                 result.SetResult(null);

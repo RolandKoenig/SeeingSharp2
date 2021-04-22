@@ -249,7 +249,7 @@ namespace SeeingSharp.Multimedia.Core
             sceneObjects.EnsureNotNull(nameof(sceneObjects));
             viewInfo.EnsureNotNull(nameof(viewInfo));
 
-            var taskComplSource = new TaskCompletionSource<object>();
+            var taskComplSource = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             // Define the poll action (polling is done inside scene update
             void PollAction()
@@ -356,7 +356,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             actionToInvoke.EnsureNotNull(nameof(actionToInvoke));
 
-            var taskCompletionSource = new TaskCompletionSource<bool>();
+            var taskCompletionSource = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             _asyncInvokesBeforeUpdate.Enqueue(() =>
             {
@@ -384,7 +384,7 @@ namespace SeeingSharp.Multimedia.Core
         {
             actionToInvoke.EnsureNotNull(nameof(actionToInvoke));
 
-            var taskCompletionSource = new TaskCompletionSource<bool>();
+            var taskCompletionSource = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             _asyncInvokesUpdateBesideRendering.Enqueue(() =>
             {

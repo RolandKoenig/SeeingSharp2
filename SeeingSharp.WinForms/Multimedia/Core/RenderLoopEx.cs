@@ -32,7 +32,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public static Task<GDI.Bitmap> GetScreenshotGdiAsync(this RenderLoop renderLoop)
         {
-            var result = new TaskCompletionSource<GDI.Bitmap>();
+            var result = new TaskCompletionSource<GDI.Bitmap>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             renderLoop.EnqueueAfterPresentAction(() =>
             {

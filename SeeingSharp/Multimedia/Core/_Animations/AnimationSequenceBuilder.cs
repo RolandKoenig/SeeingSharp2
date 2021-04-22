@@ -164,7 +164,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public Task ApplyAsync()
         {
-            var taskComplSource = new TaskCompletionSource<bool>();
+            var taskComplSource = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             this.Apply(
                 () => taskComplSource.TrySetResult(true),
@@ -179,7 +179,7 @@ namespace SeeingSharp.Multimedia.Core
         /// </summary>
         public Task ApplyAsSecondaryAsync()
         {
-            var taskComplSource = new TaskCompletionSource<bool>();
+            var taskComplSource = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             this.ApplyAsSecondary(
                 () => taskComplSource.TrySetResult(true),
