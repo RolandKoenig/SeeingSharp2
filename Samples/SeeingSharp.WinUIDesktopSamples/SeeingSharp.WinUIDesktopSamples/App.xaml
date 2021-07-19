@@ -17,19 +17,16 @@
                                  resources should be tested with both the light and dark themes,
                                  and specific light or dark resources provided as needed. -->
                             <AcrylicBrush x:Key="NavigationViewDefaultPaneBackground"
-                                          BackgroundSource="Backdrop"
                                           FallbackColor="{ThemeResource SystemAltMediumColor}"
                                           TintColor="{ThemeResource SystemAltMediumColor}"
                                           TintOpacity=".6" />
                             <AcrylicBrush x:Key="NavigationViewExpandedPaneBackground"
-                                          BackgroundSource="Backdrop"
                                           FallbackColor="{ThemeResource SystemAltMediumColor}"
                                           TintColor="{ThemeResource SystemAltMediumColor}"
                                           TintOpacity=".6" />
 
 
                             <AcrylicBrush x:Key="GenericAcrylicBrush"
-                                          BackgroundSource="Backdrop"
                                           FallbackColor="{ThemeResource SystemAltMediumColor}"
                                           TintColor="{ThemeResource SystemAltMediumColor}"
                                           TintOpacity=".6" />
