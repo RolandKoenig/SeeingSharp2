@@ -12,6 +12,9 @@
 
                 <ResourceDictionary>
 
+                    <SolidColorBrush x:Key="MainBackgroundBrush" 
+                                     Color="#0975C6"></SolidColorBrush>
+
                     <!-- Custom theme overrides -->
                     <ResourceDictionary.ThemeDictionaries>
                         <ResourceDictionary x:Key="Default">

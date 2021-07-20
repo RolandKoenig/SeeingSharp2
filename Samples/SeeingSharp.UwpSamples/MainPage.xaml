@@ -17,14 +17,12 @@
         <local:MainWindowViewModel />
     </Page.DataContext>
 
-    <Grid>
+    <Grid Background="{StaticResource MainBackgroundBrush}">
         <Grid.Resources>
             <Storyboard x:Name="SwapChainFadeInStoryboard">
                 <RepositionThemeAnimation Storyboard.TargetName="CtrlSwapChain" FromHorizontalOffset="-30" />
             </Storyboard>
         </Grid.Resources>
-
-        <sSharp:SeeingSharpRenderPanel x:Name="CtrlSwapChain" />
 
         <muxc:NavigationView IsBackButtonVisible="Collapsed"
                              IsBackEnabled="False"
@@ -67,6 +65,8 @@
             </muxc:NavigationView.PaneFooter>
 
             <Grid>
+                <sSharp:SeeingSharpRenderPanel x:Name="CtrlSwapChain" />
+
                 <ListBox VerticalAlignment="Top"
                          Background="{ThemeResource GenericAcrylicBrush}"
                          ItemsSource="{x:Bind ViewModel.Samples}"
