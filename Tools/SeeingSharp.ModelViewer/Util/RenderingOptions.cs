@@ -35,6 +35,8 @@ namespace SeeingSharp.ModelViewer.Util
         private readonly RenderLoop _renderLoop;
         private readonly SceneDetailsFilter _detailFilter;
 
+        private bool _wireframeEnabled;
+
         [Category(CATEGORY_COMMON)]
         public DelegateCommand Reset { get; }
 
@@ -75,6 +77,24 @@ namespace SeeingSharp.ModelViewer.Util
                     case CameraMode.Orthographic:
                         _renderLoop.Camera = new OrthographicCamera3D();
                         break;
+                }
+            }
+        }
+
+        [Category(CATEGORY_RENDERING)]
+        public bool Wireframe
+        {
+            get => _wireframeEnabled;
+            set
+            {
+                if (_wireframeEnabled != value)
+                {
+                    _wireframeEnabled = value;
+                    _ = _renderLoop.Scene.ManipulateSceneAsync(manipulator =>
+                    {
+                        var layerDefault = manipulator.GetLayer(Scene.DEFAULT_LAYER_NAME);
+                        layerDefault.WireframeEnabled = value;
+                    });
                 }
             }
         }

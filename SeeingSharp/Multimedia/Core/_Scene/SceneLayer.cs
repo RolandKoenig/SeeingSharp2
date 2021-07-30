@@ -106,6 +106,16 @@ namespace SeeingSharp.Multimedia.Core
         }
 
         /// <summary>
+        /// Enables wireframe rendering for this layer.
+        /// Use this property instead of <see cref="GraphicsViewConfiguration"/> if you only want wireframe rendering on this layer.
+        /// </summary>
+        public bool WireframeEnabled
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Gets a collection containing all objects.
         /// </summary>
         public ReadOnlyCollection<SceneObject> Objects { get; }
@@ -478,12 +488,30 @@ namespace SeeingSharp.Multimedia.Core
                 return;
             }
 
-            //Delegate render call to corresponding view subset
-            var viewSubset = _viewSubsets[renderState.ViewIndex];
-
-            if (viewSubset != null)
+            var changedWireframe = false;
+            if (this.WireframeEnabled && (!renderState.ViewInformation.ViewConfiguration.WireframeEnabled))
             {
-                _viewSubsets[renderState.ViewIndex].Render(renderState);
+                changedWireframe = true;
+
+                renderState.Device.DeviceImmediateContextD3D11.Rasterizer.State = 
+                    renderState.CurrentResources.DefaultResources.RasterStateWireframe;
+            }
+            try
+            {
+                //Delegate render call to corresponding view subset
+                var viewSubset = _viewSubsets[renderState.ViewIndex];
+                if (viewSubset != null)
+                {
+                    _viewSubsets[renderState.ViewIndex].Render(renderState);
+                }
+            }
+            finally
+            {
+                if (changedWireframe)
+                {
+                    renderState.Device.DeviceImmediateContextD3D11.Rasterizer.State = 
+                        renderState.CurrentResources.DefaultResources.RasterStateDefault;
+                }
             }
         }
 

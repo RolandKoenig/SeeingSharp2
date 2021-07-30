@@ -36,18 +36,21 @@ namespace SeeingSharp.ModelViewer.Util
                 // Clear the scene first
                 manipulator.Clear();
 
-                // Build new background layer with fullscreen texture
+                // Define layers
                 var bgLayer = manipulator.AddLayer("BACKGROUND");
+                var gridLayer = manipulator.AddLayer("GRID");
                 manipulator.SetLayerOrderId(bgLayer, 0);
-                manipulator.SetLayerOrderId(Scene.DEFAULT_LAYER_NAME, 1);
+                manipulator.SetLayerOrderId(gridLayer, 1);
+                manipulator.SetLayerOrderId(Scene.DEFAULT_LAYER_NAME, 2);
 
+                // Build new background layer with fullscreen texture (layer BACKGROUND)
                 var sourceBackgroundTexture = new AssemblyResourceLink(
                     typeof(App),
                     "Assets.Background.dds");
                 var resBackgroundTexture = manipulator.AddTextureResource(sourceBackgroundTexture);
                 manipulator.AddObject(new FullscreenTexture(resBackgroundTexture), bgLayer.Name);
 
-                // Add bottom grid
+                // Add bottom grid (layer GRID)
                 var resGridGeometry = manipulator.AddResource(
                     device => new GeometryResource(new Grid3DGeometryFactory
                     {
@@ -55,18 +58,18 @@ namespace SeeingSharp.ModelViewer.Util
                         TilesX = 50,
                         TilesZ = 50
                     }));
-                var gridMesh = manipulator.AddMeshObject(resGridGeometry);
+                var gridMesh = manipulator.AddMeshObject(resGridGeometry, gridLayer.Name);
                 gridMesh.YPos = -0.5f;
                 gridMesh.Tag1 = Constants.OBJ_NAME_GRID;
 
-                // Add bounding box
+                // Add bounding box (layer GRID)
                 var unitCube = new WireObject(
                     Color4.GreenColor,
                     new BoundingBox(
                         new Vector3(-0.5f, -0.5f, -0.5f),
                         new Vector3(0.5f, 0.5f, 0.5f)));
                 unitCube.Tag1 = Constants.OBJ_NAME_UNIT_CUBE;
-                manipulator.AddObject(unitCube);
+                manipulator.AddObject(unitCube, gridLayer.Name);
             });
         }
     }
