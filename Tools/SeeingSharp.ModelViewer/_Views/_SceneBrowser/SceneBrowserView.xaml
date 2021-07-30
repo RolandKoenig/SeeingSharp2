@@ -22,7 +22,9 @@
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Path=Children}">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Path=Type}" />
+                        <TextBlock Text="{Binding Path=Type, Mode=OneTime}" />
+                        <TextBlock Text="{Binding Path=Name, Mode=OneTime}" 
+                                   Margin="10,0,0,0"/>
                     </StackPanel>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>

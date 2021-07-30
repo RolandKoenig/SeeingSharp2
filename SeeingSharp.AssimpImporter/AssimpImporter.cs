@@ -174,6 +174,7 @@ namespace SeeingSharp.AssimpImporter
                 var newMesh = new Mesh(geometryKey, materialKeys);
                 newMesh.CustomTransform = actTransform;
                 newMesh.TransformationType = SpacialTransformationType.CustomTransform;
+                newMesh.Name = actNode.Name;
                 modelContainer.AddObject(newMesh);
                 nextParent = newMesh;
 
