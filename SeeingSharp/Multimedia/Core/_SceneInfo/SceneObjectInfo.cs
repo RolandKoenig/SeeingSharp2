@@ -31,6 +31,8 @@ namespace SeeingSharp.Multimedia.Core
 
         public SceneObjectInfoType Type { get; }
 
+        public string Name => this.OriginalObject.Name;
+
         /// <summary>
         /// Queries for all children of this object.
         /// </summary>

@@ -60,6 +60,12 @@ namespace SeeingSharp.Multimedia.Core
         public dynamic CustomData { get; }
 
         /// <summary>
+        /// Gets or sets the name of this node.
+        /// The name ist just meta information and has no relevance for SeeingSharp.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
         /// Gets or sets an additional data object.
         /// </summary>
         public object Tag1 { get; set; }
@@ -172,6 +178,7 @@ namespace SeeingSharp.Multimedia.Core
         protected SceneObject()
         {
             this.IsExportable = false;
+            this.Name = string.Empty;
 
             _targetDetailLevel = DetailLevel.All;
 
