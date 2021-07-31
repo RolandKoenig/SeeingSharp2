@@ -33,6 +33,8 @@ namespace SeeingSharp.Multimedia.Drawing3D
     /// </summary>
     public class ImportedModelContainer
     {
+        public static readonly string IMPORT_ROOT_NODE_NAME_PREFIX = "ImportRoot";
+
         // Static id counter 
         private static int s_maxContainerId;
 
@@ -171,6 +173,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 // Create root for the imported object graph
                 var rootObject = new ScenePivotObject();
                 rootObject.TransformationType = SpacialTransformationType.ScalingTranslationEulerAngles;
+                rootObject.Name = $"{IMPORT_ROOT_NODE_NAME_PREFIX} {_importId}";
 
                 // Configure base transformation of the root object
                 switch (_importOptions.ResourceCoordinateSystem)
