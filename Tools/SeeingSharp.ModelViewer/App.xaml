@@ -12,9 +12,16 @@
 
                 <ResourceDictionary>
                     <Style x:Key="ModelViewerIconStyle" TargetType="{x:Type materialDesign:PackIcon}">
-                        <!--<Setter Property="Width" Value="20" />
+                        <Setter Property="Width" Value="20" />
                         <Setter Property="Height" Value="20"/>
-                        <Setter Property="Foreground" Value="LightSkyBlue" />-->
+                        <Setter Property="Foreground" Value="#00CCFF" />
+                    </Style>
+
+                    <Style x:Key="MainMenuStyle" TargetType="Menu"
+                           BasedOn="{StaticResource {x:Type Menu}}">
+                        <Setter Property="Background" Value="#0975C6" />
+                        <Setter Property="Foreground" Value="White" />
+                        <Setter Property="Margin" Value="0,0,0,3" />
                     </Style>
 
                     <Style x:Key="ModelViewerPropertyGrid" TargetType="propTools:PropertyGrid">
@@ -34,6 +41,52 @@
                             </Setter.Value>
                         </Setter>
                     </Style>
+
+                    <!-- Logic for custom title bar
+                         see https://engy.us/blog/2020/01/01/implementing-a-custom-window-title-bar-in-wpf/ -->
+                    <Style x:Key="WindowMainPanelStyle" TargetType="{x:Type Border}">
+                        <Setter Property="BorderBrush" Value="{DynamicResource WindowBorderBrush}" />
+                        <Setter Property="BorderThickness" Value="4" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=WindowState}" Value="Maximized">
+                                <Setter Property="BorderThickness" Value="0" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                    <Style x:Key="TitleBarButtonStyle" TargetType="Button">
+                        <Setter Property="Foreground" Value="LightGray" />
+						<Setter Property="Padding" Value="0" />
+						<Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+						<Setter Property="IsTabStop" Value="False" />
+						<Setter Property="Template">
+							<Setter.Value>
+								<ControlTemplate TargetType="{x:Type Button}">
+									<Border
+										x:Name="border"
+										Background="Transparent"
+										BorderThickness="0"
+										SnapsToDevicePixels="true">
+										<ContentPresenter
+											x:Name="contentPresenter"
+											Margin="0"
+											HorizontalAlignment="Center"
+											VerticalAlignment="Center"
+											Focusable="False"
+											RecognizesAccessKey="True" />
+									</Border>
+									<ControlTemplate.Triggers>
+										<Trigger Property="IsMouseOver" Value="true">
+                                            <Setter TargetName="border" Property="Background" Value="#0975C6" />
+                                        </Trigger>
+										<Trigger Property="IsPressed" Value="true">
+                                            <Setter TargetName="border" Property="Background" Value="#00CCFF" />
+                                        </Trigger>
+									</ControlTemplate.Triggers>
+								</ControlTemplate>
+							</Setter.Value>
+						</Setter>
+					</Style>
+
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

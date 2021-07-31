@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <None Remove="Assets\Background.dds" />
+    <None Remove="Assets\SeeingSharp.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,6 +41,10 @@
     <ProjectReference Include="..\..\SeeingSharp.AssimpImporter\SeeingSharp.AssimpImporter.csproj" />
     <ProjectReference Include="..\..\SeeingSharp.Wpf\SeeingSharp.Wpf.csproj" />
     <ProjectReference Include="..\..\SeeingSharp\SeeingSharp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\SeeingSharp.ico" />
   </ItemGroup>
 
   <ItemGroup>
