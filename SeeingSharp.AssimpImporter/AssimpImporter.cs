@@ -71,7 +71,7 @@ namespace SeeingSharp.AssimpImporter
 
                 modelContainer.AddResource(new ImportedResourceInfo(
                     modelContainer.GetResourceKey("Material", materialIndex.ToString()),
-                    device =>
+                    _ =>
                     {
                         var materialResource = new StandardMaterialResource();
                         if (actMaterial.HasColorDiffuse)
@@ -169,7 +169,7 @@ namespace SeeingSharp.AssimpImporter
                 var geometryKey = modelContainer.GetResourceKey("Geometry", actNode.Name);
                 modelContainer.AddResource(new ImportedResourceInfo(
                     modelContainer.GetResourceKey("Geometry", actNode.Name),
-                    device=> new GeometryResource(newGeometry)));
+                    _=> new GeometryResource(newGeometry)));
 
                 var newMesh = new Mesh(geometryKey, materialKeys);
                 newMesh.CustomTransform = actTransform;
@@ -186,18 +186,24 @@ namespace SeeingSharp.AssimpImporter
             else if(actNode.HasChildren)
             {
                 var actTransform = Matrix4x4.Transpose(AssimpHelper.MatrixFromAssimp(actNode.Transform));
-                boundingBoxCalc.PushTransform(ref actTransform);
 
-                // This one is just a pivot
-                var actPivotObject = new ScenePivotObject();
-                actPivotObject.CustomTransform = actTransform;
-                actPivotObject.TransformationType = SpacialTransformationType.CustomTransform;
-                modelContainer.AddObject(actPivotObject);
-                nextParent = actPivotObject;
-
-                if (actParent != null)
+                // Do only process this pivot node if it changes behavior on the model
+                if ((actTransform != Matrix4x4.Identity) ||    
+                    (actParent != null))
                 {
-                    modelContainer.AddParentChildRelationship(new ParentChildRelationship(actParent, actPivotObject));
+                    boundingBoxCalc.PushTransform(ref actTransform);
+
+                    // This one is just a pivot
+                    var actPivotObject = new ScenePivotObject();
+                    actPivotObject.CustomTransform = actTransform;
+                    actPivotObject.TransformationType = SpacialTransformationType.CustomTransform;
+                    modelContainer.AddObject(actPivotObject);
+                    nextParent = actPivotObject;
+
+                    if (actParent != null)
+                    {
+                        modelContainer.AddParentChildRelationship(new ParentChildRelationship(actParent, actPivotObject));
+                    }
                 }
             }
 
