@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using SeeingSharp.ModelViewer.Util;
 using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D;
 
 namespace SeeingSharp.ModelViewer
 {
@@ -79,7 +80,11 @@ namespace SeeingSharp.ModelViewer
 
             this.SceneObjectInfos.Clear();
             this.SelectedObject = null;
-            foreach (var actObjectInfo in currentSceneInfos)
+
+            var importRoot = this.FindImportRoot(currentSceneInfos);
+            if (importRoot == null) { return; }
+
+            foreach (var actObjectInfo in importRoot.Children)
             {
                 this.SceneObjectInfos.Add(actObjectInfo);
             }
@@ -99,6 +104,27 @@ namespace SeeingSharp.ModelViewer
 
                 this.SelectedObjectViewModel.HardwareIndependentDetails.RefreshData();
             }
+        }
+
+        /// <summary>
+        /// Helper method for finding the root of the imported model.
+        /// </summary>
+        private SceneObjectInfo? FindImportRoot(IEnumerable<SceneObjectInfo> sceneObjectInfos)
+        {
+            foreach (var actSceneObjectInfo in sceneObjectInfos)
+            {
+                if (actSceneObjectInfo.Name.StartsWith(ImportedModelContainer.IMPORT_ROOT_NODE_NAME_PREFIX))
+                {
+                    return actSceneObjectInfo;
+                }
+
+                var recursiveResult = this.FindImportRoot(actSceneObjectInfo.Children);
+                if (recursiveResult != null)
+                {
+                    return recursiveResult;
+                }
+            }
+            return null;
         }
     }
 }

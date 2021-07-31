@@ -31,7 +31,21 @@ namespace SeeingSharp.Multimedia.Core
 
         public SceneObjectInfoType Type { get; }
 
+        /// <summary>
+        /// Gets or sets the name of this node.
+        /// The name ist just meta information and has no relevance for SeeingSharp.
+        /// </summary>
         public string Name => this.OriginalObject.Name;
+
+        /// <summary>
+        /// Gets or sets an additional data object.
+        /// </summary>
+        public object Tag1 => this.OriginalObject.Tag1;
+
+        /// <summary>
+        /// Gets or sets an additional data object.
+        /// </summary>
+        public object Tag2 => this.OriginalObject.Tag2;
 
         /// <summary>
         /// Queries for all children of this object.

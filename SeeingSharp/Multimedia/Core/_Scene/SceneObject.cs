@@ -55,11 +55,6 @@ namespace SeeingSharp.Multimedia.Core
         public virtual AnimationHandler AnimationHandler => _animationHandler;
 
         /// <summary>
-        /// Gets a dynamic container for custom data.
-        /// </summary>
-        public dynamic CustomData { get; }
-
-        /// <summary>
         /// Gets or sets the name of this node.
         /// The name ist just meta information and has no relevance for SeeingSharp.
         /// </summary>
@@ -187,9 +182,6 @@ namespace SeeingSharp.Multimedia.Core
 
             _animationHandler = new AnimationHandler(this);
             _visibilityData = new IndexBasedDynamicCollection<VisibilityCheckData>();
-
-            //Create a dynamic container for custom data
-            this.CustomData = new ExpandoObject();
 
             TransformationChanged = true;
             this.IsPickingTestVisible = true;

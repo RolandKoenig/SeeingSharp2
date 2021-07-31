@@ -25,7 +25,7 @@ using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 using SeeingSharp.Util;
 
-namespace SeeingSharp.ModelViewer.Util
+namespace SeeingSharp.ModelViewer.Rendering
 {
     public static class SceneHelper
     {
@@ -60,7 +60,7 @@ namespace SeeingSharp.ModelViewer.Util
                     }));
                 var gridMesh = manipulator.AddMeshObject(resGridGeometry, gridLayer.Name);
                 gridMesh.YPos = -0.5f;
-                gridMesh.Tag1 = Constants.OBJ_NAME_GRID;
+                gridMesh.Name = Constants.OBJ_NAME_GRID;
 
                 // Add bounding box (layer GRID)
                 var unitCube = new WireObject(
@@ -68,9 +68,14 @@ namespace SeeingSharp.ModelViewer.Util
                     new BoundingBox(
                         new Vector3(-0.5f, -0.5f, -0.5f),
                         new Vector3(0.5f, 0.5f, 0.5f)));
-                unitCube.Tag1 = Constants.OBJ_NAME_UNIT_CUBE;
+                unitCube.Name = Constants.OBJ_NAME_UNIT_CUBE;
                 manipulator.AddObject(unitCube, gridLayer.Name);
             });
+        }
+
+        public static async Task AddModelToScene(RenderLoop targetRenderLoop, ImportedModelContainer importedModel)
+        {
+            await targetRenderLoop.Scene.ImportAsync(importedModel);
         }
     }
 }

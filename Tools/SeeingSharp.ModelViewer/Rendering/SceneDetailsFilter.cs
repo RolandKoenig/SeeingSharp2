@@ -21,7 +21,7 @@
 */
 using SeeingSharp.Multimedia.Core;
 
-namespace SeeingSharp.ModelViewer.Util
+namespace SeeingSharp.ModelViewer.Rendering
 {
     public class SceneDetailsFilter : SceneObjectFilter
     {
@@ -63,9 +63,7 @@ namespace SeeingSharp.ModelViewer.Util
         /// <inheritdoc />
         public override bool IsObjectVisible(SceneObject input, ViewInformation viewInformation)
         {
-            if (!(input.Tag1 is string objectTypeName)) { return true; }
-
-            return objectTypeName switch
+            return input.Name switch
             {
                 Constants.OBJ_NAME_UNIT_CUBE => this.ShowUnitCube,
                 Constants.OBJ_NAME_GRID => this.ShowGrid,

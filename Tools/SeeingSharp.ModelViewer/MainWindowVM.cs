@@ -23,6 +23,7 @@ using System;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using SeeingSharp.ModelViewer.Rendering;
 using SeeingSharp.ModelViewer.Util;
 using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
@@ -150,7 +151,7 @@ namespace SeeingSharp.ModelViewer
                         _loadedModel = await GraphicsCore.Current.ImportersAndExporters
                             .ImportAsync(modelLink, importOptions);
 
-                        await _renderLoop.Scene.ImportAsync(_loadedModel);
+                        await SceneHelper.AddModelToScene(_renderLoop, _loadedModel);
                     }
                     catch (Exception)
                     {

@@ -20,10 +20,11 @@
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 using PropertyTools.DataAnnotations;
+using SeeingSharp.ModelViewer.Util;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
 
-namespace SeeingSharp.ModelViewer.Util
+namespace SeeingSharp.ModelViewer.Rendering
 {
     public class RenderingOptions : PropertyChangedBase
     {
