@@ -48,11 +48,13 @@ namespace SeeingSharp.ModelViewer.Rendering
                     typeof(App),
                     "Assets.Background.dds");
                 var resBackgroundTexture = manipulator.AddTextureResource(sourceBackgroundTexture);
-                manipulator.AddObject(new FullscreenTexture(resBackgroundTexture), bgLayer.Name);
+                var objBackgroundTexture = new FullscreenTexture(resBackgroundTexture);
+                objBackgroundTexture.Tag1 = new ModelViewerSceneObjectMetadata(true);
+                manipulator.AddObject(objBackgroundTexture, bgLayer.Name);
 
                 // Add bottom grid (layer GRID)
                 var resGridGeometry = manipulator.AddResource(
-                    device => new GeometryResource(new Grid3DGeometryFactory
+                    _ => new GeometryResource(new Grid3DGeometryFactory
                     {
                         TileWidth = 0.05f,
                         TilesX = 50,
@@ -61,6 +63,7 @@ namespace SeeingSharp.ModelViewer.Rendering
                 var gridMesh = manipulator.AddMeshObject(resGridGeometry, gridLayer.Name);
                 gridMesh.YPos = -0.5f;
                 gridMesh.Name = Constants.OBJ_NAME_GRID;
+                gridMesh.Tag1 = new ModelViewerSceneObjectMetadata(true);
 
                 // Add bounding box (layer GRID)
                 var unitCube = new WireObject(
@@ -69,12 +72,18 @@ namespace SeeingSharp.ModelViewer.Rendering
                         new Vector3(-0.5f, -0.5f, -0.5f),
                         new Vector3(0.5f, 0.5f, 0.5f)));
                 unitCube.Name = Constants.OBJ_NAME_UNIT_CUBE;
+                unitCube.Tag1 = new ModelViewerSceneObjectMetadata(true);
                 manipulator.AddObject(unitCube, gridLayer.Name);
             });
         }
 
         public static async Task AddModelToScene(RenderLoop targetRenderLoop, ImportedModelContainer importedModel)
         {
+            foreach (var actImportedObject in importedModel.Objects)
+            {
+                actImportedObject.Tag1 = new ModelViewerSceneObjectMetadata(false);
+            }
+
             await targetRenderLoop.Scene.ImportAsync(importedModel);
         }
     }
