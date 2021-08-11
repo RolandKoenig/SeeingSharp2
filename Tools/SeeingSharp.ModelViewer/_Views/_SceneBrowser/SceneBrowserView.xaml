@@ -68,6 +68,7 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <propTools:PropertyGrid SelectedObject="{Binding}"
+                                                    Style="{StaticResource ModelViewerPropertyGrid}"
                                                     TabVisibility="Collapsed">
                                 <propTools:PropertyGrid.ControlFactory>
                                     <local:PropertyGridControlFactory />

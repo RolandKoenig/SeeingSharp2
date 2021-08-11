@@ -12,19 +12,23 @@
     <StackPanel Orientation="Horizontal"
                 VerticalAlignment="Bottom">
         <StackPanel.Resources>
-            <Style TargetType="TextBlock">
+            <Style TargetType="TextBlock"
+                   BasedOn="{StaticResource {x:Type TextBlock}}">
                 <Setter Property="VerticalAlignment" Value="Center" />
                 <Setter Property="Margin" Value="2" />
             </Style>
-            <Style TargetType="{x:Type materialDesign:PackIcon}" BasedOn="{StaticResource ModelViewerIconStyle}">
+            <Style TargetType="{x:Type materialDesign:PackIcon}" 
+                   BasedOn="{StaticResource ModelViewerIconStyle}">
                 <Setter Property="VerticalAlignment" Value="Center" />
                 <Setter Property="Margin" Value="10,2,2,2" />
             </Style>
-            <Style TargetType="ComboBox">
+            <Style TargetType="ComboBox" 
+                   BasedOn="{StaticResource {x:Type ComboBox}}">
                 <Setter Property="VerticalAlignment" Value="Center" />
                 <Setter Property="Margin" Value="2" />
             </Style>
-            <Style TargetType="Rectangle">
+            <Style TargetType="Rectangle" 
+                   BasedOn="{StaticResource {x:Type Rectangle}}">
                 <Setter Property="Margin" Value="2" />
             </Style>
         </StackPanel.Resources>
