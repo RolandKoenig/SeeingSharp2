@@ -15,9 +15,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.1" />
-    <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.1" />
-    <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.1" />
+    <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.5" />
+    <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.5" />
+    <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.5" />
+    <PackageReference Include="PInvoke.User32" Version="0.7.104" />
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
 
@@ -29,6 +30,12 @@
     <ProjectReference Include="..\..\..\SeeingSharp.WinUI\SeeingSharp.WinUI.csproj" />
     <ProjectReference Include="..\..\..\SeeingSharp\SeeingSharp.csproj" />
     <ProjectReference Include="..\..\SeeingSharp.SampleContainer\SeeingSharp.SampleContainer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Icon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

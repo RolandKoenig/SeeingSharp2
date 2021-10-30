@@ -86,9 +86,19 @@ namespace SeeingSharp.WinUIDesktopSamples
             var appName = package.DisplayName;
             this.Title = $@"{appName} - Main window - {Assembly.GetExecutingAssembly().GetName().Version}";
 
-            //this.ExtendsContentIntoTitleBar = true;
+            this.LoadIcon("Icon.ico");
 
             this.CtrlMainContent.Loaded += this.OnLoaded;
+        }
+
+        private void LoadIcon(string iconName)
+        {
+            //Get the Window's HWND
+            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
+            var hIcon = PInvoke.User32.LoadImage(System.IntPtr.Zero, iconName,
+                PInvoke.User32.ImageType.IMAGE_ICON, 16, 16, PInvoke.User32.LoadImageFlags.LR_LOADFROMFILE);
+
+            PInvoke.User32.SendMessage(hwnd, PInvoke.User32.WindowMessage.WM_SETICON, (System.IntPtr)0, hIcon);
         }
 
         /// <summary>
