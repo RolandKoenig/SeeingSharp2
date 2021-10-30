@@ -34,7 +34,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public ImportedModelContainer ImportModel(ResourceLink sourceFile, ImportOptions importOptions)
         {
             // Get import options
-            if (!(importOptions is ACImportOptions acImportOptions))
+            if (importOptions is not ACImportOptions acImportOptions)
             {
                 throw new SeeingSharpException("Invalid import options for ACImporter!");
             }

@@ -13,7 +13,8 @@
                 <ResourceDictionary>
 
                     <!-- Fixes theme for CheckMark. CheckMark is a control from PropertyTools which gets rendered instead of readonly CheckBoxes -->
-                    <Style TargetType="propTools:CheckMark">
+                    <Style TargetType="propTools:CheckMark"
+                           BasedOn="{StaticResource {x:Type propTools:CheckMark}}">
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="propTools:CheckMark">
@@ -24,7 +25,9 @@
                         </Setter>
                     </Style>
 
-                    <Style x:Key="ModelViewerIconStyle" TargetType="{x:Type materialDesign:PackIcon}">
+                    <Style x:Key="ModelViewerIconStyle" 
+                           TargetType="{x:Type materialDesign:PackIcon}"
+                           BasedOn="{StaticResource {x:Type materialDesign:PackIcon}}">
                         <Setter Property="Width" Value="20" />
                         <Setter Property="Height" Value="20"/>
                         <Setter Property="Foreground" Value="#00CCFF" />
@@ -34,11 +37,12 @@
                            BasedOn="{StaticResource {x:Type Menu}}">
                         <Setter Property="Background" Value="#0975C6" />
                         <Setter Property="Foreground" Value="White" />
-                        <Setter Property="Margin" Value="0,0,0,3" />
+                        <Setter Property="Margin" Value="-4,0,-4,3" />
                     </Style>
 
                     <Style x:Key="ModelViewerPropertyGrid" 
-                           TargetType="propTools:PropertyGrid">
+                           TargetType="propTools:PropertyGrid"
+                           BasedOn="{StaticResource {x:Type propTools:PropertyGrid}}">
                         <Setter Property="CategoryControlType" Value="Template" />
                         <Setter Property="CategoryControlTemplate">
                             <Setter.Value>
@@ -58,7 +62,8 @@
 
                     <!-- Logic for custom title bar
                          see https://engy.us/blog/2020/01/01/implementing-a-custom-window-title-bar-in-wpf/ -->
-                    <Style x:Key="WindowMainPanelStyle" TargetType="{x:Type Border}">
+                    <Style x:Key="WindowMainPanelStyle" 
+                           TargetType="{x:Type Border}">
                         <Setter Property="BorderBrush" Value="{DynamicResource WindowBorderBrush}" />
                         <Setter Property="BorderThickness" Value="4" />
                         <Style.Triggers>
@@ -67,7 +72,9 @@
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
-                    <Style x:Key="TitleBarButtonStyle" TargetType="Button">
+                    <Style x:Key="TitleBarButtonStyle" 
+                           TargetType="Button"
+                           BasedOn="{StaticResource {x:Type Button}}">
                         <Setter Property="Foreground" Value="LightGray" />
 						<Setter Property="Padding" Value="0" />
 						<Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
@@ -100,7 +107,6 @@
 							</Setter.Value>
 						</Setter>
 					</Style>
-
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>

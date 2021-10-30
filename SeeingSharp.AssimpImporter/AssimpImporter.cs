@@ -31,6 +31,8 @@ namespace SeeingSharp.AssimpImporter
     [SupportedFileFormat("fbx", "(*.fbx)")]
     [SupportedFileFormat("3ds", "3D Studio Max (*.3ds)")]
     [SupportedFileFormat("dae", "Collada (*.dae)")]
+    [SupportedFileFormat("gltf", "GL Transmission Format (*.gltf)")]
+    [SupportedFileFormat("glb", "GL Transmission Format (*.glb)")]
     public class AssimpImporter : IModelImporter
     {
         public ImportedModelContainer ImportModel(ResourceLink sourceFile, ImportOptions importOptions)
