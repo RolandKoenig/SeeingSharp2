@@ -94,7 +94,7 @@
     <None Include="..\LICENSE.md">
       <Link>LICENSE.md</Link>
     </None>
-    <None Include="..\_Misc\_SeeingSharp.Multimedia.licenseheader">
+    <None Include="..\..\misc\_SeeingSharp.Multimedia.licenseheader">
       <Link>_SeeingSharp.Multimedia.licenseheader</Link>
     </None>
     <None Include="SeeingSharp.Uwp.nuspec" />

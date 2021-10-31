@@ -2,7 +2,7 @@
 # MSBuild is needed for SeeingSharp.Uwp
 function GetMSBuildPath()
 {
-    $allPaths = .\_Misc\vswhere.exe -nologo -property installationPath -format value | Out-String
+    $allPaths = .\misc\vswhere.exe -nologo -property installationPath -format value | Out-String
 	
 	$allPathsArray = $allPaths -split "`r`n" | Where { $_ -match '\S' }
 	if($allPathsArray.Length -eq 0)
@@ -37,20 +37,20 @@ Write-Output "MSBuild-Path: $msbuildExe"
 Write-Output ""
 
 # Build and pack all projects on the new project format
-dotnet pack -c Release -o ./publish ./SeeingSharp /p:ContinuousIntegrationBuild=true /p:IncludeSymbols=true /p:EmbedUntrackedSources=true -p:SymbolPackageFormat=snupkg
-dotnet pack -c Release -o ./publish ./SeeingSharp.AssimpImporter /p:ContinuousIntegrationBuild=true /p:IncludeSymbols=true /p:EmbedUntrackedSources=true -p:SymbolPackageFormat=snupkg
-dotnet pack -c Release -o ./publish ./SeeingSharp.WinForms /p:ContinuousIntegrationBuild=true /p:IncludeSymbols=true /p:EmbedUntrackedSources=true -p:SymbolPackageFormat=snupkg
-dotnet pack -c Release -o ./publish ./SeeingSharp.Wpf /p:ContinuousIntegrationBuild=true /p:IncludeSymbols=true /p:EmbedUntrackedSources=true -p:SymbolPackageFormat=snupkg
-dotnet pack -c Release -o ./publish ./SeeingSharp.WinUI /p:ContinuousIntegrationBuild=true /p:IncludeSymbols=true /p:EmbedUntrackedSources=true -p:SymbolPackageFormat=snupkg
+dotnet pack -c Release -o ./publish ./src/SeeingSharp /p:ContinuousIntegrationBuild=true /p:IncludeSymbols=true /p:EmbedUntrackedSources=true -p:SymbolPackageFormat=snupkg
+dotnet pack -c Release -o ./publish ./src/SeeingSharp.AssimpImporter /p:ContinuousIntegrationBuild=true /p:IncludeSymbols=true /p:EmbedUntrackedSources=true -p:SymbolPackageFormat=snupkg
+dotnet pack -c Release -o ./publish ./src/SeeingSharp.WinForms /p:ContinuousIntegrationBuild=true /p:IncludeSymbols=true /p:EmbedUntrackedSources=true -p:SymbolPackageFormat=snupkg
+dotnet pack -c Release -o ./publish ./src/SeeingSharp.Wpf /p:ContinuousIntegrationBuild=true /p:IncludeSymbols=true /p:EmbedUntrackedSources=true -p:SymbolPackageFormat=snupkg
+dotnet pack -c Release -o ./publish ./src/SeeingSharp.WinUI /p:ContinuousIntegrationBuild=true /p:IncludeSymbols=true /p:EmbedUntrackedSources=true -p:SymbolPackageFormat=snupkg
 
 # Build and pack SeeingSharp.Uwp by MSBuild (still old project format)
-&$msbuildExe SeeingSharp.Uwp/SeeingSharp.Uwp.csproj /t:Build /p:Configuration=Release /p:ContinuousIntegrationBuild=true
-nuget pack SeeingSharp.Uwp/SeeingSharp.Uwp.nuspec -OutputDirectory publish
+&$msbuildExe src/SeeingSharp.Uwp/SeeingSharp.Uwp.csproj /t:Build /p:Configuration=Release /p:ContinuousIntegrationBuild=true
+nuget pack src/SeeingSharp.Uwp/SeeingSharp.Uwp.nuspec -OutputDirectory publish
 
 # Publish sample applications
-dotnet publish -c Release -f net5.0-windows -o ./publish/WinFormsSamples ./Samples/SeeingSharp.WinFormsSamples
-dotnet publish -c Release -f net5.0-windows -o ./publish/WpfSamples ./Samples/SeeingSharp.WpfSamples
-dotnet publish -c Release -f net5.0-windows -o ./publish/ModelViewer ./Tools/SeeingSharp.ModelViewer
+dotnet publish -c Release -f net5.0-windows -o ./publish/WinFormsSamples ./src/Samples/SeeingSharp.WinFormsSamples
+dotnet publish -c Release -f net5.0-windows -o ./publish/WpfSamples ./src/Samples/SeeingSharp.WpfSamples
+dotnet publish -c Release -f net5.0-windows -o ./publish/ModelViewer ./src/Tools/SeeingSharp.ModelViewer
 
 # Compress sample applications to have one zip archive for each
 $compress = @{

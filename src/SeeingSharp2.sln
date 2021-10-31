@@ -15,22 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp", "SeeingSharp\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp.Tests", "SeeingSharp.Tests\SeeingSharp.Tests.csproj", "{4FA605DB-7FC0-46A1-9741-5B07E394D5A3}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Misc", "_Misc", "{4B6075B0-74B1-441E-8FF8-43754C876B1D}"
-	ProjectSection(SolutionItems) = preProject
-		_Misc\_SeeingSharp.Multimedia.licenseheader = _Misc\_SeeingSharp.Multimedia.licenseheader
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Root", "_Root", "{C8DD9966-EFF6-44CD-815F-1A30329AF41C}"
 	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
-		.gitattributes = .gitattributes
-		.gitignore = .gitignore
-		Directory.Build.props = Directory.Build.props
-		LICENSE.md = LICENSE.md
-		README.md = README.md
-		script-publish.ps1 = script-publish.ps1
-		SeeingSharp2.sln.DotSettings = SeeingSharp2.sln.DotSettings
-		SolutionInfo.cs = SolutionInfo.cs
+		..\.gitattributes = ..\.gitattributes
+		..\.gitignore = ..\.gitignore
+		..\script-publish.ps1 = ..\script-publish.ps1
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp.SampleContainer", "Samples\SeeingSharp.SampleContainer\SeeingSharp.SampleContainer.csproj", "{D4716317-A8EC-4605-86E8-D3755340368F}"
@@ -55,29 +44,46 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp.AssimpImporter"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp.ObjectLayoutInspection", "Tools\SeeingSharp.ObjectLayoutInspection\SeeingSharp.ObjectLayoutInspection.csproj", "{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WikiImages", "WikiImages", "{1FC1FF19-B0F1-44D2-9B6A-0784E29A3FD7}"
-	ProjectSection(SolutionItems) = preProject
-		_Misc\WikiImages\SeeingSharp.svg = _Misc\WikiImages\SeeingSharp.svg
-		_Misc\WikiImages\SeeingSharp_Samples.png = _Misc\WikiImages\SeeingSharp_Samples.png
-		_Misc\WikiImages\SimpleSampleWpf.png = _Misc\WikiImages\SimpleSampleWpf.png
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GettingStarted", "GettingStarted", "{270A9634-9CB6-4A40-AC7A-7D8632DA7ED7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GettingStarted.WinForms", "Samples\GettingStarted\GettingStarted.WinForms\GettingStarted.WinForms.csproj", "{91F55829-7B9F-436A-9A12-DD74E9F32B11}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GettingStarted.Wpf", "Samples\GettingStarted\GettingStarted.Wpf\GettingStarted.Wpf.csproj", "{4910D33D-4F6D-4EE9-B92E-0DE8725EE12F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{1588254D-CB8B-495F-8621-FF6AC2F91104}"
-	ProjectSection(SolutionItems) = preProject
-		_Misc\Nuget\SeeingSharp_128.png = _Misc\Nuget\SeeingSharp_128.png
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp.WinUI", "SeeingSharp.WinUI\SeeingSharp.WinUI.csproj", "{D38BECFC-5129-4A4C-A06C-9B6A1FC2D658}"
 EndProject
 Project("{C7167F0D-BC9F-4E6E-AFE1-012C56B48DB5}") = "SeeingSharp.WinUIDesktopSamples (Package)", "Samples\SeeingSharp.WinUIDesktopSamples\SeeingSharp.WinUIDesktopSamples (Package)\SeeingSharp.WinUIDesktopSamples (Package).wapproj", "{C3C83F8A-AC16-45B5-83F9-DCC0DD852C4D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeeingSharp.WinUIDesktopSamples", "Samples\SeeingSharp.WinUIDesktopSamples\SeeingSharp.WinUIDesktopSamples\SeeingSharp.WinUIDesktopSamples.csproj", "{408AC1A8-F7E5-479E-916E-F43F0DC82C09}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{50F02630-B3D3-4440-AC0A-0BDF5867717C}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+		LICENSE.md = LICENSE.md
+		README.md = README.md
+		SeeingSharp2.sln.DotSettings = SeeingSharp2.sln.DotSettings
+		SolutionInfo.cs = SolutionInfo.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{784DC8F8-BCCA-4845-8EA2-A34CDBEA83D8}"
+	ProjectSection(SolutionItems) = preProject
+		..\misc\_SeeingSharp.Multimedia.licenseheader = ..\misc\_SeeingSharp.Multimedia.licenseheader
+		..\misc\vswhere.exe = ..\misc\vswhere.exe
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{2F86C1A7-C362-4519-B17F-3F9F9366DEAD}"
+	ProjectSection(SolutionItems) = preProject
+		..\misc\Nuget\SeeingSharp_128.png = ..\misc\Nuget\SeeingSharp_128.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WikiImages", "WikiImages", "{12D0A365-BA3F-4F5B-891E-3BE239E11A53}"
+	ProjectSection(SolutionItems) = preProject
+		..\misc\WikiImages\SeeingSharp.svg = ..\misc\WikiImages\SeeingSharp.svg
+		..\misc\WikiImages\SeeingSharp_Samples.pdn = ..\misc\WikiImages\SeeingSharp_Samples.pdn
+		..\misc\WikiImages\SeeingSharp_Samples.png = ..\misc\WikiImages\SeeingSharp_Samples.png
+		..\misc\WikiImages\SimpleSampleWpf.png = ..\misc\WikiImages\SimpleSampleWpf.png
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -416,13 +422,15 @@ Global
 		{23DF94AA-B58B-4B2A-9AE9-3350C0C3CA9A} = {9B532433-0B22-4E5B-B7CC-E3BD981002FD}
 		{42DD13E3-5595-4CB3-9314-B8AE62999C58} = {9B532433-0B22-4E5B-B7CC-E3BD981002FD}
 		{4EDFBF9E-AFF8-41CC-8F96-4A7569D10DA6} = {9B532433-0B22-4E5B-B7CC-E3BD981002FD}
-		{1FC1FF19-B0F1-44D2-9B6A-0784E29A3FD7} = {4B6075B0-74B1-441E-8FF8-43754C876B1D}
 		{270A9634-9CB6-4A40-AC7A-7D8632DA7ED7} = {790928B0-DED6-4996-9BAE-421B79C36561}
 		{91F55829-7B9F-436A-9A12-DD74E9F32B11} = {270A9634-9CB6-4A40-AC7A-7D8632DA7ED7}
 		{4910D33D-4F6D-4EE9-B92E-0DE8725EE12F} = {270A9634-9CB6-4A40-AC7A-7D8632DA7ED7}
-		{1588254D-CB8B-495F-8621-FF6AC2F91104} = {4B6075B0-74B1-441E-8FF8-43754C876B1D}
 		{C3C83F8A-AC16-45B5-83F9-DCC0DD852C4D} = {790928B0-DED6-4996-9BAE-421B79C36561}
 		{408AC1A8-F7E5-479E-916E-F43F0DC82C09} = {790928B0-DED6-4996-9BAE-421B79C36561}
+		{50F02630-B3D3-4440-AC0A-0BDF5867717C} = {C8DD9966-EFF6-44CD-815F-1A30329AF41C}
+		{784DC8F8-BCCA-4845-8EA2-A34CDBEA83D8} = {C8DD9966-EFF6-44CD-815F-1A30329AF41C}
+		{2F86C1A7-C362-4519-B17F-3F9F9366DEAD} = {784DC8F8-BCCA-4845-8EA2-A34CDBEA83D8}
+		{12D0A365-BA3F-4F5B-891E-3BE239E11A53} = {784DC8F8-BCCA-4845-8EA2-A34CDBEA83D8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0F49729B-7B64-4341-BE26-B12CF5E5D93B}
