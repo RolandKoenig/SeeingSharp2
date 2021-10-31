@@ -1,5 +1,5 @@
 # SeeingSharp2 <img src="_Misc/WikiImages/SeeingSharp.svg" width="32" />
-![alt tag](_Misc/WikiImages/SeeingSharp_Samples.png)
+![alt tag](misc/WikiImages/SeeingSharp_Samples.png)
 
 ### Quick Links
  - [Current progress / roadmap](/../../projects/1)
@@ -127,4 +127,4 @@ public partial class MainWindow : Window
 ```
 5. Here it is...
 
-![alt tag](_Misc/WikiImages/SimpleSampleWpf.png)
+![alt tag](misc/WikiImages/SimpleSampleWpf.png)
