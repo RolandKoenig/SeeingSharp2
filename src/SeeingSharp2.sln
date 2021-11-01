@@ -86,13 +86,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WikiImages", "WikiImages", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{26AE3FEB-FF25-42A7-BD2A-45A591BAEB5A}"
 	ProjectSection(SolutionItems) = preProject
-		..\docs\Bootstrapping-Seeing#.md = ..\docs\Bootstrapping-Seeing#.md
-		..\docs\Configuration-of-Seeing#.md = ..\docs\Configuration-of-Seeing#.md
+		..\docs\Bootstrapping.md = ..\docs\Bootstrapping.md
+		..\docs\Configuration.md = ..\docs\Configuration.md
 		..\docs\CPU-utilization-on-software-rendering.md = ..\docs\CPU-utilization-on-software-rendering.md
 		..\docs\Filling-the-Scene-with-content.md = ..\docs\Filling-the-Scene-with-content.md
-		..\docs\Handling input.md = ..\docs\Handling input.md
-		..\docs\Home.md = ..\docs\Home.md
+		..\docs\Handling-input.md = ..\docs\Handling-input.md
 		..\docs\Lightning-model.md = ..\docs\Lightning-model.md
+		..\docs\README.md = ..\docs\README.md
 		..\docs\Toggle-object-visibility.md = ..\docs\Toggle-object-visibility.md
 		..\docs\Views,-Scenes-and-Cameras.md = ..\docs\Views,-Scenes-and-Cameras.md
 		..\docs\WPF-composition-mode.md = ..\docs\WPF-composition-mode.md
