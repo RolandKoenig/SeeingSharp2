@@ -1,4 +1,4 @@
-[Home](README.md)
+[Home](../README.md)
 
 ## Object filtering
 Object visibility is controlled by object filters by default. You can add one or more object filters per view. Each object inside the scene has to pass each object filter before it gets rendered for the corresponding view. The most common example of an object filter is the SceneViewboxObjectFilter. This one builds a box (or pyramid, depending on the camera's projection node) representing the area which the view sees. All objects in the scene are testet against this box - if one is inside the box or on the border, then it will be rendered.

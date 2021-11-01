@@ -1,4 +1,4 @@
-[Home](README.md)
+[Home](../README.md)
 
 ## Overview
 SeeingSharp 2 supports rendering also on a software device. That means, all rendering is done on CPU. This may be slow, but still is a good fallback solution on environments where you do not have a real hardware device (e. g. some virtualized servers). [WARP](https://docs.microsoft.com/en-us/windows/win32/direct3darticles/directx-warp) is used by SeeingSharp for software rendering under the hood. One very important question behind this technology is how it consumes CPU resources when activated. Therefore, I do a short and simple comparision here.

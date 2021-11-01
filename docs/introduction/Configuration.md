@@ -1,4 +1,4 @@
-[Home](README.md)
+[Home](../README.md)
 
 ## Overview
 There are 4 objects which control most of the configuration of Seeing#:

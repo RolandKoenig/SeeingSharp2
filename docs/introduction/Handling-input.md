@@ -1,4 +1,4 @@
-[Home](README.md)
+[Home](../README.md)
 
 ## Handling input in general
 You are free to use default input handling methods of the ui framework of your choice - just as you would do without SeeingSharp. This is no problem because SeeingSharp does not block this in any way.
