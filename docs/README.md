@@ -1,5 +1,3 @@
-[Home](https://github.com/RolandKoenig/SeeingSharp2/wiki) <br /><br />
-
 ## SeeingSharp2
 ## Introduction
 1. [Bootstrapping Seeing#](Bootstrapping.md)
