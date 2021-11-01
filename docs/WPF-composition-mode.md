@@ -1,3 +1,5 @@
+[Home](README.md)
+
 When you are using SeeingSharp 2 on WPF, then you may have noticed the CompositionMode property on the SeeingSharpRenderElement class. You also see the value of this property in the WpfSampleContainer like in the following screenshot. It can take one of the values OverHardware, FallbackOverSoftware or None. It is a very important property because it describes how SeeingSharp posts rendering results into the WPF rendering chain. For short, these values have the following meaning:
 
  - **OverHardware**: SeeingSharp uses the most direct way to post its own rendering results to WPF. [WPF and Direct3D9 interop](https://docs.microsoft.com/en-us/dotnet/framework/wpf/advanced/wpf-and-direct3d9-interoperation) is used here under the hood. 

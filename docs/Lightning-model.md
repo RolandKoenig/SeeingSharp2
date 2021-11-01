@@ -1,3 +1,5 @@
+[Home](README.md)
+
 ## Lightning model for StandardMaterial
 The lightning model in Seeing# is very simple. You don't have to define any light. Seeing# uses a per-pixel lightning system where there are two light sources:
 * The ambient light which is defined with one ambient factor in the per-view configuration
