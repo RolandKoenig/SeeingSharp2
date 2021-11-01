@@ -100,6 +100,7 @@
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Multimedia\Drawing3D\_Geometries\_Builders\" />
     <Folder Include="Multimedia\Drawing3D\_Painters\" />
   </ItemGroup>
 </Project>

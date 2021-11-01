@@ -194,6 +194,21 @@ namespace SeeingSharp.Multimedia.Drawing3D
         }
 
         /// <summary>
+        /// Adds a triangle fan.
+        /// </summary>
+        /// <param name="vertexIndices">The vertex indices of the triangle fan.</param>
+        public void AddTriangleFan(IList<int> vertexIndices)
+        {
+            for (var loop = 0; loop + 2 < vertexIndices.Count; loop++)
+            {
+                this.AddTriangle(
+                    vertexIndices[0],
+                    vertexIndices[loop + 1],
+                    vertexIndices[loop + 2]);
+            }
+        }
+
+        /// <summary>
         /// Adds a triangle
         /// </summary>
         /// <param name="index1">Index of the first vertex</param>

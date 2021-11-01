@@ -47,6 +47,7 @@
     <None Remove="Postprocessing\EdgeDetect\PreviewImage.png" />
     <None Remove="Primitives3D\Geosphere\PreviewImage.png" />
     <None Remove="Primitives3D\Pyramid\PreviewImage.png" />
+    <None Remove="Primitives3D\Torus\PreviewImage.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Assets\Background.dds" />
@@ -81,6 +82,7 @@
     <EmbeddedResource Include="Postprocessing\EdgeDetect\PreviewImage.png" />
     <EmbeddedResource Include="Primitives3D\Geosphere\PreviewImage.png" />
     <EmbeddedResource Include="Primitives3D\Pyramid\PreviewImage.png" />
+    <EmbeddedResource Include="Primitives3D\Torus\PreviewImage.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="SharpDX" Version="4.2.0" />
