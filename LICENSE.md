@@ -3,7 +3,7 @@ Exceptions are projects where it is noted otherwise.
 More info at 
  - https://github.com/RolandKoenig/SeeingSharp2 (sourcecode)
  - http://www.rolandk.de/wp (the authors homepage, german)
-Copyright (C) 2019 Roland König (RolandK)
+Copyright (C) 2021 Roland König (RolandK)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published
