@@ -8,10 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\..\misc\_SeeingSharp.Multimedia.licenseheader" Link="_SeeingSharp.Multimedia.licenseheader" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\..\SeeingSharp.Wpf\SeeingSharp.Wpf.csproj" />
     <ProjectReference Include="..\..\..\SeeingSharp\SeeingSharp.csproj" />
   </ItemGroup>

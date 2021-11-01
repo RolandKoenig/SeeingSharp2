@@ -94,9 +94,6 @@
     <None Include="..\LICENSE.md">
       <Link>LICENSE.md</Link>
     </None>
-    <None Include="..\..\misc\_SeeingSharp.Multimedia.licenseheader">
-      <Link>_SeeingSharp.Multimedia.licenseheader</Link>
-    </None>
     <None Include="SeeingSharp.Uwp.nuspec" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">

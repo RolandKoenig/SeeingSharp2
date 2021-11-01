@@ -122,9 +122,6 @@
     <EmbeddedResource Include="Resources\TextureUploader\TestTexture.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\misc\_SeeingSharp.Multimedia.licenseheader" Link="_SeeingSharp.Multimedia.licenseheader" />
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.5" />
     <PackageReference Include="MSTest.TestFramework" Version="2.2.5" />

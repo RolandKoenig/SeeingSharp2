@@ -94,7 +94,4 @@
   <ItemGroup>
     <ProjectReference Include="..\..\SeeingSharp\SeeingSharp.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\misc\_SeeingSharp.Multimedia.licenseheader" Link="_SeeingSharp.Multimedia.licenseheader" />
-  </ItemGroup>
 </Project>

@@ -93,9 +93,6 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
-    <None Include="..\..\..\misc\_SeeingSharp.Multimedia.licenseheader">
-      <Link>_SeeingSharp.Multimedia.licenseheader</Link>
-    </None>
     <None Include="SeeingSharp.UwpSamples_StoreKey.pfx" />
     <None Include="SeeingSharp.UwpSamples_TemporaryKey.pfx" />
   </ItemGroup>

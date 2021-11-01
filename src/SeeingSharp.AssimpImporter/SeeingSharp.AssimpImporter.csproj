@@ -40,7 +40,6 @@
       <PackagePath>LICENSE.md</PackagePath>
       <Pack>true</Pack>
     </None>
-    <None Include="..\..\misc\_SeeingSharp.Multimedia.licenseheader" Link="_SeeingSharp.Multimedia.licenseheader" />
   </ItemGroup>
 
   <ItemGroup>

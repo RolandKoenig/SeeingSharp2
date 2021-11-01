@@ -23,10 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\..\misc\_SeeingSharp.Multimedia.licenseheader" Link="_SeeingSharp.Multimedia.licenseheader" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\..\SeeingSharp.WinUI\SeeingSharp.WinUI.csproj" />
     <ProjectReference Include="..\..\..\SeeingSharp\SeeingSharp.csproj" />
     <ProjectReference Include="..\..\SeeingSharp.SampleContainer\SeeingSharp.SampleContainer.csproj" />

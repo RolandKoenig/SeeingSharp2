@@ -12,10 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\misc\_SeeingSharp.Multimedia.licenseheader" Link="_SeeingSharp.Multimedia.licenseheader" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="PropertyTools" Version="3.1.0" />
     <PackageReference Include="PropertyTools.Wpf" Version="3.1.0">
       <NoWarn>NU1701</NoWarn>

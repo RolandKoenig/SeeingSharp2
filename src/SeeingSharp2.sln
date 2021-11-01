@@ -68,7 +68,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{50F02630-B3D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{784DC8F8-BCCA-4845-8EA2-A34CDBEA83D8}"
 	ProjectSection(SolutionItems) = preProject
-		..\misc\_SeeingSharp.Multimedia.licenseheader = ..\misc\_SeeingSharp.Multimedia.licenseheader
 		..\misc\vswhere.exe = ..\misc\vswhere.exe
 	EndProjectSection
 EndProject
