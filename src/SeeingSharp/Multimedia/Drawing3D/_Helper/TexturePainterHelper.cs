@@ -72,7 +72,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 () =>
                 {
                     var geometry = new Geometry();
-                    geometry.FirstSurface.BuildRect4V(
+                    geometry.FirstSurface.BuildRect(
                         new Vector3(-1f, -1f, 0f),
                         new Vector3(1f, -1f, 0f),
                         new Vector3(1f, 1f, 0f),

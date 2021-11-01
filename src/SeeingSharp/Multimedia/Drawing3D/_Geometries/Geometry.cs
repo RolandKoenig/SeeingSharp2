@@ -158,7 +158,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var targetCenter = new Vector3(0f, 0f, 0f);
             var moveToTargetCenter = targetCenter - fullCenter;
 
-            this.UpdateVerticesUsingRelocationBy(moveToTargetCenter);
+            this.UpdateVerticesUsingTranslation(moveToTargetCenter);
         }
 
         public void RealignToFloorCenter()
@@ -168,7 +168,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var targetCenter = new Vector3(0f, fullBoundingBox.GetSize().Y / 2f, 0f);
             var moveToTargetCenter = targetCenter - fullCenter;
 
-            this.UpdateVerticesUsingRelocationBy(moveToTargetCenter);
+            this.UpdateVerticesUsingTranslation(moveToTargetCenter);
         }
 
         /// <summary>
@@ -245,12 +245,12 @@ namespace SeeingSharp.Multimedia.Drawing3D
             }
 
             // Bring the geometry to origin based location and then scale it
-            this.UpdateVerticesUsingRelocationBy(Vector3.Negate(boundingBox.CornerA));
-            this.UpdateVerticesUsingRelocationFunc(actPosition => new Vector3(
+            this.UpdateVerticesUsingTranslation(Vector3.Negate(boundingBox.CornerA));
+            this.UpdateVerticesUsingTranslation(actPosition => new Vector3(
                 actPosition.X * resizeFactorX,
                 actPosition.Y * resizeFactorY,
                 actPosition.Z * resizeFactorZ));
-            this.UpdateVerticesUsingRelocationBy(targetCornerALocation);
+            this.UpdateVerticesUsingTranslation(targetCornerALocation);
         }
 
         public void RemoveSurface(GeometrySurface surface)
@@ -584,7 +584,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             var centerCoord = boundingBox.GetMiddleCenter();
 
             // Update each vertex coordinate
-            this.UpdateVerticesUsingRelocationFunc(givenVector => new Vector3(
+            this.UpdateVerticesUsingTranslation(givenVector => new Vector3(
                 givenVector.X, givenVector.Y,
                 centerCoord.Z + (centerCoord.Z - givenVector.Z)));
 
@@ -612,7 +612,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// <summary>
         /// Relocates all vertices by the given vector
         /// </summary>
-        public void UpdateVerticesUsingRelocationBy(Vector3 relocateVector)
+        public void UpdateVerticesUsingTranslation(Vector3 relocateVector)
         {
             var length = _verticesBasic.Count;
             for (var loop = 0; loop < length; loop++)
@@ -626,7 +626,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         /// Relocates all vertices by the given relocation function (executed for each position vector).
         /// </summary>
         /// <param name="calculatePositionFunc">The function to be applied to each coordinate.</param>
-        public void UpdateVerticesUsingRelocationFunc(Func<Vector3, Vector3> calculatePositionFunc)
+        public void UpdateVerticesUsingTranslation(Func<Vector3, Vector3> calculatePositionFunc)
         {
             var length = _verticesBasic.Count;
             for (var loop = 0; loop < length; loop++)

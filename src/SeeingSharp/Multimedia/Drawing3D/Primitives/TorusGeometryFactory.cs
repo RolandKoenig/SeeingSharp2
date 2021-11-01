@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SeeingSharp.Multimedia.Drawing3D
+namespace SeeingSharp.Multimedia.Drawing3D.Primitives
 {
     public class TorusGeometryFactory : GeometryFactory
     {

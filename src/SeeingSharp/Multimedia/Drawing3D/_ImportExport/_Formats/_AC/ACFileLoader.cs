@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Numerics;
+using SeeingSharp.Multimedia.Drawing3D.Primitives;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Drawing3D
@@ -87,7 +88,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             {
                 // Create dummy Geometry
                 var dummyGeometry = new Geometry();
-                dummyGeometry.FirstSurface.BuildCube24V(
+                dummyGeometry.FirstSurface.BuildCube(
                     new Vector3(),
                     new Vector3(1f, 1f, 1f));
                 return dummyGeometry;

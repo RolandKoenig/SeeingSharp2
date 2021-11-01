@@ -1,4 +1,4 @@
-﻿namespace SeeingSharp.Multimedia.Drawing3D
+﻿namespace SeeingSharp.Multimedia.Drawing3D.Primitives
 {
     public class GeosphereGeometryFactory : GeometryFactory
     {

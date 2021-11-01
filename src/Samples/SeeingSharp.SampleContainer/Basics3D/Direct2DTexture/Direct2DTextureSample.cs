@@ -7,6 +7,7 @@ using SeeingSharp.Multimedia.Components;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing2D;
 using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Drawing3D.Primitives;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.SampleContainer.Basics3D.Direct2DTexture

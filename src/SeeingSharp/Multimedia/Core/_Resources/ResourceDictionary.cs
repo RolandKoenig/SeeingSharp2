@@ -8,6 +8,7 @@ using System.Numerics;
 using System.Reflection;
 using SeeingSharp.Checking;
 using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Drawing3D.Primitives;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.Multimedia.Core
@@ -191,7 +192,7 @@ namespace SeeingSharp.Multimedia.Core
             else if (resourceType == typeof(GeometryResource))
             {
                 var dummyGeometry = new Geometry();
-                dummyGeometry.FirstSurface.BuildCube24V(
+                dummyGeometry.FirstSurface.BuildCube(
                     Vector3.Zero,
                     new Vector3(1f, 1f, 1f))
                     .SetVertexColor(Color4.White);

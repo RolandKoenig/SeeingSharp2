@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace SeeingSharp.Multimedia.Drawing3D
+namespace SeeingSharp.Multimedia.Drawing3D.Primitives
 {
     public class CubeGeometryFactory : GeometryFactory
     {
@@ -14,7 +14,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             var result = new Geometry();
             result.CreateSurface()
-                .BuildCube24V(
+                .BuildCube(
                     new Vector3(-(this.Width / 2f), -(this.Height / 2f), -(this.Depth / 2f)),
                     new Vector3(this.Width, this.Height, this.Depth));
 

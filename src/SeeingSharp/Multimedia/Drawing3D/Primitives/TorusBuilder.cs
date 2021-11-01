@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
-namespace SeeingSharp.Multimedia.Drawing3D
+namespace SeeingSharp.Multimedia.Drawing3D.Primitives
 {
     // Code based on method AddTorus from
     // https://github.com/helix-toolkit/helix-toolkit/blob/develop/Source/HelixToolkit.Shared/Geometry/MeshBuilder.cs

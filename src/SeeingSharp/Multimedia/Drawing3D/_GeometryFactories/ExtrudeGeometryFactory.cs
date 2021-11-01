@@ -49,7 +49,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
             {
                 foreach (var actTriangle in actTriangleArray)
                 {
-                    surface.BuildTriangleV(
+                    surface.BuildTriangle(
                         new Vector3(actTriangle.Point1.X, 0f, actTriangle.Point1.Y),
                         new Vector3(actTriangle.Point2.X, 0f, actTriangle.Point2.Y),
                         new Vector3(actTriangle.Point3.X, 0f, actTriangle.Point3.Y));

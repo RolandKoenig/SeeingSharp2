@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Numerics;
 using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Multimedia.Drawing3D.Primitives;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 using SDX = SharpDX;
@@ -166,7 +167,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                                 polygonForRendering.Vertices[loop].X,
                                 0f,
                                 polygonForRendering.Vertices[loop].Y);
-                            tempSurface.BuildCube24V(actVertexLocation, pointRenderSize).SetVertexColor(colorToUse);
+                            tempSurface.BuildCube(actVertexLocation, pointRenderSize).SetVertexColor(colorToUse);
                         }
                     }
 
@@ -212,7 +213,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 {
                     foreach (var actLine in actPolygon.Lines)
                     {
-                        tempSurface.BuildRect4V(
+                        tempSurface.BuildRect(
                             new Vector3(actLine.StartPosition.X, -volumetricTextDepth, actLine.StartPosition.Y),
                             new Vector3(actLine.EndPosition.X, -volumetricTextDepth, actLine.EndPosition.Y),
                             new Vector3(actLine.EndPosition.X, 0f, actLine.EndPosition.Y),
@@ -254,7 +255,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 var transformMatrix = new Matrix4Stack(scaleMatrix);
                 transformMatrix.TransformLocal(_geometryOptions.VertexTransform);
 
-                tempGeometry.UpdateVerticesUsingRelocationFunc(actVector => Vector3.Transform(actVector, transformMatrix.Top));
+                tempGeometry.UpdateVerticesUsingTranslation(actVector => Vector3.Transform(actVector, transformMatrix.Top));
             }
 
             // Calculate all normals before adding to target geometry

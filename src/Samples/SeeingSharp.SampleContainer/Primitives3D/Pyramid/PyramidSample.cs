@@ -2,6 +2,7 @@
 using System.Numerics;
 using SeeingSharp.Multimedia.Core;
 using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Multimedia.Drawing3D.Primitives;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.SampleContainer.Primitives3D.Pyramid

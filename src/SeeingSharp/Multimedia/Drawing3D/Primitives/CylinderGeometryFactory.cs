@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace SeeingSharp.Multimedia.Drawing3D
+namespace SeeingSharp.Multimedia.Drawing3D.Primitives
 {
     public class CylinderGeometryFactory : GeometryFactory
     {
@@ -33,7 +33,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             var result = new Geometry();
             var mainSurface = result.CreateSurface();
-            mainSurface.BuildCylinderFullV(Vector3.Zero, this.Radius, this.Height, this.CountOfSegments);
+            mainSurface.BuildCylinder(Vector3.Zero, this.Radius, this.Height, this.CountOfSegments);
 
             return result;
         }

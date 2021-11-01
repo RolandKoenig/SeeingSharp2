@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
+using SeeingSharp.Multimedia.Drawing3D.Primitives;
 
 namespace SeeingSharp.Multimedia.Drawing3D
 {
@@ -187,7 +188,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
                     actTile.YPos * _tileSize.Y - totalHalfSize.Y);
 
                 // AddObject tile information to current Geometry
-                actSurface.BuildCubeTop4V(
+                actSurface.BuildCubeTop(
                     new Vector3(tilePosition.X, 0, tilePosition.Z),
                     new Vector3(_tileSize.X, 0, _tileSize.Y));
             }

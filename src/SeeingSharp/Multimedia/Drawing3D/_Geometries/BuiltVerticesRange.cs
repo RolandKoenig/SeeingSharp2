@@ -9,6 +9,11 @@ namespace SeeingSharp.Multimedia.Drawing3D
         public int VertexCount;
 
         /// <summary>
+        /// Gets a value indicating whether this instance is empty.
+        /// </summary>
+        public bool IsEmpty => VertexCount <= 0;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="BuiltVerticesRange" /> struct.
         /// </summary>
         /// <param name="geometry">The geometry.</param>
@@ -52,6 +57,19 @@ namespace SeeingSharp.Multimedia.Drawing3D
                 }
                 VertexCount = VertexCount + otherRange.VertexCount;
             }
+        }
+
+        public BuiltVerticesRange Translate(Vector3 translationVector)
+        {
+            var lastVertex = StartVertex + VertexCount;
+
+            for (var loop = StartVertex; loop < lastVertex; loop++)
+            {
+                ref var actVertex = ref Geometry.GetVertexBasicRef(loop);
+                actVertex.Position += translationVector;
+            }
+
+            return this;
         }
 
         public BuiltVerticesRange DisableTexture()
@@ -152,10 +170,5 @@ namespace SeeingSharp.Multimedia.Drawing3D
 
             return this;
         }
-
-        /// <summary>
-        /// Gets a value indicating whether this instance is empty.
-        /// </summary>
-        public bool IsEmpty => VertexCount <= 0;
     }
 }

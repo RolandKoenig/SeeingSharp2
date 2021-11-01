@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace SeeingSharp.Multimedia.Drawing3D
+namespace SeeingSharp.Multimedia.Drawing3D.Primitives
 {
     public class PyramidGeometryFactory : GeometryFactory
     {
@@ -20,7 +20,7 @@ namespace SeeingSharp.Multimedia.Drawing3D
         {
             var result = new Geometry();
             result.CreateSurface()
-                .BuildPyramidFullV(
+                .BuildPyramid(
                     new Vector3(0f, 0f, 0f),
                     this.Width,
                     this.Height);
