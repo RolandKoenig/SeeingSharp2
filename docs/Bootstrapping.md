@@ -1,3 +1,5 @@
+[Home](README.md)
+
 ## The bootstrapping process
 Before using any rendering functionality from Seeing# you have to invoke the bootstrapping process. Bootstrapping is available through the GraphicsCore.Loader class. Bootstrapping can only happen once. If you invoke the process the second time, then you get an exception. The following code-snipped shows this for the base functionality of Seeing#. 
 

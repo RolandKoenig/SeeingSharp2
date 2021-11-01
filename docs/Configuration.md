@@ -1,3 +1,5 @@
+[Home](README.md)
+
 ## Overview
 There are 4 objects which control most of the configuration of Seeing#:
 * **SeeingSharpLoadSettings**: Configured on load time when GraphicsCore.Loader.Load() is called
