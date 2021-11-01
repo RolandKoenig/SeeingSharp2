@@ -8,5 +8,5 @@
 6. [Toggle object visibility](introduction/Toggle-object-visibility.md)
    
 ## Special topics
-1. [WPF composition mode](special-topics/WPF-composition-mode.md)
-2. [CPU utilization on software rendering](special-topics/CPU-utilization-on-software-rendering.md)
+1. [WPF composition mode](special-topics/wpf-composition-mode/WPF-composition-mode.md)
+2. [CPU utilization on software rendering](special-topics/cpu-utilization-on-software-rendering/CPU-utilization-on-software-rendering.md)

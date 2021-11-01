@@ -89,13 +89,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{26AE3FEB-F
 		..\docs\README.md = ..\docs\README.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{57C59C06-D43E-47E6-B810-1CC9469B5EC1}"
-	ProjectSection(SolutionItems) = preProject
-		..\docs\images\CpuUsage_Hardware.png = ..\docs\images\CpuUsage_Hardware.png
-		..\docs\images\CpuUsage_Software.png = ..\docs\images\CpuUsage_Software.png
-		..\docs\images\WPFCompositionMode.png = ..\docs\images\WPFCompositionMode.png
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "introduction", "introduction", "{BB87F564-394E-46DA-9D6D-C94FB370BDE7}"
 	ProjectSection(SolutionItems) = preProject
 		..\docs\introduction\Bootstrapping.md = ..\docs\introduction\Bootstrapping.md
@@ -108,9 +101,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "introduction", "introductio
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "special-topics", "special-topics", "{BA2720B1-F309-45AF-B18B-49CD6257DCA4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cpu-utilization-on-software-rendering", "cpu-utilization-on-software-rendering", "{A7331E7D-7941-4841-95A3-C597875BBFDB}"
 	ProjectSection(SolutionItems) = preProject
-		..\docs\special-topics\CPU-utilization-on-software-rendering.md = ..\docs\special-topics\CPU-utilization-on-software-rendering.md
-		..\docs\special-topics\WPF-composition-mode.md = ..\docs\special-topics\WPF-composition-mode.md
+		..\docs\special-topics\cpu-utilization-on-software-rendering\CPU-utilization-on-software-rendering.md = ..\docs\special-topics\cpu-utilization-on-software-rendering\CPU-utilization-on-software-rendering.md
+		..\docs\special-topics\cpu-utilization-on-software-rendering\CpuUsage_Hardware.png = ..\docs\special-topics\cpu-utilization-on-software-rendering\CpuUsage_Hardware.png
+		..\docs\special-topics\cpu-utilization-on-software-rendering\CpuUsage_Software.png = ..\docs\special-topics\cpu-utilization-on-software-rendering\CpuUsage_Software.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "wpf-composition-mode", "wpf-composition-mode", "{60F251D3-21BB-498A-8C52-D17606B1B8DC}"
+	ProjectSection(SolutionItems) = preProject
+		..\docs\special-topics\wpf-composition-mode\WPF-composition-mode.md = ..\docs\special-topics\wpf-composition-mode\WPF-composition-mode.md
+		..\docs\special-topics\wpf-composition-mode\WPFCompositionMode.png = ..\docs\special-topics\wpf-composition-mode\WPFCompositionMode.png
 	EndProjectSection
 EndProject
 Global
@@ -460,9 +462,10 @@ Global
 		{2F86C1A7-C362-4519-B17F-3F9F9366DEAD} = {784DC8F8-BCCA-4845-8EA2-A34CDBEA83D8}
 		{12D0A365-BA3F-4F5B-891E-3BE239E11A53} = {784DC8F8-BCCA-4845-8EA2-A34CDBEA83D8}
 		{26AE3FEB-FF25-42A7-BD2A-45A591BAEB5A} = {C8DD9966-EFF6-44CD-815F-1A30329AF41C}
-		{57C59C06-D43E-47E6-B810-1CC9469B5EC1} = {26AE3FEB-FF25-42A7-BD2A-45A591BAEB5A}
 		{BB87F564-394E-46DA-9D6D-C94FB370BDE7} = {26AE3FEB-FF25-42A7-BD2A-45A591BAEB5A}
 		{BA2720B1-F309-45AF-B18B-49CD6257DCA4} = {26AE3FEB-FF25-42A7-BD2A-45A591BAEB5A}
+		{A7331E7D-7941-4841-95A3-C597875BBFDB} = {BA2720B1-F309-45AF-B18B-49CD6257DCA4}
+		{60F251D3-21BB-498A-8C52-D17606B1B8DC} = {BA2720B1-F309-45AF-B18B-49CD6257DCA4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0F49729B-7B64-4341-BE26-B12CF5E5D93B}
