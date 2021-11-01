@@ -86,16 +86,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WikiImages", "WikiImages", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{26AE3FEB-FF25-42A7-BD2A-45A591BAEB5A}"
 	ProjectSection(SolutionItems) = preProject
-		..\docs\Bootstrapping.md = ..\docs\Bootstrapping.md
-		..\docs\Configuration.md = ..\docs\Configuration.md
-		..\docs\CPU-utilization-on-software-rendering.md = ..\docs\CPU-utilization-on-software-rendering.md
-		..\docs\Filling-the-Scene-with-content.md = ..\docs\Filling-the-Scene-with-content.md
-		..\docs\Handling-input.md = ..\docs\Handling-input.md
-		..\docs\Lightning-model.md = ..\docs\Lightning-model.md
 		..\docs\README.md = ..\docs\README.md
-		..\docs\Toggle-object-visibility.md = ..\docs\Toggle-object-visibility.md
-		..\docs\Views,-Scenes-and-Cameras.md = ..\docs\Views,-Scenes-and-Cameras.md
-		..\docs\WPF-composition-mode.md = ..\docs\WPF-composition-mode.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{57C59C06-D43E-47E6-B810-1CC9469B5EC1}"
@@ -103,6 +94,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "images", "images", "{57C59C
 		..\docs\images\CpuUsage_Hardware.png = ..\docs\images\CpuUsage_Hardware.png
 		..\docs\images\CpuUsage_Software.png = ..\docs\images\CpuUsage_Software.png
 		..\docs\images\WPFCompositionMode.png = ..\docs\images\WPFCompositionMode.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "introduction", "introduction", "{BB87F564-394E-46DA-9D6D-C94FB370BDE7}"
+	ProjectSection(SolutionItems) = preProject
+		..\docs\introduction\Bootstrapping.md = ..\docs\introduction\Bootstrapping.md
+		..\docs\introduction\Configuration.md = ..\docs\introduction\Configuration.md
+		..\docs\introduction\Filling-the-Scene-with-content.md = ..\docs\introduction\Filling-the-Scene-with-content.md
+		..\docs\introduction\Handling-input.md = ..\docs\introduction\Handling-input.md
+		..\docs\introduction\Lightning-model.md = ..\docs\introduction\Lightning-model.md
+		..\docs\introduction\Toggle-object-visibility.md = ..\docs\introduction\Toggle-object-visibility.md
+		..\docs\introduction\Views-Scenes-and-Cameras.md = ..\docs\introduction\Views-Scenes-and-Cameras.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "special-topics", "special-topics", "{BA2720B1-F309-45AF-B18B-49CD6257DCA4}"
+	ProjectSection(SolutionItems) = preProject
+		..\docs\special-topics\CPU-utilization-on-software-rendering.md = ..\docs\special-topics\CPU-utilization-on-software-rendering.md
+		..\docs\special-topics\WPF-composition-mode.md = ..\docs\special-topics\WPF-composition-mode.md
 	EndProjectSection
 EndProject
 Global
@@ -453,6 +461,8 @@ Global
 		{12D0A365-BA3F-4F5B-891E-3BE239E11A53} = {784DC8F8-BCCA-4845-8EA2-A34CDBEA83D8}
 		{26AE3FEB-FF25-42A7-BD2A-45A591BAEB5A} = {C8DD9966-EFF6-44CD-815F-1A30329AF41C}
 		{57C59C06-D43E-47E6-B810-1CC9469B5EC1} = {26AE3FEB-FF25-42A7-BD2A-45A591BAEB5A}
+		{BB87F564-394E-46DA-9D6D-C94FB370BDE7} = {26AE3FEB-FF25-42A7-BD2A-45A591BAEB5A}
+		{BA2720B1-F309-45AF-B18B-49CD6257DCA4} = {26AE3FEB-FF25-42A7-BD2A-45A591BAEB5A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0F49729B-7B64-4341-BE26-B12CF5E5D93B}
