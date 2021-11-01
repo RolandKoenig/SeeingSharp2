@@ -3,7 +3,7 @@
 
 ### Quick Links
  - [Current progress / roadmap](/../../projects/1)
- - [Wiki](/../../wiki)
+ - [Docs](/docs)
  - [Sample codes](/../../tree/master/Samples) (you can download compiled samples in the 'releases' tab)
 
 ### Nuget
