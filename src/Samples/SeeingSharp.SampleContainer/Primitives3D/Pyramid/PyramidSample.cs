@@ -27,7 +27,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D.Pyramid
                     }));
 
             var result = new Mesh(resGeometry, resMaterial);
-            result.Position = new Vector3(0f, 0.5f, 0f);
+            result.Position = new Vector3(0f, 0.5f + castedSettings.Height / 2f, 0f);
             return result;
         }
 
@@ -36,8 +36,16 @@ namespace SeeingSharp.SampleContainer.Primitives3D.Pyramid
         //*********************************************************************
         private class PyramidSampleSettings : Primitive3DSampleSettings
         {
-            private float _width = 1f;
-            private float _height = 1f;
+            private float _width;
+            private float _height;
+
+            public PyramidSampleSettings()
+            {
+                // Set defaults
+                var geoFactory = new PyramidGeometryFactory();
+                _width = geoFactory.Width;
+                _height = geoFactory.Height;
+            }
 
             [Category(CATEGORY_NAME)]
             public float Width

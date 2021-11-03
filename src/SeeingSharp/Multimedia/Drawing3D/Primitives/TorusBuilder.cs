@@ -14,15 +14,18 @@ namespace SeeingSharp.Multimedia.Drawing3D.Primitives
         /// Builds a torus.
         /// </summary>
         /// <param name="target">Target <see cref="GeometrySurface"/>.</param>
-        /// <param name="torusDiameter">The diameter of the torus.</param>
-        /// <param name="tubeDiameter">The diameter of the torus "tube".</param>
+        /// <param name="torusRadius">The radius of the torus.</param>
+        /// <param name="tubeRadius">The radius of the torus "tube".</param>
         /// <param name="tDiv">The number of subdivisions around the torus.</param>
         /// <param name="pDiv">The number of subdivisions of the torus' "tube.</param>
         public static BuiltVerticesRange BuildTorus(
             this GeometrySurface target,
-            int tDiv, int pDiv, float torusDiameter, float tubeDiameter)
+            int tDiv, int pDiv, float torusRadius, float tubeRadius)
         {
             var startVertex = target.Owner.CountVertices;
+
+            var torusDiameter = torusRadius * 2f;
+            var tubeDiameter = tubeRadius * 2f;
 
             if (torusDiameter == 0.0)
             {

@@ -24,12 +24,12 @@ namespace SeeingSharp.SampleContainer.Primitives3D.Torus
                     {
                         TDiv = castedSettings.TDiv,
                         PDiv = castedSettings.PDiv,
-                        TorusDiameter = castedSettings.TorusDiameter,
-                        TubeDiameter = castedSettings.TubeDiameter,
+                        TorusRadius = castedSettings.TorusRadius,
+                        TubeRadius = castedSettings.TubeRadius,
                     }));
 
             var result = new Mesh(resGeometry, resMaterial);
-            result.Position = new Vector3(0f, 0.5f + (castedSettings.TubeDiameter / 2f) + (castedSettings.TorusDiameter / 2f), 0f);
+            result.Position = new Vector3(0f, 0.5f + castedSettings.TubeRadius  + castedSettings.TorusRadius, 0f);
             return result;
         }
 
@@ -38,10 +38,20 @@ namespace SeeingSharp.SampleContainer.Primitives3D.Torus
         //*********************************************************************
         private class TorusSampleSettings : Primitive3DSampleSettings
         {
-            private int _tDiv = 20;
-            private int _pDiv = 12;
-            private float _torusDiameter = 1f;
-            private float _tubeDiameter = 0.2f;
+            private int _tDiv;
+            private int _pDiv;
+            private float _torusRadius;
+            private float _tubeRadius;
+
+            public TorusSampleSettings()
+            {
+                // Set defaults
+                var geoFactory = new TorusGeometryFactory();
+                _tDiv = geoFactory.TDiv;
+                _pDiv = geoFactory.PDiv;
+                _torusRadius = geoFactory.TorusRadius;
+                _tubeRadius = geoFactory.TubeRadius;
+            }
 
             [Category(CATEGORY_NAME)]
             public int TDiv
@@ -72,28 +82,28 @@ namespace SeeingSharp.SampleContainer.Primitives3D.Torus
             }
 
             [Category(CATEGORY_NAME)]
-            public float TorusDiameter
+            public float TorusRadius
             {
-                get => _torusDiameter;
+                get => _torusRadius;
                 set
                 {
-                    if (!EngineMath.EqualsWithTolerance(_torusDiameter, value))
+                    if (!EngineMath.EqualsWithTolerance(_torusRadius, value))
                     {
-                        _torusDiameter = value;
+                        _torusRadius = value;
                         this.RaiseRecreateRequest();
                     }
                 }
             }
 
             [Category(CATEGORY_NAME)]
-            public float TubeDiameter
+            public float TubeRadius
             {
-                get => _tubeDiameter;
+                get => _tubeRadius;
                 set
                 {
-                    if (!EngineMath.EqualsWithTolerance(_tubeDiameter, value))
+                    if (!EngineMath.EqualsWithTolerance(_tubeRadius, value))
                     {
-                        _tubeDiameter = value;
+                        _tubeRadius = value;
                         this.RaiseRecreateRequest();
                     }
                 }

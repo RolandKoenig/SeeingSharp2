@@ -10,6 +10,28 @@ namespace SeeingSharp.Multimedia.Drawing3D.Primitives
         /// <summary>
         /// Builds a cube into this Geometry (this cube is built up of 24 vertices, so texture coordinates and normals are set)
         /// </summary>
+        public static BuiltVerticesRange BuildCube(this GeometrySurface target, float width, float height, float depth)
+        {
+            return BuildCube(
+                target, 
+                new Vector3(-(width / 2f), -(height / 2f), -(depth / 2f)),
+                new Vector3(width, height, depth));
+        }
+
+        /// <summary>
+        /// Builds a cube into this Geometry (this cube is built up of 24 vertices, so texture coordinates and normals are set)
+        /// </summary>
+        public static BuiltVerticesRange BuildCube(this GeometrySurface target, Vector3 size)
+        {
+            return BuildCube(
+                target, 
+                new Vector3(-(size.X / 2f), -(size.Y / 2f), -(size.Z / 2f)),
+                new Vector3(size.X, size.Y, size.Z));
+        }
+
+        /// <summary>
+        /// Builds a cube into this Geometry (this cube is built up of 24 vertices, so texture coordinates and normals are set)
+        /// </summary>
         /// <param name="target">Target <see cref="GeometrySurface"/>.</param>
         /// <param name="start">Start point of the cube</param>
         /// <param name="size">Size of the cube</param>

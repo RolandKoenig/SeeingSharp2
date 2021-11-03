@@ -10,12 +10,13 @@ namespace SeeingSharp.Multimedia.Drawing3D.Primitives
         /// <summary>
         /// Create a 4 Side Pyramid
         /// </summary>
-        public static BuiltVerticesRange BuildPyramid(this GeometrySurface target, Vector3 lowerMiddle, float width, float height)
+        public static BuiltVerticesRange BuildPyramid(this GeometrySurface target, float width, float height)
         {
             width = Math.Max(EngineMath.TOLERANCE_FLOAT_POSITIVE, width);
             height = Math.Max(EngineMath.TOLERANCE_FLOAT_POSITIVE, height);
 
             var halfWidth = width / 2f;
+            var lowerMiddle = new Vector3(0f, -(height / 2f), 0f);
             var start = new Vector3(lowerMiddle.X - halfWidth, lowerMiddle.Y, lowerMiddle.Z - halfWidth);
             var dest = start + new Vector3(width, 0f, width);
             var centerTopCoordination = new Vector3((dest.X + start.X) / 2, start.Y + height, (dest.Z + start.Z) / 2);

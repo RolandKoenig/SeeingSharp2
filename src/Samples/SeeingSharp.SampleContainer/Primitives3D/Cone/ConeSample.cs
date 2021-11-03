@@ -28,7 +28,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D.Cone
                     }));
 
             var result = new Mesh(resGeometry, resMaterial);
-            result.Position = new Vector3(0f, 0.5f, 0f);
+            result.Position = new Vector3(0f, 0.5f + castedSettings.Height / 2f, 0f);
             return result;
         }
 
@@ -37,9 +37,18 @@ namespace SeeingSharp.SampleContainer.Primitives3D.Cone
         //*********************************************************************
         private class ConeSampleSettings : Primitive3DSampleSettings
         {
-            private float _radius = 0.5f;
-            private float _height = 1f;
-            private int _countOfSegments = 10;
+            private float _radius;
+            private float _height;
+            private int _countOfSegments;
+
+            public ConeSampleSettings()
+            {
+                // Set defaults
+                var geoFactory = new ConeGeometryFactory();
+                _radius = geoFactory.Radius;
+                _height = geoFactory.Height;
+                _countOfSegments = geoFactory.CountOfSegments;
+            }
 
             [Category(CATEGORY_NAME)]
             public float Radius

@@ -37,9 +37,18 @@ namespace SeeingSharp.SampleContainer.Primitives3D.Cube
         //*********************************************************************
         private class CubeSampleSettings : Primitive3DSampleSettings
         {
-            private float _width = 1f;
-            private float _height = 1f;
-            private float _depth = 1f;
+            private float _width;
+            private float _height;
+            private float _depth;
+
+            public CubeSampleSettings()
+            {
+                // Set defaults
+                var geoFactory = new CubeGeometryFactory();
+                _width = geoFactory.Width;
+                _height = geoFactory.Height;
+                _depth = geoFactory.Height;
+            }
 
             [Category(CATEGORY_NAME)]
             public float Width

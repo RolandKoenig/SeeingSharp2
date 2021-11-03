@@ -11,11 +11,10 @@ namespace SeeingSharp.Multimedia.Drawing3D.Primitives
         /// Builds a cone into the geometry with correct texture coordinates and normals.
         /// </summary>
         /// <param name="target">Target <see cref="GeometrySurface"/>.</param>
-        /// <param name="bottomMiddle">Coordinate of bottom middle.</param>
         /// <param name="radius">The radius of the cone.</param>
         /// <param name="height">The height of the cone.</param>
         /// <param name="countOfSegments">Total count of segments to generate.</param>
-        public static BuiltVerticesRange BuildCone(this GeometrySurface target, Vector3 bottomMiddle, float radius, float height, int countOfSegments)
+        public static BuiltVerticesRange BuildCone(this GeometrySurface target, float radius, float height, int countOfSegments)
         {
             var startVertex = target.Owner.CountVertices;
             radius = Math.Max(EngineMath.TOLERANCE_FLOAT_POSITIVE, radius);
@@ -34,8 +33,8 @@ namespace SeeingSharp.Multimedia.Drawing3D.Primitives
             }
 
             // Specify bottom and top middle coordinates
-            var bottomCoordinate = bottomMiddle;
-            var topCoordinate = new Vector3(bottomMiddle.X, bottomMiddle.Y + height, bottomMiddle.Z);
+            var bottomCoordinate = new Vector3(0f, -(height / 2f), 0f);
+            var topCoordinate = new Vector3(bottomCoordinate.X, bottomCoordinate.Y + height, bottomCoordinate.Z);
 
             // Create bottom and top vertices
             var bottomVertex = new VertexBasic(bottomCoordinate, new Vector2(texX / 2f, texY / 2f), new Vector3(0f, -1f, 0f));

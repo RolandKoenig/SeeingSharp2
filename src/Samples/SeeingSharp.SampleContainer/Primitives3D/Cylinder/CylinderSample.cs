@@ -37,9 +37,18 @@ namespace SeeingSharp.SampleContainer.Primitives3D.Cylinder
         //*********************************************************************
         private class CylinderSampleSettings : Primitive3DSampleSettings
         {
-            private float _radius = 0.5f;
-            private float _height = 1f;
-            private int _countOfSegments = 10;
+            private float _radius;
+            private float _height;
+            private int _countOfSegments;
+
+            public CylinderSampleSettings()
+            {
+                // Set defaults
+                var geoSettings = new CylinderGeometryFactory();
+                _radius = geoSettings.Radius;
+                _height = geoSettings.Height;
+                _countOfSegments = geoSettings.CountOfSegments;
+            }
 
             [Category(CATEGORY_NAME)]
             public float Radius

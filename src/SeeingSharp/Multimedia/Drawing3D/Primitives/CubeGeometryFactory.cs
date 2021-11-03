@@ -14,9 +14,7 @@ namespace SeeingSharp.Multimedia.Drawing3D.Primitives
         {
             var result = new Geometry();
             result.CreateSurface()
-                .BuildCube(
-                    new Vector3(-(this.Width / 2f), -(this.Height / 2f), -(this.Depth / 2f)),
-                    new Vector3(this.Width, this.Height, this.Depth));
+                .BuildCube(this.Width, this.Height, this.Depth);
 
             return result;
         }

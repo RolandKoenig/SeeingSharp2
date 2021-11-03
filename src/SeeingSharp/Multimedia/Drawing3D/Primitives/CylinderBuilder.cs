@@ -11,6 +11,20 @@ namespace SeeingSharp.Multimedia.Drawing3D.Primitives
         /// Builds a cylinder into the geometry with correct texture coordinates and normals.
         /// </summary>
         /// <param name="target">Target <see cref="GeometrySurface"/>.</param>
+        /// <param name="radius">The radius of the cylinder.</param>
+        /// <param name="height">The height of the cylinder.</param>
+        /// <param name="countOfSegments">Total count of segments to generate.</param>
+        public static BuiltVerticesRange BuildCylinder(this GeometrySurface target, float radius, float height, int countOfSegments)
+        {
+            return target.BuildCylinder(
+                new Vector3(0f, -(height / 2f), 0f), 
+                radius, height, countOfSegments, true, true, true);
+        }
+
+        /// <summary>
+        /// Builds a cylinder into the geometry with correct texture coordinates and normals.
+        /// </summary>
+        /// <param name="target">Target <see cref="GeometrySurface"/>.</param>
         /// <param name="bottomMiddle">Coordinate of bottom middle.</param>
         /// <param name="radius">The radius of the cylinder.</param>
         /// <param name="height">The height of the cylinder.</param>
@@ -18,6 +32,20 @@ namespace SeeingSharp.Multimedia.Drawing3D.Primitives
         public static BuiltVerticesRange BuildCylinder(this GeometrySurface target, Vector3 bottomMiddle, float radius, float height, int countOfSegments)
         {
             return target.BuildCylinder(bottomMiddle, radius, height, countOfSegments, true, true, true);
+        }
+
+        /// <summary>
+        /// Builds a cylinder into the geometry with correct texture coordinates and normals.
+        /// </summary>
+        /// <param name="target">Target <see cref="GeometrySurface"/>.</param>
+        /// <param name="radius">The radius of the cylinder.</param>
+        /// <param name="height">The height of the cylinder.</param>
+        /// <param name="countOfSegments">Total count of segments to generate.</param>
+        public static BuiltVerticesRange BuildCylinderTop(this GeometrySurface target, float radius, float height, int countOfSegments)
+        {
+            return target.BuildCylinder(
+                new Vector3(0f, -(height / 2f), 0f), 
+                radius, height, countOfSegments, false, false, true);
         }
 
         /// <summary>
@@ -37,6 +65,20 @@ namespace SeeingSharp.Multimedia.Drawing3D.Primitives
         /// Builds a cylinder into the geometry with correct texture coordinates and normals.
         /// </summary>
         /// <param name="target">Target <see cref="GeometrySurface"/>.</param>
+        /// <param name="radius">The radius of the cylinder.</param>
+        /// <param name="height">The height of the cylinder.</param>
+        /// <param name="countOfSegments">Total count of segments to generate.</param>
+        public static BuiltVerticesRange BuildCylinderSides(this GeometrySurface target, float radius, float height, int countOfSegments)
+        {
+            return target.BuildCylinder(
+                new Vector3(0f, -(height / 2f), 0f), 
+                radius, height, countOfSegments, true, false, false);
+        }
+
+        /// <summary>
+        /// Builds a cylinder into the geometry with correct texture coordinates and normals.
+        /// </summary>
+        /// <param name="target">Target <see cref="GeometrySurface"/>.</param>
         /// <param name="bottomMiddle">Coordinate of bottom middle.</param>
         /// <param name="radius">The radius of the cylinder.</param>
         /// <param name="height">The height of the cylinder.</param>
@@ -44,6 +86,20 @@ namespace SeeingSharp.Multimedia.Drawing3D.Primitives
         public static BuiltVerticesRange BuildCylinderSides(this GeometrySurface target, Vector3 bottomMiddle, float radius, float height, int countOfSegments)
         {
             return target.BuildCylinder(bottomMiddle, radius, height, countOfSegments, true, false, false);
+        }
+
+        /// <summary>
+        /// Builds a cylinder into the geometry with correct texture coordinates and normals.
+        /// </summary>
+        /// <param name="target">Target <see cref="GeometrySurface"/>.</param>
+        /// <param name="radius">The radius of the cylinder.</param>
+        /// <param name="height">The height of the cylinder.</param>
+        /// <param name="countOfSegments">Total count of segments to generate.</param>
+        public static BuiltVerticesRange BuildCylinderBottom(this GeometrySurface target, float radius, float height, int countOfSegments)
+        {
+            return target.BuildCylinder(
+                new Vector3(0f, -(height / 2f), 0f), 
+                radius, height, countOfSegments, false, true, false);
         }
 
         /// <summary>

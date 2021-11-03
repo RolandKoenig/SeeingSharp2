@@ -2,23 +2,11 @@
 {
     public class SphereGeometryFactory : GeometryFactory
     {
-        public int TDiv
-        {
-            get;
-            set;
-        }
+        public int TDiv { get; set; } = 30;
 
-        public int PDiv
-        {
-            get;
-            set;
-        }
+        public int PDiv { get; set; } = 30;
 
-        public float Radius
-        {
-            get;
-            set;
-        } = 0.5f;
+        public float Radius { get; set; } = 0.5f;
 
         public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
         {

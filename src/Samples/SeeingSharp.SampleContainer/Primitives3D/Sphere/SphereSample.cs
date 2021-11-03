@@ -37,9 +37,18 @@ namespace SeeingSharp.SampleContainer.Primitives3D.Sphere
         //*********************************************************************
         private class SphereSampleSettings : Primitive3DSampleSettings
         {
-            private int _tDiv = 30;
-            private int _pDiv = 30;
-            private float _radius = 0.5f;
+            private int _tDiv;
+            private int _pDiv;
+            private float _radius;
+
+            public SphereSampleSettings()
+            {
+                // Set defaults
+                var geoFactory = new SphereGeometryFactory();
+                _tDiv = geoFactory.TDiv;
+                _pDiv = geoFactory.PDiv;
+                _radius = geoFactory.Radius;
+            }
 
             [Category(CATEGORY_NAME)]
             public int TDiv

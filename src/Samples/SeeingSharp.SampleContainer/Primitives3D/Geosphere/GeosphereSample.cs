@@ -36,8 +36,16 @@ namespace SeeingSharp.SampleContainer.Primitives3D.Geosphere
         //*********************************************************************
         private class GeosphereSampleSettings : Primitive3DSampleSettings
         {
-            private int _countSubdivisions = 3;
-            private float _radius = 0.5f;
+            private int _countSubdivisions;
+            private float _radius;
+
+            public GeosphereSampleSettings()
+            {
+                // Set defaults
+                var geoFactory = new GeosphereGeometryFactory();
+                _countSubdivisions = geoFactory.CountSubdivisions;
+                _radius = geoFactory.Radius;
+            }
 
             [Category(CATEGORY_NAME)]
             public int CountSubdivisions
