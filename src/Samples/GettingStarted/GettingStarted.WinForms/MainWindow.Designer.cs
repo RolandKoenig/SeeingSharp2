@@ -30,7 +30,7 @@ namespace GettingStarted.WinForms
         /// </summary>
         private void InitializeComponent()
         {
-            this._ctrlView3D = new SeeingSharp.Multimedia.Views.SeeingSharpRendererControl();
+            this._ctrlView3D = new SeeingSharp.Views.SeeingSharpRendererControl();
             this.SuspendLayout();
             // 
             // _ctrlView3D
@@ -54,7 +54,7 @@ namespace GettingStarted.WinForms
 
         #endregion
 
-        private SeeingSharp.Multimedia.Views.SeeingSharpRendererControl _ctrlView3D;
+        private SeeingSharp.Views.SeeingSharpRendererControl _ctrlView3D;
     }
 }
 

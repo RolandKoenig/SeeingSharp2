@@ -2,8 +2,8 @@
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Core;
+using SeeingSharp.Drawing3D;
 using SeeingSharp.SampleContainer;
 using SeeingSharp.SampleContainer.Util;
 

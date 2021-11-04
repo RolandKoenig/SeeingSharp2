@@ -1,5 +1,5 @@
 ﻿using ObjectLayoutInspector;
-using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Drawing3D;
 
 namespace SeeingSharp.ObjectLayoutInspection
 {

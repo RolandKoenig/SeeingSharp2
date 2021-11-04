@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Threading.Tasks;
 using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing2D;
+using SeeingSharp.Core;
+using SeeingSharp.Drawing2D;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.SampleContainer.Basics2D.Image

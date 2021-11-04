@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Windows;
 using System.Windows.Input;
-using SeeingSharp.Multimedia.Views;
+using SeeingSharp.Views;
 
-namespace SeeingSharp.Multimedia.Input
+namespace SeeingSharp.Input
 {
     internal class WpfKeyAndMouseInputHandler : IInputHandler
     {

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Input;
+using SeeingSharp.Core;
+using SeeingSharp.Drawing3D;
+using SeeingSharp.Input;
 
 namespace SeeingSharp
 {

@@ -6,10 +6,10 @@ A view in Seeing# is an area, where Seeing# renders a Scene to. Normally a view 
 
 |UI library|Control                                                 |
 |:---------|:-------------------------------------------------------|
-|WPF       |SeeingSharp.Multimedia.Views.SeeingSharpRendererElement |
-|WinForms  |SeeingSharp.Multimedia.Views.SeeingSharpRendererControl |
-|UWP       |SeeingSharp.Multimedia.Views.SeeingSharpRenderPanel     |
-|-         |SeeingSharp.Multimedia.Views.MemoryRenderTarget         |
+|WPF       |SeeingSharp.Views.SeeingSharpRendererElement |
+|WinForms  |SeeingSharp.Views.SeeingSharpRendererControl |
+|UWP       |SeeingSharp.Views.SeeingSharpRenderPanel     |
+|-         |SeeingSharp.Views.MemoryRenderTarget         |
 
 Each of these types has a member of the type RenderLoop (the property is named just like that). The RenderLoop type contains all common functionality across all view types. So if you need to further interact with rendering logic itself, the property RenderLoop of the view's object is a good entry point for that. 
 

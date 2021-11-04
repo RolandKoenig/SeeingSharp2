@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
 using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Core;
 using SeeingSharp.SampleContainer;
 using SeeingSharp.SampleContainer.Util;
 

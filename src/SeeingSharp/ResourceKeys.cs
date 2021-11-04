@@ -1,6 +1,6 @@
 ﻿using SeeingSharp.Util;
 
-namespace SeeingSharp.Multimedia
+namespace SeeingSharp
 {
     public static class ResourceKeys
     {

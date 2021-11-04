@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using SharpDX;
 
-namespace SeeingSharp.Multimedia.Views
+namespace SeeingSharp.Views
 {
     internal static class WinUIDesktopInterop
     {

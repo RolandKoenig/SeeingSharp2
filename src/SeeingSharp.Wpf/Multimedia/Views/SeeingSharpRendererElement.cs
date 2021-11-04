@@ -7,15 +7,15 @@ using System.Windows.Controls;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Input;
+using SeeingSharp.Core;
+using SeeingSharp.Drawing3D;
+using SeeingSharp.Input;
 using SeeingSharp.Util;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using D3D11 = SharpDX.Direct3D11;
 
-namespace SeeingSharp.Multimedia.Views
+namespace SeeingSharp.Views
 {
     public class SeeingSharpRendererElement : Image, IInputEnabledView, ISeeingSharpPainter, IRenderLoopHost, INotifyPropertyChanged
     {

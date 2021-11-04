@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SeeingSharp.Multimedia;
-using SeeingSharp.Multimedia.Core;
+using SeeingSharp;
+using SeeingSharp.Core;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.Tests

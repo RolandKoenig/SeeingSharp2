@@ -1,4 +1,4 @@
-﻿using SeeingSharp.Multimedia.Core;
+﻿using SeeingSharp.Core;
 
 namespace SeeingSharp
 {

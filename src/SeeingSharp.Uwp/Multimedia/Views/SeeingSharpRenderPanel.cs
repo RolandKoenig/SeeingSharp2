@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Input;
+using SeeingSharp.Core;
+using SeeingSharp.Drawing3D;
+using SeeingSharp.Input;
 
-namespace SeeingSharp.Multimedia.Views
+namespace SeeingSharp.Views
 {
     public class SeeingSharpRenderPanel : SwapChainPanel, IInputEnabledView, INotifyPropertyChanged
     {

@@ -2,8 +2,8 @@
 using System.ComponentModel;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Views;
+using SeeingSharp.Core;
+using SeeingSharp.Views;
 
 namespace SeeingSharp.UwpSamples.Controls
 {

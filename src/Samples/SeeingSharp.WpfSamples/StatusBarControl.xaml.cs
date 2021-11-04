@@ -2,8 +2,8 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Views;
+using SeeingSharp.Core;
+using SeeingSharp.Views;
 
 namespace SeeingSharp.WpfSamples
 {

@@ -7,10 +7,10 @@ using Windows.UI.Input;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Views;
+using SeeingSharp.Core;
+using SeeingSharp.Views;
 
-namespace SeeingSharp.Multimedia.Input
+namespace SeeingSharp.Input
 {
     internal class WinRTKeyAndMouseInputHandler : IInputHandler
     {

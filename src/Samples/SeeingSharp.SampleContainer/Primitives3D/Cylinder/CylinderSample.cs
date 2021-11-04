@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Numerics;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Drawing3D.Primitives;
+using SeeingSharp.Core;
+using SeeingSharp.Drawing3D;
+using SeeingSharp.Drawing3D.Primitives;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.SampleContainer.Primitives3D.Cylinder

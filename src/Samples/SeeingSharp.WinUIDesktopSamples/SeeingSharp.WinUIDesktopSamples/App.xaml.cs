@@ -15,7 +15,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
-using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Core;
 
 namespace SeeingSharp.WinUIDesktopSamples
 {

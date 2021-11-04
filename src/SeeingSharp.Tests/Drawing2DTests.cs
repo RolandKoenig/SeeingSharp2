@@ -2,10 +2,10 @@
 using System.Numerics;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing2D;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Views;
+using SeeingSharp.Core;
+using SeeingSharp.Drawing2D;
+using SeeingSharp.Drawing3D;
+using SeeingSharp.Views;
 using SeeingSharp.Util;
 using SharpDX.Mathematics.Interop;
 

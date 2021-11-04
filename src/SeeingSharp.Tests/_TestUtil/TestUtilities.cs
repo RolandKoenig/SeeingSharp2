@@ -4,7 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Core;
 using SeeingSharp.Util;
 using SharpDX.Direct3D;
 using D3D11 = SharpDX.Direct3D11;

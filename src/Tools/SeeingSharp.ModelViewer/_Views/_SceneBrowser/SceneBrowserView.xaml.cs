@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Core;
 
 namespace SeeingSharp.ModelViewer
 {

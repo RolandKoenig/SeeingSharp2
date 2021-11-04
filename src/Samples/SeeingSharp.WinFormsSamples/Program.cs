@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
-using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Core;
 
 namespace SeeingSharp.WinFormsSamples
 {

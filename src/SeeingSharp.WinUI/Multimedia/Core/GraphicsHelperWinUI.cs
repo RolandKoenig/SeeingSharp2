@@ -1,7 +1,7 @@
 ﻿using SeeingSharp.Checking;
 using SharpDX.DXGI;
 
-namespace SeeingSharp.Multimedia.Core
+namespace SeeingSharp.Core
 {
     public static class GraphicsHelperWinUI
     {

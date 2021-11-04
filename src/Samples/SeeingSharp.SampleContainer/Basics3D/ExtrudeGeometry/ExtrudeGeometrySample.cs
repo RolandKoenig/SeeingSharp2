@@ -1,9 +1,9 @@
 ﻿using System.Threading.Tasks;
 using System.Numerics;
 using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Components;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Components;
+using SeeingSharp.Core;
+using SeeingSharp.Drawing3D;
 using D2D = SharpDX.Direct2D1;
 
 namespace SeeingSharp.SampleContainer.Basics3D.ExtrudeGeometry

@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Core;
 
 namespace SeeingSharp.WpfSamples
 {

@@ -30,7 +30,7 @@ namespace SeeingSharp.WinFormsSamples
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
-            this._ctrlRenderPanel = new SeeingSharp.Multimedia.Views.SeeingSharpRendererControl();
+            this._ctrlRenderPanel = new SeeingSharp.Views.SeeingSharpRendererControl();
             this._refreshTimer = new System.Windows.Forms.Timer(this.components);
             this._barStatus = new System.Windows.Forms.StatusStrip();
             this._lblResolutionDesc = new System.Windows.Forms.ToolStripStatusLabel();
@@ -350,7 +350,7 @@ namespace SeeingSharp.WinFormsSamples
 
         
 
-        private Multimedia.Views.SeeingSharpRendererControl _ctrlRenderPanel;
+        private Views.SeeingSharpRendererControl _ctrlRenderPanel;
         private System.Windows.Forms.Timer _refreshTimer;
         private System.Windows.Forms.StatusStrip _barStatus;
         private System.Windows.Forms.ToolStripStatusLabel _lblResolutionDesc;

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Core;
+using SeeingSharp.Drawing3D;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.AssimpImporter

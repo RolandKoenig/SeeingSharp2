@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SeeingSharp;
-using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Core;
 
 namespace GettingStarted.WinForms
 {

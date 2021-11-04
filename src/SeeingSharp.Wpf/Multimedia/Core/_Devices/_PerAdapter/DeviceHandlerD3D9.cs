@@ -4,7 +4,7 @@ using SeeingSharp.Util;
 using SharpDX.DXGI;
 using D3D9 = SharpDX.Direct3D9;
 
-namespace SeeingSharp.Multimedia.Core
+namespace SeeingSharp.Core
 {
     public class DeviceHandlerD3D9 : IDisposable
     {

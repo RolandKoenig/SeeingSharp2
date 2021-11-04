@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
-using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Core;
 using GDI = System.Drawing;
 using WinForms = System.Windows.Forms;
 
-namespace SeeingSharp.Multimedia.Input
+namespace SeeingSharp.Input
 {
     internal class WinFormsKeyAndMouseInputHandler : IInputHandler
     {

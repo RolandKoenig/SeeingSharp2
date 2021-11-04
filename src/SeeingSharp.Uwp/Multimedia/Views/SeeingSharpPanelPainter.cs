@@ -4,15 +4,15 @@ using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Input;
+using SeeingSharp.Core;
+using SeeingSharp.Drawing3D;
+using SeeingSharp.Input;
 using SeeingSharp.Util;
 using SharpDX.Mathematics.Interop;
 using DXGI = SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
 
-namespace SeeingSharp.Multimedia.Views
+namespace SeeingSharp.Views
 {
     public class SeeingSharpPanelPainter : ISeeingSharpPainter, IDisposable, IInputEnabledView, IRenderLoopHost
     {

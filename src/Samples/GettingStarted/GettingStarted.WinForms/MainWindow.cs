@@ -9,10 +9,10 @@ using System.Threading.Tasks;
 using System.Numerics;
 using System.Windows.Forms;
 using SeeingSharp;
-using SeeingSharp.Multimedia.Components;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Drawing3D.Primitives;
+using SeeingSharp.Components;
+using SeeingSharp.Core;
+using SeeingSharp.Drawing3D;
+using SeeingSharp.Drawing3D.Primitives;
 
 namespace GettingStarted.WinForms
 {

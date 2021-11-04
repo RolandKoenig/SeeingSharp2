@@ -8,7 +8,7 @@
     xmlns:localControls="using:SeeingSharp.WinUIDesktopSamples.Controls"
     xmlns:samples="using:SeeingSharp.SampleContainer"
     xmlns:samplesUtil="using:SeeingSharp.SampleContainer.Util"
-    xmlns:sSharp="using:SeeingSharp.Multimedia.Views"
+    xmlns:sSharp="using:SeeingSharp.Views"
     mc:Ignorable="d">
 
     <Grid x:Name="CtrlMainContent">

@@ -7,9 +7,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Input;
+using SeeingSharp.Core;
+using SeeingSharp.Drawing3D;
+using SeeingSharp.Input;
 using SeeingSharp.Util;
 using SharpDX;
 using SharpDX.DXGI;
@@ -17,7 +17,7 @@ using SharpDX.Mathematics.Interop;
 using D3D11 = SharpDX.Direct3D11;
 using GDI = System.Drawing;
 
-namespace SeeingSharp.Multimedia.Views
+namespace SeeingSharp.Views
 {
     public class SeeingSharpRendererControl : Panel, ISeeingSharpPainter, IInputEnabledView, IRenderLoopHost
     {
@@ -124,7 +124,7 @@ namespace SeeingSharp.Multimedia.Views
         public event EventHandler<MouseEventArgs> MouseClickEx;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:SeeingSharp.Multimedia.Views.SeeingSharpRendererControl" /> class.
+        /// Initializes a new instance of the <see cref="T:SeeingSharp.Views.SeeingSharpRendererControl" /> class.
         /// </summary>
         public SeeingSharpRendererControl()
         {

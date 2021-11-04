@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChildRenderWindow));
-            this._ctrlRenderer = new SeeingSharp.Multimedia.Views.SeeingSharpRendererControl();
+            this._ctrlRenderer = new SeeingSharp.Views.SeeingSharpRendererControl();
             this._refreshTimer = new System.Windows.Forms.Timer(this.components);
             this._barTools = new System.Windows.Forms.ToolStrip();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -271,7 +271,7 @@
 
         #endregion
 
-        private Multimedia.Views.SeeingSharpRendererControl _ctrlRenderer;
+        private Views.SeeingSharpRendererControl _ctrlRenderer;
         private System.Windows.Forms.Timer _refreshTimer;
         private System.Windows.Forms.ToolStrip _barTools;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;

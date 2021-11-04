@@ -2,8 +2,8 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Views;
+using SeeingSharp.Core;
+using SeeingSharp.Views;
 
 namespace SeeingSharp.WinFormsSamples
 {

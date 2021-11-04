@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Core;
 using SeeingSharp.SampleContainer;
 using SeeingSharp.Util;
 

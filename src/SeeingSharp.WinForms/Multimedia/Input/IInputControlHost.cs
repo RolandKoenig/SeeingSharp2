@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace SeeingSharp.Multimedia.Input
+namespace SeeingSharp.Input
 {
     public interface IInputControlHost
     {

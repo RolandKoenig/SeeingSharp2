@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using SeeingSharp.ModelViewer.Rendering;
 using SeeingSharp.ModelViewer.Util;
-using SeeingSharp.Multimedia.Components;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Components;
+using SeeingSharp.Core;
+using SeeingSharp.Drawing3D;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.ModelViewer

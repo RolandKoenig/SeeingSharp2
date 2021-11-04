@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using GDI = System.Drawing;
 
-namespace SeeingSharp.Multimedia.Core
+namespace SeeingSharp.Core
 {
     public static class RenderLoopEx
     {

@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Core;
 
 namespace SeeingSharp.SampleContainer
 {

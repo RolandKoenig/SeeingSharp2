@@ -1,4 +1,4 @@
-﻿namespace SeeingSharp.Multimedia.Views
+﻿namespace SeeingSharp.Views
 {
     public enum WpfSeeingSharpCompositionMode
     {

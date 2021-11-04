@@ -19,7 +19,7 @@ The bootstrapping process is designed to be extensible in some ways. It is possi
 |Configure               |SeeingSharp                                       |Allows to change some configuration flags before loading Seeing#
 
 ## Bootstrapping with WPF support
-The best place for bootstrapping Seeing# in a WPF application is the App.xaml.cs file. Following code-snipped shows when to call the SupportWpf method. Don't forget to include the SeeingSharp.Wpf or SeeingSharp.WpfCore assembly and include the namespace SeeingSharp.Multimedia.Core.
+The best place for bootstrapping Seeing# in a WPF application is the App.xaml.cs file. Following code-snipped shows when to call the SupportWpf method. Don't forget to include the SeeingSharp.Wpf or SeeingSharp.WpfCore assembly and include the namespace SeeingSharp.Core.
 
 ```csharp
 public partial class App : Application
@@ -36,7 +36,7 @@ public partial class App : Application
 ```
 
 ## Bootstrapping with Windows.Forms support
-The best place for bootstrapping Seeing# in a Windows.Forms application is the Program.cs file. Following code-snipped shows when to call the SupportWinForms method. Don't forget to include the SeeingSharp.WinForms or SeeingSharp.WinFormsCore assembly and include the namespace SeeingSharp.Multimedia.Core.
+The best place for bootstrapping Seeing# in a Windows.Forms application is the Program.cs file. Following code-snipped shows when to call the SupportWinForms method. Don't forget to include the SeeingSharp.WinForms or SeeingSharp.WinFormsCore assembly and include the namespace SeeingSharp.Core.
 
 ```csharp
 internal static class Program
@@ -55,7 +55,7 @@ internal static class Program
 }
 ```
 ## Bootstrapping with UWP (Universal Windows Platform)
-The best place for bootstrapping Seeing# in an UWP application is the App.xaml.cs file. Following code-snipped shows when to call the SupportUwp method. Don't forget to include the SeeingSharp.Uwp assembly and include the namespace SeeingSharp.Multimedia.Core. Additionally we have to handle the Suspending and Resuming events of the Application class.
+The best place for bootstrapping Seeing# in an UWP application is the App.xaml.cs file. Following code-snipped shows when to call the SupportUwp method. Don't forget to include the SeeingSharp.Uwp assembly and include the namespace SeeingSharp.Core. Additionally we have to handle the Suspending and Resuming events of the Application class.
 
 ```csharp
 sealed partial class App : Application

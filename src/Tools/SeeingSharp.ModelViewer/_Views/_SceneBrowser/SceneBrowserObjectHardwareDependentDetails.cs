@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using SeeingSharp.ModelViewer.Util;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
+using SeeingSharp.Core;
+using SeeingSharp.Drawing3D;
 
 namespace SeeingSharp.ModelViewer
 {

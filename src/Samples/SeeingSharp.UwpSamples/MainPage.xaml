@@ -9,7 +9,7 @@
     xmlns:localControls="using:SeeingSharp.UwpSamples.Controls"
     xmlns:samples="using:SeeingSharp.SampleContainer"
     xmlns:samplesUtil="using:SeeingSharp.SampleContainer.Util"
-    xmlns:sSharp="using:SeeingSharp.Multimedia.Views"
+    xmlns:sSharp="using:SeeingSharp.Views"
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 

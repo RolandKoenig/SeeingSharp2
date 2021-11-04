@@ -7,7 +7,7 @@ using D3D11 = SharpDX.Direct3D11;
 using GDI = System.Drawing;
 using WinForms = System.Windows.Forms;
 
-namespace SeeingSharp.Multimedia.Core
+namespace SeeingSharp.Core
 {
     public static class GraphicsHelperWinForms
     {

@@ -2,14 +2,14 @@
 using System.Windows;
 using System.Windows.Interop;
 using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Core;
 using SeeingSharp.Util;
 using SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
 using D3D9 = SharpDX.Direct3D9;
 using DXGI = SharpDX.DXGI;
 
-namespace SeeingSharp.Multimedia.Views
+namespace SeeingSharp.Views
 {
     public class HigherD3DImageSource : D3DImage, IDisposable
     {

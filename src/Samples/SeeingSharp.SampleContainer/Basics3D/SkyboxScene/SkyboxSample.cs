@@ -2,10 +2,10 @@
 using System.Numerics;
 using System.Threading.Tasks;
 using SeeingSharp.Checking;
-using SeeingSharp.Multimedia.Components;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Drawing3D;
-using SeeingSharp.Multimedia.Drawing3D.Primitives;
+using SeeingSharp.Components;
+using SeeingSharp.Core;
+using SeeingSharp.Drawing3D;
+using SeeingSharp.Drawing3D.Primitives;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.SampleContainer.Basics3D.SkyboxScene

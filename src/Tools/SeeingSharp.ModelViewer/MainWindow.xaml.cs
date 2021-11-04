@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using Microsoft.Win32;
-using SeeingSharp.Multimedia.Core;
+using SeeingSharp.Core;
 
 namespace SeeingSharp.ModelViewer
 {

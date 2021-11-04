@@ -6,10 +6,10 @@ using Microsoft.UI.Input.Experimental;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
-using SeeingSharp.Multimedia.Core;
-using SeeingSharp.Multimedia.Views;
+using SeeingSharp.Core;
+using SeeingSharp.Views;
 
-namespace SeeingSharp.Multimedia.Input
+namespace SeeingSharp.Input
 {
     internal class WinUIKeyAndMouseInputHandler : IInputHandler
     {
