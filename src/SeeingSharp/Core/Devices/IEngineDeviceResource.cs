@@ -1,4 +1,4 @@
-﻿namespace SeeingSharp.Core
+﻿namespace SeeingSharp.Core.Devices
 {
     public interface IEngineDeviceResource
     {

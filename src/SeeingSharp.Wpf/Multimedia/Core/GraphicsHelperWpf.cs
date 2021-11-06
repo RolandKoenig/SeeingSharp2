@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Media.Imaging;
 using SeeingSharp.Checking;
+using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
 using D3D11 = SharpDX.Direct3D11;
 

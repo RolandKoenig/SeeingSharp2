@@ -1,7 +1,7 @@
 ﻿using System;
 using SharpDX.DXGI;
 
-namespace SeeingSharp.Core
+namespace SeeingSharp.Core.HardwareInfo
 {
     public struct EngineOutputModeInfo : IEquatable<EngineOutputModeInfo>
     {

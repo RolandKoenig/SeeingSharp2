@@ -4,7 +4,7 @@ using SeeingSharp.Util;
 using SharpDX.DXGI;
 using D2D = SharpDX.Direct2D1;
 
-namespace SeeingSharp.Core
+namespace SeeingSharp.Core.Devices
 {
     public class DeviceHandlerD2D
     {

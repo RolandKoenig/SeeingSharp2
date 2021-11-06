@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using SeeingSharp.Checking;
 using SeeingSharp.Core;
+using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.Drawing3D

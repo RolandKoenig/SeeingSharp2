@@ -1,5 +1,6 @@
 ﻿using SeeingSharp.Checking;
 using SeeingSharp.Core.Configuration;
+using SeeingSharp.Core.Devices;
 using SharpDX.DXGI;
 
 namespace SeeingSharp.Core

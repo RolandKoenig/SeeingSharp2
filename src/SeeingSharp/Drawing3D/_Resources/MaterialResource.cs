@@ -1,4 +1,5 @@
 ﻿using SeeingSharp.Core;
+using SeeingSharp.Core.Devices;
 using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Drawing3D

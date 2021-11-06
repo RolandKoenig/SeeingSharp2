@@ -1,4 +1,5 @@
 ﻿using SeeingSharp.Core;
+using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
 using SharpDX.D3DCompiler;
 

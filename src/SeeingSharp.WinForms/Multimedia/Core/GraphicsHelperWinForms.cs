@@ -1,6 +1,7 @@
 ﻿using System.Drawing.Imaging;
 using SeeingSharp.Checking;
 using SeeingSharp.Core.Configuration;
+using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
 using SharpDX;
 using SharpDX.DXGI;

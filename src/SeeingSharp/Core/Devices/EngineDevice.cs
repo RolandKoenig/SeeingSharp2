@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using SeeingSharp.Checking;
 using SeeingSharp.Core.Configuration;
+using SeeingSharp.Core.HardwareInfo;
 using SeeingSharp.Util;
 using SharpDX.Direct3D;
 using SharpDX.DXGI;
 using D2D = SharpDX.Direct2D1;
 using D3D11 = SharpDX.Direct3D11;
 
-namespace SeeingSharp.Core
+namespace SeeingSharp.Core.Devices
 {
     public class EngineDevice : IDisposable, ICheckDisposed
     {

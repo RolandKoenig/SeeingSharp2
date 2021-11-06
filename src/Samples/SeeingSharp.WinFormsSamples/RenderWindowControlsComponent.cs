@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 using SeeingSharp.Core;
+using SeeingSharp.Core.Devices;
 using SeeingSharp.Views;
 
 namespace SeeingSharp.WinFormsSamples

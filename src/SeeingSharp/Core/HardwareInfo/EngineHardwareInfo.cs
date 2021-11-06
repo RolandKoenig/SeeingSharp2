@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using SeeingSharp.Core.Devices;
 
-namespace SeeingSharp.Core
+namespace SeeingSharp.Core.HardwareInfo
 {
     public class EngineHardwareInfo
     {

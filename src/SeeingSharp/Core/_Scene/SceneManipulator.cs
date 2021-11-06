@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using SeeingSharp.Checking;
+using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing2D;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Util;

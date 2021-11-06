@@ -7,6 +7,7 @@ using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using SeeingSharp.Checking;
+using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Drawing3D.Primitives;
 using SeeingSharp.Util;

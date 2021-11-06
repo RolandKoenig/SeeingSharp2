@@ -16,6 +16,7 @@ using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
 using SeeingSharp.Core.Configuration;
+using SeeingSharp.Core.Devices;
 using D2D = SharpDX.Direct2D1;
 using D3D11 = SharpDX.Direct3D11;
 

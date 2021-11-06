@@ -1,7 +1,8 @@
-﻿using SeeingSharp.Util;
+﻿using SeeingSharp.Core.HardwareInfo;
+using SeeingSharp.Util;
 using SharpDX.DXGI;
 
-namespace SeeingSharp.Core
+namespace SeeingSharp.Core.Devices
 {
     public class DeviceHandlerDXGI
     {

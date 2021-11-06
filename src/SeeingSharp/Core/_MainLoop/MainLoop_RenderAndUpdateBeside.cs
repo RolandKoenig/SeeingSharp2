@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SeeingSharp.Core.Devices;
 
 namespace SeeingSharp.Core
 {

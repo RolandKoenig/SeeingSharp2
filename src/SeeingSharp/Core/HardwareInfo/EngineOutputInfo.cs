@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using SharpDX.DXGI;
 
-namespace SeeingSharp.Core
+namespace SeeingSharp.Core.HardwareInfo
 {
     public class EngineOutputInfo
     {

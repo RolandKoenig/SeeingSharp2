@@ -1,5 +1,6 @@
 ﻿using System;
 using SeeingSharp.Core;
+using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
 using DWrite = SharpDX.DirectWrite;
 

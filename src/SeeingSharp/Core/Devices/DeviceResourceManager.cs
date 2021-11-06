@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using SeeingSharp.Checking;
 
-namespace SeeingSharp.Core
+namespace SeeingSharp.Core.Devices
 {
     public class DeviceResourceManager
     {

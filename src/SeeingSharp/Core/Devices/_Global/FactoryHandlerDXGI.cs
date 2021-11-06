@@ -3,7 +3,7 @@ using SeeingSharp.Core.Configuration;
 using SeeingSharp.Util;
 using SharpDX.DXGI;
 
-namespace SeeingSharp.Core
+namespace SeeingSharp.Core.Devices
 {
     public class FactoryHandlerDXGI : IDisposable, ICheckDisposed
     {

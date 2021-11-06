@@ -3,7 +3,7 @@ using SeeingSharp.Core.Configuration;
 using SeeingSharp.Util;
 using DWrite = SharpDX.DirectWrite;
 
-namespace SeeingSharp.Core
+namespace SeeingSharp.Core.Devices
 {
     public class FactoryHandlerDWrite : IDisposable, ICheckDisposed
     {

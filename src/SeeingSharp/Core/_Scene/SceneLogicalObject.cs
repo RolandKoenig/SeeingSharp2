@@ -1,4 +1,6 @@
-﻿namespace SeeingSharp.Core
+﻿using SeeingSharp.Core.Devices;
+
+namespace SeeingSharp.Core
 {
     public abstract class SceneLogicalObject : SceneObject
     {

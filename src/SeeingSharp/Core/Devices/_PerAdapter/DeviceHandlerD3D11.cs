@@ -6,7 +6,7 @@ using SharpDX.DXGI;
 using D3D = SharpDX.Direct3D;
 using D3D11 = SharpDX.Direct3D11;
 
-namespace SeeingSharp.Core
+namespace SeeingSharp.Core.Devices
 {
     // Overview Feature levels:
     //http://msdn.microsoft.com/en-us/library/windows/desktop/ff476876(v=vs.85).aspx

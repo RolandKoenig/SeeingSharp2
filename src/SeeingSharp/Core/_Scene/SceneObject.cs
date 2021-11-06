@@ -4,6 +4,7 @@ using System.Dynamic;
 using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Core.Animations;
+using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Input;
 using SeeingSharp.Util;

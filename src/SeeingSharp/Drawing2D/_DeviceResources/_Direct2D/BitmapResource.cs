@@ -1,5 +1,6 @@
 ﻿using System;
 using SeeingSharp.Core;
+using SeeingSharp.Core.Devices;
 using D2D = SharpDX.Direct2D1;
 
 namespace SeeingSharp.Drawing2D

@@ -3,7 +3,7 @@ using SeeingSharp.Core.Configuration;
 using SeeingSharp.Util;
 using D2D = SharpDX.Direct2D1;
 
-namespace SeeingSharp.Core
+namespace SeeingSharp.Core.Devices
 {
     public class FactoryHandlerD2D : IDisposable, ICheckDisposed
     {

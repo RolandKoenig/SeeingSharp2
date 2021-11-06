@@ -1,4 +1,6 @@
-﻿namespace SeeingSharp.Core
+﻿using SeeingSharp.Core.Devices;
+
+namespace SeeingSharp.Core
 {
     /// <summary>
     /// This class represents a Pivot with no visualization at all.
