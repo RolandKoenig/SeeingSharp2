@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SeeingSharp.Core.Animations;
 using SeeingSharp.Input;
 
 namespace SeeingSharp.Core

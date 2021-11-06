@@ -2,6 +2,7 @@
 using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Components;
+using SeeingSharp.Components.Input;
 using SeeingSharp.Core;
 using SeeingSharp.Drawing3D;
 using D2D = SharpDX.Direct2D1;

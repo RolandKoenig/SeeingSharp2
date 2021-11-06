@@ -1,4 +1,5 @@
 ﻿using SeeingSharp.Core;
+using SeeingSharp.Core.Animations;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.Drawing3D

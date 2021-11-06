@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using SeeingSharp.Checking;
+using SeeingSharp.Core.Animations;
 using SeeingSharp.Input;
 
 namespace SeeingSharp.Core

@@ -3,6 +3,7 @@ using System.Numerics;
 using System.Threading.Tasks;
 using SeeingSharp.Checking;
 using SeeingSharp.Components;
+using SeeingSharp.Components.Input;
 using SeeingSharp.Core;
 using SeeingSharp.Drawing3D;
 

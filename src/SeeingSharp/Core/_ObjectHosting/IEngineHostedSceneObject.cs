@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using SeeingSharp.Core.Animations;
 
 namespace SeeingSharp.Core
 {

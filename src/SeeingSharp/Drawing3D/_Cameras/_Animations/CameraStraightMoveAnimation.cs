@@ -1,6 +1,7 @@
 ﻿using System;
 using SeeingSharp.Checking;
 using SeeingSharp.Core;
+using SeeingSharp.Core.Animations;
 
 namespace SeeingSharp.Drawing3D
 {

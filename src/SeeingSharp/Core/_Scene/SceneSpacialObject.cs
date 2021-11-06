@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
+using SeeingSharp.Core.Animations;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Util;
 

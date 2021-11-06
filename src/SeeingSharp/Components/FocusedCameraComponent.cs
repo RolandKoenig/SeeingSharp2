@@ -60,7 +60,7 @@ namespace SeeingSharp.Components
         public override bool IsViewSpecific => true;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FocusedPointCameraComponent"/> class.
+        /// Initializes a new instance of the <see cref="Input.FocusedPointCameraComponent"/> class.
         /// </summary>
         protected FocusedCameraComponent()
         {
