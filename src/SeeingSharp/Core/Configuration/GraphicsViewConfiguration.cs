@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using SeeingSharp.Util;
 
-namespace SeeingSharp.Core
+namespace SeeingSharp.Core.Configuration
 {
     public class GraphicsViewConfiguration
     {

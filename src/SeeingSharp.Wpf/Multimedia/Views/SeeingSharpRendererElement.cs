@@ -8,6 +8,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using SeeingSharp.Core;
+using SeeingSharp.Core.Configuration;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Input;
 using SeeingSharp.Util;

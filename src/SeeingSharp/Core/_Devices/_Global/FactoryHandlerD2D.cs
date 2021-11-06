@@ -1,4 +1,5 @@
 ﻿using System;
+using SeeingSharp.Core.Configuration;
 using SeeingSharp.Util;
 using D2D = SharpDX.Direct2D1;
 

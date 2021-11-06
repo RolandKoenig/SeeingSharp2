@@ -4,6 +4,7 @@ using System.ComponentModel;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 using SeeingSharp.Core;
+using SeeingSharp.Core.Configuration;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Input;
 

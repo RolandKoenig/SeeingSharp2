@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using SeeingSharp.Checking;
+using SeeingSharp.Core.Configuration;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Resources;
 using SeeingSharp.Util;

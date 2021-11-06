@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SeeingSharp.Core.Configuration;
 using SeeingSharp.Util;
 using SharpDX.DXGI;
 using D3D = SharpDX.Direct3D;

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using SeeingSharp.Checking;
+using SeeingSharp.Core.Configuration;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Input;
 using SeeingSharp.Util;

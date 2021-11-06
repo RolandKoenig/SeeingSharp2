@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SeeingSharp.Checking;
+using SeeingSharp.Core.Configuration;
 using SeeingSharp.Drawing3D;
 
 namespace SeeingSharp.Core

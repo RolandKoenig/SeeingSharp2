@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
+using SeeingSharp.Core.Configuration;
 using SeeingSharp.Drawing3D;
 
 namespace SeeingSharp.Core

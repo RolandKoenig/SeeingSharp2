@@ -1,4 +1,5 @@
 ﻿using SeeingSharp.Checking;
+using SeeingSharp.Core.Configuration;
 using SharpDX.DXGI;
 
 namespace SeeingSharp.Core

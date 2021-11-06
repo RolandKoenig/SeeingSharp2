@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using SeeingSharp.Core.Configuration;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.Core

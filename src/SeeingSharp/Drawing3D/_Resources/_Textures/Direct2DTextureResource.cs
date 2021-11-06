@@ -1,5 +1,6 @@
 ﻿using SeeingSharp.Checking;
 using SeeingSharp.Core;
+using SeeingSharp.Core.Configuration;
 using SeeingSharp.Drawing2D;
 using SeeingSharp.Util;
 using SharpDX;

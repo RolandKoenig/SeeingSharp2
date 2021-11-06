@@ -5,6 +5,7 @@ using System.Windows;
 using SeeingSharp.ModelViewer.Rendering;
 using SeeingSharp.ModelViewer.Util;
 using SeeingSharp.Components;
+using SeeingSharp.Components.Input;
 using SeeingSharp.Core;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Util;
