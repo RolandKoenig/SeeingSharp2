@@ -1,4 +1,6 @@
-﻿namespace SeeingSharp.Drawing3D
+﻿using SeeingSharp.Mathematics;
+
+namespace SeeingSharp.Drawing3D
 {
     /// <summary>
     /// A Triangle inside a Geometry object

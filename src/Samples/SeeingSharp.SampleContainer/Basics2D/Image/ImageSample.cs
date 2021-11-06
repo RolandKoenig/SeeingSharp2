@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using SeeingSharp.Checking;
 using SeeingSharp.Core;
 using SeeingSharp.Drawing2D;
+using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.SampleContainer.Basics2D.Image

@@ -2,6 +2,7 @@
 using SeeingSharp.Checking;
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
+using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.DrawingVideo

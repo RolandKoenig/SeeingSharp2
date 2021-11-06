@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SeeingSharp.Mathematics;
 
 namespace SeeingSharp.Tests
 {

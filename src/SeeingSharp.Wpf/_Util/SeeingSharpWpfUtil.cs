@@ -1,4 +1,5 @@
 ﻿using System;
+using SeeingSharp.Mathematics;
 using Wpf = System.Windows;
 using WpfMedia = System.Windows.Media;
 

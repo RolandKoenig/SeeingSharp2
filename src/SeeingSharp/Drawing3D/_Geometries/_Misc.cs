@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using SeeingSharp.Drawing2D;
+using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.Drawing3D

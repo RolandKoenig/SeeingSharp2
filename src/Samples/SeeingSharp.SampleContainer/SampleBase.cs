@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using SeeingSharp.Core;
 using SeeingSharp.Drawing2D;
 using SeeingSharp.Drawing3D;
+using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 using SharpDX.WIC;
 

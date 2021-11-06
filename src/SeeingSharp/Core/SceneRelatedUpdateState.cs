@@ -4,6 +4,7 @@ using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Core.Animations;
 using SeeingSharp.Input;
+using SeeingSharp.Mathematics;
 
 namespace SeeingSharp.Core
 {

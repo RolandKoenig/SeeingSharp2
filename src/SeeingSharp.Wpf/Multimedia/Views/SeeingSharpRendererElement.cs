@@ -12,6 +12,7 @@ using SeeingSharp.Core.Configuration;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Input;
+using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;

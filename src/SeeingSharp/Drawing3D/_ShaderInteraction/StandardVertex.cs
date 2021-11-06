@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using SeeingSharp.Checking;
+using SeeingSharp.Mathematics;
 using SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
 

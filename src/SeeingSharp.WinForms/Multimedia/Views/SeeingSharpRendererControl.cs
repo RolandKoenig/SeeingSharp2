@@ -13,9 +13,10 @@ using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Input;
 using SeeingSharp.Util;
-using SharpDX;
-using SharpDX.DXGI;
-using SharpDX.Mathematics.Interop;
+using SeeingSharp.Mathematics;
+using SDX = SharpDX;
+using SDXMath = SharpDX.Mathematics.Interop;
+using DXGI = SharpDX.DXGI;
 using D3D11 = SharpDX.Direct3D11;
 using GDI = System.Drawing;
 
@@ -29,7 +30,7 @@ namespace SeeingSharp.Views
         private RenderLoop _renderLoop;
 
         // Resources for Direct3D 11
-        private SwapChain1 _swapChain;
+        private DXGI.SwapChain1 _swapChain;
         private D3D11.Device _renderDevice;
         private D3D11.RenderTargetView _renderTarget;
         private D3D11.DepthStencilView _renderTargetDepth;
@@ -447,7 +448,7 @@ namespace SeeingSharp.Views
         /// <summary>
         /// Create all view resources.
         /// </summary>
-        Tuple<D3D11.Texture2D, D3D11.RenderTargetView, D3D11.Texture2D, D3D11.DepthStencilView, RawViewportF, Size2, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice device)
+        Tuple<D3D11.Texture2D, D3D11.RenderTargetView, D3D11.Texture2D, D3D11.DepthStencilView, SDXMath.RawViewportF, Size2, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice device)
         {
             var width = this.Width;
             var height = this.Height;
@@ -568,13 +569,13 @@ namespace SeeingSharp.Views
             //Present all rendered stuff on screen
             try
             {
-                _swapChain.Present(0, PresentFlags.DoNotWait, new PresentParameters());
+                _swapChain.Present(0, DXGI.PresentFlags.DoNotWait, new DXGI.PresentParameters());
             }
-            catch (SharpDXException ex)
+            catch (SDX.SharpDXException ex)
             {
                 // Skip present on error DXGI_ERROR_WAS_STILL_DRAWING
                 // This error occurs some times on slower hardware
-                if (ex.ResultCode == ResultCode.WasStillDrawing) { return; }
+                if (ex.ResultCode == DXGI.ResultCode.WasStillDrawing) { return; }
 
                 throw;
             }

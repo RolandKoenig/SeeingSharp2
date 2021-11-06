@@ -4,6 +4,7 @@ using SeeingSharp;
 using SeeingSharp.Core;
 using SeeingSharp.Core.Configuration;
 using SeeingSharp.Core.Devices;
+using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.Tests

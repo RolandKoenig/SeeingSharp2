@@ -1,4 +1,5 @@
-﻿using GDI = System.Drawing;
+﻿using SeeingSharp.Mathematics;
+using GDI = System.Drawing;
 
 namespace SeeingSharp.Util
 {

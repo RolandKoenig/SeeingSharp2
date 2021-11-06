@@ -4,6 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SeeingSharp.Core;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Drawing3D.Primitives;
+using SeeingSharp.Mathematics;
 using SeeingSharp.Views;
 
 namespace SeeingSharp.Tests

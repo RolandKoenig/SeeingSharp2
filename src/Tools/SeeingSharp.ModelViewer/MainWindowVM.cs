@@ -8,6 +8,7 @@ using SeeingSharp.Components;
 using SeeingSharp.Components.Input;
 using SeeingSharp.Core;
 using SeeingSharp.Drawing3D;
+using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.ModelViewer

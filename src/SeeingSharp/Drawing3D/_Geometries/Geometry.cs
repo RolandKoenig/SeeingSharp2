@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Core;
+using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.Drawing3D

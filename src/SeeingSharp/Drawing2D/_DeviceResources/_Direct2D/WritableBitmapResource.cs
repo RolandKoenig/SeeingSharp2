@@ -1,6 +1,7 @@
 ﻿using System;
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
+using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 using SharpDX.DXGI;
 using D2D = SharpDX.Direct2D1;

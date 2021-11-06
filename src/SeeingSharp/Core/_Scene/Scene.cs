@@ -10,6 +10,7 @@ using SeeingSharp.Checking;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing2D;
 using SeeingSharp.Drawing3D;
+using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.Core

@@ -1,4 +1,6 @@
-﻿namespace SeeingSharp.Drawing3D
+﻿using SeeingSharp.Mathematics;
+
+namespace SeeingSharp.Drawing3D
 {
     internal class ACMaterialInfo
     {

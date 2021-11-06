@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using SeeingSharp.Core;
+using SeeingSharp.Mathematics;
 
 namespace SeeingSharp.Drawing3D
 {

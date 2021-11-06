@@ -1,5 +1,6 @@
 ﻿using System;
 using SeeingSharp.Core.Devices;
+using SeeingSharp.Mathematics;
 using SharpDX.Mathematics.Interop;
 using D3D11 = SharpDX.Direct3D11;
 

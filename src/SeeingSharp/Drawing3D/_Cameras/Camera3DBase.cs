@@ -2,6 +2,7 @@
 using System.Numerics;
 using SeeingSharp.Core;
 using SeeingSharp.Core.Animations;
+using SeeingSharp.Mathematics;
 
 namespace SeeingSharp.Drawing3D
 {

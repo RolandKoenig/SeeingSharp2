@@ -1,4 +1,5 @@
 ﻿using SeeingSharp.Core.Devices;
+using SeeingSharp.Mathematics;
 
 namespace SeeingSharp.Core
 {

@@ -1,4 +1,5 @@
 ﻿using System;
+using SeeingSharp.Mathematics;
 using SharpDX.DXGI;
 
 namespace SeeingSharp.Core.HardwareInfo
@@ -27,11 +28,11 @@ namespace SeeingSharp.Core.HardwareInfo
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="SeeingSharp.Color4"/> is equal to this instance.
+        /// Determines whether the specified <see cref="Color4"/> is equal to this instance.
         /// </summary>
-        /// <param name="other">The <see cref="SeeingSharp.Color4"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="Color4"/> to compare with this instance.</param>
         /// <returns>
-        /// <c>true</c> if the specified <see cref="SeeingSharp.Color4"/> is equal to this instance; otherwise, <c>false</c>.
+        /// <c>true</c> if the specified <see cref="Color4"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public bool Equals(EngineOutputModeInfo other)
         {

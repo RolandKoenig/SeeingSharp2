@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
+using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 using SharpDX.Mathematics.Interop;
 using D2D = SharpDX.Direct2D1;

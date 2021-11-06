@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing3D;
+using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 using SharpDX.Mathematics.Interop;
 using D3D11 = SharpDX.Direct3D11;

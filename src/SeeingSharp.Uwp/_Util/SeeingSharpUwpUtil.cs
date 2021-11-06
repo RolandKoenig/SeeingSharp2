@@ -1,4 +1,6 @@
-﻿namespace SeeingSharp.Util
+﻿using SeeingSharp.Mathematics;
+
+namespace SeeingSharp.Util
 {
     public static class SeeingSharpUwpUtil
     {

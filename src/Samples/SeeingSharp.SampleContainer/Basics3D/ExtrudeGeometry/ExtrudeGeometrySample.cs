@@ -5,6 +5,7 @@ using SeeingSharp.Components;
 using SeeingSharp.Components.Input;
 using SeeingSharp.Core;
 using SeeingSharp.Drawing3D;
+using SeeingSharp.Mathematics;
 using D2D = SharpDX.Direct2D1;
 
 namespace SeeingSharp.SampleContainer.Basics3D.ExtrudeGeometry

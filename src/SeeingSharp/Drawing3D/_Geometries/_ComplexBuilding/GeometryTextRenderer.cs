@@ -3,6 +3,7 @@ using System.Linq;
 using System.Numerics;
 using SeeingSharp.Core;
 using SeeingSharp.Drawing3D.Primitives;
+using SeeingSharp.Mathematics;
 using SharpDX.Direct2D1;
 using SharpDX.DirectWrite;
 using SDX = SharpDX;

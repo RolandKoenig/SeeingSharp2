@@ -9,6 +9,7 @@ using SeeingSharp.Core.Animations;
 using SeeingSharp.Drawing2D;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Drawing3D.Primitives;
+using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.SampleContainer.Basics3D.Direct2DTextureAnimated

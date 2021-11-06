@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Numerics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SeeingSharp.Mathematics;
 
 namespace SeeingSharp.Tests
 {

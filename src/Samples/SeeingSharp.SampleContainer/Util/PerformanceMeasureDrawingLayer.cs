@@ -6,6 +6,7 @@ using System.Text;
 using SeeingSharp.Core;
 using SeeingSharp.Drawing2D;
 using SeeingSharp.Input;
+using SeeingSharp.Mathematics;
 
 namespace SeeingSharp.SampleContainer.Util
 {

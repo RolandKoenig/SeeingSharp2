@@ -4,7 +4,7 @@ using SeeingSharp.Core.Configuration;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing2D;
 using SeeingSharp.Util;
-using SharpDX;
+using SeeingSharp.Mathematics;
 using D2D = SharpDX.Direct2D1;
 using D3D11 = SharpDX.Direct3D11;
 
@@ -95,7 +95,7 @@ namespace SeeingSharp.Drawing3D
                 {
                     _overlayRenderer.EndDraw();
                 }
-                catch (SharpDXException dxException)
+                catch (SharpDX.SharpDXException dxException)
                 {
                     if (dxException.ResultCode == D2D.ResultCode.RecreateTarget)
                     {

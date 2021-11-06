@@ -7,6 +7,7 @@ using SeeingSharp.Core;
 using SeeingSharp.Drawing2D;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Drawing3D.Primitives;
+using SeeingSharp.Mathematics;
 using SeeingSharp.Views;
 using SeeingSharp.Util;
 using GDI = System.Drawing;

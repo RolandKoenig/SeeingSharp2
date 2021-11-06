@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using SeeingSharp.Mathematics;
 
 namespace SeeingSharp.Checking
 {

@@ -1,5 +1,6 @@
 ﻿using SeeingSharp.Checking;
 using SeeingSharp.Core;
+using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 using D2D = SharpDX.Direct2D1;
 using SDXM = SharpDX.Mathematics.Interop;

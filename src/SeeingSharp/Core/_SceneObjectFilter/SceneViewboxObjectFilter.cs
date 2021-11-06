@@ -1,8 +1,8 @@
 ﻿using System.Numerics;
+using SeeingSharp.Mathematics;
 
 namespace SeeingSharp.Core
 {
-
     public class SceneViewboxObjectFilter : SceneObjectFilter
     {
         // Values for viewbox clipping

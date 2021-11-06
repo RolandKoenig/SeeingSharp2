@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.Core.Configuration

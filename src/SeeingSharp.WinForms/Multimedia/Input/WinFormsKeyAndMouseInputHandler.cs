@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using SeeingSharp.Core;
+using SeeingSharp.Mathematics;
 using GDI = System.Drawing;
 using WinForms = System.Windows.Forms;
 

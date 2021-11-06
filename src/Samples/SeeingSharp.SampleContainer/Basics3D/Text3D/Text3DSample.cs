@@ -6,6 +6,7 @@ using SeeingSharp.Components;
 using SeeingSharp.Components.Input;
 using SeeingSharp.Core;
 using SeeingSharp.Drawing3D;
+using SeeingSharp.Mathematics;
 
 namespace SeeingSharp.SampleContainer.Basics3D.Text3D
 {
