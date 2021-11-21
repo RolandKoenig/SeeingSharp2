@@ -9,85 +9,100 @@
         mc:Ignorable="d"
         Title="SeeingSharp 2 - Wpf samples - Main window" Width="800" Height="450"
         d:DataContext="{x:Static local:DesignData.MainWindowVM}">
-    <DockPanel LastChildFill="True">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="Performance"
+        <sSharp:SeeingSharpRendererElement Grid.RowSpan="3" 
+                                           x:Name="CtrlRenderer" />
+
+        <StackPanel Grid.Row="0"
+                    Orientation="Vertical"
+                    Background="#BBD3D3D3">
+            <Menu Background="Transparent"
+                  Margin="2">
+                <Menu.Resources>
+                    <Style TargetType="MenuItem">
+                        <Setter Property="Background" Value="Transparent" />
+                    </Style>
+                </Menu.Resources>
+
+                <MenuItem Header="Performance"
                       Click="OnMnuCmdPerformance_ItemClick" />
-            <MenuItem Header="New child window"
+                <MenuItem Header="New child window"
                       Click="OnMnuCmdNewChildWindow_Click" />
-            <MenuItem Header="Change resolution">
-                <MenuItem Header="To 800x600"
+                <MenuItem Header="Change resolution">
+                    <MenuItem Header="To 800x600"
                           Click="OnMnuCmdChangeResolution_Click"
                           Tag="800x600" />
-                <MenuItem Header="To 1024x768"
+                    <MenuItem Header="To 1024x768"
                           Click="OnMnuCmdChangeResolution_Click"
                           Tag="1024x768" />
-                <MenuItem Header="To 1280x1024"
+                    <MenuItem Header="To 1280x1024"
                           Click="OnMnuCmdChangeResolution_Click"
                           Tag="1280x1024" />
-                <MenuItem Header="To 1600x1200"
+                    <MenuItem Header="To 1600x1200"
                           Click="OnMnuCmdChangeResolution_Click"
                           Tag="1600x1200" />
-                <Separator />
-                <MenuItem Header="To 1024x1024"
+                    <Separator />
+                    <MenuItem Header="To 1024x1024"
                           Click="OnMnuCmdChangeResolution_Click"
                           Tag="1024x1024" />
-            </MenuItem>
-        </Menu>
+                </MenuItem>
+            </Menu>
 
-        <!-- List of sample groups -->
-        <ListBox DockPanel.Dock="Top"
-                 Background="#0975C6" Foreground="White" BorderThickness="0"
+            <ListBox HorizontalAlignment="Left"
+                 Background="Transparent"
+                 Foreground="White" BorderThickness="0"
                  ItemsSource="{Binding Path=SampleGroups}"
                  SelectedItem="{Binding Path=SelectedGroup, Mode=TwoWay}">
-            <ListBox.Resources>
-                <Style TargetType="ListBoxItem">
-                    <Setter Property="Margin" Value="5,2,5,2" />
-                </Style>
-            </ListBox.Resources>
+                <ListBox.Resources>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Margin" Value="5,2,5,2" />
+                    </Style>
+                </ListBox.Resources>
 
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <WrapPanel />
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-        </ListBox>
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Background="#0975C6" />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+            </ListBox>
 
-        <Grid>
-            <!-- The 3D renderer control-->
-            <sSharp:SeeingSharpRendererElement x:Name="CtrlRenderer" />
-
-            <!-- List of samples of the currently selected group -->
-            <StackPanel Orientation="Vertical"
-                        VerticalAlignment="Top">
-
-                <ListBox Background="#BBD3D3D3" Foreground="Black" BorderThickness="0"
-                         ItemsSource="{Binding Path=Samples}"
-                         SelectedItem="{Binding Path=SelectedSample, Mode=TwoWay}"
-                         SelectionChanged="OnSelectedSampleChanged"
-                         SelectionMode="Single"
-                         VerticalContentAlignment="Top">
-                    <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <WrapPanel />
-                        </ItemsPanelTemplate>
-                    </ListBox.ItemsPanel>
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Vertical"
+            <ListBox BorderThickness="0"
+                     Background="Transparent"
+                     ItemsSource="{Binding Path=Samples}"
+                     SelectedItem="{Binding Path=SelectedSample, Mode=TwoWay}"
+                     SelectionChanged="OnSelectedSampleChanged"
+                     SelectionMode="Single"
+                     VerticalContentAlignment="Top">
+                <ListBox.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Vertical"
                                         Margin="5" Cursor="Hand">
-                                <Image Source="{Binding Path=BitmapSource}"
+                            <Image Source="{Binding Path=BitmapSource}"
                                        Width="64" Height="64"
                                        RenderOptions.BitmapScalingMode="Fant"
                                        Margin="5" />
-                                <TextBlock Text="{Binding Path=Name}"
+                            <TextBlock Text="{Binding Path=Name}"
                                            HorizontalAlignment="Center" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
-                <Rectangle Height="1" Fill="DarkGray" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            <Rectangle Height="1" Fill="DarkGray" />
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <StackPanel Orientation="Vertical"
+                        VerticalAlignment="Top">
 
                 <ItemsControl ItemsSource="{Binding Path=SampleCommands}">
                     <ItemsControl.ItemsPanel>
@@ -123,5 +138,5 @@
             <!-- Status bar -->
             <local:StatusBarControl CtrlRenderer="{Binding ElementName=CtrlRenderer}" />
         </Grid>
-    </DockPanel>
+    </Grid>
 </Window>

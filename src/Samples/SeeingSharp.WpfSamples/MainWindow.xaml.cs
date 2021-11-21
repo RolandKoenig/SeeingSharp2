@@ -155,7 +155,7 @@ namespace SeeingSharp.WpfSamples
                     _actSampleInfo = sampleInfo;
 
                     await CtrlRenderer.RenderLoop.Register2DDrawingLayerAsync(
-                        new PerformanceMeasureDrawingLayer(120f, CtrlRenderer.ViewInformation));
+                        new PerformanceMeasureDrawingLayer(170f, CtrlRenderer.ViewInformation));
                 }
 
                 // Wait for next finished rendering
