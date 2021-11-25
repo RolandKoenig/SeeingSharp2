@@ -193,6 +193,12 @@ namespace SeeingSharp.Input
             }
         }
 
+        public ref struct RefVector2
+        {
+            public float X;
+            public float Y;
+        }
+
         /// <summary>
         /// Notifies some information about the mouse pointer.
         /// Called by input handler.
@@ -200,7 +206,7 @@ namespace SeeingSharp.Input
         internal void NotifyMouseLocation(Vector2 pixelPosition, Vector2 moveDistancePixel, Vector2 screenSizePixel)
         {
             _positionPixel = pixelPosition;
-            _moveDistancePixel = moveDistancePixel;
+            _moveDistancePixel = _moveDistancePixel + moveDistancePixel;
             _screenSizePixel = screenSizePixel;
         }
 
