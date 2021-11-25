@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "SeeingSharp.WinUIDesktopSamples (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "SeeingSharp.WinUIDesktopSamples (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

@@ -13,7 +13,7 @@
                 <ResourceDictionary>
 
                     <SolidColorBrush x:Key="MainBackgroundBrush" 
-                                     Color="#0975C6"></SolidColorBrush>
+                                     Color="White"></SolidColorBrush>
 
                     <!-- Custom theme overrides -->
                     <ResourceDictionary.ThemeDictionaries>

@@ -22,8 +22,6 @@
             </Storyboard>
         </Grid.Resources>
 
-        <sSharp:SeeingSharpRenderPanel x:Name="CtrlSwapChain" />
-
         <NavigationView IsBackButtonVisible="Collapsed"
                         IsBackEnabled="False"
                         IsSettingsVisible="False"
@@ -32,7 +30,6 @@
                         PaneTitle="Sample Groups"
                         MenuItemsSource="{x:Bind ViewModel.SampleGroups, Mode=OneWay}"
                         SelectedItem="{x:Bind ViewModel.SelectedGroup, Mode=TwoWay}">
-
             <NavigationView.MenuItemTemplate>
                 <DataTemplate x:DataType="samples:SampleGroupMetadata">
                     <NavigationViewItem Content="{x:Bind GroupName}"
@@ -65,6 +62,8 @@
             </NavigationView.PaneFooter>
 
             <Grid>
+                <sSharp:SeeingSharpRenderPanel x:Name="CtrlSwapChain" />
+                
                 <ListBox VerticalAlignment="Top"
                          Background="{ThemeResource GenericAcrylicBrush}"
                          ItemsSource="{x:Bind ViewModel.Samples}"

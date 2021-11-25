@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using Microsoft.UI.Dispatching;
-using Microsoft.UI.Input.Experimental;
+using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
@@ -18,7 +18,7 @@ namespace SeeingSharp.Input
         private static readonly Dictionary<Windows.System.VirtualKey, WinVirtualKey> s_keyMappingDict;
 
         // State variables for camera movement
-        private ExpPointerPoint _lastDragPoint;
+        private PointerPoint _lastDragPoint;
 
         // Objects from outside
         private SeeingSharpPanelPainter _painter;
@@ -278,12 +278,11 @@ namespace SeeingSharp.Input
 
             // Calculate move distance
             var currentPoint = e.GetCurrentPoint(_targetPanel);
-
             if (_lastDragPoint == null)
             {
                 _lastDragPoint = currentPoint;
             }
-
+            
             var moveDistance = new Vector2(
                 (float)(currentPoint.Position.X - _lastDragPoint.Position.X),
                 (float)(currentPoint.Position.Y - _lastDragPoint.Position.Y));
