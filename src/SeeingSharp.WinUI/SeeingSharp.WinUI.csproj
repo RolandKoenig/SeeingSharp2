@@ -33,7 +33,7 @@
 
   <ItemGroup>
       <PackageReference Include="Microsoft.ProjectReunion" Version="0.8.1" />
-      <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.1" />
+      <PackageReference Include="Microsoft.ProjectReunion.Foundation" Version="0.8.5" />
       <PackageReference Include="Microsoft.ProjectReunion.WinUI" Version="0.8.1" />
       <PackageReference Include="SharpDX" Version="4.2.0" />
       <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
