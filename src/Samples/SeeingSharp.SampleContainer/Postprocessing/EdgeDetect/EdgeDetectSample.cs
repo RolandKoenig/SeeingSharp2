@@ -15,7 +15,7 @@ namespace SeeingSharp.SampleContainer.Postprocessing.EdgeDetect
     [SampleDescription(
         "Edge detect", 1, nameof(Postprocessing),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Postprocessing/EdgeDetect",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/src/Samples/SeeingSharp.SampleContainer/Postprocessing/EdgeDetect",
         typeof(SampleSettingsWith3D))]
     public class EdgeDetectSample : SampleBase
     {

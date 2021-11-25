@@ -14,7 +14,7 @@ namespace SeeingSharp.SampleContainer.Postprocessing.Focus
     [SampleDescription(
         "Focus", 2, nameof(Postprocessing),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Postprocessing/Focus",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/src/Samples/SeeingSharp.SampleContainer/Postprocessing/Focus",
         typeof(FocusSampleSettings))]
     public class FocusSample : SampleBase
     {

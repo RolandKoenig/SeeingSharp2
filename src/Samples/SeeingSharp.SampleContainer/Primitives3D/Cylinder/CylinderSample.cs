@@ -11,7 +11,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D.Cylinder
     [SampleDescription(
         "Cylinder", 2, nameof(Primitives3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/Cylinder",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/src/Samples/SeeingSharp.SampleContainer/Primitives3D/Cylinder",
         typeof(CylinderSampleSettings))]
     public class CylinderSample : Primitive3DSampleBase
     {

@@ -18,7 +18,7 @@ namespace SeeingSharp.SampleContainer.Basics3D.Direct2DTexture
     [SampleDescription(
         "Direct2D Texture", 4, nameof(Basics3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/Direct2DTexture",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/src/Samples/SeeingSharp.SampleContainer/Basics3D/Direct2DTexture",
         typeof(Direct2DTextureSampleSettings))]
     public class Direct2DTextureSample : SampleBase
     {

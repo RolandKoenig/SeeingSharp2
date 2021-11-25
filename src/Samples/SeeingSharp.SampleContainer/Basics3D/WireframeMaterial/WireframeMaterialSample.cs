@@ -15,7 +15,7 @@ namespace SeeingSharp.SampleContainer.Basics3D.WireframeMaterial
     [SampleDescription(
         "Wireframe Material", 9, nameof(Basics3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/WireframeMaterial",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/src/Samples/SeeingSharp.SampleContainer/Basics3D/WireframeMaterial",
         typeof(SampleSettingsWith3D))]
     public class WireframeMaterialSample : SampleBase
     {

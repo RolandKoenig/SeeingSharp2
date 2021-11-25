@@ -11,7 +11,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D.Cone
     [SampleDescription(
         "Cone", 3, nameof(Primitives3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/Cone",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/src/Samples/SeeingSharp.SampleContainer/Primitives3D/Cone",
         typeof(ConeSampleSettings))]
     public class ConeSample : Primitive3DSampleBase
     {

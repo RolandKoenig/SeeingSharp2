@@ -16,7 +16,7 @@ namespace SeeingSharp.SampleContainer.Basics3D.SkyboxScene
     [SampleDescription(
         "Skybox", 1, nameof(Basics3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/SkyboxScene",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/src/Samples/SeeingSharp.SampleContainer/Basics3D/SkyboxScene",
         typeof(SampleSettingsWith3D))]
     public class SkyboxSample : SampleBase
     {

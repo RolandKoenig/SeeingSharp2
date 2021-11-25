@@ -14,7 +14,7 @@ namespace SeeingSharp.SampleContainer.Basics3D.ObjectFiltering
     [SampleDescription(
         "Object Filtering", 10, nameof(Basics3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/ObjectFiltering",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/src/Samples/SeeingSharp.SampleContainer/Basics3D/ObjectFiltering",
         typeof(ObjectFilteringSettings))]
     public class ObjectFilteringSample : SampleBase
     {

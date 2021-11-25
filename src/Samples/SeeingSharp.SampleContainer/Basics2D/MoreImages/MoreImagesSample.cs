@@ -11,7 +11,7 @@ namespace SeeingSharp.SampleContainer.Basics2D.MoreImages
     [SampleDescription(
         "More Images", 3, nameof(Basics2D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics2D/MoreImages",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/src/Samples/SeeingSharp.SampleContainer/Basics2D/MoreImages",
         typeof(ImageSampleSettings))]
     public class MoreImagesSample : SampleBase
     {

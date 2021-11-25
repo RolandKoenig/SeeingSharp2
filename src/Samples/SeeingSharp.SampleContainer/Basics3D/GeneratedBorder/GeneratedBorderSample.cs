@@ -16,7 +16,7 @@ namespace SeeingSharp.SampleContainer.Basics3D.GeneratedBorder
     [SampleDescription(
         "Generated Border", 6, nameof(Basics3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/GeneratedBorder",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/src/Samples/SeeingSharp.SampleContainer/Basics3D/GeneratedBorder",
         typeof(GeneratedBorderSettings))]
     public class GeneratedBorderSample : SampleBase
     {

@@ -17,7 +17,7 @@ namespace SeeingSharp.SampleContainer.Basics3D.MultiMaterial
     [SampleDescription(
         "Multi Material", 8, nameof(Basics3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Basics3D/MultiMaterial",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/src/Samples/SeeingSharp.SampleContainer/Basics3D/MultiMaterial",
         typeof(SampleSettingsWith3D))]
     public class MultiMaterialSample : SampleBase
     {

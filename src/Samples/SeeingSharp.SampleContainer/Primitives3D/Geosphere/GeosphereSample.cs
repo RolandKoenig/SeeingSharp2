@@ -11,7 +11,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D.Geosphere
     [SampleDescription(
         "Geosphere", 5, nameof(Primitives3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/Geosphere",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/src/Samples/SeeingSharp.SampleContainer/Primitives3D/Geosphere",
         typeof(GeosphereSampleSettings))]
     public class GeosphereSample : Primitive3DSampleBase
     {

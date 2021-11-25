@@ -11,7 +11,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D.Cube
     [SampleDescription(
         "Cube", 1, nameof(Primitives3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/Cube",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/src/Samples/SeeingSharp.SampleContainer/Primitives3D/Cube",
         typeof(CubeSampleSettings))]
     public class CubeSample : Primitive3DSampleBase
     {

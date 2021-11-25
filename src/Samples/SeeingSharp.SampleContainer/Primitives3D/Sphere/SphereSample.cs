@@ -11,7 +11,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D.Sphere
     [SampleDescription(
         "Sphere", 4, nameof(Primitives3D),
         "PreviewImage.png",
-        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/Samples/SeeingSharp.SampleContainer/Primitives3D/Sphere",
+        "https://github.com/RolandKoenig/SeeingSharp2/tree/master/src/Samples/SeeingSharp.SampleContainer/Primitives3D/Sphere",
         typeof(SphereSampleSettings))]
     public class SphereSample : Primitive3DSampleBase
     {
