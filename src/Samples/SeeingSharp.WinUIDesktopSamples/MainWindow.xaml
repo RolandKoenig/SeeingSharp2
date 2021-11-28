@@ -29,13 +29,7 @@
         <MenuBar Grid.Row="0"
                  Style="{ThemeResource MainMenuBar}" FontWeight="Bold"
                  x:Name="CtrlMainMenuBar">
-            <MenuBar.Items>
-                <!--<MenuBarItem Title="Open new window"
-                             Style="{ThemeResource MainMenuBarItem}"
-                             Tapped="OnMenuNewChildWindow_Tapped"/>
-                <MenuBarItem Title="Show source" 
-                             Style="{ThemeResource MainMenuBarItem}"/>-->
-            </MenuBar.Items>
+
         </MenuBar>
 
         <NavigationView Grid.Row="1" 
