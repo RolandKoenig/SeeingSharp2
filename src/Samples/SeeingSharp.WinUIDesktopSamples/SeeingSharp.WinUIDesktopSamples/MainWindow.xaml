@@ -12,6 +12,10 @@
     mc:Ignorable="d">
 
     <Grid x:Name="CtrlMainContent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         <Grid.DataContext>
             <local:MainWindowViewModel />
         </Grid.DataContext>
@@ -22,7 +26,20 @@
             </Storyboard>
         </Grid.Resources>
 
-        <NavigationView IsBackButtonVisible="Collapsed"
+        <MenuBar Grid.Row="0"
+                 Style="{ThemeResource MainMenuBar}" FontWeight="Bold"
+                 x:Name="CtrlMainMenuBar">
+            <MenuBar.Items>
+                <!--<MenuBarItem Title="Open new window"
+                             Style="{ThemeResource MainMenuBarItem}"
+                             Tapped="OnMenuNewChildWindow_Tapped"/>
+                <MenuBarItem Title="Show source" 
+                             Style="{ThemeResource MainMenuBarItem}"/>-->
+            </MenuBar.Items>
+        </MenuBar>
+
+        <NavigationView Grid.Row="1" 
+                        IsBackButtonVisible="Collapsed"
                         IsBackEnabled="False"
                         IsSettingsVisible="False"
                         IsTabStop="False" 
@@ -65,7 +82,7 @@
                 <sSharp:SeeingSharpRenderPanel x:Name="CtrlSwapChain" />
                 
                 <ListBox VerticalAlignment="Top"
-                         Background="{ThemeResource GenericAcrylicBrush}"
+                         Background="{ThemeResource SystemControlAcrylicElementBrush}"
                          ItemsSource="{x:Bind ViewModel.Samples}"
                          SelectedItem="{x:Bind ViewModel.SelectedSample, Mode=TwoWay}"
                          SelectionChanged="OnSelectedSampleChanged"
@@ -112,7 +129,8 @@
             </Grid>
         </NavigationView>
 
-        <ProgressRing Visibility="{x:Bind ProgressRingVisibility, Mode=OneWay}"
+        <ProgressRing Grid.Row="1" 
+                      Visibility="{x:Bind ProgressRingVisibility, Mode=OneWay}"
                       IsActive="True"
                       Width="250" Height="250"/>
     </Grid>

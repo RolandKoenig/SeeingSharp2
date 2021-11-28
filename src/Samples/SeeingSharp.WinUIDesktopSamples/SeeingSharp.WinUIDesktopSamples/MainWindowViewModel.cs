@@ -84,8 +84,6 @@ namespace SeeingSharp.WinUIDesktopSamples
 
         public SampleSettings SampleSettings => _sampleSettings;
 
-        public event EventHandler NewChildWindowRequest;
-
         public void LoadSampleData(SampleRepository sampleRepo, RenderLoop renderLoop)
         {
             _selectedGroup = null;

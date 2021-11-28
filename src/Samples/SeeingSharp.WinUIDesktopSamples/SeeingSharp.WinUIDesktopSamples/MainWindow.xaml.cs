@@ -75,7 +75,7 @@ namespace SeeingSharp.WinUIDesktopSamples
             //Get the Window's HWND
             var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
             var hIcon = PInvoke.User32.LoadImage(System.IntPtr.Zero, iconName,
-                PInvoke.User32.ImageType.IMAGE_ICON, 16, 16, PInvoke.User32.LoadImageFlags.LR_LOADFROMFILE);
+                PInvoke.User32.ImageType.IMAGE_ICON, 32, 32, PInvoke.User32.LoadImageFlags.LR_LOADFROMFILE);
 
             PInvoke.User32.SendMessage(hwnd, PInvoke.User32.WindowMessage.WM_SETICON, (System.IntPtr)0, hIcon);
         }
@@ -176,6 +176,41 @@ namespace SeeingSharp.WinUIDesktopSamples
                 // Reset lock for 'ApplySample' method
                 this.IsChangingSample = false;
             }
+
+            this.UpdateMainMenuBar();
+        }
+
+        private void UpdateMainMenuBar()
+        {
+            // Clear previous sample commands from UI
+            var sampleCommandMenuItems = this.CtrlMainMenuBar.Items
+                .Where(actItem => actItem.Tag as string == "SampleCommand")
+                .ToList();
+            foreach(var actSampleCommandMenuItem in sampleCommandMenuItems)
+            {
+                this.CtrlMainMenuBar.Items.Remove(actSampleCommandMenuItem);
+            }
+
+            // Add new sample commands to UI
+            foreach(var actSampleCommand in this.ViewModel.SampleCommands)
+            {
+                var actSampleCommandInner = actSampleCommand;
+
+                var newBarItem = new MenuBarItem()
+                {
+                    Title = actSampleCommandInner.CommandText,
+                    IsEnabled = actSampleCommandInner.CanExecuteAsProperty,
+                };
+                newBarItem.Tapped += (sender, eArgs) =>
+                {
+                    if (!actSampleCommandInner.CanExecuteAsProperty) { return; }
+                    actSampleCommandInner.Execute(null);
+                };
+                newBarItem.Tag = "SampleCommand";
+                newBarItem.Style = (Style)App.Current.Resources["MainMenuBarItem"];
+
+                this.CtrlMainMenuBar.Items.Add(newBarItem);
+            }
         }
 
         private void RaisePropertyChanged([CallerMemberName] string propertyName = null)
@@ -257,14 +292,6 @@ namespace SeeingSharp.WinUIDesktopSamples
             if (selectedSample == null) { return; }
 
             this.ApplySample(selectedSample.SampleMetadata, viewModel.SampleSettings);
-        }
-
-        private void OnViewModel_NewChildWindowRequest(object sender, EventArgs eArgs)
-        {
-            var childWindow = new ChildRenderWindow();
-            _childPages.Add(childWindow);
-
-            childWindow.Activate();
         }
 
         private void OnSampleCommand_Tapped(object sender, TappedRoutedEventArgs e)
