@@ -47,6 +47,8 @@ dotnet pack -c Release -o ./publish ./src/SeeingSharp.WinUI /p:ContinuousIntegra
 &$msbuildExe src/SeeingSharp.Uwp/SeeingSharp.Uwp.csproj /t:Build /p:Configuration=Release /p:ContinuousIntegrationBuild=true
 nuget pack src/SeeingSharp.Uwp/SeeingSharp.Uwp.nuspec -OutputDirectory publish
 
+&$msbuildExe src\SeeingSharp.WinUI\SeeingSharp.WinUI.csproj /t:Build /p:Configuration=Release /p:ContinuousIntegrationBuild=true /p:IncludeSymbols=true /p:EmbedUntrackedSources=true /t:pack /p:SymbolPackageFormat=snupkg /p:OutputPath=../../publish/SeeingSharp.WinUI
+
 # Publish sample applications
 dotnet publish -c Release -f net5.0-windows -o ./publish/WinFormsSamples ./src/Samples/SeeingSharp.WinFormsSamples
 dotnet publish -c Release -f net5.0-windows -o ./publish/WpfSamples ./src/Samples/SeeingSharp.WpfSamples
