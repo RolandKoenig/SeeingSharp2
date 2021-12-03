@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using SeeingSharp.Core.Configuration;
 using SeeingSharp.Util;
-using SharpDX.DXGI;
-using D3D = SharpDX.Direct3D;
-using D3D11 = SharpDX.Direct3D11;
+using DXGI = Vortice.DXGI;
+using D3D = Vortice.Direct3D;
+using D3D11 = Vortice.Direct3D11;
+using static Vortice.Direct3D11.D3D11;
 
 namespace SeeingSharp.Core.Devices
 {
@@ -20,11 +21,11 @@ namespace SeeingSharp.Core.Devices
     public class DeviceHandlerD3D11
     {
         // Resources from Direct3D11 api
-        private Adapter1 _dxgiAdapter;
-        private D3D11.Device1 _device1;
-        private D3D11.Device3 _device3;
-        private D3D11.DeviceContext _immediateContext;
-        private D3D11.DeviceContext3 _immediateContext3;
+        private DXGI.IDXGIAdapter1 _dxgiAdapter;
+        private D3D11.ID3D11Device1 _device1;
+        private D3D11.ID3D11Device3 _device3;
+        private D3D11.ID3D11DeviceContext _immediateContext;
+        private D3D11.ID3D11DeviceContext3 _immediateContext3;
 
         // Parameters of created device
         private D3D11.DeviceCreationFlags _creationFlags;
@@ -68,26 +69,26 @@ namespace SeeingSharp.Core.Devices
         /// <summary>
         /// Gets the Direct3D 11 device.
         /// </summary>
-        internal D3D11.Device1 Device1 => _device1;
+        internal D3D11.ID3D11Device1 Device1 => _device1;
 
-        internal D3D11.Device3 Device3 => _device3;
+        internal D3D11.ID3D11Device3 Device3 => _device3;
 
         internal D3D11.DeviceCreationFlags CreationFlags => _creationFlags;
 
         /// <summary>
         /// Gets the immediate context.
         /// </summary>
-        internal D3D11.DeviceContext ImmediateContext => _immediateContext;
+        internal D3D11.ID3D11DeviceContext ImmediateContext => _immediateContext;
 
         /// <summary>
         /// Gets the immediate context.
         /// </summary>
-        internal D3D11.DeviceContext3 ImmediateContext3 => _immediateContext3;
+        internal D3D11.ID3D11DeviceContext3 ImmediateContext3 => _immediateContext3;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerD3D11"/> class.
         /// </summary>
-        internal DeviceHandlerD3D11(GraphicsDeviceConfiguration deviceConfig, Adapter1 dxgiAdapter)
+        internal DeviceHandlerD3D11(GraphicsDeviceConfiguration deviceConfig, DXGI.IDXGIAdapter1 dxgiAdapter)
         {
             _dxgiAdapter = dxgiAdapter;
 
@@ -116,15 +117,22 @@ namespace SeeingSharp.Core.Devices
                 try
                 {
                     // Try to create the device using current parameters
-                    using (var device = new D3D11.Device(dxgiAdapter, actCreateFlags, actFeatureLevel))
+                    D3D11CreateDevice(
+                        dxgiAdapter, D3D.DriverType.Hardware, createFlags,
+                        new D3D.FeatureLevel[] { actFeatureLevel }, out var device);
+                    try
                     {
-                        _device1 = device.QueryInterface<D3D11.Device1>();
-                        _device3 = SeeingSharpUtil.TryExecute(() => _device1.QueryInterface<D3D11.Device3>());
+                        _device1 = device.QueryInterface<D3D11.ID3D11Device1>();
+                        _device3 = SeeingSharpUtil.TryExecute(() => _device1.QueryInterface<D3D11.ID3D11Device3>());
 
                         if (_device3 != null)
                         {
                             _immediateContext3 = _device3.ImmediateContext3;
                         }
+                    }
+                    finally
+                    {
+                        SeeingSharpUtil.SafeDispose(ref device);
                     }
 
                     // Device successfully created, save all parameters and break this loop

@@ -13,7 +13,7 @@ using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 using SharpDX.Mathematics.Interop;
 using WinRT;
-using DXGI = SharpDX.DXGI;
+using DXGI = Vortice.DXGI;
 using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Views

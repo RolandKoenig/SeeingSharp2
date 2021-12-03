@@ -3,9 +3,9 @@
 
 using System;
 using System.IO;
-using SharpDX.DXGI;
-using SharpDX.IO;
-using SDX = SharpDX;
+using Vortice.DXGI;
+//using SharpDX.IO;
+//using SDX = SharpDX;
 
 namespace SeeingSharp.Util.SdxTK
 {

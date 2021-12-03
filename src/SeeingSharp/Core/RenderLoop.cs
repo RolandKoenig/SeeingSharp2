@@ -4,7 +4,7 @@ using SeeingSharp.Drawing3D;
 using SeeingSharp.DrawingVideo;
 using SeeingSharp.Input;
 using SeeingSharp.Util;
-using SharpDX.DXGI;
+using Vortice.DXGI;
 using SharpDX.Mathematics.Interop;
 using System;
 using System.Collections.Concurrent;

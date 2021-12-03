@@ -1,31 +1,32 @@
 ﻿using System;
 using SeeingSharp.Core.Configuration;
 using SeeingSharp.Util;
-using SharpDX.DXGI;
-using D2D = SharpDX.Direct2D1;
+using DXGI = Vortice.DXGI;
+using D2D = Vortice.Direct2D1;
+using static Vortice.Direct2D1.D2D1;
 
 namespace SeeingSharp.Core.Devices
 {
     public class DeviceHandlerD2D
     {
         // Main references for Direct2D
-        private D2D.RenderTarget _renderTarget;
-        private D2D.Device _deviceD2D;
-        private D2D.DeviceContext _deviceContextD2D;
+        private D2D.ID2D1RenderTarget _renderTarget;
+        private D2D.ID2D1Device _deviceD2D;
+        private D2D.ID2D1DeviceContext _deviceContextD2D;
 
         public bool IsLoaded => _renderTarget != null;
 
         /// <summary>
         /// Gets a reference to the Direct2D view to the device.
         /// </summary>
-        internal D2D.Device Device => _deviceD2D;
+        internal D2D.ID2D1Device Device => _deviceD2D;
 
         /// <summary>
         /// Gets a reference to the device DeviceContext for rendering.
         /// </summary>
-        internal D2D.DeviceContext DeviceContext => _deviceContextD2D;
+        internal D2D.ID2D1DeviceContext DeviceContext => _deviceContextD2D;
 
-        internal D2D.RenderTarget RenderTarget => _renderTarget;
+        internal D2D.ID2D1RenderTarget RenderTarget => _renderTarget;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerD3D11" /> class.
@@ -40,12 +41,11 @@ namespace SeeingSharp.Core.Devices
                     throw new SeeingSharpGraphicsException("Simulation Direct2D device init exception");
                 }
 
-                using (var dxgiDevice = engineDevice.DeviceD3D11_1.QueryInterface<Device>())
+                using (var dxgiDevice = engineDevice.DeviceD3D11_1.QueryInterface<DXGI.IDXGIDevice>())
                 {
-                    _deviceD2D = new D2D.Device1(engineFactory.FactoryD2D_2, dxgiDevice);
-                    _deviceContextD2D = new D2D.DeviceContext(
-                        _deviceD2D,
-                        D2D.DeviceContextOptions.None);
+                    _deviceD2D = engineFactory.FactoryD2D_2.CreateDevice(dxgiDevice);
+                    _deviceContextD2D = _deviceD2D
+                        .CreateDeviceContext(D2D.DeviceContextOptions.None);
                     _renderTarget = _deviceContextD2D;
                 }
             }

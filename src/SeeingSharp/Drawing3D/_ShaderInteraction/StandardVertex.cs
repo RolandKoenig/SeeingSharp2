@@ -4,7 +4,7 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using SeeingSharp.Checking;
 using SeeingSharp.Mathematics;
-using SharpDX.DXGI;
+using Vortice.DXGI;
 using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Drawing3D

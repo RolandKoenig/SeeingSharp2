@@ -5,7 +5,7 @@ using SeeingSharp.Core;
 using SeeingSharp.Drawing3D.Primitives;
 using SeeingSharp.Mathematics;
 using SharpDX.Direct2D1;
-using SharpDX.DirectWrite;
+using Vortice.DirectWrite;
 using SDX = SharpDX;
 
 namespace SeeingSharp.Drawing3D
@@ -27,7 +27,7 @@ namespace SeeingSharp.Drawing3D
         /// <summary>
         /// IDWriteTextLayout::Draw calls this function to instruct the client to render a run of glyphs.
         /// </summary>
-        /// <param name="clientDrawingContext">The application-defined drawing context passed to  <see cref="M:SharpDX.DirectWrite.TextLayout.Draw_(System.IntPtr,System.IntPtr,System.Single,System.Single)" />.</param>
+        /// <param name="clientDrawingContext">The application-defined drawing context passed to  <see cref="M:Vortice.DirectWrite.TextLayout.Draw_(System.IntPtr,System.IntPtr,System.Single,System.Single)" />.</param>
         /// <param name="baselineOriginX">The pixel location (X-coordinate) at the baseline origin of the glyph run.</param>
         /// <param name="baselineOriginY">The pixel location (Y-coordinate) at the baseline origin of the glyph run.</param>
         /// <param name="measuringMode">The measuring method for glyphs in the run, used with the other properties to determine the rendering mode.</param>
@@ -39,7 +39,7 @@ namespace SeeingSharp.Drawing3D
         /// </returns>
         /// <unmanaged>HRESULT DrawGlyphRun([None] void* clientDrawingContext,[None] FLOAT baselineOriginX,[None] FLOAT baselineOriginY,[None] DWRITE_MEASURING_MODE measuringMode,[In] const DWRITE_GLYPH_RUN* glyphRun,[In] const DWRITE_GLYPH_RUN_DESCRIPTION* glyphRunDescription,[None] IUnknown* clientDrawingEffect)</unmanaged>
         /// <remarks>
-        /// The <see cref="M:SharpDX.DirectWrite.TextLayout.Draw_(System.IntPtr,System.IntPtr,System.Single,System.Single)" /> function calls this callback function with all the information about glyphs to render. The application implements this callback by mostly delegating the call to the underlying platform's graphics API such as {{Direct2D}} to draw glyphs on the drawing context. An application that uses GDI can implement this callback in terms of the <see cref="M:SharpDX.DirectWrite.BitmapRenderTarget.DrawGlyphRun(System.Single,System.Single,SharpDX.Direct2D1.MeasuringMode,SharpDX.DirectWrite.GlyphRun,SharpDX.DirectWrite.RenderingParams,SharpDX.Color4)" /> method.
+        /// The <see cref="M:Vortice.DirectWrite.TextLayout.Draw_(System.IntPtr,System.IntPtr,System.Single,System.Single)" /> function calls this callback function with all the information about glyphs to render. The application implements this callback by mostly delegating the call to the underlying platform's graphics API such as {{Direct2D}} to draw glyphs on the drawing context. An application that uses GDI can implement this callback in terms of the <see cref="M:Vortice.DirectWrite.BitmapRenderTarget.DrawGlyphRun(System.Single,System.Single,SharpDX.Direct2D1.MeasuringMode,Vortice.DirectWrite.GlyphRun,Vortice.DirectWrite.RenderingParams,SharpDX.Color4)" /> method.
         /// </remarks>
         public override SDX.Result DrawGlyphRun(
             object clientDrawingContext, float baselineOriginX, float baselineOriginY,

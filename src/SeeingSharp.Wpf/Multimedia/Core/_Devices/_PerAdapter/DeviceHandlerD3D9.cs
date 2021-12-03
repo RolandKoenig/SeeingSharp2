@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using SeeingSharp.Util;
-using SharpDX.DXGI;
+using Vortice.DXGI;
 using D3D9 = SharpDX.Direct3D9;
 
 namespace SeeingSharp.Core

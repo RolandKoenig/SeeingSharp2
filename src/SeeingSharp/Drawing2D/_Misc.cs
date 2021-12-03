@@ -63,7 +63,7 @@ namespace SeeingSharp.Drawing2D
     /// </summary>
     public enum BitmapFormat
     {
-        Bgra = SharpDX.DXGI.Format.B8G8R8A8_UNorm
+        Bgra = Vortice.DXGI.Format.B8G8R8A8_UNorm
     }
 
     /// <summary>

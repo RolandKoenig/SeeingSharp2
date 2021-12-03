@@ -89,15 +89,12 @@
     <None Include="..\..\LICENSE.md" Link="LICENSE.md" Pack="true" PackagePath="LICENSE.md" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="SharpDX" Version="4.2.0" />
-    <PackageReference Include="SharpDX.D3DCompiler" Version="4.2.0" />
-    <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0" />
-    <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
-    <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
-    <PackageReference Include="SharpDX.Mathematics" Version="4.2.0" />
     <PackageReference Include="System.Memory" Version="4.5.4" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0" />
+    <PackageReference Include="Vortice.D3DCompiler" Version="1.9.143" />
+    <PackageReference Include="Vortice.Direct2D1" Version="1.9.143" />
+    <PackageReference Include="Vortice.Direct3D11" Version="1.9.143" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Drawing3D\_Geometries\_Builders\" />

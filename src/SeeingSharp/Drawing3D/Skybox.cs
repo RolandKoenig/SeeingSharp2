@@ -2,7 +2,7 @@
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
-using SharpDX.DXGI;
+using Vortice.DXGI;
 using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Drawing3D

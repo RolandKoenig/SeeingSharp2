@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using SharpDX.DXGI;
+using Vortice.DXGI;
 
 namespace SeeingSharp.Core.HardwareInfo
 {

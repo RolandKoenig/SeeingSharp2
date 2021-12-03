@@ -1,7 +1,7 @@
 ﻿using System;
 using SeeingSharp.Core.Configuration;
 using SeeingSharp.Util;
-using D2D = SharpDX.Direct2D1;
+using D2D = Vortice.Direct2D1;
 
 namespace SeeingSharp.Core.Devices
 {
@@ -54,7 +54,7 @@ namespace SeeingSharp.Core.Devices
             private set => _handlerWIC = value;
         }
 
-        internal D2D.Factory2 FactoryD2D_2
+        internal D2D.ID2D1Factory2 FactoryD2D_2
         {
             get
             {

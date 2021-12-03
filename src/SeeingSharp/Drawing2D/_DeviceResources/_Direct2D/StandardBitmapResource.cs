@@ -3,7 +3,7 @@ using SeeingSharp.Checking;
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
-using SharpDX.DXGI;
+using Vortice.DXGI;
 using SharpDX.WIC;
 using D2D = SharpDX.Direct2D1;
 

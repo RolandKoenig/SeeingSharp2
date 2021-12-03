@@ -3,7 +3,7 @@
 
 using System;
 using System.Runtime.InteropServices;
-using SharpDX.DXGI;
+//using Vortice.DXGI;
 
 namespace SeeingSharp.Util.SdxTK
 {
@@ -24,7 +24,7 @@ namespace SeeingSharp.Util.SdxTK
         public int MipLevels;
 
         /// <summary>
-        /// <dd> <p>Texture format (see <strong><see cref="SharpDX.DXGI.Format"/></strong>).</p> </dd>
+        /// <dd> <p>Texture format (see <strong><see cref="Vortice.DXGI.Format"/></strong>).</p> </dd>
         /// </summary>
         /// <msdn-id>ff476252</msdn-id>
         /// <unmanaged>DXGI_FORMAT Format</unmanaged>

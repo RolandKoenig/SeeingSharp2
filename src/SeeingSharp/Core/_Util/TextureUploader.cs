@@ -3,8 +3,8 @@ using SeeingSharp.Checking;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
-using SharpDX.DXGI;
-using D3D11 = SharpDX.Direct3D11;
+using DXGI = Vortice.DXGI;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Core
 {
@@ -14,7 +14,7 @@ namespace SeeingSharp.Core
         private EngineDevice _device;
         private int _width;
         private int _height;
-        private Format _format;
+        private DXGI.Format _format;
         private bool _isMultisampled;
         private bool _isDisposed;
 
@@ -22,8 +22,8 @@ namespace SeeingSharp.Core
         // A staging texture for reading contents by Cpu
         // A standard texture for copying data from multisample texture to standard one
         // see http://www.rolandk.de/wp/2013/06/inhalt-der-rendertarget-textur-in-ein-bitmap-kopieren/
-        private D3D11.Texture2D _copyHelperTextureStaging;
-        private D3D11.Texture2D _copyHelperTextureStandard;
+        private D3D11.ID3D11Texture2D _copyHelperTextureStaging;
+        private D3D11.ID3D11Texture2D _copyHelperTextureStandard;
 
         /// <inheritdoc />
         public bool IsDisposed => _isDisposed;
@@ -36,7 +36,7 @@ namespace SeeingSharp.Core
         /// <param name="pixelHeight">Height of textures to be uploaded.</param>
         /// <param name="format">Format of textures to be uploaded.</param>
         /// <param name="isMultisampled">True if this uploader expects multisampled textures.</param>
-        internal TextureUploader(EngineDevice device, int pixelWidth, int pixelHeight, Format format, bool isMultisampled)
+        internal TextureUploader(EngineDevice device, int pixelWidth, int pixelHeight, DXGI.Format format, bool isMultisampled)
         {
             _device = device;
             _width = pixelWidth;
@@ -49,7 +49,7 @@ namespace SeeingSharp.Core
         /// Upload a texture from the graphics hardware.
         /// </summary>
         /// <param name="textureToUpload">The texture to be uploaded.</param>
-        internal MemoryMappedTexture<T> UploadToMemoryMappedTexture<T>(D3D11.Texture2D textureToUpload)
+        internal MemoryMappedTexture<T> UploadToMemoryMappedTexture<T>(D3D11.ID3D11Texture2D textureToUpload)
             where T : unmanaged
         {
             if (_isDisposed) { throw new ObjectDisposedException(nameof(TextureUploader)); }
@@ -65,7 +65,7 @@ namespace SeeingSharp.Core
         /// </summary>
         /// <param name="textureToUpload">The texture to be uploaded.</param>
         /// <param name="targetFloatBuffer">The target buffer to which to copy all data.</param>
-        internal unsafe void UploadToMemoryMappedTexture<T>(D3D11.Texture2D textureToUpload, MemoryMappedTexture<T> targetFloatBuffer) 
+        internal unsafe void UploadToMemoryMappedTexture<T>(D3D11.ID3D11Texture2D textureToUpload, MemoryMappedTexture<T> targetFloatBuffer) 
             where T : unmanaged
         {
             if (_isDisposed) { throw new ObjectDisposedException(nameof(TextureUploader)); }
@@ -102,7 +102,7 @@ namespace SeeingSharp.Core
             }
 
             // Check format compatibility
-            var textureFormatByteSize = FormatHelper.SizeOfInBytes(_format);
+            var textureFormatByteSize = DXGI.FormatHelper.SizeOfInBytes(_format);
             if (textureFormatByteSize != sizeof(T))
             {
                 throw new SeeingSharpGraphicsException(
@@ -114,7 +114,7 @@ namespace SeeingSharp.Core
             this.CopyTextureToStagingResource(textureToUpload);
 
             // Read the data into the .Net data block
-            var dataBox = _device.DeviceImmediateContextD3D11.MapSubresource(
+            var dataBox = _device.DeviceImmediateContextD3D11.Map(
                 _copyHelperTextureStaging, 0, D3D11.MapMode.Read, D3D11.MapFlags.None);
             try
             {
@@ -137,7 +137,7 @@ namespace SeeingSharp.Core
             }
             finally
             {
-                _device.DeviceImmediateContextD3D11.UnmapSubresource(_copyHelperTextureStaging, 0);
+                _device.DeviceImmediateContextD3D11.Unmap(_copyHelperTextureStaging, 0);
             }
         }
 
@@ -148,7 +148,7 @@ namespace SeeingSharp.Core
             _isDisposed = true;
         }
 
-        internal static TextureUploader ConstructUsingPropertiesFromTexture(EngineDevice device, D3D11.Texture2D texture)
+        internal static TextureUploader ConstructUsingPropertiesFromTexture(EngineDevice device, D3D11.ID3D11Texture2D texture)
         {
             var textureDesc = texture.Description;
             return new TextureUploader(
@@ -160,7 +160,7 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Loads the target texture int a staging texture.
         /// </summary>
-        private void CopyTextureToStagingResource(D3D11.Texture2D textureToUpload)
+        private void CopyTextureToStagingResource(D3D11.ID3D11Texture2D textureToUpload)
         {
             // Prepare needed textures
             if (_copyHelperTextureStaging == null)

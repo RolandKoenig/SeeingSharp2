@@ -1,13 +1,14 @@
 ﻿using System;
 using SeeingSharp.Core.Configuration;
 using SeeingSharp.Util;
-using DWrite = SharpDX.DirectWrite;
+using DWrite = Vortice.DirectWrite;
+using static Vortice.DirectWrite.DWrite;
 
 namespace SeeingSharp.Core.Devices
 {
     public class FactoryHandlerDWrite : IDisposable, ICheckDisposed
     {
-        private DWrite.Factory _factory;
+        private DWrite.IDWriteFactory _factory;
 
         /// <summary>
         /// Is DirectWrite initialized successfully?
@@ -17,7 +18,7 @@ namespace SeeingSharp.Core.Devices
         /// <summary>
         /// Gets the Factory object.
         /// </summary>
-        internal DWrite.Factory Factory
+        internal DWrite.IDWriteFactory Factory
         {
             get
             {
@@ -32,7 +33,7 @@ namespace SeeingSharp.Core.Devices
         internal FactoryHandlerDWrite(GraphicsCoreConfiguration coreConfiguration)
         {
             // Create DirectWrite Factory object
-            _factory = new DWrite.Factory(DWrite.FactoryType.Shared);
+            _factory = DWriteCreateFactory<DWrite.IDWriteFactory>(DWrite.FactoryType.Shared);
         }
 
         /// <summary>

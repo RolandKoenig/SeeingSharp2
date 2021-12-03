@@ -1,13 +1,13 @@
 ﻿using SeeingSharp.Core.HardwareInfo;
 using SeeingSharp.Util;
-using SharpDX.DXGI;
+using DXGI = Vortice.DXGI;
 
 namespace SeeingSharp.Core.Devices
 {
     public class DeviceHandlerDXGI
     {
-        private Adapter1 _adapter;
-        private Factory2 _factory;
+        private DXGI.IDXGIAdapter1 _adapter;
+        private DXGI.IDXGIFactory2 _factory;
 
         public bool IsInitialized =>
             _factory != null &&
@@ -17,12 +17,12 @@ namespace SeeingSharp.Core.Devices
         /// Gets current factory object.
         /// </summary>
         /// <value>The factory.</value>
-        internal Factory2 Factory => _factory;
+        internal DXGI.IDXGIFactory2 Factory => _factory;
 
         /// <summary>
         /// Gets current adapter used for drawing.
         /// </summary>
-        internal Adapter1 Adapter => _adapter;
+        internal DXGI.IDXGIAdapter1 Adapter => _adapter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerDXGI"/> class.
@@ -30,7 +30,7 @@ namespace SeeingSharp.Core.Devices
         internal DeviceHandlerDXGI(EngineFactory factory, EngineAdapterInfo adapterInfo)
         {
             _adapter = factory.DXGI.Factory.GetAdapter1(adapterInfo.AdapterIndex);
-            _factory = _adapter.GetParent<Factory2>();
+            _factory = _adapter.GetParent<DXGI.IDXGIFactory2>();
         }
 
         /// <summary>

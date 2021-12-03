@@ -4,7 +4,7 @@ using SeeingSharp.Core.Configuration;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
 using SharpDX;
-using SharpDX.DXGI;
+using Vortice.DXGI;
 using D3D11 = SharpDX.Direct3D11;
 using GDI = System.Drawing;
 using WinForms = System.Windows.Forms;

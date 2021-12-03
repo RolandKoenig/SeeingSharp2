@@ -4,17 +4,17 @@ using SeeingSharp.Checking;
 using SeeingSharp.Core.Configuration;
 using SeeingSharp.Core.HardwareInfo;
 using SeeingSharp.Util;
-using SharpDX.Direct3D;
-using SharpDX.DXGI;
-using D2D = SharpDX.Direct2D1;
-using D3D11 = SharpDX.Direct3D11;
+using DXGI = Vortice.DXGI;
+using D2D = Vortice.Direct2D1;
+using D3D = Vortice.Direct3D;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Core.Devices
 {
     public class EngineDevice : IDisposable, ICheckDisposed
     {
         // Members for antialiasing
-        private SampleDescription _sampleDescWithAntialiasing;
+        private DXGI.SampleDescription _sampleDescWithAntialiasing;
 
         // Main members
         private ISeeingSharpExtensionProvider _extensionProvider;
@@ -36,9 +36,9 @@ namespace SeeingSharp.Core.Devices
         private DeviceResourceManager _deviceResources;
 
         // Possible antialiasing modes
-        private SampleDescription _antialiasingConfigLow;
-        private SampleDescription _antialiasingConfigMedium;
-        private SampleDescription _antialiasingConfigHigh;
+        private DXGI.SampleDescription _antialiasingConfigLow;
+        private DXGI.SampleDescription _antialiasingConfigMedium;
+        private DXGI.SampleDescription _antialiasingConfigHigh;
 
         /// <summary>
         /// Checks for standard antialiasing support.
@@ -150,11 +150,11 @@ namespace SeeingSharp.Core.Devices
         /// <summary>
         /// Gets the Direct3D 11 device object.
         /// </summary>
-        internal D3D11.Device1 DeviceD3D11_1 => _handlerD3D11.Device1;
+        internal D3D11.ID3D11Device1 DeviceD3D11_1 => _handlerD3D11.Device1;
 
-        internal D2D.Device DeviceD2D => _handlerD2D.Device;
+        internal D2D.ID2D1Device DeviceD2D => _handlerD2D.Device;
 
-        internal D2D.DeviceContext DeviceContextD2D => _handlerD2D.DeviceContext;
+        internal D2D.ID2D1DeviceContext DeviceContextD2D => _handlerD2D.DeviceContext;
 
         /// <summary>
         /// A unique value that identifies the adapter.
@@ -168,7 +168,7 @@ namespace SeeingSharp.Core.Devices
         /// <summary>
         /// Gets the main Direct3D 11 context object.
         /// </summary>
-        internal D3D11.DeviceContext DeviceImmediateContextD3D11 => _handlerD3D11.ImmediateContext;
+        internal D3D11.ID3D11DeviceContext DeviceImmediateContextD3D11 => _handlerD3D11.ImmediateContext;
 
         /// <summary>
         /// Gets the current device configuration.
@@ -178,12 +178,12 @@ namespace SeeingSharp.Core.Devices
         /// <summary>
         /// Gets the DXGI factory object.
         /// </summary>
-        internal Factory2 FactoryDxgi => _handlerDXGI.Factory;
+        internal DXGI.IDXGIFactory2 FactoryDxgi => _handlerDXGI.Factory;
 
         /// <summary>
         /// Gets the 2D render target which can be used to load 2D resources on this device.
         /// </summary>
-        internal D2D.RenderTarget FakeRenderTarget2D
+        internal D2D.ID2D1RenderTarget FakeRenderTarget2D
         {
             get;
             set;
@@ -256,7 +256,7 @@ namespace SeeingSharp.Core.Devices
             this.Configuration.GeometryQuality = !this.IsSoftware ? GeometryQuality.High : GeometryQuality.Low;
 
             // Set default antialiasing configurations
-            _sampleDescWithAntialiasing = new SampleDescription(1, 0);
+            _sampleDescWithAntialiasing = new DXGI.SampleDescription(1, 0);
 
             // Let loaders edit the device configuration
             if (_extensionProvider != null)
@@ -337,7 +337,7 @@ namespace SeeingSharp.Core.Devices
         /// Get the sample description for the given quality level.
         /// </summary>
         /// <param name="qualityLevel">The quality level for which a sample description is needed.</param>
-        internal SampleDescription GetSampleDescription(AntialiasingQualityLevel qualityLevel)
+        internal DXGI.SampleDescription GetSampleDescription(AntialiasingQualityLevel qualityLevel)
         {
             if(_isDisposed) { throw new ObjectDisposedException(nameof(EngineDevice)); }
 
@@ -346,7 +346,7 @@ namespace SeeingSharp.Core.Devices
                 AntialiasingQualityLevel.Low => _antialiasingConfigLow,
                 AntialiasingQualityLevel.Medium => _antialiasingConfigMedium,
                 AntialiasingQualityLevel.High => _antialiasingConfigHigh,
-                _ => new SampleDescription(1, 0)
+                _ => new DXGI.SampleDescription(1, 0)
             };
         }
 
@@ -409,12 +409,12 @@ namespace SeeingSharp.Core.Devices
         /// <summary>
         /// Get the sample description for the given quality level.
         /// </summary>
-        internal SampleDescription GetSampleDescription(bool antialiasingEnabled)
+        internal DXGI.SampleDescription GetSampleDescription(bool antialiasingEnabled)
         {
             if(_isDisposed) { throw new ObjectDisposedException(nameof(EngineDevice)); }
 
             if (antialiasingEnabled) { return _sampleDescWithAntialiasing; }
-            return new SampleDescription(1, 0);
+            return new DXGI.SampleDescription(1, 0);
         }
 
         /// <summary>
@@ -504,9 +504,9 @@ namespace SeeingSharp.Core.Devices
             //  see http://msdn.microsoft.com/en-us/library/windows/apps/dn458384.aspx
             var formatSupport = _handlerD3D11.Device1.CheckFormatSupport(GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT);
 
-            if ((formatSupport & D3D11.FormatSupport.MultisampleRenderTarget) != D3D11.FormatSupport.MultisampleRenderTarget) { return false; }
+            if ((formatSupport & D3D11.FormatSupport.MultisampleRendertarget) != D3D11.FormatSupport.MultisampleRendertarget) { return false; }
             if ((formatSupport & D3D11.FormatSupport.MultisampleResolve) != D3D11.FormatSupport.MultisampleResolve) { return false; }
-            if (_handlerD3D11.FeatureLevel == FeatureLevel.Level_9_1) { return false; }
+            if (_handlerD3D11.FeatureLevel == D3D.FeatureLevel.Level_9_1) { return false; }
 
             try
             {
@@ -518,13 +518,13 @@ namespace SeeingSharp.Core.Devices
                     ArraySize = 1,
                     Format = GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT,
                     Usage = D3D11.ResourceUsage.Default,
-                    SampleDescription = new SampleDescription(2, 0),
+                    SampleDescription = new DXGI.SampleDescription(2, 0),
                     BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget,
                     CpuAccessFlags = D3D11.CpuAccessFlags.None,
                     OptionFlags = D3D11.ResourceOptionFlags.None
                 };
 
-                var testTexture = new D3D11.Texture2D(_handlerD3D11.Device1, textureDescription);
+                var testTexture = _handlerD3D11.Device1.CreateTexture2D(textureDescription);
                 SeeingSharpUtil.SafeDispose(ref testTexture);
             }
             catch (Exception)
@@ -540,15 +540,15 @@ namespace SeeingSharp.Core.Devices
             // Generate sample descriptions for each possible quality level
             if (lowQualityLevels > 0)
             {
-                _antialiasingConfigLow = new SampleDescription(2, lowQualityLevels - 1);
+                _antialiasingConfigLow = new DXGI.SampleDescription(2, lowQualityLevels - 1);
             }
             if (mediumQualityLevels > 0)
             {
-                _antialiasingConfigMedium = new SampleDescription(4, mediumQualityLevels - 1);
+                _antialiasingConfigMedium = new DXGI.SampleDescription(4, mediumQualityLevels - 1);
             }
             if (highQualityLevels > 0)
             {
-                _antialiasingConfigHigh = new SampleDescription(8, highQualityLevels - 1);
+                _antialiasingConfigHigh = new DXGI.SampleDescription(8, highQualityLevels - 1);
             }
 
             return lowQualityLevels > 0;
@@ -561,19 +561,19 @@ namespace SeeingSharp.Core.Devices
         {
             private EngineDevice _host;
 
-            public Adapter1 Adapter => _host._handlerDXGI?.Adapter;
+            public DXGI.IDXGIAdapter1 Adapter => _host._handlerDXGI?.Adapter;
 
-            public D2D.RenderTarget FakeRenderTarget2D => _host.FakeRenderTarget2D;
+            public D2D.ID2D1RenderTarget FakeRenderTarget2D => _host.FakeRenderTarget2D;
 
-            public Factory2 FactoryDxgi => _host.FactoryDxgi;
+            public DXGI.IDXGIFactory2 FactoryDxgi => _host.FactoryDxgi;
 
-            public D3D11.DeviceContext DeviceImmediateContextD3D11 => _host.DeviceImmediateContextD3D11;
+            public D3D11.ID3D11DeviceContext DeviceImmediateContextD3D11 => _host.DeviceImmediateContextD3D11;
 
-            public D2D.DeviceContext DeviceContextD2D => _host.DeviceContextD2D;
+            public D2D.ID2D1DeviceContext DeviceContextD2D => _host.DeviceContextD2D;
 
-            public D2D.Device DeviceD2D => _host.DeviceD2D;
+            public D2D.ID2D1Device DeviceD2D => _host.DeviceD2D;
 
-            public D3D11.Device1 DeviceD3D11_1 => _host.DeviceD3D11_1;
+            public D3D11.ID3D11Device1 DeviceD3D11_1 => _host.DeviceD3D11_1;
 
             internal EngineDeviceInternals(EngineDevice host)
             {
@@ -590,7 +590,7 @@ namespace SeeingSharp.Core.Devices
                 _host.DeregisterDeviceResource(resource);
             }
 
-            public SampleDescription GetSampleDescription(AntialiasingQualityLevel qualityLevel)
+            public DXGI.SampleDescription GetSampleDescription(AntialiasingQualityLevel qualityLevel)
             {
                 return _host.GetSampleDescription(qualityLevel);
             }

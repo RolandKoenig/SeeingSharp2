@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
-using D3D11 = SharpDX.Direct3D11;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Core
 {
@@ -48,7 +48,7 @@ namespace SeeingSharp.Core
             if(_isDisposed){ throw new ObjectDisposedException(nameof(RenderPassDump)); }
 
             var actDumpEntry = new RenderPassDumpEntry(dumpKey, _size);
-            using (var colorBufferTexture = renderTargets.ColorBuffer.ResourceAs<D3D11.Texture2D>())
+            using (var colorBufferTexture = renderTargets.ColorBuffer.ResourceAs<D3D11.ID3D11Texture2D>())
             {
                 _uploaderColor.UploadToMemoryMappedTexture(colorBufferTexture, actDumpEntry.BufferColor);
             }

@@ -16,7 +16,7 @@ using SeeingSharp.Util;
 using SeeingSharp.Mathematics;
 using SDX = SharpDX;
 using SDXMath = SharpDX.Mathematics.Interop;
-using DXGI = SharpDX.DXGI;
+using DXGI = Vortice.DXGI;
 using D3D11 = SharpDX.Direct3D11;
 using GDI = System.Drawing;
 

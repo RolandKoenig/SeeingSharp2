@@ -2,14 +2,15 @@
 using System.Diagnostics;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
-using D3D11 = SharpDX.Direct3D11;
+using D3D11 = Vortice.Direct3D11;
+using static Vortice.Direct3D11.D3D11;
 
 namespace SeeingSharp.Core
 {
     internal class PipelineStatisticsQueryHelper : IDisposable, ICheckDisposed
     {
-        private D3D11.DeviceContext _deviceContext;
-        private D3D11.Query _query;
+        private D3D11.ID3D11DeviceContext _deviceContext;
+        private D3D11.ID3D11Query _query;
         private D3D11.QueryDataPipelineStatistics _result;
         private bool _resultGot;
 
@@ -22,8 +23,10 @@ namespace SeeingSharp.Core
             _deviceContext = device.DeviceImmediateContextD3D11;
 
             var queryDesc = new D3D11.QueryDescription();
-            queryDesc.Type = D3D11.QueryType.PipelineStatistics;
-            _query = new D3D11.Query(deviceD3D11, queryDesc);
+            queryDesc.QueryType = D3D11.QueryType.PipelineStatistics;
+
+            _query = deviceD3D11.CreateQuery(queryDesc);
+            
             _deviceContext.Begin(_query);
         }
 
@@ -39,14 +42,14 @@ namespace SeeingSharp.Core
 
             Debug.WriteLine("");
             Debug.WriteLine($"===== Print Pipeline Statistics ({header})");
-            Debug.WriteLine($"IA VertexCount: {result.IAVerticeCount}");
-            Debug.WriteLine($"IA PrimitiveCount: {result.IAPrimitiveCount}");
-            Debug.WriteLine($"VS InvocationCount: {result.VSInvocationCount}");
-            Debug.WriteLine($"GS InvocationCount: {result.GSInvocationCount}");
-            Debug.WriteLine($"GS PrimitiveCount: {result.GSPrimitiveCount}");
-            Debug.WriteLine($"C  InvocationCount: {result.CInvocationCount}");
-            Debug.WriteLine($"C  PrimitiveCount: {result.CPrimitiveCount}");
-            Debug.WriteLine($"PS InvocationCount: {result.PSInvocationCount}");
+            Debug.WriteLine($"IA VertexCount: {result.IAVertices}");
+            Debug.WriteLine($"IA PrimitiveCount: {result.IAPrimitives}");
+            Debug.WriteLine($"VS InvocationCount: {result.VSInvocations}");
+            Debug.WriteLine($"GS InvocationCount: {result.GSInvocations}");
+            Debug.WriteLine($"GS PrimitiveCount: {result.GSPrimitives}");
+            Debug.WriteLine($"C  InvocationCount: {result.CInvocations}");
+            Debug.WriteLine($"C  PrimitiveCount: {result.CPrimitives}");
+            Debug.WriteLine($"PS InvocationCount: {result.PSInvocations}");
         }
 
         public D3D11.QueryDataPipelineStatistics GetPipelineStatistics()

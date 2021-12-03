@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-using SharpDX;
-using SharpDX.DXGI;
-using SDX = SharpDX;
-using SDXIO = SharpDX.IO;
+//using SharpDX;
+//using Vortice.DXGI;
+//using SDX = SharpDX;
+//using SDXIO = SharpDX.IO;
 
 namespace SeeingSharp.Util.SdxTK
 {
@@ -29,7 +29,7 @@ namespace SeeingSharp.Util.SdxTK
         /// True if the buffer must be disposed.
         /// </summary>
         private bool bufferIsDisposable;
-        private SDX.DataBox[] dataBoxArray;
+        private Vortice.Direct3D11.SubresourceData[] dataBoxArray;
 
         /// <summary>
         /// Handle != null if the buffer is a pinned managed object on the LOH (Large Object Heap).
@@ -662,6 +662,7 @@ namespace SeeingSharp.Util.SdxTK
 
             if (dataPointer == IntPtr.Zero)
             {
+                
                 buffer = Utilities.AllocateMemory(totalSizeInBytes);
                 offset = 0;
                 this.bufferIsDisposable = true;
@@ -796,9 +797,9 @@ namespace SeeingSharp.Util.SdxTK
         /// Gets the databox from this image.
         /// </summary>
         /// <returns>The databox of this image.</returns>
-        private DataBox[] ComputeDataBox()
+        private Vortice.Direct3D11.SubresourceData[] ComputeDataBox()
         {
-            dataBoxArray = new DataBox[Description.ArraySize * Description.MipLevels];
+            dataBoxArray = new Vortice.Direct3D11.SubresourceData[Description.ArraySize * Description.MipLevels];
             var i = 0;
             for (var arrayIndex = 0; arrayIndex < Description.ArraySize; arrayIndex++)
             {
@@ -808,7 +809,7 @@ namespace SeeingSharp.Util.SdxTK
                     var pixelBuffer = this.GetPixelBufferUnsafe(arrayIndex, 0, mipIndex);
 
                     dataBoxArray[i].DataPointer = pixelBuffer.DataPointer;
-                    dataBoxArray[i].RowPitch = pixelBuffer.RowStride;
+                    dataBoxArray[i].Pitch = pixelBuffer.RowStride;
                     dataBoxArray[i].SlicePitch = pixelBuffer.BufferStride;
                     i++;
                 }

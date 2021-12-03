@@ -1,6 +1,6 @@
 ﻿using System;
 using SeeingSharp.Mathematics;
-using SharpDX.DXGI;
+using Vortice.DXGI;
 
 namespace SeeingSharp.Core.HardwareInfo
 {

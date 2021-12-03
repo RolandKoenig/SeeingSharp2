@@ -13,7 +13,7 @@ using SeeingSharp.Input;
 using SeeingSharp.Util;
 using SharpDX.WIC;
 using D2D = SharpDX.Direct2D1;
-using DWrite = SharpDX.DirectWrite;
+using DWrite = Vortice.DirectWrite;
 
 namespace SeeingSharp.Core
 {

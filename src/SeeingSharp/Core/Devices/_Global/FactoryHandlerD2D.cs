@@ -1,20 +1,21 @@
 ﻿using System;
 using SeeingSharp.Core.Configuration;
 using SeeingSharp.Util;
-using D2D = SharpDX.Direct2D1;
+using D2D = Vortice.Direct2D1;
+using static Vortice.Direct2D1.D2D1;
 
 namespace SeeingSharp.Core.Devices
 {
     public class FactoryHandlerD2D : IDisposable, ICheckDisposed
     {
-        private D2D.Factory2 _factory;
+        private D2D.ID2D1Factory2 _factory;
 
         /// <summary>
         /// Is Direct2D initialized?
         /// </summary>
         public bool IsDisposed => _factory == null;
 
-        internal D2D.Factory2 Factory
+        internal D2D.ID2D1Factory2 Factory
         {
             get
             {
@@ -28,9 +29,12 @@ namespace SeeingSharp.Core.Devices
         /// </summary>
         internal FactoryHandlerD2D(GraphicsCoreConfiguration coreConfiguration)
         {
-            _factory = new D2D.Factory2(
+            var factoryOptions = new D2D.FactoryOptions();
+            factoryOptions.DebugLevel = coreConfiguration.DebugEnabled ? D2D.DebugLevel.Information : D2D.DebugLevel.None;
+
+            D2D1CreateFactory<D2D.ID2D1Factory2>(
                 D2D.FactoryType.SingleThreaded,
-                coreConfiguration.DebugEnabled ? D2D.DebugLevel.Information : D2D.DebugLevel.None);
+                factoryOptions);
         }
 
         /// <summary>

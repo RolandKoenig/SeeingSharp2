@@ -5,10 +5,10 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using SharpDX.DXGI;
-using D3D11 = SharpDX.Direct3D11;
-using SDX = SharpDX;
-using SDXM = SharpDX.Multimedia;
+using Vortice.DXGI;
+//using D3D11 = SharpDX.Direct3D11;
+//using SDX = SharpDX;
+//using SDXM = SharpDX.Multimedia;
 
 namespace SeeingSharp.Util.SdxTK
 {
@@ -212,7 +212,7 @@ namespace SeeingSharp.Util.SdxTK
         /// <param name="outSize">The destination size.</param>
         /// <param name="pSource">The source buffer.</param>
         /// <param name="inSize">The source size.</param>
-        /// <param name="format">The <see cref="SharpDX.DXGI.Format"/> of the source scanline.</param>
+        /// <param name="format">The <see cref="Vortice.DXGI.Format"/> of the source scanline.</param>
         /// <param name="flags">Scanline flags used when copying the scanline.</param>
         internal static unsafe void CopyScanline(IntPtr pDestination, int outSize, IntPtr pSource, int inSize, Format format, ScanlineFlags flags)
         {
@@ -429,7 +429,7 @@ namespace SeeingSharp.Util.SdxTK
         /// <param name="outSize">The destination size.</param>
         /// <param name="pSource">The source buffer.</param>
         /// <param name="inSize">The source size.</param>
-        /// <param name="format">The <see cref="SharpDX.DXGI.Format"/> of the source scanline.</param>
+        /// <param name="format">The <see cref="Vortice.DXGI.Format"/> of the source scanline.</param>
         /// <param name="flags">Scanline flags used when copying the scanline.</param>
         /// <remarks>
         /// This method can be used in place as well, otherwise copies the image row unmodified.

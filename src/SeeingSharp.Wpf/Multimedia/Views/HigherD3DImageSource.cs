@@ -5,10 +5,10 @@ using SeeingSharp.Checking;
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
-using SharpDX.DXGI;
+using Vortice.DXGI;
 using D3D11 = SharpDX.Direct3D11;
 using D3D9 = SharpDX.Direct3D9;
-using DXGI = SharpDX.DXGI;
+using DXGI = Vortice.DXGI;
 
 namespace SeeingSharp.Views
 {

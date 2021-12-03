@@ -7,11 +7,9 @@ using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Resources;
 using SeeingSharp.Util;
-using SharpDX;
-using SharpDX.DXGI;
-using SharpDX.Mathematics.Interop;
-using SharpDX.WIC;
-using D3D11 = SharpDX.Direct3D11;
+using DXGI = Vortice.DXGI;
+using WIC = Vortice.WIC;
+using D3D11 = Vortice.Direct3D11;
 using SDXTK = SeeingSharp.Util.SdxTK;
 
 namespace SeeingSharp.Core
@@ -21,7 +19,7 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Creates a new texture from a bitmap.
         /// </summary>
-        internal static D3D11.Texture2D CreateTexture(EngineDevice device, ResourceLink source)
+        internal static D3D11.ID3D11Texture2D CreateTexture(EngineDevice device, ResourceLink source)
         {
             using (var inStream = source.OpenInputStream())
             using (var rawImage = SDXTK.Image.Load(inStream))
@@ -35,7 +33,7 @@ namespace SeeingSharp.Core
         /// </summary>
         /// <param name="device">Graphics device.</param>
         /// <param name="rawImage">Raw image data.</param>
-        internal static D3D11.Texture2D CreateTexture(EngineDevice device, SDXTK.Image rawImage)
+        internal static D3D11.ID3D11Texture2D CreateTexture(EngineDevice device, SDXTK.Image rawImage)
         {
             var textureDescription = new D3D11.Texture2DDescription
             {
@@ -45,7 +43,7 @@ namespace SeeingSharp.Core
                 ArraySize = rawImage.Description.ArraySize,
                 Format = rawImage.Description.Format,
                 Usage = D3D11.ResourceUsage.Default,
-                SampleDescription = new SampleDescription(1, 0),
+                SampleDescription = new DXGI.SampleDescription(1, 0),
                 BindFlags = D3D11.BindFlags.ShaderResource,
                 CpuAccessFlags = D3D11.CpuAccessFlags.None,
                 OptionFlags = D3D11.ResourceOptionFlags.None
@@ -57,7 +55,8 @@ namespace SeeingSharp.Core
                 textureDescription.OptionFlags = D3D11.ResourceOptionFlags.TextureCube;
             }
 
-            return new D3D11.Texture2D(device.DeviceD3D11_1, textureDescription, rawImage.ToDataBox());
+            return device.DeviceD3D11_1.CreateTexture2D(textureDescription, rawImage.ToDataBox());
+            //return new D3D11.ID3D11Texture2D(device.DeviceD3D11_1, textureDescription, rawImage.ToDataBox());
         }
 
         /// <summary>

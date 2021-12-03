@@ -4,7 +4,7 @@ using System.Numerics;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Util;
-using D3D = SharpDX.Direct3D;
+using D3D = Vortice.Direct3D;
 
 namespace SeeingSharp.Core
 {

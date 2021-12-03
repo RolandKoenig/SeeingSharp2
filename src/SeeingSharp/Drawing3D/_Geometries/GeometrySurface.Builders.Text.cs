@@ -1,6 +1,6 @@
 ﻿using System;
 using SeeingSharp.Core;
-using DWrite = SharpDX.DirectWrite;
+using DWrite = Vortice.DirectWrite;
 
 namespace SeeingSharp.Drawing3D
 {
@@ -31,9 +31,11 @@ namespace SeeingSharp.Drawing3D
             // Create the text layout object
             try
             {
-                using var textLayout = new DWrite.TextLayout(
+                
+
+                using var textLayout = new DWrite.IDWriteTextLayout(
                     writeFactory, stringToBuild,
-                    new DWrite.TextFormat(
+                    new DWrite.IDWriteTextFormat(
                         writeFactory, geometryOptions.FontFamily, (DWrite.FontWeight)fontWeight, (DWrite.FontStyle)fontStyle, geometryOptions.FontSize),
                         float.MaxValue, float.MaxValue, 1f, true);
 

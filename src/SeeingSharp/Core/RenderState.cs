@@ -5,7 +5,7 @@ using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing2D;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Mathematics;
-using SharpDX.DXGI;
+using Vortice.DXGI;
 using SharpDX.Mathematics.Interop;
 using D2D = SharpDX.Direct2D1;
 using D3D11 = SharpDX.Direct3D11;
