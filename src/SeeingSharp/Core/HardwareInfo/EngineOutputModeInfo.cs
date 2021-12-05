@@ -1,6 +1,6 @@
 ﻿using System;
 using SeeingSharp.Mathematics;
-using Vortice.DXGI;
+using DXGI = Vortice.DXGI;
 
 namespace SeeingSharp.Core.HardwareInfo
 {
@@ -8,7 +8,7 @@ namespace SeeingSharp.Core.HardwareInfo
     {
         public static readonly EngineOutputModeInfo Empty = default;
 
-        internal EngineOutputModeInfo(EngineOutputInfo hostOutput, ModeDescription modeDescription)
+        internal EngineOutputModeInfo(EngineOutputInfo hostOutput, DXGI.ModeDescription modeDescription)
         {
             this.HostOutput = hostOutput;
             this.PixelWidth = modeDescription.Width;

@@ -3,9 +3,9 @@ using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing2D;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
-using Vortice.DXGI;
-using D2D = SharpDX.Direct2D1;
-using D3D11 = SharpDX.Direct3D11;
+using DXGI = Vortice.DXGI;
+using D2D = Vortice.Direct2D1;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Core
 {
@@ -19,11 +19,11 @@ namespace SeeingSharp.Core
 
         // Given resources
         private EngineDevice _device;
-        private D3D11.Texture2D _renderTarget3D;
+        private D3D11.ID3D11Texture2D _renderTarget3D;
 
         // Own 2D render target resource
-        private D2D.RenderTarget _renderTarget2D;
-        private D2D.Bitmap1 _renderTargetBitmap;
+        private D2D.ID2D1RenderTarget _renderTarget2D;
+        private D2D.ID2D1Bitmap1 _renderTargetBitmap;
 
         /// <summary>
         /// Is this resource loaded correctly?
@@ -35,7 +35,7 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets the Direct2D render target.
         /// </summary>
-        internal D2D.RenderTarget RenderTarget2D => _renderTarget2D;
+        internal D2D.ID2D1RenderTarget RenderTarget2D => _renderTarget2D;
 
         /// <summary>
         /// Gets the 2D graphics object.
@@ -45,7 +45,7 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="Direct2DOverlayRenderer"/> class.
         /// </summary>
-        public Direct2DOverlayRenderer(EngineDevice device, D3D11.Texture2D renderTarget3D, int viewWidth, int viewHeight, DpiScaling dpiScaling)
+        public Direct2DOverlayRenderer(EngineDevice device, D3D11.ID3D11Texture2D renderTarget3D, int viewWidth, int viewHeight, DpiScaling dpiScaling)
             : this(device, renderTarget3D, viewWidth, viewHeight, dpiScaling, false)
         {
 
@@ -54,7 +54,7 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="Direct2DOverlayRenderer"/> class.
         /// </summary>
-        internal Direct2DOverlayRenderer(EngineDevice device, D3D11.Texture2D renderTarget3D, int viewWidth, int viewHeight, DpiScaling dpiScaling, bool forceInit)
+        internal Direct2DOverlayRenderer(EngineDevice device, D3D11.ID3D11Texture2D renderTarget3D, int viewWidth, int viewHeight, DpiScaling dpiScaling, bool forceInit)
         {
             _device = device;
             _renderTarget3D = renderTarget3D;
@@ -71,7 +71,7 @@ namespace SeeingSharp.Core
             if (_renderTarget2D.IsDisposed) { return; }
 
             _device.DeviceContextD2D.Target = _renderTargetBitmap;
-            _device.DeviceContextD2D.DotsPerInch = _renderTargetBitmap.DotsPerInch;
+            _device.DeviceContextD2D.Dpi = _renderTargetBitmap.Dpi;
 
             // Start Direct2D rendering
             _renderTarget2D.BeginDraw();
@@ -131,18 +131,19 @@ namespace SeeingSharp.Core
             }
 
             // Create the render target
-            using (var dxgiSurface = _renderTarget3D.QueryInterface<Surface>())
+            using (var dxgiSurface = _renderTarget3D.QueryInterface<DXGI.IDXGISurface>())
             {
                 var bitmapProperties = new D2D.BitmapProperties1
                 {
                     DpiX = dpiScaling.DpiX,
                     DpiY = dpiScaling.DpiY,
                     BitmapOptions = D2D.BitmapOptions.Target | D2D.BitmapOptions.CannotDraw,
-                    PixelFormat = new D2D.PixelFormat(GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT,
-                        D2D.AlphaMode.Premultiplied)
+                    PixelFormat = new Vortice.DCommon.PixelFormat(
+                        GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT,
+                        Vortice.DCommon.AlphaMode.Premultiplied)
                 };
 
-                _renderTargetBitmap = new D2D.Bitmap1(_device.DeviceContextD2D, dxgiSurface, bitmapProperties);
+                _renderTargetBitmap = _device.DeviceContextD2D.CreateBitmapFromDxgiSurface(dxgiSurface, bitmapProperties);
                 _renderTarget2D = _device.DeviceContextD2D;
                 _graphics2D = new Graphics2D(_device, _device.DeviceContextD2D, scaledScreenSize);
             }

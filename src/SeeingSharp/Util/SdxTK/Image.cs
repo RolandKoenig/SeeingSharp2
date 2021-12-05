@@ -7,6 +7,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using SeeingSharp.Util.Sdx;
 using DXGI = Vortice.DXGI;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Util.SdxTK
 {
@@ -27,7 +28,7 @@ namespace SeeingSharp.Util.SdxTK
         /// True if the buffer must be disposed.
         /// </summary>
         private bool bufferIsDisposable;
-        private Vortice.Direct3D11.SubresourceData[] dataBoxArray;
+        private D3D11.SubresourceData[] dataBoxArray;
 
         /// <summary>
         /// Handle != null if the buffer is a pinned managed object on the LOH (Large Object Heap).
@@ -220,6 +221,11 @@ namespace SeeingSharp.Util.SdxTK
         public DataBox[] ToDataBox()
         {
             return (DataBox[])dataBoxArray.Clone();
+        }
+
+        public D3D11.SubresourceData[] ToD3D11SubresourceData()
+        {
+            return dataBoxArray;
         }
 
         /// <summary>

@@ -473,8 +473,8 @@ namespace SeeingSharp.Core
             {
                 changedWireframe = true;
 
-                renderState.Device.DeviceImmediateContextD3D11.Rasterizer.State = 
-                    renderState.CurrentResources.DefaultResources.RasterStateWireframe;
+                renderState.Device.DeviceImmediateContextD3D11.RSSetState(
+                    renderState.CurrentResources.DefaultResources.RasterStateWireframe);
             }
             try
             {
@@ -489,8 +489,8 @@ namespace SeeingSharp.Core
             {
                 if (changedWireframe)
                 {
-                    renderState.Device.DeviceImmediateContextD3D11.Rasterizer.State = 
-                        renderState.CurrentResources.DefaultResources.RasterStateDefault;
+                    renderState.Device.DeviceImmediateContextD3D11.RSSetState(
+                        renderState.CurrentResources.DefaultResources.RasterStateDefault);
                 }
             }
         }

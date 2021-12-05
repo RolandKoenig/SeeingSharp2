@@ -37,20 +37,18 @@ namespace SeeingSharp.Core.HardwareInfo
         {
             _adapters = new List<EngineAdapterInfo>();
 
-            var adapterCount = factory.DXGI.Factory.GetAdapterCount1();
-            for (var loop = 0; loop < adapterCount; loop++)
+            var lastResult = SharpGen.Runtime.Result.Ok;
+            var actIndex = 0;
+            do
             {
-                try
+                lastResult = factory.DXGI.Factory.EnumAdapters1(actIndex, out var actAdapter);
+                if(lastResult.Success)
                 {
-                    var actAdapter = factory.DXGI.Factory.GetAdapter1(loop);
-                    _adapters.Add(new EngineAdapterInfo(loop, actAdapter));
+                    _adapters.Add(new EngineAdapterInfo(actIndex, actAdapter));
                 }
-                catch (Exception)
-                {
-                    //No exception handling needed here
-                    // .. adapter information simply can not be gathered
-                }
+                actIndex++;
             }
+            while (lastResult.Success);
         }
     }
 }

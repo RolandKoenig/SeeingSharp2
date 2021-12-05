@@ -2,7 +2,7 @@
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
-using D3D11 = SharpDX.Direct3D11;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Drawing3D
 {
@@ -11,25 +11,25 @@ namespace SeeingSharp.Drawing3D
         public static readonly NamedOrGenericKey RESOURCE_KEY = new NamedOrGenericKey(typeof(DefaultResources));
 
         // Blend states
-        private Lazy<D3D11.BlendState> _defaultBlendState;
-        private Lazy<D3D11.BlendState> _alphaBlendingBlendState;
+        private Lazy<D3D11.ID3D11BlendState> _defaultBlendState;
+        private Lazy<D3D11.ID3D11BlendState> _alphaBlendingBlendState;
 
         // Depth stencil states
-        private Lazy<D3D11.DepthStencilState> _depthStencilStateDefault;
-        private Lazy<D3D11.DepthStencilState> _depthStencilStateDisableZWrites;
-        private Lazy<D3D11.DepthStencilState> _depthStencilStateInvertedZTest;
-        private Lazy<D3D11.DepthStencilState> _depthStencilStateAlwaysPass;
+        private Lazy<D3D11.ID3D11DepthStencilState> _depthStencilStateDefault;
+        private Lazy<D3D11.ID3D11DepthStencilState> _depthStencilStateDisableZWrites;
+        private Lazy<D3D11.ID3D11DepthStencilState> _depthStencilStateInvertedZTest;
+        private Lazy<D3D11.ID3D11DepthStencilState> _depthStencilStateAlwaysPass;
 
         // Rasterizer states
-        private Lazy<D3D11.RasterizerState> _rasterStateLines;
-        private Lazy<D3D11.RasterizerState> _rasterStateDefault;
-        private Lazy<D3D11.RasterizerState> _rasterStateBiased;
-        private Lazy<D3D11.RasterizerState> _rasterStateWireframe;
+        private Lazy<D3D11.ID3D11RasterizerState> _rasterStateLines;
+        private Lazy<D3D11.ID3D11RasterizerState> _rasterStateDefault;
+        private Lazy<D3D11.ID3D11RasterizerState> _rasterStateBiased;
+        private Lazy<D3D11.ID3D11RasterizerState> _rasterStateWireframe;
 
         // Sample states
-        private Lazy<D3D11.SamplerState> _samplerStateLow;
-        private Lazy<D3D11.SamplerState> _samplerStateMedium;
-        private Lazy<D3D11.SamplerState> _samplerStateHigh;
+        private Lazy<D3D11.ID3D11SamplerState> _samplerStateLow;
+        private Lazy<D3D11.ID3D11SamplerState> _samplerStateMedium;
+        private Lazy<D3D11.ID3D11SamplerState> _samplerStateHigh;
 
         /// <summary>
         /// Are resources loaded?
@@ -38,27 +38,27 @@ namespace SeeingSharp.Drawing3D
 
         public override bool IsLoaded => _defaultBlendState != null;
 
-        internal D3D11.BlendState DefaultBlendState => _defaultBlendState?.Value;
+        internal D3D11.ID3D11BlendState DefaultBlendState => _defaultBlendState?.Value;
 
-        internal D3D11.BlendState AlphaBlendingBlendState => _alphaBlendingBlendState?.Value;
+        internal D3D11.ID3D11BlendState AlphaBlendingBlendState => _alphaBlendingBlendState?.Value;
 
-        internal D3D11.DepthStencilState DepthStencilStateDefault => _depthStencilStateDefault?.Value;
+        internal D3D11.ID3D11DepthStencilState DepthStencilStateDefault => _depthStencilStateDefault?.Value;
 
-        internal D3D11.DepthStencilState DepthStencilStateDisableZWrites => _depthStencilStateDisableZWrites?.Value;
+        internal D3D11.ID3D11DepthStencilState DepthStencilStateDisableZWrites => _depthStencilStateDisableZWrites?.Value;
 
-        internal D3D11.DepthStencilState DepthStencilStateAlwaysPassDepth => _depthStencilStateAlwaysPass?.Value;
+        internal D3D11.ID3D11DepthStencilState DepthStencilStateAlwaysPassDepth => _depthStencilStateAlwaysPass?.Value;
 
-        internal D3D11.DepthStencilState DepthStencilStateInvertedZTest => _depthStencilStateInvertedZTest?.Value;
+        internal D3D11.ID3D11DepthStencilState DepthStencilStateInvertedZTest => _depthStencilStateInvertedZTest?.Value;
 
-        internal D3D11.RasterizerState RasterStateDefault => _rasterStateDefault?.Value;
+        internal D3D11.ID3D11RasterizerState RasterStateDefault => _rasterStateDefault?.Value;
 
-        internal D3D11.RasterizerState RasterStateBiased => _rasterStateBiased?.Value;
+        internal D3D11.ID3D11RasterizerState RasterStateBiased => _rasterStateBiased?.Value;
 
-        internal D3D11.RasterizerState RasterStateWireframe => _rasterStateWireframe?.Value;
+        internal D3D11.ID3D11RasterizerState RasterStateWireframe => _rasterStateWireframe?.Value;
 
-        internal D3D11.RasterizerState RasterStateLines => _rasterStateLines?.Value;
+        internal D3D11.ID3D11RasterizerState RasterStateLines => _rasterStateLines?.Value;
 
-        internal D3D11.SamplerState SamplerStateDefault => _samplerStateMedium?.Value;
+        internal D3D11.ID3D11SamplerState SamplerStateDefault => _samplerStateMedium?.Value;
 
         /// <summary>
         /// Loads the resource.
@@ -68,111 +68,122 @@ namespace SeeingSharp.Drawing3D
         protected override void LoadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
             // Create default blend state
-            _defaultBlendState = new Lazy<D3D11.BlendState>(() =>
+            _defaultBlendState = new Lazy<D3D11.ID3D11BlendState>(() =>
             {
-                var blendDesc = D3D11.BlendStateDescription.Default();
-                return new D3D11.BlendState(device.DeviceD3D11_1, blendDesc);
+                var blendDesc = D3D11.BlendDescription.Default;
+                return device.DeviceD3D11_1.CreateBlendState(blendDesc);
             });
 
             // Create alpha blending blend state
-            _alphaBlendingBlendState = new Lazy<D3D11.BlendState>(() =>
+            _alphaBlendingBlendState = new Lazy<D3D11.ID3D11BlendState>(() =>
             {
                 //Define the blend state (based on http://www.rastertek.com/dx11tut26.html)
-                var blendDesc = D3D11.BlendStateDescription.Default();
+                var blendDesc = D3D11.BlendDescription.Default;
                 blendDesc.RenderTarget[0].IsBlendEnabled = true;
-                blendDesc.RenderTarget[0].SourceBlend = D3D11.BlendOption.SourceAlpha;
-                blendDesc.RenderTarget[0].DestinationBlend = D3D11.BlendOption.InverseSourceAlpha;
+                blendDesc.RenderTarget[0].SourceBlend = D3D11.Blend.SourceAlpha;
+                blendDesc.RenderTarget[0].DestinationBlend = D3D11.Blend.InverseSourceAlpha;
                 blendDesc.RenderTarget[0].BlendOperation = D3D11.BlendOperation.Add;
-                blendDesc.RenderTarget[0].DestinationAlphaBlend = D3D11.BlendOption.One;
-                blendDesc.RenderTarget[0].SourceAlphaBlend = D3D11.BlendOption.One;
-                blendDesc.RenderTarget[0].AlphaBlendOperation = D3D11.BlendOperation.Maximum;
-                blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11.ColorWriteMaskFlags.All;
+                blendDesc.RenderTarget[0].DestinationBlendAlpha = D3D11.Blend.One;
+                blendDesc.RenderTarget[0].SourceBlendAlpha = D3D11.Blend.One;
+                blendDesc.RenderTarget[0].BlendOperationAlpha = D3D11.BlendOperation.Max;
+                blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11.ColorWriteEnable.All;
 
                 //Create the BlendState object
-                return new D3D11.BlendState(device.DeviceD3D11_1, blendDesc);
+                return device.DeviceD3D11_1.CreateBlendState(blendDesc);
             });
 
             // Create default depth stencil state
-            _depthStencilStateDefault = new Lazy<D3D11.DepthStencilState>(() =>
+            _depthStencilStateDefault = new Lazy<D3D11.ID3D11DepthStencilState>(() =>
             {
-                var stateDesc = D3D11.DepthStencilStateDescription.Default();
-                stateDesc.DepthComparison = D3D11.Comparison.LessEqual;
-                return new D3D11.DepthStencilState(device.DeviceD3D11_1, stateDesc);
+                var stateDesc = D3D11.DepthStencilDescription.Default;
+                stateDesc.DepthFunc = D3D11.ComparisonFunction.LessEqual;
+                return device.DeviceD3D11_1.CreateDepthStencilState(stateDesc);
             });
 
             // Create the depth stencil state for disabling z writes
-            _depthStencilStateDisableZWrites = new Lazy<D3D11.DepthStencilState>(() =>
+            _depthStencilStateDisableZWrites = new Lazy<D3D11.ID3D11DepthStencilState>(() =>
             {
-                var stateDesc = D3D11.DepthStencilStateDescription.Default();
+                var stateDesc = D3D11.DepthStencilDescription.Default;
                 stateDesc.DepthWriteMask = D3D11.DepthWriteMask.Zero;
-                stateDesc.DepthComparison = D3D11.Comparison.LessEqual;
-                return new D3D11.DepthStencilState(device.DeviceD3D11_1, stateDesc);
+                stateDesc.DepthFunc = D3D11.ComparisonFunction.LessEqual;
+                return device.DeviceD3D11_1.CreateDepthStencilState(stateDesc);
             });
 
-            _depthStencilStateAlwaysPass = new Lazy<D3D11.DepthStencilState>(() =>
+            _depthStencilStateAlwaysPass = new Lazy<D3D11.ID3D11DepthStencilState>(() =>
             {
-                var stateDesc = D3D11.DepthStencilStateDescription.Default();
+                var stateDesc = D3D11.DepthStencilDescription.Default;
                 stateDesc.DepthWriteMask = D3D11.DepthWriteMask.Zero;
-                stateDesc.DepthComparison = D3D11.Comparison.Always;
-                stateDesc.IsDepthEnabled = false;
-                return new D3D11.DepthStencilState(device.DeviceD3D11_1, stateDesc);
+                stateDesc.DepthFunc = D3D11.ComparisonFunction.Always;
+                stateDesc.DepthEnable = false;
+                return device.DeviceD3D11_1.CreateDepthStencilState(stateDesc);
             });
 
             // Create the depth stencil state for inverting z logic
-            _depthStencilStateInvertedZTest = new Lazy<D3D11.DepthStencilState>(() =>
+            _depthStencilStateInvertedZTest = new Lazy<D3D11.ID3D11DepthStencilState>(() =>
             {
-                var stateDesc = D3D11.DepthStencilStateDescription.Default();
-                stateDesc.DepthComparison = D3D11.Comparison.Greater;
+                var stateDesc = D3D11.DepthStencilDescription.Default;
+                stateDesc.DepthFunc = D3D11.ComparisonFunction.Greater;
                 stateDesc.DepthWriteMask = D3D11.DepthWriteMask.Zero;
-                return new D3D11.DepthStencilState(device.DeviceD3D11_1, stateDesc);
+                return device.DeviceD3D11_1.CreateDepthStencilState(stateDesc);
             });
 
             // Create default rasterizer state
-            _rasterStateDefault = new Lazy<D3D11.RasterizerState>(
+            _rasterStateDefault = new Lazy<D3D11.ID3D11RasterizerState>(
                 () =>
                 {
-                    var stateDesc = D3D11.RasterizerStateDescription.Default();
-                    stateDesc.IsAntialiasedLineEnabled = true;
-                    stateDesc.IsMultisampleEnabled = true;
+                    var stateDesc = new D3D11.RasterizerDescription();
+                    stateDesc.AntialiasedLineEnable = true;
+                    stateDesc.MultisampleEnable = true;
                     stateDesc.FillMode = D3D11.FillMode.Solid;
-                    return new D3D11.RasterizerState(device.DeviceD3D11_1, stateDesc);
+                    stateDesc.DepthBias = D3D11.RasterizerDescription.DefaultDepthBias;
+                    stateDesc.DepthBiasClamp = D3D11.RasterizerDescription.DefaultDepthBiasClamp;
+                    stateDesc.SlopeScaledDepthBias = D3D11.RasterizerDescription.DefaultSlopeScaledDepthBias;
+                    return device.DeviceD3D11_1.CreateRasterizerState(stateDesc);
                 });
 
             // Create a raster state with depth bias
-            _rasterStateBiased = new Lazy<D3D11.RasterizerState>(() =>
+            _rasterStateBiased = new Lazy<D3D11.ID3D11RasterizerState>(() =>
             {
-                var rasterDesc = D3D11.RasterizerStateDescription.Default();
+                var rasterDesc = new D3D11.RasterizerDescription();
                 rasterDesc.DepthBias = GraphicsHelper.Internals.GetDepthBiasValue(device, -0.00003f);
-                return new D3D11.RasterizerState(device.DeviceD3D11_1, rasterDesc);
+                rasterDesc.DepthBiasClamp = D3D11.RasterizerDescription.DefaultDepthBiasClamp;
+                rasterDesc.SlopeScaledDepthBias = D3D11.RasterizerDescription.DefaultSlopeScaledDepthBias;
+                return device.DeviceD3D11_1.CreateRasterizerState(rasterDesc);
             });
 
             // Create a raster state for wireframe rendering
-            _rasterStateWireframe = new Lazy<D3D11.RasterizerState>(() =>
+            _rasterStateWireframe = new Lazy<D3D11.ID3D11RasterizerState>(() =>
             {
-                var rasterDesc = D3D11.RasterizerStateDescription.Default();
+                var rasterDesc = new D3D11.RasterizerDescription();
                 rasterDesc.FillMode = D3D11.FillMode.Wireframe;
-                rasterDesc.IsAntialiasedLineEnabled = true;
-                rasterDesc.IsMultisampleEnabled = true;
-                return new D3D11.RasterizerState(device.DeviceD3D11_1, rasterDesc);
+                rasterDesc.AntialiasedLineEnable = true;
+                rasterDesc.MultisampleEnable = true;
+                rasterDesc.DepthBias = D3D11.RasterizerDescription.DefaultDepthBias;
+                rasterDesc.DepthBiasClamp = D3D11.RasterizerDescription.DefaultDepthBiasClamp;
+                rasterDesc.SlopeScaledDepthBias = D3D11.RasterizerDescription.DefaultSlopeScaledDepthBias;
+                return device.DeviceD3D11_1.CreateRasterizerState(rasterDesc);
             });
 
             // Create the rasterizer state for line rendering
-            _rasterStateLines = new Lazy<D3D11.RasterizerState>(() =>
+            _rasterStateLines = new Lazy<D3D11.ID3D11RasterizerState>(() =>
             {
-                var stateDesc = D3D11.RasterizerStateDescription.Default();
-                stateDesc.CullMode = D3D11.CullMode.None;
-                stateDesc.IsAntialiasedLineEnabled = true;
-                stateDesc.IsMultisampleEnabled = true;
-                stateDesc.FillMode = D3D11.FillMode.Solid;
-                return new D3D11.RasterizerState(device.DeviceD3D11_1, stateDesc);
+                var rasterDesc = new D3D11.RasterizerDescription();
+                rasterDesc.CullMode = D3D11.CullMode.None;
+                rasterDesc.AntialiasedLineEnable = true;
+                rasterDesc.MultisampleEnable = true;
+                rasterDesc.FillMode = D3D11.FillMode.Solid;
+                rasterDesc.DepthBias = D3D11.RasterizerDescription.DefaultDepthBias;
+                rasterDesc.DepthBiasClamp = D3D11.RasterizerDescription.DefaultDepthBiasClamp;
+                rasterDesc.SlopeScaledDepthBias = D3D11.RasterizerDescription.DefaultSlopeScaledDepthBias;
+                return device.DeviceD3D11_1.CreateRasterizerState(rasterDesc);
             });
 
             // Create sampler states
-            _samplerStateLow = new Lazy<D3D11.SamplerState>(
+            _samplerStateLow = new Lazy<D3D11.ID3D11SamplerState>(
                 () => GraphicsHelper.Internals.CreateDefaultTextureSampler(device, TextureSamplerQualityLevel.Low));
-            _samplerStateMedium = new Lazy<D3D11.SamplerState>(
+            _samplerStateMedium = new Lazy<D3D11.ID3D11SamplerState>(
                 () => GraphicsHelper.Internals.CreateDefaultTextureSampler(device, TextureSamplerQualityLevel.Medium));
-            _samplerStateHigh = new Lazy<D3D11.SamplerState>(
+            _samplerStateHigh = new Lazy<D3D11.ID3D11SamplerState>(
                 () => GraphicsHelper.Internals.CreateDefaultTextureSampler(device, TextureSamplerQualityLevel.High));
         }
 
@@ -197,7 +208,7 @@ namespace SeeingSharp.Drawing3D
         /// Gets the sampler state with the given requested quality level.
         /// </summary>
         /// <param name="qualityLevel">The quality level to get the sampler state for.</param>
-        internal D3D11.SamplerState GetSamplerState(TextureSamplerQualityLevel qualityLevel)
+        internal D3D11.ID3D11SamplerState GetSamplerState(TextureSamplerQualityLevel qualityLevel)
         {
             switch (qualityLevel)
             {

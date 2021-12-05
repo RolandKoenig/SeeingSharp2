@@ -1,7 +1,7 @@
 ﻿using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
-using D3D11 = SharpDX.Direct3D11;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Drawing3D
 {
@@ -17,7 +17,7 @@ namespace SeeingSharp.Drawing3D
         // Resources
         private VertexShaderResource _vertexShader;
         private PixelShaderResource _pixelShader;
-        private D3D11.InputLayout _inputLayout;
+        private D3D11.ID3D11InputLayout _inputLayout;
 
         /// <summary>
         /// Is the resource loaded correctly?
@@ -37,7 +37,7 @@ namespace SeeingSharp.Drawing3D
         /// <summary>
         /// Gets the input layout for the vertex shader.
         /// </summary>
-        internal D3D11.InputLayout InputLayout => _inputLayout;
+        internal D3D11.ID3D11InputLayout InputLayout => _inputLayout;
 
         /// <summary>
         /// Loads the resource.
@@ -51,10 +51,8 @@ namespace SeeingSharp.Drawing3D
                 s_keyPixelShader,
                 () => GraphicsHelper.Internals.GetPixelShaderResource(device, "LineRendering", "LinePixelShader"));
 
-            _inputLayout = new D3D11.InputLayout(
-                device.DeviceD3D11_1,
-                _vertexShader.ShaderBytecode,
-                LineVertex.InputElements);
+            _inputLayout = device.DeviceD3D11_1.CreateInputLayout(
+                LineVertex.InputElements, _vertexShader.ShaderBytecode);
         }
 
         /// <summary>

@@ -20,8 +20,8 @@ namespace SeeingSharp.Core
         {
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
-            deviceContext.OutputMerger.BlendState = _defaultResources.AlphaBlendingBlendState;
-            deviceContext.OutputMerger.DepthStencilState = _defaultResources.DepthStencilStateDisableZWrites;
+            deviceContext.OMSetBlendState(_defaultResources.AlphaBlendingBlendState);
+            deviceContext.OMSetDepthStencilState(_defaultResources.DepthStencilStateDisableZWrites);
         }
 
         /// <summary>
@@ -32,8 +32,8 @@ namespace SeeingSharp.Core
         {
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
-            deviceContext.OutputMerger.BlendState = _defaultResources.DefaultBlendState;
-            deviceContext.OutputMerger.DepthStencilState = _defaultResources.DepthStencilStateDefault;
+            deviceContext.OMSetBlendState(_defaultResources.DefaultBlendState);
+            deviceContext.OMSetDepthStencilState(_defaultResources.DepthStencilStateDefault);
         }
 
         /// <summary>

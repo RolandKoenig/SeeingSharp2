@@ -4,8 +4,6 @@ using SeeingSharp.Drawing3D;
 using SeeingSharp.DrawingVideo;
 using SeeingSharp.Input;
 using SeeingSharp.Util;
-using Vortice.DXGI;
-using SharpDX.Mathematics.Interop;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -18,8 +16,9 @@ using System.Threading.Tasks;
 using SeeingSharp.Core.Configuration;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Mathematics;
-using D2D = SharpDX.Direct2D1;
-using D3D11 = SharpDX.Direct3D11;
+using DXGI = Vortice.DXGI;
+using D2D = Vortice.Direct2D1;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Core
 {
@@ -65,11 +64,11 @@ namespace SeeingSharp.Core
 
         private Scene _currentScene;
         private Direct2DOverlayRenderer _d2dOverlay;
-        private D3D11.Texture2D _renderTarget;
-        private D3D11.Texture2D _renderTargetDepth;
-        private D3D11.RenderTargetView _renderTargetView;
-        private D3D11.DepthStencilView _renderTargetDepthView;
-        private RawViewportF _viewport;
+        private D3D11.ID3D11Texture2D _renderTarget;
+        private D3D11.ID3D11Texture2D _renderTargetDepth;
+        private D3D11.ID3D11RenderTargetView _renderTargetView;
+        private D3D11.ID3D11DepthStencilView _renderTargetDepthView;
+        private Vortice.Mathematics.Viewport _viewport;
         private int _loadDeviceIndex;
 
         // Cached values
@@ -84,8 +83,8 @@ namespace SeeingSharp.Core
         // A staging texture for reading contents by Cpu
         // A standard texture for copying data from multisample texture to standard one
         // see http://www.rolandk.de/wp/2013/06/inhalt-der-rendertarget-textur-in-ein-bitmap-kopieren/
-        private D3D11.Texture2D _copyHelperTextureStaging;
-        private D3D11.Texture2D _copyHelperTextureStandard;
+        private D3D11.ID3D11Texture2D _copyHelperTextureStaging;
+        private D3D11.ID3D11Texture2D _copyHelperTextureStandard;
 
         /// <summary>
         /// Gets an identifier related to this render loop.
@@ -856,7 +855,7 @@ namespace SeeingSharp.Core
             _renderTargetView = null;
             _renderTargetDepth = null;
             _renderTargetDepthView = null;
-            _viewport = new RawViewportF();
+            _viewport = new Vortice.Mathematics.Viewport();
             _currentViewSize = new Size2(SeeingSharpConstants.MIN_VIEW_WIDTH, SeeingSharpConstants.MIN_VIEW_HEIGHT);
 
             // Dispose local resources
@@ -1094,7 +1093,7 @@ namespace SeeingSharp.Core
                             {
                                 _d2dOverlay.EndDraw();
                             }
-                            catch (SharpDX.SharpDXException dxException)
+                            catch (SharpGen.Runtime.SharpGenException dxException)
                             {
                                 if (dxException.ResultCode == D2D.ResultCode.RecreateTarget)
                                 {
@@ -1211,10 +1210,10 @@ namespace SeeingSharp.Core
                     {
                         this.RefreshViewResources();
                     }
-                    catch (SharpDX.SharpDXException dxException)
+                    catch (SharpGen.Runtime.SharpGenException dxException)
                     {
-                        if (dxException.ResultCode == ResultCode.DeviceRemoved ||
-                            dxException.ResultCode == ResultCode.DeviceReset)
+                        if (dxException.ResultCode == DXGI.ResultCode.DeviceRemoved ||
+                            dxException.ResultCode == DXGI.ResultCode.DeviceReset)
                         {
                             // Mark the device as lost
                             _currentDevice.IsLost = true;
@@ -1467,10 +1466,10 @@ namespace SeeingSharp.Core
                     // Finish rendering now
                     _renderLoopHost.OnRenderLoop_AfterRendering(_currentDevice);
                 }
-                catch (SharpDX.SharpDXException dxException)
+                catch (SharpGen.Runtime.SharpGenException dxException)
                 {
-                    if (dxException.ResultCode == ResultCode.DeviceRemoved ||
-                        dxException.ResultCode == ResultCode.DeviceReset)
+                    if (dxException.ResultCode == DXGI.ResultCode.DeviceRemoved ||
+                        dxException.ResultCode == DXGI.ResultCode.DeviceReset)
                     {
                         // Mark the device as lost
                         _currentDevice.IsLost = true;
@@ -1586,17 +1585,17 @@ namespace SeeingSharp.Core
         {
             private RenderLoop _target;
 
-            public D3D11.Texture2D RenderTarget => _target._renderTarget;
+            public D3D11.ID3D11Texture2D RenderTarget => _target._renderTarget;
 
-            public D3D11.Texture2D RenderTargetDepth => _target._renderTargetDepth;
+            public D3D11.ID3D11Texture2D RenderTargetDepth => _target._renderTargetDepth;
 
-            public D3D11.Texture2D CopyHelperTextureStaging
+            public D3D11.ID3D11Texture2D CopyHelperTextureStaging
             {
                 get => _target._copyHelperTextureStaging;
                 set => _target._copyHelperTextureStaging = value;
             }
 
-            public D3D11.Texture2D CopyHelperTextureStandard
+            public D3D11.ID3D11Texture2D CopyHelperTextureStandard
             {
                 get => _target._copyHelperTextureStandard;
                 set => _target._copyHelperTextureStandard = value;

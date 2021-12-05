@@ -520,8 +520,8 @@ namespace SeeingSharp.Core
                 try
                 {
                     // All following objects are build using only triangle lists
-                    _device.DeviceImmediateContextD3D11.InputAssembler.PrimitiveTopology =
-                        D3D.PrimitiveTopology.TriangleList;
+                    _device.DeviceImmediateContextD3D11.IASetPrimitiveTopology(
+                        D3D.PrimitiveTopology.TriangleList);
 
                     // Perform all plain renderings
                     this.RenderPass(null, _objectsPassPlainRender, renderState, ref invalidObjects);

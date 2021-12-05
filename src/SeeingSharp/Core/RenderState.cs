@@ -5,10 +5,9 @@ using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing2D;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Mathematics;
-using Vortice.DXGI;
-using SharpDX.Mathematics.Interop;
-using D2D = SharpDX.Direct2D1;
-using D3D11 = SharpDX.Direct3D11;
+using DXGI = Vortice.DXGI;
+using D2D = Vortice.Direct2D1;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Core
 {
@@ -91,11 +90,11 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets the current main viewport.
         /// </summary>
-        internal RawViewportF Viewport
+        internal Vortice.Mathematics.Viewport Viewport
         {
             get
             {
-                if (_currentRenderSettings == null) { return new RawViewportF(); }
+                if (_currentRenderSettings == null) { return new Vortice.Mathematics.Viewport(); }
                 return _currentRenderSettings.SingleViewport;
             }
         }
@@ -120,7 +119,7 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets or sets the current render target for 2D rendering.
         /// </summary>
-        internal D2D.RenderTarget RenderTarget2D;
+        internal D2D.ID2D1RenderTarget RenderTarget2D;
 
         /// <summary>
         /// Gets or sets the current view index.
@@ -162,7 +161,7 @@ namespace SeeingSharp.Core
         internal RenderState(
             EngineDevice device,
             RenderTargets renderTargets,
-            RawViewportF viewport,
+            Vortice.Mathematics.Viewport viewport,
             Camera3DBase camera, ViewInformation viewInformation)
             : this(device)
         {
@@ -459,7 +458,7 @@ namespace SeeingSharp.Core
         /// <param name="renderTargets">The render targets used for rendering.</param>
         internal void Reset(
             in RenderTargets renderTargets,
-            in RawViewportF viewport,
+            in Vortice.Mathematics.Viewport viewport,
             in Camera3DBase camera, in ViewInformation viewInformation)
         {
             _currentTargetDump = null;

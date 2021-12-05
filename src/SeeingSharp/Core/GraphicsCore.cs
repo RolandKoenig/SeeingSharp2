@@ -11,8 +11,8 @@ using SeeingSharp.Core.HardwareInfo;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Input;
 using SeeingSharp.Util;
-using SharpDX.WIC;
-using D2D = SharpDX.Direct2D1;
+using WIC = Vortice.WIC;
+using D2D = Vortice.Direct2D1;
 using DWrite = Vortice.DirectWrite;
 
 namespace SeeingSharp.Core
@@ -197,17 +197,17 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets the DirectWrite factory object.
         /// </summary>
-        internal DWrite.Factory FactoryDWrite { get; }
+        internal DWrite.IDWriteFactory FactoryDWrite { get; }
 
         /// <summary>
         /// Gets the Direct2D factory object.
         /// </summary>
-        internal D2D.Factory2 FactoryD2D;
+        internal D2D.ID2D1Factory2 FactoryD2D;
 
         /// <summary>
         /// Gets the WIC factory object.
         /// </summary>
-        internal ImagingFactory FactoryWIC;
+        internal WIC.IWICImagingFactory FactoryWIC;
 
         public GraphicsCoreInternals Internals { get; }
 
@@ -564,11 +564,11 @@ namespace SeeingSharp.Core
         {
             private GraphicsCore _parent;
 
-            public D2D.Factory2 FactoryD2D => _parent.FactoryD2D;
+            public D2D.ID2D1Factory2 FactoryD2D => _parent.FactoryD2D;
 
-            public DWrite.Factory FactoryDWrite => _parent.FactoryDWrite;
+            public DWrite.IDWriteFactory FactoryDWrite => _parent.FactoryDWrite;
 
-            public ImagingFactory FactoryWIC => _parent.FactoryWIC;
+            public WIC.IWICImagingFactory FactoryWIC => _parent.FactoryWIC;
 
             internal GraphicsCoreInternals(GraphicsCore parent)
             {

@@ -1069,17 +1069,17 @@ namespace SeeingSharp.Core
             // Apply default states on the device
             var defaultResource = resources.DefaultResources;
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
-            deviceContext.OutputMerger.BlendState = defaultResource.DefaultBlendState;
-            deviceContext.OutputMerger.DepthStencilState = defaultResource.DepthStencilStateDefault;
+            deviceContext.OMSetBlendState(defaultResource.DefaultBlendState);
+            deviceContext.OMSetDepthStencilState(defaultResource.DepthStencilStateDefault);
 
             // Set initial rasterizer state
             if (renderState.ViewInformation.ViewConfiguration.WireframeEnabled)
             {
-                deviceContext.Rasterizer.State = defaultResource.RasterStateWireframe;
+                deviceContext.RSSetState(defaultResource.RasterStateWireframe);
             }
             else
             {
-                deviceContext.Rasterizer.State = defaultResource.RasterStateDefault;
+                deviceContext.RSSetState(defaultResource.RasterStateDefault);
             }
 
             // Get or create RenderParameters object on scene level

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using Vortice.DXGI;
-using D3D = SharpDX.Direct3D;
-using D3D11 = SharpDX.Direct3D11;
+using DXGI = Vortice.DXGI;
+using D3D = Vortice.Direct3D;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Core.HardwareInfo
 {
     public class EngineAdapterInfo
     {
-        private AdapterDescription _adapterDescription;
+        private DXGI.AdapterDescription _adapterDescription;
         private D3D.FeatureLevel _d3d11FeatureLevel;
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace SeeingSharp.Core.HardwareInfo
         /// <summary>
         /// Initializes a new instance of the <see cref="EngineAdapterInfo" /> class.
         /// </summary>
-        internal EngineAdapterInfo(int adapterIndex, Adapter1 adapter)
+        internal EngineAdapterInfo(int adapterIndex, DXGI.IDXGIAdapter1 adapter)
         {
             this.Outputs = new List<EngineOutputInfo>();
             this.AdapterIndex = adapterIndex;
@@ -51,32 +51,21 @@ namespace SeeingSharp.Core.HardwareInfo
                 _adapterDescription.Description == "Microsoft Basic Render Driver" ||
                 !string.IsNullOrEmpty(_adapterDescription.Description) && _adapterDescription.Description.Contains("Software") ||
                 !string.IsNullOrEmpty(_adapterDescription.Description) && _adapterDescription.Description.Contains("Microsoft Basic Render Driver");
-
-            _d3d11FeatureLevel = D3D11.Device.GetSupportedFeatureLevel(adapter);
+            _d3d11FeatureLevel = D3D11.D3D11.GetSupportedFeatureLevel(adapter);
 
             //Query for output information
-            var outputs = adapter.Outputs;
-            for (var loop = 0; loop < outputs.Length; loop++)
+            var lastResult = SharpGen.Runtime.Result.Ok;
+            var actIndex = 0;
+            do
             {
-                try
+                lastResult = adapter.EnumOutputs(actIndex, out var actOutput);
+                if(lastResult != null)
                 {
-                    var actOutput = outputs[loop];
-
-                    try
-                    {
-                        this.Outputs.Add(new EngineOutputInfo(adapterIndex, loop, actOutput));
-                    }
-                    finally
-                    {
-                        actOutput.Dispose();
-                    }
+                    this.Outputs.Add(new EngineOutputInfo(adapterIndex, actIndex, actOutput));
                 }
-                catch (Exception)
-                {
-                    //Query for output information not possible
-                    // .. no special handling needed here
-                }
+                actIndex++;
             }
+            while (lastResult.Success);
         }
     }
 }

@@ -15,7 +15,7 @@ namespace SeeingSharp.Mathematics
             return *(RawMatrix3x2*)(&value);
         }
 
-        internal static unsafe Matrix3x2 Matrix3x2FromRaw(RawMatrix3x2 value)
+        internal static unsafe Matrix3x2 Matrix3x2FromRaw(Matrix3x2 value)
         {
             return *(Matrix3x2*)(&value);
         }

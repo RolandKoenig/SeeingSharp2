@@ -23,12 +23,12 @@ namespace SeeingSharp.Core
         {
             var device = renderState.Device;
 
-            device.DeviceImmediateContextD3D11.Rasterizer.State = _defaultResources.RasterStateLines;
-            device.DeviceImmediateContextD3D11.InputAssembler.PrimitiveTopology = D3D.PrimitiveTopology.LineList;
-            device.DeviceImmediateContextD3D11.InputAssembler.InputLayout = _lineRenderResources.InputLayout;
+            device.DeviceImmediateContextD3D11.RSSetState(_defaultResources.RasterStateLines);
+            device.DeviceImmediateContextD3D11.IASetPrimitiveTopology(D3D.PrimitiveTopology.LineList);
+            device.DeviceImmediateContextD3D11.IASetInputLayout(_lineRenderResources.InputLayout);
 
-            device.DeviceImmediateContextD3D11.VertexShader.Set(_lineRenderResources.VertexShader.VertexShader);
-            device.DeviceImmediateContextD3D11.PixelShader.Set(_lineRenderResources.PixelShader.PixelShader);
+            device.DeviceImmediateContextD3D11.VSSetShader(_lineRenderResources.VertexShader.VertexShader);
+            device.DeviceImmediateContextD3D11.PSSetShader(_lineRenderResources.PixelShader.PixelShader);
         }
 
         /// <summary>
@@ -39,8 +39,8 @@ namespace SeeingSharp.Core
         {
             var device = renderState.Device;
 
-            device.DeviceImmediateContextD3D11.Rasterizer.State = _defaultResources.RasterStateDefault;
-            device.DeviceImmediateContextD3D11.InputAssembler.PrimitiveTopology = D3D.PrimitiveTopology.TriangleList;
+            device.DeviceImmediateContextD3D11.RSSetState(_defaultResources.RasterStateDefault);
+            device.DeviceImmediateContextD3D11.IASetPrimitiveTopology(D3D.PrimitiveTopology.TriangleList);
         }
 
         /// <summary>

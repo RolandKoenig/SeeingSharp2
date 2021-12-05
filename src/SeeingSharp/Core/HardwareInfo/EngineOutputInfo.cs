@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Vortice.DXGI;
+using DXGI = Vortice.DXGI;
 
 namespace SeeingSharp.Core.HardwareInfo
 {
@@ -8,7 +8,7 @@ namespace SeeingSharp.Core.HardwareInfo
     {
         private const string TRANSLATABLE_GROUP_COMMON_OUTPUT_INFO = "Common output information";
 
-        private OutputDescription _outputDescription;
+        private DXGI.OutputDescription _outputDescription;
 
         /// <summary>
         /// Gets the name of the output device.
@@ -19,28 +19,28 @@ namespace SeeingSharp.Core.HardwareInfo
 
         public int OutputIndex { get; }
 
-        public bool IsAttachedToDesktop => _outputDescription.IsAttachedToDesktop;
+        public bool IsAttachedToDesktop => _outputDescription.AttachedToDesktop;
 
         /// <summary>
         /// Gets the total count of pixels on X axis.
         /// </summary>
-        public int DesktopWidth => _outputDescription.DesktopBounds.Right - _outputDescription.DesktopBounds.Left;
+        public int DesktopWidth => _outputDescription.DesktopCoordinates.Right - _outputDescription.DesktopCoordinates.Left;
 
         /// <summary>
         /// Gets the total count of pixels on Y axis.
         /// </summary>
-        public int DesktopHeight => _outputDescription.DesktopBounds.Bottom - _outputDescription.DesktopBounds.Top;
+        public int DesktopHeight => _outputDescription.DesktopCoordinates.Bottom - _outputDescription.DesktopCoordinates.Top;
 
-        public int DesktopXPos => _outputDescription.DesktopBounds.Left;
+        public int DesktopXPos => _outputDescription.DesktopCoordinates.Left;
 
-        public int DesktopYPos => _outputDescription.DesktopBounds.Top;
+        public int DesktopYPos => _outputDescription.DesktopCoordinates.Top;
 
         public string DesktopResolution =>
-            _outputDescription.DesktopBounds.Right - _outputDescription.DesktopBounds.Left +
+            _outputDescription.DesktopCoordinates.Right - _outputDescription.DesktopCoordinates.Left +
             "x" +
-            (_outputDescription.DesktopBounds.Bottom - _outputDescription.DesktopBounds.Top);
+            (_outputDescription.DesktopCoordinates.Bottom - _outputDescription.DesktopCoordinates.Top);
 
-        public string DesktopLocation => "X = " + _outputDescription.DesktopBounds.Left + ", Y = " + _outputDescription.DesktopBounds.Top;
+        public string DesktopLocation => "X = " + _outputDescription.DesktopCoordinates.Left + ", Y = " + _outputDescription.DesktopCoordinates.Top;
 
         public string Rotation => _outputDescription.Rotation.ToString();
 
@@ -51,7 +51,7 @@ namespace SeeingSharp.Core.HardwareInfo
         /// <summary>
         /// Initializes a new instance of the <see cref="EngineOutputInfo" /> class.
         /// </summary>
-        internal EngineOutputInfo(int adapterIndex, int outputIndex, Output output)
+        internal EngineOutputInfo(int adapterIndex, int outputIndex, DXGI.IDXGIOutput output)
         {
             this.AdapterIndex = adapterIndex;
             this.OutputIndex = outputIndex;
@@ -60,7 +60,7 @@ namespace SeeingSharp.Core.HardwareInfo
             // Get all supported modes
             var modes = output.GetDisplayModeList(
                 GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT,
-                DisplayModeEnumerationFlags.Interlaced);
+                DXGI.DisplayModeEnumerationFlags.Interlaced);
 
             // Convert and sort them
             var engineModes = new EngineOutputModeInfo[modes.Length];

@@ -5,8 +5,7 @@ using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
-using D2D = SharpDX.Direct2D1;
-using SDXM = SharpDX.Mathematics.Interop;
+using D2D = Vortice.Direct2D1;
 
 namespace SeeingSharp.Drawing2D
 {
@@ -16,8 +15,8 @@ namespace SeeingSharp.Drawing2D
         private Graphics2DTransformSettings _transformSettings;
 
         // Main view related properties
-        private D2D.RenderTarget _renderTarget;
-        private D2D.DeviceContext _deviceContext;
+        private D2D.ID2D1RenderTarget _renderTarget;
+        private D2D.ID2D1DeviceContext _deviceContext;
 
         /// <summary>
         /// Gets the device which is used for rendering.
@@ -130,7 +129,7 @@ namespace SeeingSharp.Drawing2D
         /// <param name="device">The hardware device which is used for rendering.</param>
         /// <param name="renderTarget">The render target which is used by this graphics object.</param>
         /// <param name="screenSize">The size of the screen in device independent pixels.</param>
-        internal Graphics2D(EngineDevice device, D2D.RenderTarget renderTarget, Size2F screenSize)
+        internal Graphics2D(EngineDevice device, D2D.ID2D1RenderTarget renderTarget, Size2F screenSize)
         {
             _transformSettings = Graphics2DTransformSettings.Default;
             this.TransformStack = new Matrix3x2Stack();
@@ -138,7 +137,7 @@ namespace SeeingSharp.Drawing2D
             this.Device = device;
             _renderTarget = renderTarget;
             this.ScreenPixelSize = screenSize;
-            _deviceContext = _renderTarget as D2D.DeviceContext;
+            _deviceContext = _renderTarget as D2D.ID2D1DeviceContext;
 
             this.Internals = new Graphics2DInternals(this);
         }
@@ -154,8 +153,7 @@ namespace SeeingSharp.Drawing2D
             }
 
             var top = this.TransformStack.Top;
-            _renderTarget.Transform =
-                *(SDXM.RawMatrix3x2*)&top;
+            _renderTarget.Transform = top;
         }
 
         /// <summary>
@@ -454,7 +452,7 @@ namespace SeeingSharp.Drawing2D
                 textFormat.GetTextFormat(this.Device),
                 SdxMathHelper.RawFromRectangleF(targetRectangle),
                 brush.GetBrush(this.Device),
-                (D2D.DrawTextOptions)drawOptions, (D2D.MeasuringMode)measuringMode);
+                (D2D.DrawTextOptions)drawOptions, (Vortice.DCommon.MeasuringMode)measuringMode);
         }
 
         /// <summary>
@@ -577,7 +575,7 @@ namespace SeeingSharp.Drawing2D
             else
             {
                 var nativeBitmap = bitmap.GetBitmap(this.Device);
-                var destinationRectangle = new SDXM.RawRectangleF(
+                var destinationRectangle = new Vortice.RawRectF(
                     destinationOrigin.X, destinationOrigin.Y,
                     destinationOrigin.X + bitmap.PixelWidth, destinationOrigin.Y + bitmap.PixelHeight);
 
@@ -608,7 +606,7 @@ namespace SeeingSharp.Drawing2D
 
             if (_deviceContext != null)
             {
-                var d2dImage = internalImage.GetImageObject(this.Device) as D2D.Image;
+                var d2dImage = internalImage.GetImageObject(this.Device) as D2D.ID2D1Image;
                 d2dImage.EnsureNotNull(nameof(d2dImage));
 
                 _deviceContext.DrawImage(
@@ -690,9 +688,9 @@ namespace SeeingSharp.Drawing2D
         {
             private Graphics2D _owner;
 
-            public D2D.RenderTarget RenderTarget => _owner._renderTarget;
+            public D2D.ID2D1RenderTarget RenderTarget => _owner._renderTarget;
 
-            public D2D.DeviceContext DeviceContext => _owner._deviceContext;
+            public D2D.ID2D1DeviceContext DeviceContext => _owner._deviceContext;
 
             internal Graphics2DInternals(Graphics2D owner)
             {
