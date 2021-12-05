@@ -5,10 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-//using SharpDX;
-//using Vortice.DXGI;
-//using SDX = SharpDX;
-//using SDXIO = SharpDX.IO;
+using SeeingSharp.Util.Sdx;
+using DXGI = Vortice.DXGI;
 
 namespace SeeingSharp.Util.SdxTK
 {
@@ -219,7 +217,7 @@ namespace SeeingSharp.Util.SdxTK
         /// Gets the databox from this image.
         /// </summary>
         /// <returns>The databox of this image.</returns>
-        public SDX.DataBox[] ToDataBox()
+        public DataBox[] ToDataBox()
         {
             return (DataBox[])dataBoxArray.Clone();
         }
@@ -358,11 +356,11 @@ namespace SeeingSharp.Util.SdxTK
         /// <summary>
         /// Loads an image from an unmanaged memory pointer.
         /// </summary>
-        /// <param name="dataBuffer">Pointer to an unmanaged memory. If <see paramref="makeACopy"/> is false, this buffer must be allocated with <see cref="Utilities.AllocateMemory"/>.</param>
+        /// <param name="dataBuffer">Pointer to an unmanaged memory. If <see paramref="makeACopy"/> is false, this buffer must be allocated with <see cref="SdxUtilities.AllocateMemory"/>.</param>
         /// <param name="makeACopy">True to copy the content of the buffer to a new allocated buffer, false otherwhise.</param>
         /// <returns>An new image.</returns>
         /// <remarks>If <see paramref="makeACopy"/> is set to false, the returned image is now the holder of the unmanaged pointer and will release it on Dispose. </remarks>
-        public static Image Load(SDX.DataPointer dataBuffer, bool makeACopy = false)
+        public static Image Load(DataPointer dataBuffer, bool makeACopy = false)
         {
             return Load(dataBuffer.Pointer, dataBuffer.Size, makeACopy);
         }
@@ -370,7 +368,7 @@ namespace SeeingSharp.Util.SdxTK
         /// <summary>
         /// Loads an image from an unmanaged memory pointer.
         /// </summary>
-        /// <param name="dataPointer">Pointer to an unmanaged memory. If <see paramref="makeACopy"/> is false, this buffer must be allocated with <see cref="Utilities.AllocateMemory"/>.</param>
+        /// <param name="dataPointer">Pointer to an unmanaged memory. If <see paramref="makeACopy"/> is false, this buffer must be allocated with <see cref="SdxUtilities.AllocateMemory"/>.</param>
         /// <param name="dataSize">Size of the unmanaged buffer.</param>
         /// <param name="makeACopy">True to copy the content of the buffer to a new allocated buffer, false otherwise.</param>
         /// <returns>An new image.</returns>
@@ -416,31 +414,8 @@ namespace SeeingSharp.Util.SdxTK
         /// <remarks>This method support the following format: <c>dds, bmp, jpg, png, gif, tiff, wmp, tga</c>.</remarks>
         public static Image Load(Stream imageStream)
         {
-            // Use fast path using NativeFileStream
-            var nativeImageStream = imageStream as SDXIO.NativeFileStream;
-            if (nativeImageStream != null)
-            {
-                var imageBuffer = IntPtr.Zero;
-                Image image = null;
-                try
-                {
-                    var imageSize = (int)nativeImageStream.Length;
-                    imageBuffer = Utilities.AllocateMemory(imageSize);
-                    nativeImageStream.Read(imageBuffer, 0, imageSize);
-                    image = Load(imageBuffer, imageSize);
-                }
-                finally
-                {
-                    if (image == null)
-                    {
-                        Utilities.FreeMemory(imageBuffer);
-                    }
-                }
-                return image;
-            }
-
             // Else Read the whole stream into memory.
-            return Load(Utilities.ReadStream(imageStream));
+            return Load(SdxUtilities.ReadStream(imageStream));
         }
 
         /// <summary>
@@ -451,42 +426,10 @@ namespace SeeingSharp.Util.SdxTK
         /// <remarks>This method support the following format: <c>dds, bmp, jpg, png, gif, tiff, wmp, tga</c>.</remarks>
         public static Image Load(string fileName)
         {
-            SDXIO.NativeFileStream stream = null;
-            var memoryPtr = IntPtr.Zero;
-            int size;
-
-            try
+            using (Stream inStream = File.OpenRead(fileName))
             {
-                stream = new SDXIO.NativeFileStream(fileName, SDXIO.NativeFileMode.Open, SDXIO.NativeFileAccess.Read);
-                size = (int)stream.Length;
-                memoryPtr = Utilities.AllocateMemory(size);
-                stream.Read(memoryPtr, 0, size);
+                return Load(inStream);
             }
-            catch (Exception)
-            {
-                if (memoryPtr != IntPtr.Zero)
-                {
-                    Utilities.FreeMemory(memoryPtr);
-                }
-
-                throw;
-            }
-            finally
-            {
-                try
-                {
-                    if (stream != null)
-                    {
-                        stream.Dispose();
-                    }
-                }
-                catch
-                {
-                }
-            }
-
-            // If everything was fine, load the image from memory
-            return Load(memoryPtr, size);
         }
 
         /// <summary>
@@ -541,7 +484,7 @@ namespace SeeingSharp.Util.SdxTK
         /// <remarks>This method support the following format: <c>dds, bmp, jpg, png, gif, tiff, wmp, tga</c>.</remarks>
         public void Save(string fileName, ImageFileType fileType)
         {
-            using (var imageStream = new SDXIO.NativeFileStream(fileName, SDXIO.NativeFileMode.Create, SDXIO.NativeFileAccess.Write))
+            using (var imageStream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
                 this.Save(imageStream, fileType);
             }
@@ -567,7 +510,7 @@ namespace SeeingSharp.Util.SdxTK
 
             if (bufferIsDisposable)
             {
-                Utilities.FreeMemory(buffer);
+                SdxUtilities.FreeMemory(buffer);
             }
         }
 
@@ -596,7 +539,8 @@ namespace SeeingSharp.Util.SdxTK
 
         internal unsafe void Initialize(ImageDescription description, IntPtr dataPointer, int offset, GCHandle? handle, bool bufferIsDisposable, PitchFlags pitchFlags = PitchFlags.None)
         {
-            if (!description.Format.IsValid() || description.Format.IsVideo())
+            if (!DXGI.FormatHelper.IsValid(description.Format) || 
+                DXGI.FormatHelper.IsVideo(description.Format))
             {
                 throw new InvalidOperationException("Unsupported DXGI Format");
             }
@@ -663,7 +607,7 @@ namespace SeeingSharp.Util.SdxTK
             if (dataPointer == IntPtr.Zero)
             {
                 
-                buffer = Utilities.AllocateMemory(totalSizeInBytes);
+                buffer = SdxUtilities.AllocateMemory(totalSizeInBytes);
                 offset = 0;
                 this.bufferIsDisposable = true;
             }
@@ -676,26 +620,26 @@ namespace SeeingSharp.Util.SdxTK
             dataBoxArray = this.ComputeDataBox();
         }
 
-        internal static void ComputePitch(Format fmt, int width, int height, out int rowPitch, out int slicePitch, out int widthCount, out int heightCount, PitchFlags flags = PitchFlags.None)
+        internal static void ComputePitch(DXGI.Format fmt, int width, int height, out int rowPitch, out int slicePitch, out int widthCount, out int heightCount, PitchFlags flags = PitchFlags.None)
         {
             widthCount = width;
             heightCount = height;
 
-            if (fmt.IsCompressed())
+            if (DXGI.FormatHelper.IsCompressed(fmt))
             {
-                var bpb = fmt == Format.BC1_Typeless
-                          || fmt == Format.BC1_UNorm
-                          || fmt == Format.BC1_UNorm_SRgb
-                          || fmt == Format.BC4_Typeless
-                          || fmt == Format.BC4_UNorm
-                          || fmt == Format.BC4_SNorm ? 8 : 16;
+                var bpb = fmt == DXGI.Format.BC1_Typeless
+                          || fmt == DXGI.Format.BC1_UNorm
+                          || fmt == DXGI.Format.BC1_UNorm_SRgb
+                          || fmt == DXGI.Format.BC4_Typeless
+                          || fmt == DXGI.Format.BC4_UNorm
+                          || fmt == DXGI.Format.BC4_SNorm ? 8 : 16;
                 widthCount = Math.Max(1, (width + 3) / 4);
                 heightCount = Math.Max(1, (height + 3) / 4);
                 rowPitch = widthCount * bpb;
 
                 slicePitch = rowPitch * heightCount;
             }
-            else if (fmt.IsPacked())
+            else if (DXGI.FormatHelper.IsPacked(fmt))
             {
                 rowPitch = ((width + 1) >> 1) * 4;
 
@@ -719,7 +663,7 @@ namespace SeeingSharp.Util.SdxTK
                 }
                 else
                 {
-                    bpp = fmt.SizeOfInBits();
+                    bpp = DXGI.FormatHelper.SizeOfInBits(fmt);
                 }
 
                 if ((flags & PitchFlags.LegacyDword) != 0)

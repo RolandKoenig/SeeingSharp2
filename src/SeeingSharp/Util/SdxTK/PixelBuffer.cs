@@ -1,11 +1,10 @@
 ﻿// This code is ported from SharpDX.Toolkit
 // see: https://github.com/sharpdx/Toolkit
 
+using SeeingSharp.Util.Sdx;
 using System;
 using System.IO;
-using Vortice.DXGI;
-//using SharpDX.IO;
-//using SDX = SharpDX;
+using DXGI = Vortice.DXGI;
 
 namespace SeeingSharp.Util.SdxTK
 {
@@ -14,7 +13,7 @@ namespace SeeingSharp.Util.SdxTK
     /// </summary>
     internal sealed class PixelBuffer
     {
-        private Format format;
+        private DXGI.Format format;
 
         /// <summary>
         /// True when RowStride == sizeof(pixelformat) * width
@@ -37,12 +36,12 @@ namespace SeeingSharp.Util.SdxTK
         /// Gets the format (this value can be changed)
         /// </summary>
         /// <value>The format.</value>
-        public Format Format
+        public DXGI.Format Format
         {
             get => format;
             set
             {
-                if (this.PixelSize != value.SizeOfInBytes())
+                if (this.PixelSize != DXGI.FormatHelper.SizeOfInBytes(value))
                 {
                     throw new ArgumentException(
                         $"Format [{value}] doesn't have same pixel size in bytes than current format [{format}]");
@@ -84,7 +83,7 @@ namespace SeeingSharp.Util.SdxTK
         /// <param name="rowStride">The row pitch.</param>
         /// <param name="bufferStride">The slice pitch.</param>
         /// <param name="dataPointer">The pixels.</param>
-        public PixelBuffer(int width, int height, Format format, int rowStride, int bufferStride, IntPtr dataPointer)
+        public PixelBuffer(int width, int height, DXGI.Format format, int rowStride, int bufferStride, IntPtr dataPointer)
         {
             if (dataPointer == IntPtr.Zero)
             {
@@ -97,7 +96,7 @@ namespace SeeingSharp.Util.SdxTK
             this.RowStride = rowStride;
             this.BufferStride = bufferStride;
             this.DataPointer = dataPointer;
-            this.PixelSize = this.format.SizeOfInBytes();
+            this.PixelSize = DXGI.FormatHelper.SizeOfInBytes(this.format);
             isStrictRowStride = this.PixelSize * width == rowStride;
         }
 
@@ -114,7 +113,7 @@ namespace SeeingSharp.Util.SdxTK
             // Check that buffers are identical
             if (this.Width != pixelBuffer.Width
                 || this.Height != pixelBuffer.Height
-                || this.PixelSize != pixelBuffer.Format.SizeOfInBytes())
+                || this.PixelSize != DXGI.FormatHelper.SizeOfInBytes(pixelBuffer.Format))
             {
                 throw new ArgumentException("Invalid destination pixelBufferArray. Mush have same Width, Height and Format", "pixelBuffer");
             }
@@ -122,7 +121,7 @@ namespace SeeingSharp.Util.SdxTK
             // If buffers have same size, than we can copy it directly
             if (this.BufferStride == pixelBuffer.BufferStride)
             {
-                SDX.Utilities.CopyMemory(pixelBuffer.DataPointer, this.DataPointer, this.BufferStride);
+                SdxUtilities.CopyMemory(pixelBuffer.DataPointer, this.DataPointer, this.BufferStride);
             }
             else
             {
@@ -133,7 +132,7 @@ namespace SeeingSharp.Util.SdxTK
                 // Copy per scanline
                 for (var i = 0; i < this.Height; i++)
                 {
-                    SDX.Utilities.CopyMemory(new IntPtr(dstPointer), new IntPtr(srcPointer), rowStride);
+                    SdxUtilities.CopyMemory(new IntPtr(dstPointer), new IntPtr(srcPointer), rowStride);
                     srcPointer += this.RowStride;
                     dstPointer += pixelBuffer.RowStride;
                 }
@@ -148,7 +147,7 @@ namespace SeeingSharp.Util.SdxTK
         /// <remarks>This method support the following format: <c>dds, bmp, jpg, png, gif, tiff, wmp, tga</c>.</remarks>
         public void Save(string fileName, ImageFileType fileType)
         {
-            using (var imageStream = new NativeFileStream(fileName, NativeFileMode.Create, NativeFileAccess.Write))
+            using (var imageStream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
                 this.Save(imageStream, fileType);
             }
@@ -187,7 +186,7 @@ namespace SeeingSharp.Util.SdxTK
         /// </remarks>
         public unsafe T GetPixel<T>(int x, int y) where T : struct
         {
-            return SDX.Utilities.Read<T>(new IntPtr((byte*)this.DataPointer + this.RowStride * y + x * this.PixelSize));
+            return SdxUtilities.Read<T>(new IntPtr((byte*)this.DataPointer + this.RowStride * y + x * this.PixelSize));
         }
 
         /// <summary>
@@ -202,7 +201,7 @@ namespace SeeingSharp.Util.SdxTK
         /// </remarks>
         public unsafe void SetPixel<T>(int x, int y, T value) where T : struct
         {
-            SDX.Utilities.Write(new IntPtr((byte*)this.DataPointer + this.RowStride * y + x * this.PixelSize), ref value);
+            SdxUtilities.Write(new IntPtr((byte*)this.DataPointer + this.RowStride * y + x * this.PixelSize), ref value);
         }
 
         /// <summary>
@@ -214,7 +213,7 @@ namespace SeeingSharp.Util.SdxTK
         /// <exception cref="System.ArgumentException">If the sizeof(T) is an invalid size</exception>
         public T[] GetPixels<T>(int yOffset = 0) where T : struct
         {
-            var sizeOfOutputPixel = SDX.Utilities.SizeOf<T>();
+            var sizeOfOutputPixel = SdxUtilities.SizeOf<T>();
             var totalSize = this.Width * this.Height * this.PixelSize;
             if (totalSize % sizeOfOutputPixel != 0)
             {
@@ -257,22 +256,22 @@ namespace SeeingSharp.Util.SdxTK
             var pixelPointer = (byte*)this.DataPointer + yOffset * this.RowStride;
             if (isStrictRowStride)
             {
-                SDX.Utilities.Read(new IntPtr(pixelPointer), pixels, 0, pixelCount);
+                SdxUtilities.Read(new IntPtr(pixelPointer), pixels, 0, pixelCount);
             }
             else
             {
-                var sizeOfOutputPixel = SDX.Utilities.SizeOf<T>() * pixelCount;
+                var sizeOfOutputPixel = SdxUtilities.SizeOf<T>() * pixelCount;
                 var sizePerWidth = sizeOfOutputPixel / this.Width;
                 var remainingPixels = sizeOfOutputPixel % this.Width;
                 for (var i = 0; i < sizePerWidth; i++)
                 {
-                    SDX.Utilities.Read(new IntPtr(pixelPointer), pixels, pixelIndex, this.Width);
+                    SdxUtilities.Read(new IntPtr(pixelPointer), pixels, pixelIndex, this.Width);
                     pixelPointer += this.RowStride;
                     pixelIndex += this.Width;
                 }
                 if (remainingPixels > 0)
                 {
-                    SDX.Utilities.Read(new IntPtr(pixelPointer), pixels, pixelIndex, remainingPixels);
+                    SdxUtilities.Read(new IntPtr(pixelPointer), pixels, pixelIndex, remainingPixels);
                 }
             }
         }
@@ -311,22 +310,22 @@ namespace SeeingSharp.Util.SdxTK
             var pixelPointer = (byte*)this.DataPointer + yOffset * this.RowStride;
             if (isStrictRowStride)
             {
-                SDX.Utilities.Write(new IntPtr(pixelPointer), sourcePixels, 0, pixelCount);
+                SdxUtilities.Write(new IntPtr(pixelPointer), sourcePixels, 0, pixelCount);
             }
             else
             {
-                var sizeOfOutputPixel = SDX.Utilities.SizeOf<T>() * pixelCount;
+                var sizeOfOutputPixel = SdxUtilities.SizeOf<T>() * pixelCount;
                 var sizePerWidth = sizeOfOutputPixel / this.Width;
                 var remainingPixels = sizeOfOutputPixel % this.Width;
                 for (var i = 0; i < sizePerWidth; i++)
                 {
-                    SDX.Utilities.Write(new IntPtr(pixelPointer), sourcePixels, pixelIndex, this.Width);
+                    SdxUtilities.Write(new IntPtr(pixelPointer), sourcePixels, pixelIndex, this.Width);
                     pixelPointer += this.RowStride;
                     pixelIndex += this.Width;
                 }
                 if (remainingPixels > 0)
                 {
-                    SDX.Utilities.Write(new IntPtr(pixelPointer), sourcePixels, pixelIndex, remainingPixels);
+                    SdxUtilities.Write(new IntPtr(pixelPointer), sourcePixels, pixelIndex, remainingPixels);
                 }
             }
         }

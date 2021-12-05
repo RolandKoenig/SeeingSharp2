@@ -3,10 +3,9 @@
 
 using System;
 using System.Runtime.InteropServices;
-using Vortice.DXGI;
-//using D3D11 = SharpDX.Direct3D11;
-//using SDX = SharpDX;
-//using SDXM = SharpDX.Multimedia;
+using SeeingSharp.Util.Sdx;
+using DXGI = Vortice.DXGI;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Util.SdxTK
 {
@@ -94,7 +93,7 @@ namespace SeeingSharp.Util.SdxTK
             /// <param name="aBitMask">A bit mask.</param>
             public PixelFormat(PixelFormatFlags flags, int fourCC, int rgbBitCount, uint rBitMask, uint gBitMask, uint bBitMask, uint aBitMask)
             {
-                Size = SDX.Utilities.SizeOf<PixelFormat>();
+                Size = SdxUtilities.SizeOf<PixelFormat>();
                 Flags = flags;
                 FourCC = fourCC;
                 RGBBitCount = rgbBitCount;
@@ -113,27 +112,27 @@ namespace SeeingSharp.Util.SdxTK
             public uint BBitMask;
             public uint ABitMask;
 
-            public static readonly PixelFormat DXT1 = new PixelFormat(PixelFormatFlags.FourCC, new SDXM.FourCC('D', 'X', 'T', '1'), 0, 0, 0, 0, 0);
+            public static readonly PixelFormat DXT1 = new PixelFormat(PixelFormatFlags.FourCC, new FourCC('D', 'X', 'T', '1'), 0, 0, 0, 0, 0);
 
-            public static readonly PixelFormat DXT2 = new PixelFormat(PixelFormatFlags.FourCC, new SDXM.FourCC('D', 'X', 'T', '2'), 0, 0, 0, 0, 0);
+            public static readonly PixelFormat DXT2 = new PixelFormat(PixelFormatFlags.FourCC, new FourCC('D', 'X', 'T', '2'), 0, 0, 0, 0, 0);
 
-            public static readonly PixelFormat DXT3 = new PixelFormat(PixelFormatFlags.FourCC, new SDXM.FourCC('D', 'X', 'T', '3'), 0, 0, 0, 0, 0);
+            public static readonly PixelFormat DXT3 = new PixelFormat(PixelFormatFlags.FourCC, new FourCC('D', 'X', 'T', '3'), 0, 0, 0, 0, 0);
 
-            public static readonly PixelFormat DXT4 = new PixelFormat(PixelFormatFlags.FourCC, new SDXM.FourCC('D', 'X', 'T', '4'), 0, 0, 0, 0, 0);
+            public static readonly PixelFormat DXT4 = new PixelFormat(PixelFormatFlags.FourCC, new FourCC('D', 'X', 'T', '4'), 0, 0, 0, 0, 0);
 
-            public static readonly PixelFormat DXT5 = new PixelFormat(PixelFormatFlags.FourCC, new SDXM.FourCC('D', 'X', 'T', '5'), 0, 0, 0, 0, 0);
+            public static readonly PixelFormat DXT5 = new PixelFormat(PixelFormatFlags.FourCC, new FourCC('D', 'X', 'T', '5'), 0, 0, 0, 0, 0);
 
-            public static readonly PixelFormat BC4_UNorm = new PixelFormat(PixelFormatFlags.FourCC, new SDXM.FourCC('B', 'C', '4', 'U'), 0, 0, 0, 0, 0);
+            public static readonly PixelFormat BC4_UNorm = new PixelFormat(PixelFormatFlags.FourCC, new FourCC('B', 'C', '4', 'U'), 0, 0, 0, 0, 0);
 
-            public static readonly PixelFormat BC4_SNorm = new PixelFormat(PixelFormatFlags.FourCC, new SDXM.FourCC('B', 'C', '4', 'S'), 0, 0, 0, 0, 0);
+            public static readonly PixelFormat BC4_SNorm = new PixelFormat(PixelFormatFlags.FourCC, new FourCC('B', 'C', '4', 'S'), 0, 0, 0, 0, 0);
 
-            public static readonly PixelFormat BC5_UNorm = new PixelFormat(PixelFormatFlags.FourCC, new SDXM.FourCC('B', 'C', '5', 'U'), 0, 0, 0, 0, 0);
+            public static readonly PixelFormat BC5_UNorm = new PixelFormat(PixelFormatFlags.FourCC, new FourCC('B', 'C', '5', 'U'), 0, 0, 0, 0, 0);
 
-            public static readonly PixelFormat BC5_SNorm = new PixelFormat(PixelFormatFlags.FourCC, new SDXM.FourCC('B', 'C', '5', 'S'), 0, 0, 0, 0, 0);
+            public static readonly PixelFormat BC5_SNorm = new PixelFormat(PixelFormatFlags.FourCC, new FourCC('B', 'C', '5', 'S'), 0, 0, 0, 0, 0);
 
-            public static readonly PixelFormat R8G8_B8G8 = new PixelFormat(PixelFormatFlags.FourCC, new SDXM.FourCC('R', 'G', 'B', 'G'), 0, 0, 0, 0, 0);
+            public static readonly PixelFormat R8G8_B8G8 = new PixelFormat(PixelFormatFlags.FourCC, new FourCC('R', 'G', 'B', 'G'), 0, 0, 0, 0, 0);
 
-            public static readonly PixelFormat G8R8_G8B8 = new PixelFormat(PixelFormatFlags.FourCC, new SDXM.FourCC('G', 'R', 'G', 'B'), 0, 0, 0, 0, 0);
+            public static readonly PixelFormat G8R8_G8B8 = new PixelFormat(PixelFormatFlags.FourCC, new FourCC('G', 'R', 'G', 'B'), 0, 0, 0, 0, 0);
 
             public static readonly PixelFormat A8R8G8B8 = new PixelFormat(PixelFormatFlags.Rgba, 0, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
 
@@ -161,7 +160,7 @@ namespace SeeingSharp.Util.SdxTK
 
             public static readonly PixelFormat A8 = new PixelFormat(PixelFormatFlags.Alpha, 0, 8, 0x00, 0x00, 0x00, 0xff);
 
-            public static readonly PixelFormat DX10 = new PixelFormat(PixelFormatFlags.FourCC, new SDXM.FourCC('D', 'X', '1', '0'), 0, 0, 0, 0, 0);
+            public static readonly PixelFormat DX10 = new PixelFormat(PixelFormatFlags.FourCC, new FourCC('D', 'X', '1', '0'), 0, 0, 0, 0, 0);
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -200,7 +199,7 @@ namespace SeeingSharp.Util.SdxTK
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct HeaderDXT10
         {
-            public Format DXGIFormat;
+            public DXGI.Format DXGIFormat;
             public D3D11.ResourceDimension ResourceDimension;
             public D3D11.ResourceOptionFlags MiscFlags;
             public int ArraySize;
