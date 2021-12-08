@@ -7,8 +7,7 @@ using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
-using SharpDX.Mathematics.Interop;
-using D3D11 = SharpDX.Direct3D11;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Views
 {
@@ -21,13 +20,13 @@ namespace SeeingSharp.Views
         private int _pixelHeight;
 
         // All needed direct3d resources
-        private D3D11.Device _device;
-        private D3D11.DeviceContext _deviceContext;
-        private D3D11.Texture2D _copyHelperTextureStaging;
-        private D3D11.Texture2D _renderTarget;
-        private D3D11.Texture2D _renderTargetDepth;
-        private D3D11.RenderTargetView _renderTargetView;
-        private D3D11.DepthStencilView _renderTargetDepthView;
+        private D3D11.ID3D11Device _device;
+        private D3D11.ID3D11DeviceContext _deviceContext;
+        private D3D11.ID3D11Texture2D _copyHelperTextureStaging;
+        private D3D11.ID3D11Texture2D _renderTarget;
+        private D3D11.ID3D11Texture2D _renderTargetDepth;
+        private D3D11.ID3D11RenderTargetView _renderTargetView;
+        private D3D11.ID3D11DepthStencilView _renderTargetDepthView;
 
         /// <summary>
         /// Gets or sets the scene.
@@ -125,7 +124,7 @@ namespace SeeingSharp.Views
         /// <summary>
         /// Create all view resources.
         /// </summary>
-        Tuple<D3D11.Texture2D, D3D11.RenderTargetView, D3D11.Texture2D, D3D11.DepthStencilView, RawViewportF, Size2, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice device)
+        Tuple<D3D11.ID3D11Texture2D, D3D11.ID3D11RenderTargetView, D3D11.ID3D11Texture2D, D3D11.ID3D11DepthStencilView, Vortice.Mathematics.Viewport, Size2, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice device)
         {
             var width = _pixelWidth;
             var height = _pixelHeight;
@@ -136,11 +135,11 @@ namespace SeeingSharp.Views
 
             //Create the swap chain and the render target
             _renderTarget = GraphicsHelper.Internals.CreateRenderTargetTexture(device, width, height, this.RenderLoop.Configuration);
-            _renderTargetView = new D3D11.RenderTargetView(_device, _renderTarget);
+            _renderTargetView = _device.CreateRenderTargetView(_renderTarget);
 
             //Create the depth buffer
             _renderTargetDepth = GraphicsHelper.Internals.CreateDepthBufferTexture(device, width, height, this.RenderLoop.Configuration);
-            _renderTargetDepthView = new D3D11.DepthStencilView(_device, _renderTargetDepth);
+            _renderTargetDepthView = _device.CreateDepthStencilView(_renderTargetDepth);
 
             //Define the viewport for rendering
             var viewPort = GraphicsHelper.Internals.CreateDefaultViewport(width, height);

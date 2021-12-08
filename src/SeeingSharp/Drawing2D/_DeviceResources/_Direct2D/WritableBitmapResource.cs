@@ -3,8 +3,8 @@ using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
-using Vortice.DXGI;
-using D2D = SharpDX.Direct2D1;
+using DXGI = Vortice.DXGI;
+using D2D = Vortice.Direct2D1;
 
 namespace SeeingSharp.Drawing2D
 {
@@ -12,12 +12,12 @@ namespace SeeingSharp.Drawing2D
     {
         // Configuration
         private Size2 _bitmapSize;
-        private D2D.PixelFormat _pixelFormat;
+        private Vortice.DCommon.PixelFormat _pixelFormat;
         private double _dpiX;
         private double _dpiY;
 
         // Resources
-        private D2D.Bitmap[] _loadedBitmaps;
+        private D2D.ID2D1Bitmap[] _loadedBitmaps;
 
         public override int PixelWidth => _bitmapSize.Width;
 
@@ -46,11 +46,11 @@ namespace SeeingSharp.Drawing2D
             AlphaMode alphaMode = AlphaMode.Straight,
             double dpiX = 96.0, double dpiY = 96.0)
         {
-            _loadedBitmaps = new D2D.Bitmap[GraphicsCore.Current.DeviceCount];
+            _loadedBitmaps = new D2D.ID2D1Bitmap[GraphicsCore.Current.DeviceCount];
             _bitmapSize = bitmapSize;
-            _pixelFormat = new D2D.PixelFormat(
-                (Format)format,
-                (D2D.AlphaMode)alphaMode);
+            _pixelFormat = new Vortice.DCommon.PixelFormat(
+                (DXGI.Format)format,
+                (Vortice.DCommon.AlphaMode)alphaMode);
             _dpiX = dpiX;
             _dpiY = dpiY;
         }
@@ -71,7 +71,7 @@ namespace SeeingSharp.Drawing2D
         /// Gets the bitmap for the given device..
         /// </summary>
         /// <param name="engineDevice">The engine device.</param>
-        internal override D2D.Bitmap GetBitmap(EngineDevice engineDevice)
+        internal override D2D.ID2D1Bitmap GetBitmap(EngineDevice engineDevice)
         {
             // Check for disposed state
             if (this.IsDisposed)
@@ -83,8 +83,7 @@ namespace SeeingSharp.Drawing2D
             if (result == null)
             {
                 // Load the bitmap initially
-                result = new D2D.Bitmap(
-                    engineDevice.FakeRenderTarget2D,
+                result = engineDevice.FakeRenderTarget2D.CreateBitmap(
                     SdxMathHelper.SdxFromSize2(_bitmapSize),
                     new D2D.BitmapProperties(_pixelFormat, (float)_dpiX, (float)_dpiY));
                 _loadedBitmaps[engineDevice.DeviceIndex] = result;

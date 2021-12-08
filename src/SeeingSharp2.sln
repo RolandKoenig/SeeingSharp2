@@ -74,6 +74,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{2F86C1A7
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WikiImages", "WikiImages", "{12D0A365-BA3F-4F5B-891E-3BE239E11A53}"
 	ProjectSection(SolutionItems) = preProject
+		..\misc\WikiImages\screenshot_01.png = ..\misc\WikiImages\screenshot_01.png
+		..\misc\WikiImages\screenshot_02.png = ..\misc\WikiImages\screenshot_02.png
+		..\misc\WikiImages\screenshot_03.png = ..\misc\WikiImages\screenshot_03.png
 		..\misc\WikiImages\SeeingSharp.svg = ..\misc\WikiImages\SeeingSharp.svg
 		..\misc\WikiImages\SeeingSharp_Samples.pdn = ..\misc\WikiImages\SeeingSharp_Samples.pdn
 		..\misc\WikiImages\SeeingSharp_Samples.png = ..\misc\WikiImages\SeeingSharp_Samples.png

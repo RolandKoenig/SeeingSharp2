@@ -113,7 +113,7 @@ namespace SeeingSharp.Drawing3D
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
             // Reset settings made on render state (needed for all passes)
-            deviceContext.Rasterizer.State = _defaultResources.RasterStateDefault;
+            deviceContext.RSSetState(_defaultResources.RasterStateDefault);
 
             // Reset render target (needed for all passes)
             _renderTarget.PopFromRenderState(renderState);
@@ -135,10 +135,10 @@ namespace SeeingSharp.Drawing3D
                     this.ApplyAlphaBasedSpriteRendering(deviceContext);
                     try
                     {
-                        deviceContext.PixelShader.SetShaderResource(0, _renderTarget.TextureView);
-                        deviceContext.PixelShader.SetSampler(0, _defaultResources.GetSamplerState(TextureSamplerQualityLevel.Low));
-                        deviceContext.PixelShader.SetConstantBuffer(2, _constantBuffer.ConstantBuffer);
-                        deviceContext.PixelShader.Set(_pixelShaderBlur.PixelShader);
+                        deviceContext.PSSetShaderResource(0, _renderTarget.TextureView);
+                        deviceContext.PSSetSampler(0, _defaultResources.GetSamplerState(TextureSamplerQualityLevel.Low));
+                        deviceContext.PSSetConstantBuffer(2, _constantBuffer.ConstantBuffer);
+                        deviceContext.PSSetShader(_pixelShaderBlur.PixelShader);
                         deviceContext.Draw(3, 0);
                     }
                     finally

@@ -1,14 +1,14 @@
 ﻿using System;
-using SharpDX;
+using SharpGen.Runtime;
 
 namespace SeeingSharp.Util
 {
     internal class DummyComObject : IUnknown, ICallbackable, IDisposable
     {
-        private int _referenceCounter;
+        private uint _referenceCounter;
 
         /// <inheritdoc />
-        public IDisposable Shadow { get; set; }
+        public ShadowContainer Shadow { get; set; }
 
         /// <inheritdoc />
         public virtual void Dispose()
@@ -24,14 +24,14 @@ namespace SeeingSharp.Util
         }
 
         /// <inheritdoc />
-        public int AddReference()
+        public uint AddRef()
         {
             _referenceCounter++;
             return _referenceCounter;
         }
 
         /// <inheritdoc />
-        public int Release()
+        public uint Release()
         {
             _referenceCounter--;
             return _referenceCounter;

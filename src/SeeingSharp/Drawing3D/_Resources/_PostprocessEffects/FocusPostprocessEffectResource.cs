@@ -121,7 +121,7 @@ namespace SeeingSharp.Drawing3D
                         renderState.ClearCurrentColorBuffer(new Color4(1f, 1f, 1f, 0f));
 
                         // ConfigureLoading stencil state(invert z logic, disable z writes)
-                        renderState.Device.DeviceImmediateContextD3D11.OutputMerger.DepthStencilState = _defaultResources.DepthStencilStateInvertedZTest;
+                        renderState.Device.DeviceImmediateContextD3D11.OMSetDepthStencilState(_defaultResources.DepthStencilStateInvertedZTest);
                         break;
 
                     //******************************
@@ -137,8 +137,8 @@ namespace SeeingSharp.Drawing3D
                         renderState.ClearCurrentColorBuffer(new Color4(1f, 1f, 1f, 0f));
 
                         // Change raster state
-                        renderState.Device.DeviceImmediateContextD3D11.Rasterizer.State = _defaultResources.RasterStateBiased;
-                        renderState.Device.DeviceImmediateContextD3D11.OutputMerger.DepthStencilState = _defaultResources.DepthStencilStateDisableZWrites;
+                        renderState.Device.DeviceImmediateContextD3D11.RSSetState(_defaultResources.RasterStateBiased);
+                        renderState.Device.DeviceImmediateContextD3D11.OMSetDepthStencilState(_defaultResources.DepthStencilStateDisableZWrites);
                         break;
                 }
             }
@@ -147,7 +147,7 @@ namespace SeeingSharp.Drawing3D
                 renderState.ForceMaterial(_singleForcedColor);
 
                 // Change raster state
-                renderState.Device.DeviceImmediateContextD3D11.Rasterizer.State = _defaultResources.RasterStateBiased;
+                renderState.Device.DeviceImmediateContextD3D11.RSSetState(_defaultResources.RasterStateBiased);
             }
         }
 
@@ -165,8 +165,8 @@ namespace SeeingSharp.Drawing3D
             if (renderState.Device.IsHighDetailSupported && !_forceSimpleMethod)
             {
                 // Reset settings made on render state (needed for all passes)
-                deviceContext.Rasterizer.State = _defaultResources.RasterStateDefault;
-                deviceContext.OutputMerger.DepthStencilState = _defaultResources.DepthStencilStateDefault;
+                deviceContext.RSSetState(_defaultResources.RasterStateDefault);
+                deviceContext.OMSetDepthStencilState(_defaultResources.DepthStencilStateDefault);
                 renderState.ForceMaterial(null);
 
                 renderState.DumpCurrentRenderTargetsIfActivated(layerName, passId, "FocusAfterRender");
@@ -184,10 +184,10 @@ namespace SeeingSharp.Drawing3D
                         this.ApplyAlphaBasedSpriteRendering(deviceContext);
                         try
                         {
-                            deviceContext.PixelShader.SetShaderResource(0, _renderTarget.TextureView);
-                            deviceContext.PixelShader.SetSampler(0, _defaultResources.GetSamplerState(TextureSamplerQualityLevel.Low));
-                            deviceContext.PixelShader.SetConstantBuffer(2, _cbFirstPass.ConstantBuffer);
-                            deviceContext.PixelShader.Set(_pixelShaderBlur.PixelShader);
+                            deviceContext.PSSetShaderResource(0, _renderTarget.TextureView);
+                            deviceContext.PSSetSampler(0, _defaultResources.GetSamplerState(TextureSamplerQualityLevel.Low));
+                            deviceContext.PSSetConstantBuffer(2, _cbFirstPass.ConstantBuffer);
+                            deviceContext.PSSetShader(_pixelShaderBlur.PixelShader);
                             deviceContext.Draw(3, 0);
                         }
                         finally
@@ -200,10 +200,10 @@ namespace SeeingSharp.Drawing3D
                         this.ApplyAlphaBasedSpriteRendering(deviceContext);
                         try
                         {
-                            deviceContext.PixelShader.SetShaderResource(0, _renderTarget.TextureView);
-                            deviceContext.PixelShader.SetSampler(0, _defaultResources.GetSamplerState(TextureSamplerQualityLevel.Low));
-                            deviceContext.PixelShader.SetConstantBuffer(2, _cbSecondPass.ConstantBuffer);
-                            deviceContext.PixelShader.Set(_pixelShaderBlur.PixelShader);
+                            deviceContext.PSSetShaderResource(0, _renderTarget.TextureView);
+                            deviceContext.PSSetSampler(0, _defaultResources.GetSamplerState(TextureSamplerQualityLevel.Low));
+                            deviceContext.PSSetConstantBuffer(2, _cbSecondPass.ConstantBuffer);
+                            deviceContext.PSSetShader(_pixelShaderBlur.PixelShader);
                             deviceContext.Draw(3, 0);
 
                         }
@@ -217,7 +217,7 @@ namespace SeeingSharp.Drawing3D
             else
             {
                 // Reset changes from before
-                deviceContext.Rasterizer.State = _defaultResources.RasterStateDefault;
+                deviceContext.RSSetState(_defaultResources.RasterStateDefault);
                 renderState.ForceMaterial(null);
 
                 // Now we ware finished

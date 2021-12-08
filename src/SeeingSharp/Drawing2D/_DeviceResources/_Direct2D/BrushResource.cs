@@ -1,6 +1,6 @@
 ﻿using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
-using D2D = SharpDX.Direct2D1;
+using D2D = Vortice.Direct2D1;
 
 namespace SeeingSharp.Drawing2D
 {
@@ -10,6 +10,6 @@ namespace SeeingSharp.Drawing2D
         /// Gets the brush for the given device.
         /// </summary>
         /// <param name="engineDevice">The device for which to get the brush.</param>
-        internal abstract D2D.Brush GetBrush(EngineDevice engineDevice);
+        internal abstract D2D.ID2D1Brush GetBrush(EngineDevice engineDevice);
     }
 }

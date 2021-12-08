@@ -2,7 +2,7 @@
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
-using D3D11 = SharpDX.Direct3D11;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Drawing3D
 {
@@ -75,7 +75,7 @@ namespace SeeingSharp.Drawing3D
         /// </summary>
         /// <param name="device">The device on which to create the input layout.</param>
         /// <param name="inputElements">An array of InputElements describing vertex input structure.</param>
-        internal override D3D11.InputLayout GetInputLayout(EngineDevice device, D3D11.InputElement[] inputElements)
+        internal override D3D11.ID3D11InputLayout GetInputLayout(EngineDevice device, D3D11.InputElementDescription[] inputElements)
         {
             return _vertexShader.GetInputLayout(device, inputElements);
         }
@@ -102,10 +102,10 @@ namespace SeeingSharp.Drawing3D
             }
 
             // Apply constants and shader resources
-            deviceContext.VertexShader.Set(_vertexShader.VertexShader);
-            deviceContext.PixelShader.Set(_pixelShader.PixelShader);
-            deviceContext.PixelShader.SetConstantBuffer(3, _cbPerMaterial.ConstantBuffer);
-            deviceContext.VertexShader.SetConstantBuffer(3, _cbPerMaterial.ConstantBuffer);
+            deviceContext.VSSetShader(_vertexShader.VertexShader);
+            deviceContext.PSSetShader(_pixelShader.PixelShader);
+            deviceContext.PSSetConstantBuffer(3, _cbPerMaterial.ConstantBuffer);
+            deviceContext.VSSetConstantBuffer(3, _cbPerMaterial.ConstantBuffer);
         }
     }
 }

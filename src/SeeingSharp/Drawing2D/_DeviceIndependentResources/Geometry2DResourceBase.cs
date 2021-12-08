@@ -3,7 +3,7 @@ using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
-using D2D = SharpDX.Direct2D1;
+using D2D = Vortice.Direct2D1;
 
 namespace SeeingSharp.Drawing2D
 {
@@ -26,7 +26,7 @@ namespace SeeingSharp.Drawing2D
             var geometryThis = this.GetGeometry();
             var geometryOther = other.GetGeometry();
 
-            return geometryThis.Compare(geometryOther) != D2D.GeometryRelation.Disjoint;
+            return geometryThis.CompareWithGeometry(geometryOther) != D2D.GeometryRelation.Disjoint;
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace SeeingSharp.Drawing2D
             var geometryThis = this.GetGeometry();
             var geometryOther = other.GetGeometry();
 
-            return geometryThis.Compare(geometryOther, SdxMathHelper.RawFromMatrix3x2(otherTransform), 1f) != D2D.GeometryRelation.Disjoint;
+            return geometryThis.CompareWithGeometry(geometryOther, otherTransform, 1f) != D2D.GeometryRelation.Disjoint;
         }
 
         public abstract void Dispose();
@@ -50,6 +50,6 @@ namespace SeeingSharp.Drawing2D
         /// <summary>
         /// Gets the geometry object.
         /// </summary>
-        internal abstract D2D.Geometry GetGeometry();
+        internal abstract D2D.ID2D1Geometry GetGeometry();
     }
 }

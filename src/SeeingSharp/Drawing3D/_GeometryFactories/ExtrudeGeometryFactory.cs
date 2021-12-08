@@ -2,8 +2,7 @@
 using System.Numerics;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
-using SharpDX.Mathematics.Interop;
-using D2D = SharpDX.Direct2D1;
+using D2D = Vortice.Direct2D1;
 
 namespace SeeingSharp.Drawing3D
 {
@@ -67,7 +66,7 @@ namespace SeeingSharp.Drawing3D
         /// <param name="flatteningTolerance">The maximum bounds on the distance between points in the polygonal approximation of the geometry. Smaller values produce more accurate results but cause slower execution.</param>
         /// <param name="extrudeOptions">Additional options for extruding.</param>
         internal void SetGeometry(
-            D2D.Geometry geometry, float flatteningTolerance,
+            D2D.ID2D1Geometry geometry, float flatteningTolerance,
             ExtrudeGeometryOptions extrudeOptions = ExtrudeGeometryOptions.None)
         {
             // Get triangles out of given geometry
@@ -87,7 +86,7 @@ namespace SeeingSharp.Drawing3D
             var minY = float.MaxValue;
             var maxY = float.MinValue;
             var minPoint = Vector2.Zero;
-            void UpdateMinWidthHeight(RawVector2 actCorner)
+            void UpdateMinWidthHeight(System.Drawing.PointF actCorner)
             {
                 if (actCorner.X < minX) { minX = actCorner.X; }
                 if (actCorner.X > maxX) { maxX = actCorner.X; }
@@ -134,9 +133,9 @@ namespace SeeingSharp.Drawing3D
                     for (var loop = 0; loop < actTriangleArray.Length; loop++)
                     {
                         var actTriangle = actTriangleArray[loop];
-                        actTriangle.Point1 = new RawVector2(actTriangle.Point1.X * scaleFactorX, actTriangle.Point1.Y * scaleFactorY);
-                        actTriangle.Point2 = new RawVector2(actTriangle.Point2.X * scaleFactorX, actTriangle.Point2.Y * scaleFactorY);
-                        actTriangle.Point3 = new RawVector2(actTriangle.Point3.X * scaleFactorX, actTriangle.Point3.Y * scaleFactorY);
+                        actTriangle.Point1 = new System.Drawing.PointF(actTriangle.Point1.X * scaleFactorX, actTriangle.Point1.Y * scaleFactorY);
+                        actTriangle.Point2 = new System.Drawing.PointF(actTriangle.Point2.X * scaleFactorX, actTriangle.Point2.Y * scaleFactorY);
+                        actTriangle.Point3 = new System.Drawing.PointF(actTriangle.Point3.X * scaleFactorX, actTriangle.Point3.Y * scaleFactorY);
 
                         actTriangleArray[loop] = actTriangle;
                     }
@@ -193,7 +192,7 @@ namespace SeeingSharp.Drawing3D
             /// <param name="flatteningTolerance">The maximum bounds on the distance between points in the polygonal approximation of the geometry. Smaller values produce more accurate results but cause slower execution.</param>
             /// <param name="extrudeOptions">Additional options for extruding.</param>
             public void SetGeometry(
-                D2D.Geometry geometry, float flatteningTolerance,
+                D2D.ID2D1Geometry geometry, float flatteningTolerance,
                 ExtrudeGeometryOptions extrudeOptions = ExtrudeGeometryOptions.None)
             {
                 _owner.SetGeometry(geometry, flatteningTolerance, extrudeOptions);
@@ -203,7 +202,7 @@ namespace SeeingSharp.Drawing3D
         //*********************************************************************
         //*********************************************************************
         //*********************************************************************
-        private class ExtruderTessellationSink : DummyComObject, D2D.TessellationSink
+        private class ExtruderTessellationSink : DummyComObject, D2D.ID2D1TessellationSink
         {
             public List<D2D.Triangle[]> Triangles { get; } = new List<D2D.Triangle[]>();
 

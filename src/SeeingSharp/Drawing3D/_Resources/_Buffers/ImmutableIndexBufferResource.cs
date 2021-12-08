@@ -2,19 +2,19 @@
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
-using D3D11 = SharpDX.Direct3D11;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Drawing3D
 {
     public class ImmutableIndexBufferResource : Resource
     {
         // Direct3D resources
-        private D3D11.Buffer _buffer;
+        private D3D11.ID3D11Buffer _buffer;
 
         // Configuration
         private Func<int[]> _bufferDataFactory;
 
-        internal D3D11.Buffer Buffer => _buffer;
+        internal D3D11.ID3D11Buffer Buffer => _buffer;
 
         public override bool IsLoaded => _buffer != null;
 

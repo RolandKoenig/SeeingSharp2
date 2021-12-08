@@ -2,8 +2,7 @@
 using SeeingSharp.Checking;
 using SeeingSharp.Core;
 using SeeingSharp.Util;
-using D2D = SharpDX.Direct2D1;
-using SDXM = SharpDX.Mathematics.Interop;
+using D2D = Vortice.Direct2D1;
 
 namespace SeeingSharp.Drawing2D
 {
@@ -15,7 +14,7 @@ namespace SeeingSharp.Drawing2D
         private float _radiusY;
 
         // Resources
-        private D2D.EllipseGeometry _geometry;
+        private D2D.ID2D1EllipseGeometry _geometry;
 
         public override bool IsDisposed => _geometry == null;
 
@@ -52,10 +51,10 @@ namespace SeeingSharp.Drawing2D
             _radiusY = radiusY;
 
             SeeingSharpUtil.SafeDispose(ref _geometry);
-            _geometry = new D2D.EllipseGeometry(
-                GraphicsCore.Current.FactoryD2D,
+
+            GraphicsCore.Current.FactoryD2D.CreateEllipseGeometry(
                 new D2D.Ellipse(
-                    *(SDXM.RawVector2*)&center,
+                    *(System.Drawing.PointF*)&center,
                     radiusX, radiusY));
         }
 
@@ -67,7 +66,7 @@ namespace SeeingSharp.Drawing2D
         /// <summary>
         /// Gets the geometry object.
         /// </summary>
-        internal override D2D.Geometry GetGeometry()
+        internal override D2D.ID2D1Geometry GetGeometry()
         {
             this.EnsureNotNullOrDisposed(nameof(_geometry));
 

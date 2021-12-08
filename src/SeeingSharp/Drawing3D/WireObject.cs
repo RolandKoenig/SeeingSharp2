@@ -3,7 +3,7 @@ using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
-using D3D11 = SharpDX.Direct3D11;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Drawing3D
 {
@@ -260,7 +260,7 @@ namespace SeeingSharp.Drawing3D
 
             // Apply vertex buffer and draw lines
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
-            deviceContext.InputAssembler.SetVertexBuffers(0, new D3D11.VertexBufferBinding(resourceData.LineVertexBuffer, LineVertex.Size, 0));
+            deviceContext.IASetVertexBuffers(0, new D3D11.VertexBufferView(resourceData.LineVertexBuffer, LineVertex.Size, 0));
             deviceContext.Draw(_lineData.Length * 2, 0);
         }
 
@@ -270,7 +270,7 @@ namespace SeeingSharp.Drawing3D
         private class LocalResourceData
         {
             public bool LineDataLoaded;
-            public D3D11.Buffer LineVertexBuffer;
+            public D3D11.ID3D11Buffer LineVertexBuffer;
         }
     }
 }

@@ -2,8 +2,7 @@
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
-using D3D11 = SharpDX.Direct3D11;
-using SDXTK = SeeingSharp.Util.SdxTK;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Drawing3D
 {
@@ -15,8 +14,8 @@ namespace SeeingSharp.Drawing3D
         private MemoryMappedTexture<int> _inMemoryTexture;
 
         // Loaded resources
-        private D3D11.Texture2D _texture;
-        private D3D11.ShaderResourceView _textureView;
+        private D3D11.ID3D11Texture2D _texture;
+        private D3D11.ID3D11ShaderResourceView _textureView;
 
         // Runtime
         private bool _isCubeTexture;
@@ -26,12 +25,12 @@ namespace SeeingSharp.Drawing3D
         /// Gets the texture object.
         /// </summary>
         /// <exception cref="System.NotImplementedException"></exception>
-        internal override D3D11.Texture2D Texture => _texture;
+        internal override D3D11.ID3D11Texture2D Texture => _texture;
 
         /// <summary>
         /// Gets a ShaderResourceView targeting the texture.
         /// </summary>
-        internal override D3D11.ShaderResourceView TextureView => _textureView;
+        internal override D3D11.ID3D11ShaderResourceView TextureView => _textureView;
 
         /// <summary>
         /// Is the object loaded correctly?
@@ -108,7 +107,7 @@ namespace SeeingSharp.Drawing3D
             }
 
             // Create view for shaders
-            _textureView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, _texture);
+            _textureView = device.DeviceD3D11_1.CreateShaderResourceView(_texture);
 
             // Some checking..
             _isCubeTexture =

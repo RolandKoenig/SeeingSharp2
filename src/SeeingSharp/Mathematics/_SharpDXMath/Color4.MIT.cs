@@ -248,6 +248,25 @@ namespace SeeingSharp.Mathematics
         }
 
         /// <summary>
+        /// Converts the color into a packed integer.
+        /// </summary>
+        /// <returns>A packed integer containing all four color components.</returns>
+        public int ToArgb()
+        {
+            var a = (uint)(Alpha * 255.0f) & 255;
+            var r = (uint)(Red * 255.0f) & 255;
+            var g = (uint)(Green * 255.0f) & 255;
+            var b = (uint)(Blue * 255.0f) & 255;
+
+            var value = a;
+            value |= r << 8;
+            value |= g << 16;
+            value |= b << 24;
+
+            return (int)value;
+        }
+
+        /// <summary>
         /// Converts the color into a three component vector.
         /// </summary>
         /// <returns>A three component vector containing the red, green, and blue components of the color.</returns>

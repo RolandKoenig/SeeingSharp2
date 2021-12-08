@@ -2,8 +2,7 @@
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
-using SharpDX.Mathematics.Interop;
-using D2D = SharpDX.Direct2D1;
+using D2D = Vortice.Direct2D1;
 
 namespace SeeingSharp.Drawing2D
 {
@@ -13,14 +12,14 @@ namespace SeeingSharp.Drawing2D
         private IImageInternal[] _effectInputs;
 
         // Resources
-        private D2D.Effect[] _loadedEffects;
+        private D2D.ID2D1Effect[] _loadedEffects;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EffectResource"/> class.
         /// </summary>
         protected EffectResource(params IImage[] effectInputs)
         {
-            _loadedEffects = new D2D.Effect[GraphicsCore.Current.DeviceCount];
+            _loadedEffects = new D2D.ID2D1Effect[GraphicsCore.Current.DeviceCount];
 
             // Get all effect inputs
             _effectInputs = new IImageInternal[effectInputs.Length];
@@ -38,7 +37,7 @@ namespace SeeingSharp.Drawing2D
         /// Builds the effect.
         /// </summary>
         /// <param name="device">The device on which to load the effect instance.</param>
-        protected abstract D2D.Effect BuildEffect(EngineDevice device);
+        protected abstract D2D.ID2D1Effect BuildEffect(EngineDevice device);
 
         /// <summary>
         /// Unloads all resources loaded on the given device.
@@ -86,9 +85,9 @@ namespace SeeingSharp.Drawing2D
                 // Set input values
                 for (var loop = 0; loop < _effectInputs.Length; loop++)
                 {
-                    using (var actInput = _effectInputs[loop].GetImageObject(device) as D2D.Image)
+                    using (var actInput = _effectInputs[loop].GetImageObject(device) as D2D.ID2D1Image)
                     {
-                        effect.SetInput(loop, actInput, new RawBool(false));
+                        effect.SetInput(loop, actInput, new SharpGen.Runtime.RawBool(false));
                     }
                 }
 

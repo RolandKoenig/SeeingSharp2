@@ -5,7 +5,7 @@ using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing2D;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
-using D3D11 = SharpDX.Direct3D11;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Drawing3D
 {
@@ -23,8 +23,8 @@ namespace SeeingSharp.Drawing3D
         private int _height;
 
         // Resources for Direct3D
-        private D3D11.Texture2D _renderTargetTexture;
-        private D3D11.ShaderResourceView _renderTargetTextureView;
+        private D3D11.ID3D11Texture2D _renderTargetTexture;
+        private D3D11.ID3D11ShaderResourceView _renderTargetTextureView;
 
         /// <summary>
         /// Is the resource loaded?
@@ -34,12 +34,12 @@ namespace SeeingSharp.Drawing3D
         /// <summary>
         /// Gets the texture object.
         /// </summary>
-        internal override D3D11.Texture2D Texture => _renderTargetTexture;
+        internal override D3D11.ID3D11Texture2D Texture => _renderTargetTexture;
 
         /// <summary>
         /// Gets a ShaderResourceView targeting the texture.
         /// </summary>
-        internal override D3D11.ShaderResourceView TextureView => _renderTargetTextureView;
+        internal override D3D11.ID3D11ShaderResourceView TextureView => _renderTargetTextureView;
 
         /// <summary>
         /// Gets the size of the texture array.
@@ -91,7 +91,7 @@ namespace SeeingSharp.Drawing3D
         {
             _renderTargetTexture = GraphicsHelper.Internals.CreateRenderTargetTexture(
                 device, _width, _height, new GraphicsViewConfiguration { AntialiasingEnabled = false });
-            _renderTargetTextureView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, _renderTargetTexture);
+            _renderTargetTextureView = device.DeviceD3D11_1.CreateShaderResourceView(_renderTargetTexture);
 
             // Create resources for rendering on the texture
             using (var overlayRenderer = new Direct2DOverlayRenderer(

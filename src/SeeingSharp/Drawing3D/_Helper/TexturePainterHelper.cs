@@ -137,10 +137,10 @@ namespace SeeingSharp.Drawing3D
             // Apply all current rendering parameters
             _renderParameters.Apply(renderState);
 
-            deviceContext.OutputMerger.DepthStencilState = _defaultResources.DepthStencilStateDisableZWrites;
+            deviceContext.OMSetDepthStencilState(_defaultResources.DepthStencilStateDisableZWrites);
             if (this.AlphaBlendMode == TexturePainterAlphaBlendMode.AlphaBlend)
             {
-                deviceContext.OutputMerger.BlendState = _defaultResources.AlphaBlendingBlendState;
+                deviceContext.OMSetBlendState(_defaultResources.AlphaBlendingBlendState);
             }
 
             // Render the object
@@ -148,9 +148,9 @@ namespace SeeingSharp.Drawing3D
 
             if (this.AlphaBlendMode == TexturePainterAlphaBlendMode.AlphaBlend)
             {
-                deviceContext.OutputMerger.BlendState = _defaultResources.DefaultBlendState;
+                deviceContext.OMSetBlendState(_defaultResources.DefaultBlendState);
             }
-            deviceContext.OutputMerger.DepthStencilState = _defaultResources.DepthStencilStateDefault;
+            deviceContext.OMSetDepthStencilState(_defaultResources.DepthStencilStateDefault);
         }
     }
 }

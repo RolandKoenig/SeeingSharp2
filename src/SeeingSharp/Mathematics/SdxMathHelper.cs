@@ -1,48 +1,37 @@
 ﻿using System.Numerics;
-using SharpDX.Mathematics.Interop;
 
 namespace SeeingSharp.Mathematics
 {
     internal static class SdxMathHelper
     {
-        internal static unsafe RawColor4 RawFromColor4(Color4 value)
-        {
-            return *(RawColor4*)(&value);
-        }
-
-        internal static unsafe RawMatrix3x2 RawFromMatrix3x2(Matrix3x2 value)
-        {
-            return *(RawMatrix3x2*)(&value);
-        }
-
         internal static unsafe Matrix3x2 Matrix3x2FromRaw(Matrix3x2 value)
         {
             return *(Matrix3x2*)(&value);
         }
 
-        internal static unsafe RawVector2 RawFromVector2(Vector2 value)
+        internal static unsafe System.Drawing.PointF RawFromVector2(Vector2 value)
         {
-            return *(RawVector2*)(&value);
+            return *(System.Drawing.PointF*)(&value);
         }
 
-        internal static unsafe Vector2 Vector2FromRaw(RawVector2 value)
+        internal static unsafe Vector2 Vector2FromRaw(System.Drawing.PointF value)
         {
             return *(Vector2*)(&value);
         }
 
-        internal static unsafe RawRectangle RawFromRectangle(Rectangle value)
+        internal static unsafe System.Drawing.Rectangle RawFromRectangle(Rectangle value)
         {
-            return *(RawRectangle*)(&value);
+            return *(System.Drawing.Rectangle*)(&value);
         }
 
-        internal static unsafe RawRectangleF RawFromRectangleF(RectangleF value)
+        internal static unsafe System.Drawing.RectangleF RawFromRectangleF(RectangleF value)
         {
-            return *(RawRectangleF*)(&value);
+            return *(System.Drawing.RectangleF*)(&value);
         }
 
-        internal static unsafe SharpDX.Size2 SdxFromSize2(Size2 value)
+        internal static System.Drawing.Color RawFromColor4(Color4 color)
         {
-            return *(SharpDX.Size2*)(&value);
+            return System.Drawing.Color.FromArgb(color.ToArgb());
         }
     }
 }

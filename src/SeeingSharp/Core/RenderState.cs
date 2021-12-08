@@ -296,15 +296,15 @@ namespace SeeingSharp.Core
                 if (lastVertexBufferId != actChunk.Template.VertexBufferId)
                 {
                     lastVertexBufferId = actChunk.Template.VertexBufferId;
-                    deviceContext.InputAssembler.InputLayout = actChunk.InputLayout;
-                    deviceContext.InputAssembler.SetVertexBuffers(0, new D3D11.VertexBufferBinding(actChunk.Template.VertexBuffer, actChunk.Template.SizePerVertex, 0));
+                    deviceContext.IASetInputLayout(actChunk.InputLayout);
+                    deviceContext.IASetVertexBuffers(0, new D3D11.VertexBufferView(actChunk.Template.VertexBuffer, actChunk.Template.SizePerVertex, 0));
                 }
 
                 // Apply IndexBuffer
                 if (lastIndexBufferId != actChunk.Template.IndexBufferId)
                 {
                     lastIndexBufferId = actChunk.Template.IndexBufferId;
-                    deviceContext.InputAssembler.SetIndexBuffer(actChunk.Template.IndexBuffer, Format.R32_UInt, 0);
+                    deviceContext.IASetIndexBuffer(actChunk.Template.IndexBuffer, DXGI.Format.R32_UInt, 0);
                 }
 
                 // Apply material
@@ -502,7 +502,7 @@ namespace SeeingSharp.Core
         /// <exception cref="System.ObjectDisposedException">RenderState</exception>
         internal void PushRenderTarget(
             in RenderTargets renderTargets,
-            in RawViewportF viewport,
+            in Vortice.Mathematics.Viewport viewport,
             in Camera3DBase camera, in ViewInformation viewInformation)
         {
             if (_disposed)
@@ -539,8 +539,8 @@ namespace SeeingSharp.Core
         private class RenderStackEntry
         {
             // Local array which store all RenderTargets for usage
-            private D3D11.RenderTargetView[] _targetArray;
-            private RawViewportF[] _viewports;
+            private D3D11.ID3D11RenderTargetView[] _targetArray;
+            private Vortice.Mathematics.Viewport[] _viewports;
 
             /// <summary>
             /// Gets the current view projection matrix.
@@ -553,13 +553,13 @@ namespace SeeingSharp.Core
 
             public RenderTargets RenderTargets { get; private set; }
 
-            public RawViewportF SingleViewport { get; private set; }
+            public Vortice.Mathematics.Viewport SingleViewport { get; private set; }
 
             public ViewInformation ViewInformation { get; private set; }
 
             public RenderStackEntry(
                 in Camera3DBase camera, in RenderTargets renderTargets, 
-                in RawViewportF viewPort, in ViewInformation viewInfo)
+                in Vortice.Mathematics.Viewport viewPort, in ViewInformation viewInfo)
             {
                 this.Matrix4Stack = new Matrix4Stack();
                 this.Reset(camera, renderTargets, viewPort, viewInfo);
@@ -567,7 +567,7 @@ namespace SeeingSharp.Core
 
             public void Reset(
                 in Camera3DBase camera, in RenderTargets renderTargets,
-                in RawViewportF viewPort, in ViewInformation viewInfo)
+                in Vortice.Mathematics.Viewport viewPort, in ViewInformation viewInfo)
             {
                 this.Camera = camera;
                 this.Matrix4Stack.ResetStackToIdentity();
@@ -580,22 +580,22 @@ namespace SeeingSharp.Core
             /// Applies all properties.
             /// </summary>
             /// <param name="deviceContext">Target DeviceContext object.</param>
-            public void Apply(D3D11.DeviceContext deviceContext)
+            public void Apply(D3D11.ID3D11DeviceContext deviceContext)
             {
                 // Create render target array (if not done before)
-                if (_targetArray == null) { _targetArray = new D3D11.RenderTargetView[3]; }
+                if (_targetArray == null) { _targetArray = new D3D11.ID3D11RenderTargetView[3]; }
                 _targetArray[0] = this.RenderTargets.ColorBuffer;
                 _targetArray[1] = this.RenderTargets.ObjectIdBuffer;
                 _targetArray[2] = this.RenderTargets.NormalDepthBuffer;
 
-                if (_viewports == null){ _viewports = new RawViewportF[3]; }
+                if (_viewports == null){ _viewports = new Vortice.Mathematics.Viewport[3]; }
                 _viewports[0] = this.SingleViewport;
                 _viewports[1] = this.SingleViewport;
                 _viewports[2] = this.SingleViewport;
 
                 // Set render targets to output merger
-                deviceContext.Rasterizer.SetViewports(_viewports);
-                deviceContext.OutputMerger.SetTargets(this.RenderTargets.DepthStencilBuffer, _targetArray);
+                deviceContext.RSSetViewports(_viewports);
+                deviceContext.OMSetRenderTargets(_targetArray, this.RenderTargets.DepthStencilBuffer);
             }
         }
     }

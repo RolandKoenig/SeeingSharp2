@@ -2,8 +2,8 @@
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
-using Vortice.DXGI;
-using D3D11 = SharpDX.Direct3D11;
+using DXGI = Vortice.DXGI;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Drawing3D
 {
@@ -190,13 +190,13 @@ namespace SeeingSharp.Drawing3D
             var localResources = _localResources[renderState.DeviceIndex];
 
             // Apply constants and shader resources
-            deviceContext.VertexShader.Set(localResources.VertexShader.VertexShader);
-            deviceContext.PixelShader.Set(localResources.PixelShader.PixelShader);
-            deviceContext.PixelShader.SetShaderResource(0, localResources.CubeTexture.TextureView);
+            deviceContext.VSSetShader(localResources.VertexShader.VertexShader);
+            deviceContext.PSSetShader(localResources.PixelShader.PixelShader);
+            deviceContext.PSSetShaderResource(0, localResources.CubeTexture.TextureView);
 
             // Bind index and vertex buffer
-            deviceContext.InputAssembler.SetIndexBuffer(localResources.IndexBuffer.Buffer, Format.R32_UInt, 0);
-            deviceContext.InputAssembler.SetVertexBuffers(0, new D3D11.VertexBufferBinding(
+            deviceContext.IASetIndexBuffer(localResources.IndexBuffer.Buffer, DXGI.Format.R32_UInt, 0);
+            deviceContext.IASetVertexBuffers(0, new D3D11.VertexBufferView(
                 localResources.VertexBuffer.Buffer,
                 StandardVertex.Size, 0));
 

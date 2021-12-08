@@ -1,8 +1,7 @@
 ﻿using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
-using SharpDX.Mathematics.Interop;
-using D3D11 = SharpDX.Direct3D11;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Drawing3D
 {
@@ -17,28 +16,28 @@ namespace SeeingSharp.Drawing3D
         private int _height;
         private bool _antialiasingEnabled;
         private AntialiasingQualityLevel _antialiasingQuality;
-        private RawViewportF _viewportF;
+        private Vortice.Mathematics.Viewport _viewportF;
         private bool _forceRecreateResources;
 
         // Resources for depth buffer
-        private D3D11.Texture2D _depthBuffer;
-        private D3D11.DepthStencilView _depthBufferView;
+        private D3D11.ID3D11Texture2D _depthBuffer;
+        private D3D11.ID3D11DepthStencilView _depthBufferView;
 
         // Resources for color buffer
-        private D3D11.Texture2D _colorBuffer;
-        private D3D11.RenderTargetView _colorBufferRenderTargetView;
-        private D3D11.Texture2D _colorBufferShaderResource;
-        private D3D11.ShaderResourceView _colorBufferShaderResourceView;
+        private D3D11.ID3D11Texture2D _colorBuffer;
+        private D3D11.ID3D11RenderTargetView _colorBufferRenderTargetView;
+        private D3D11.ID3D11Texture2D _colorBufferShaderResource;
+        private D3D11.ID3D11ShaderResourceView _colorBufferShaderResourceView;
 
         // Resources for ObjectId buffer
-        private D3D11.Texture2D _objectIdBuffer;
-        private D3D11.RenderTargetView _objectIdBufferRenderTargetView;
+        private D3D11.ID3D11Texture2D _objectIdBuffer;
+        private D3D11.ID3D11RenderTargetView _objectIdBufferRenderTargetView;
 
         // Resources for normal/depth buffer
-        private D3D11.Texture2D _normalDepthBuffer;
-        private D3D11.RenderTargetView _normalDepthBufferRenderTargetView;
-        private D3D11.Texture2D _normalDepthBufferShaderResource;
-        private D3D11.ShaderResourceView _normalDepthBufferShaderResourceView;
+        private D3D11.ID3D11Texture2D _normalDepthBuffer;
+        private D3D11.ID3D11RenderTargetView _normalDepthBufferRenderTargetView;
+        private D3D11.ID3D11Texture2D _normalDepthBufferShaderResource;
+        private D3D11.ID3D11ShaderResourceView _normalDepthBufferShaderResourceView;
 
         /// <summary>
         /// Is the resource loaded?
@@ -48,23 +47,23 @@ namespace SeeingSharp.Drawing3D
         /// <summary>
         /// Gets the texture itself.
         /// </summary>
-        internal override D3D11.Texture2D Texture => _colorBuffer;
+        internal override D3D11.ID3D11Texture2D Texture => _colorBuffer;
 
         /// <summary>
         /// Gets the shader resource view to the texture.
         /// </summary>
-        internal override D3D11.ShaderResourceView TextureView => _colorBufferShaderResourceView;
+        internal override D3D11.ID3D11ShaderResourceView TextureView => _colorBufferShaderResourceView;
 
         public override int ArraySize => 1;
 
-        internal D3D11.Texture2D TextureColor => _colorBuffer;
+        internal D3D11.ID3D11Texture2D TextureColor => _colorBuffer;
 
-        internal D3D11.ShaderResourceView TextureViewColor => _colorBufferShaderResourceView;
+        internal D3D11.ID3D11ShaderResourceView TextureViewColor => _colorBufferShaderResourceView;
 
         /// <summary>
         /// Gets the shader resource view to the normal-depth texture.
         /// </summary>
-        internal D3D11.ShaderResourceView TextureViewNormalDepth => _normalDepthBufferShaderResourceView;
+        internal D3D11.ID3D11ShaderResourceView TextureViewNormalDepth => _normalDepthBufferShaderResourceView;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RenderTargetTextureResource" /> class.
@@ -75,7 +74,7 @@ namespace SeeingSharp.Drawing3D
             _creationMode = creationMode;
             _width = -1;
             _height = -1;
-            _viewportF = new RawViewportF();
+            _viewportF = new Vortice.Mathematics.Viewport();
             _shaderResourceCreated = false;
         }
 
@@ -136,8 +135,8 @@ namespace SeeingSharp.Drawing3D
                     {
                         _shaderResourceCreated = false;
                     }
-                    _colorBufferRenderTargetView = new D3D11.RenderTargetView(renderState.Device.DeviceD3D11_1, _colorBuffer);
-                    _colorBufferShaderResourceView = new D3D11.ShaderResourceView(renderState.Device.DeviceD3D11_1, _colorBufferShaderResource);
+                    _colorBufferRenderTargetView = renderState.Device.DeviceD3D11_1.CreateRenderTargetView(_colorBuffer);
+                    _colorBufferShaderResourceView = renderState.Device.DeviceD3D11_1.CreateShaderResourceView(_colorBufferShaderResource);
                 }
 
                 // Create depth-buffer resources
@@ -153,7 +152,7 @@ namespace SeeingSharp.Drawing3D
                 {
                     _objectIdBuffer = GraphicsHelper.Internals.CreateRenderTargetTextureObjectIds(
                         renderState.Device, currentViewSize.Width, currentViewSize.Height, renderState.ViewInformation.ViewConfiguration);
-                    _objectIdBufferRenderTargetView = new D3D11.RenderTargetView(renderState.Device.DeviceD3D11_1, _objectIdBuffer);
+                    _objectIdBufferRenderTargetView = renderState.Device.DeviceD3D11_1.CreateRenderTargetView(_objectIdBuffer);
                 }
 
                 // Create normal-depth buffer resources
@@ -167,8 +166,8 @@ namespace SeeingSharp.Drawing3D
                         _normalDepthBufferShaderResource = GraphicsHelper.Internals.CreateTexture(
                             renderState.Device, currentViewSize.Width, currentViewSize.Height, GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT_NORMAL_DEPTH);
                     }
-                    _normalDepthBufferRenderTargetView = new D3D11.RenderTargetView(renderState.Device.DeviceD3D11_1, _normalDepthBuffer);
-                    _normalDepthBufferShaderResourceView = new D3D11.ShaderResourceView(renderState.Device.DeviceD3D11_1, _normalDepthBufferShaderResource);
+                    _normalDepthBufferRenderTargetView = renderState.Device.DeviceD3D11_1.CreateRenderTargetView(_normalDepthBuffer);
+                    _normalDepthBufferShaderResourceView = renderState.Device.DeviceD3D11_1.CreateShaderResourceView(_normalDepthBufferShaderResource);
                 }
 
                 // Remember values

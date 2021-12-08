@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using SharpDX;
 
 namespace SeeingSharp.Util
 {

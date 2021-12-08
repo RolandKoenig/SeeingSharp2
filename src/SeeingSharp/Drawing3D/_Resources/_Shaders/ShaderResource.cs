@@ -1,7 +1,8 @@
 ﻿using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
-using SharpDX.D3DCompiler;
+using D3DCompiler = Vortice.D3DCompiler;
+using D3D = Vortice.Direct3D;
 
 namespace SeeingSharp.Drawing3D
 {
@@ -79,18 +80,30 @@ namespace SeeingSharp.Drawing3D
                             resourceLink,
                             singleShaderSourceBuilder);
 
+                        // device.DebugEnabled ? D3DCompiler.ShaderFlags.Debug : D3DCompiler.ShaderFlags.None
                         var shaderSource = singleShaderSourceBuilder.ToString();
-                        var compileResult = SharpDX.D3DCompiler.ShaderBytecode.Compile(
+                        var compileResult = D3DCompiler.Compiler.Compile(
                             shaderSource,
+                            null, 
+                            null,
                             "main",
+                            resourceLink.ToString(),
                             shaderModel,
-                            device.DebugEnabled ? ShaderFlags.Debug : ShaderFlags.None,
-                            sourceFileName: resourceLink.ToString());
-                        if (compileResult.HasErrors)
+                            device.DebugEnabled ? D3DCompiler.ShaderFlags.Debug : D3DCompiler.ShaderFlags.None,
+                            out var compBlob, out var compErrorBlob);
+                        try
                         {
-                            throw new SeeingSharpGraphicsException($"Unable to compile shader from {resourceLink}: {compileResult.ResultCode} - {compileResult.Message}");
+                            if (compileResult.Failure)
+                            {
+                                throw new SeeingSharpGraphicsException($"Unable to compile shader from {resourceLink}: {compileResult.Code} - {compileResult.ToString()}");
+                            }
+                            return compBlob.GetBytes();
                         }
-                        return compileResult.Bytecode.Data;
+                        finally
+                        {
+                            SeeingSharpUtil.SafeDispose(ref compBlob);
+                            SeeingSharpUtil.SafeDispose(ref compErrorBlob);
+                        }
                     }
 
                 default:

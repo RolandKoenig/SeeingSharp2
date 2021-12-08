@@ -5,8 +5,7 @@ using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
-using SharpDX.Mathematics.Interop;
-using D2D = SharpDX.Direct2D1;
+using D2D = Vortice.Direct2D1;
 
 namespace SeeingSharp.Drawing2D
 {
@@ -79,7 +78,7 @@ namespace SeeingSharp.Drawing2D
         /// Gets the brush for the given device.
         /// </summary>
         /// <param name="engineDevice">The device for which to get the brush.</param>
-        internal override D2D.Brush GetBrush(EngineDevice engineDevice)
+        internal override D2D.ID2D1Brush GetBrush(EngineDevice engineDevice)
         {
             // Check for disposed state
             if (this.IsDisposed)
@@ -104,8 +103,7 @@ namespace SeeingSharp.Drawing2D
                 // Create the brush
                 result = new LoadedBrushResources
                 {
-                    GradientStops = new D2D.GradientStopCollection(
-                        engineDevice.FakeRenderTarget2D,
+                    GradientStops = engineDevice.FakeRenderTarget2D.CreateGradientStopCollection(
                         d2dGradientStops,
                         (D2D.Gamma)this.Gamma, (D2D.ExtendMode)this.ExtendMode)
                 };
@@ -113,8 +111,7 @@ namespace SeeingSharp.Drawing2D
                 unsafe
                 {
                     var identityMatrix = Matrix3x2.Identity;
-                    result.Brush = new D2D.LinearGradientBrush(
-                        engineDevice.FakeRenderTarget2D,
+                    result.Brush = engineDevice.FakeRenderTarget2D.CreateLinearGradientBrush(
                         new D2D.LinearGradientBrushProperties
                         {
                             StartPoint = SdxMathHelper.RawFromVector2(this.StartPoint),
@@ -123,7 +120,7 @@ namespace SeeingSharp.Drawing2D
                         new D2D.BrushProperties
                         {
                             Opacity = _opacity,
-                            Transform = *(RawMatrix3x2*)&identityMatrix
+                            Transform = *(Matrix3x2*)&identityMatrix
                         },
                         result.GradientStops);
                 }
@@ -145,8 +142,8 @@ namespace SeeingSharp.Drawing2D
         /// </summary>
         private struct LoadedBrushResources
         {
-            public D2D.GradientStopCollection GradientStops;
-            public D2D.LinearGradientBrush Brush;
+            public D2D.ID2D1GradientStopCollection GradientStops;
+            public D2D.ID2D1LinearGradientBrush Brush;
         }
     }
 }

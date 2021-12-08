@@ -1,7 +1,7 @@
 ﻿using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
-using D3D11 = SharpDX.Direct3D11;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Drawing3D
 {
@@ -17,42 +17,41 @@ namespace SeeingSharp.Drawing3D
         /// Applies alpha based sprite rendering.
         /// </summary>
         /// <param name="deviceContext">The target device context.</param>
-        protected void ApplySpriteRendering(D3D11.DeviceContext deviceContext)
+        protected void ApplySpriteRendering(D3D11.ID3D11DeviceContext deviceContext)
         {
-            deviceContext.VertexShader.Set(_vertexShader.VertexShader);
-
-            deviceContext.OutputMerger.DepthStencilState = _defaultResources.DepthStencilStateAlwaysPassDepth;
+            deviceContext.VSSetShader(_vertexShader.VertexShader);
+            deviceContext.OMSetDepthStencilState(_defaultResources.DepthStencilStateAlwaysPassDepth);
         }
 
         /// <summary>
         /// Discards alpha based sprite rendering.
         /// </summary>
         /// <param name="deviceContext">The target device context.</param>
-        protected void DiscardSpriteRendering(D3D11.DeviceContext deviceContext)
+        protected void DiscardSpriteRendering(D3D11.ID3D11DeviceContext deviceContext)
         {
-            deviceContext.OutputMerger.DepthStencilState = _defaultResources.DepthStencilStateDefault;
+            deviceContext.OMSetDepthStencilState(_defaultResources.DepthStencilStateDefault);
         }
 
         /// <summary>
         /// Applies alpha based sprite rendering.
         /// </summary>
         /// <param name="deviceContext">The target device context.</param>
-        protected void ApplyAlphaBasedSpriteRendering(D3D11.DeviceContext deviceContext)
+        protected void ApplyAlphaBasedSpriteRendering(D3D11.ID3D11DeviceContext deviceContext)
         {
-            deviceContext.VertexShader.Set(_vertexShader.VertexShader);
+            deviceContext.VSSetShader(_vertexShader.VertexShader);
 
-            deviceContext.OutputMerger.DepthStencilState = _defaultResources.DepthStencilStateAlwaysPassDepth;
-            deviceContext.OutputMerger.BlendState = _defaultResources.AlphaBlendingBlendState;
+            deviceContext.OMSetDepthStencilState(_defaultResources.DepthStencilStateAlwaysPassDepth);
+            deviceContext.OMSetBlendState(_defaultResources.AlphaBlendingBlendState);
         }
 
         /// <summary>
         /// Discards alpha based sprite rendering.
         /// </summary>
         /// <param name="deviceContext">The target device context.</param>
-        protected void DiscardAlphaBasedSpriteRendering(D3D11.DeviceContext deviceContext)
+        protected void DiscardAlphaBasedSpriteRendering(D3D11.ID3D11DeviceContext deviceContext)
         {
-            deviceContext.OutputMerger.BlendState = _defaultResources.DefaultBlendState;
-            deviceContext.OutputMerger.DepthStencilState = _defaultResources.DepthStencilStateDefault;
+            deviceContext.OMSetBlendState(_defaultResources.DefaultBlendState);
+            deviceContext.OMSetDepthStencilState(_defaultResources.DepthStencilStateDefault);
         }
 
         /// <summary>

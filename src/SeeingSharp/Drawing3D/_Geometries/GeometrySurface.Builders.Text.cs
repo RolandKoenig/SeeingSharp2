@@ -33,11 +33,11 @@ namespace SeeingSharp.Drawing3D
             {
                 
 
-                using var textLayout = new DWrite.IDWriteTextLayout(
-                    writeFactory, stringToBuild,
-                    new DWrite.IDWriteTextFormat(
-                        writeFactory, geometryOptions.FontFamily, (DWrite.FontWeight)fontWeight, (DWrite.FontStyle)fontStyle, geometryOptions.FontSize),
-                        float.MaxValue, float.MaxValue, 1f, true);
+                using var textLayout = writeFactory.CreateTextLayout(
+                    stringToBuild,
+                    writeFactory.CreateTextFormat(
+                        geometryOptions.FontFamily, (DWrite.FontWeight)fontWeight, (DWrite.FontStyle)fontStyle, geometryOptions.FontSize),
+                        float.MaxValue, float.MaxValue);
 
                 // Render the text using the geometry text renderer
                 using var textRenderer = new GeometryTextRenderer(this, geometryOptions);

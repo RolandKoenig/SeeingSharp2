@@ -1,16 +1,17 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using SeeingSharp.Core;
 using SeeingSharp.Drawing3D.Primitives;
 using SeeingSharp.Mathematics;
-using SharpDX.Direct2D1;
-using Vortice.DirectWrite;
-using SDX = SharpDX;
+using SharpGen.Runtime;
+using D2D = Vortice.Direct2D1;
+using DWrite = Vortice.DirectWrite;
 
 namespace SeeingSharp.Drawing3D
 {
-    internal class GeometryTextRenderer : TextRendererBase
+    internal class GeometryTextRenderer : DWrite.TextRendererBase
     {
         private TextGeometryOptions _geometryOptions;
         private GeometrySurface _targetSurface;
@@ -41,14 +42,14 @@ namespace SeeingSharp.Drawing3D
         /// <remarks>
         /// The <see cref="M:Vortice.DirectWrite.TextLayout.Draw_(System.IntPtr,System.IntPtr,System.Single,System.Single)" /> function calls this callback function with all the information about glyphs to render. The application implements this callback by mostly delegating the call to the underlying platform's graphics API such as {{Direct2D}} to draw glyphs on the drawing context. An application that uses GDI can implement this callback in terms of the <see cref="M:Vortice.DirectWrite.BitmapRenderTarget.DrawGlyphRun(System.Single,System.Single,SharpDX.Direct2D1.MeasuringMode,Vortice.DirectWrite.GlyphRun,Vortice.DirectWrite.RenderingParams,SharpDX.Color4)" /> method.
         /// </remarks>
-        public override SDX.Result DrawGlyphRun(
-            object clientDrawingContext, float baselineOriginX, float baselineOriginY,
-            MeasuringMode measuringMode, GlyphRun glyphRun, GlyphRunDescription glyphRunDescription, SDX.ComObject clientDrawingEffect)
+        public override void DrawGlyphRun(
+            IntPtr clientDrawingContext, float baselineOriginX, float baselineOriginY,
+            Vortice.DCommon.MeasuringMode measuringMode, DWrite.GlyphRun glyphRun, DWrite.GlyphRunDescription glyphRunDescription, IUnknown clientDrawingEffect)
         {
             if (glyphRun.Indices == null ||
                 glyphRun.Indices.Length == 0)
             {
-                return SDX.Result.Ok;
+                return;
             }
 
             var d2DFactory = GraphicsCore.Current.FactoryD2D;
@@ -56,7 +57,7 @@ namespace SeeingSharp.Drawing3D
             // Extrude geometry data out of given glyph run
             var geometryExtruder = new SimplePolygon2DGeometrySink(new Vector2(baselineOriginX, baselineOriginY));
 
-            using (var pathGeometry = new PathGeometry(d2DFactory))
+            using (var pathGeometry = d2DFactory.CreatePathGeometry())
             {
                 // Write all geometry data into a standard PathGeometry object
                 using (var geoSink = pathGeometry.Open())
@@ -66,7 +67,6 @@ namespace SeeingSharp.Drawing3D
                         glyphRun.Indices,
                         glyphRun.Advances,
                         glyphRun.Offsets,
-                        glyphRun.Offsets?.Length ?? 0,
                         glyphRun.IsSideways,
                         glyphRun.BidiLevel % 2 == 1,
                         geoSink);
@@ -74,7 +74,7 @@ namespace SeeingSharp.Drawing3D
                 }
 
                 // Simplify written geometry and write it into own structure
-                pathGeometry.Simplify(GeometrySimplificationOption.Lines, _geometryOptions.SimplificationFlatternTolerance, geometryExtruder);
+                pathGeometry.Simplify(D2D.GeometrySimplificationOption.Lines, _geometryOptions.SimplificationFlatternTolerance, geometryExtruder);
             }
 
             // Geometry for caching the result
@@ -268,7 +268,7 @@ namespace SeeingSharp.Drawing3D
             // Merge temporary geometry to target geometry
             _targetSurface.AddGeometry(tempGeometry);
 
-            return SDX.Result.Ok;
+            return;
         }
 
         /// <summary>
@@ -285,9 +285,9 @@ namespace SeeingSharp.Drawing3D
         /// If the method succeeds, it returns S_OK. Otherwise, it returns an HRESULT error code.
         /// </returns>
         /// <unmanaged>HRESULT DrawInlineObject([None] void* clientDrawingContext,[None] FLOAT originX,[None] FLOAT originY,[None] IDWriteInlineObject* inlineObject,[None] BOOL isSideways,[None] BOOL isRightToLeft,[None] IUnknown* clientDrawingEffect)</unmanaged>
-        public override SDX.Result DrawInlineObject(object clientDrawingContext, float originX, float originY, InlineObject inlineObject, bool isSideways, bool isRightToLeft, SDX.ComObject clientDrawingEffect)
+        public override void DrawInlineObject(IntPtr clientDrawingContext, float originX, float originY, DWrite.IDWriteInlineObject inlineObject, RawBool isSideways, RawBool isRightToLeft, IUnknown clientDrawingEffect)
         {
-            return SDX.Result.Ok;
+            return;
         }
 
         /// <summary>
@@ -305,9 +305,9 @@ namespace SeeingSharp.Drawing3D
         /// <remarks>
         /// A single strikethrough can be broken into multiple calls, depending on how the formatting changes attributes. Strikethrough is not averaged across font sizes/styles changes. To get an appropriate starting pixel position, add strikethrough::offset to the baseline. Like underlines, the x coordinate will always be passed as the left side, regardless of text directionality.
         /// </remarks>
-        public override SDX.Result DrawStrikethrough(object clientDrawingContext, float baselineOriginX, float baselineOriginY, ref Strikethrough strikethrough, SDX.ComObject clientDrawingEffect)
+        public override void DrawStrikethrough(IntPtr clientDrawingContext, float baselineOriginX, float baselineOriginY, ref DWrite.Strikethrough strikethrough, IUnknown clientDrawingEffect)
         {
-            return SDX.Result.Ok;
+            return;
         }
 
         /// <summary>
@@ -325,9 +325,9 @@ namespace SeeingSharp.Drawing3D
         /// <remarks>
         /// A single underline can be broken into multiple calls, depending on how the formatting changes attributes. If font sizes/styles change within an underline, the thickness and offset will be averaged weighted according to characters. To get an appropriate starting pixel position, add underline::offset to the baseline. Otherwise there will be no spacing between the text. The x coordinate will always be passed as the left side, regardless of text directionality. This simplifies drawing and reduces the problem of round-off that could potentially cause gaps or a double stamped alpha blend. To avoid alpha overlap, round the end points to the nearest device pixel.
         /// </remarks>
-        public override SDX.Result DrawUnderline(object clientDrawingContext, float baselineOriginX, float baselineOriginY, ref Underline underline, SDX.ComObject clientDrawingEffect)
+        public override void DrawUnderline(IntPtr clientDrawingContext, float baselineOriginX, float baselineOriginY, ref DWrite.Underline underline, IUnknown clientDrawingEffect)
         {
-            return SDX.Result.Ok;
+            return;
         }
     }
 }

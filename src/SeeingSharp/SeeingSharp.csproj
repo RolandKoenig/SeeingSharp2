@@ -25,6 +25,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Drawing3D\_Geometries\_Builders\**" />
+    <EmbeddedResource Remove="Drawing3D\_Geometries\_Builders\**" />
+    <None Remove="Drawing3D\_Geometries\_Builders\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <!-- For GitHub -->
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.0-beta-20204-02" PrivateAssets="All" />
     <PackageReference Include="SharpGenTools.Sdk" Version="1.2.1">
@@ -99,8 +105,5 @@
     <PackageReference Include="Vortice.D3DCompiler" Version="1.9.143" />
     <PackageReference Include="Vortice.Direct2D1" Version="1.9.143" />
     <PackageReference Include="Vortice.Direct3D11" Version="1.9.143" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Drawing3D\_Geometries\_Builders\" />
   </ItemGroup>
 </Project>

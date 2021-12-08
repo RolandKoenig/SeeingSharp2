@@ -5,7 +5,7 @@ using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
-using D2D = SharpDX.Direct2D1;
+using D2D = Vortice.Direct2D1;
 
 namespace SeeingSharp.Drawing2D
 {
@@ -79,7 +79,7 @@ namespace SeeingSharp.Drawing2D
         /// Gets the brush for the given device.
         /// </summary>
         /// <param name="engineDevice">The device for which to get the brush.</param>
-        internal override D2D.Brush GetBrush(EngineDevice engineDevice)
+        internal override D2D.ID2D1Brush GetBrush(EngineDevice engineDevice)
         {
             // Check for disposed state
             if (this.IsDisposed)
@@ -104,15 +104,13 @@ namespace SeeingSharp.Drawing2D
                 // Create the brush
                 result = new LoadedBrushResources
                 {
-                    GradientStops = new D2D.GradientStopCollection(
-                        engineDevice.FakeRenderTarget2D,
+                    GradientStops = engineDevice.FakeRenderTarget2D.CreateGradientStopCollection(
                         d2dGradientStops,
                         (D2D.Gamma)this.Gamma,
                         (D2D.ExtendMode)this.ExtendMode)
                 };
 
-                result.Brush = new D2D.RadialGradientBrush(
-                    engineDevice.FakeRenderTarget2D,
+                result.Brush = engineDevice.FakeRenderTarget2D.CreateRadialGradientBrush(
                     new D2D.RadialGradientBrushProperties
                     {
                         Center = SdxMathHelper.RawFromVector2(this.Center),
@@ -144,8 +142,8 @@ namespace SeeingSharp.Drawing2D
         /// </summary>
         private struct LoadedBrushResources
         {
-            public D2D.GradientStopCollection GradientStops;
-            public D2D.RadialGradientBrush Brush;
+            public D2D.ID2D1GradientStopCollection GradientStops;
+            public D2D.ID2D1RadialGradientBrush Brush;
         }
     }
 }

@@ -5,7 +5,8 @@ using SeeingSharp.Core.Devices;
 namespace SeeingSharp.Drawing2D
 {
     public interface IImage
-    {}
+    {
+    }
 
     internal interface IImageInternal
     {

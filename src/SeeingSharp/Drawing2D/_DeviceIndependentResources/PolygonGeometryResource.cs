@@ -2,15 +2,14 @@
 using SeeingSharp.Core;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
-using D2D = SharpDX.Direct2D1;
-using SDXM = SharpDX.Mathematics.Interop;
+using D2D = Vortice.Direct2D1;
 
 namespace SeeingSharp.Drawing2D
 {
     public class PolygonGeometryResource : Geometry2DResourceBase
     {
         // resources
-        private D2D.PathGeometry _d2dGeometry;
+        private D2D.ID2D1PathGeometry _d2dGeometry;
 
         public override bool IsDisposed => _d2dGeometry == null;
 
@@ -19,8 +18,7 @@ namespace SeeingSharp.Drawing2D
         /// </summary>
         public PolygonGeometryResource()
         {
-            _d2dGeometry = new D2D.PathGeometry(
-                GraphicsCore.Current.FactoryD2D);
+            _d2dGeometry = GraphicsCore.Current.FactoryD2D.CreatePathGeometry();
         }
 
         /// <summary>
@@ -49,7 +47,7 @@ namespace SeeingSharp.Drawing2D
                 // Start the figure
                 var startPoint = vertices[0];
                 geoSink.BeginFigure(
-                    *(SDXM.RawVector2*)&startPoint,
+                    *(System.Drawing.PointF*)&startPoint,
                     D2D.FigureBegin.Filled);
 
                 // AddObject all lines
@@ -58,7 +56,7 @@ namespace SeeingSharp.Drawing2D
                 for (var loop = 1; loop < vertexCount; loop++)
                 {
                     var actVectorOrig = vertices[loop];
-                    geoSink.AddLine(*(SDXM.RawVector2*)&actVectorOrig);
+                    geoSink.AddLine(*(System.Drawing.PointF*)&actVectorOrig);
                 }
 
                 // End the figure
@@ -76,7 +74,7 @@ namespace SeeingSharp.Drawing2D
             this.EnsureNotNullOrDisposed("this");
             otherGeometry.EnsureNotNullOrDisposed(nameof(otherGeometry));
 
-            var relation = _d2dGeometry.Compare(otherGeometry._d2dGeometry);
+            var relation = _d2dGeometry.CompareWithGeometry(otherGeometry._d2dGeometry);
 
             return
                 relation != D2D.GeometryRelation.Unknown &&
@@ -94,7 +92,7 @@ namespace SeeingSharp.Drawing2D
         /// <summary>
         /// Gets the geometry object.
         /// </summary>
-        internal override D2D.Geometry GetGeometry()
+        internal override D2D.ID2D1Geometry GetGeometry()
         {
             return _d2dGeometry;
         }

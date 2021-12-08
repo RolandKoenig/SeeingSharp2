@@ -5,8 +5,8 @@ using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing2D;
 using SeeingSharp.Util;
 using SeeingSharp.Mathematics;
-using D2D = SharpDX.Direct2D1;
-using D3D11 = SharpDX.Direct3D11;
+using D2D = Vortice.Direct2D1;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Drawing3D
 {
@@ -17,8 +17,8 @@ namespace SeeingSharp.Drawing3D
         private int _height;
 
         // Resources for Direct3D
-        private D3D11.Texture2D _renderTargetTexture;
-        private D3D11.ShaderResourceView _renderTargetTextureView;
+        private D3D11.ID3D11Texture2D _renderTargetTexture;
+        private D3D11.ID3D11ShaderResourceView _renderTargetTextureView;
 
         // Resources for Direct2D
         private Graphics2D _graphics2D;
@@ -32,12 +32,12 @@ namespace SeeingSharp.Drawing3D
         /// <summary>
         /// Gets the texture object.
         /// </summary>
-        internal override D3D11.Texture2D Texture => _renderTargetTexture;
+        internal override D3D11.ID3D11Texture2D Texture => _renderTargetTexture;
 
         /// <summary>
         /// Gets a ShaderResourceView targeting the texture.
         /// </summary>
-        internal override D3D11.ShaderResourceView TextureView => _renderTargetTextureView;
+        internal override D3D11.ID3D11ShaderResourceView TextureView => _renderTargetTextureView;
 
         /// <summary>
         /// Gets the size of the texture array.
@@ -95,7 +95,7 @@ namespace SeeingSharp.Drawing3D
                 {
                     _overlayRenderer.EndDraw();
                 }
-                catch (SharpDX.SharpDXException dxException)
+                catch (SharpGen.Runtime.SharpGenException dxException)
                 {
                     if (dxException.ResultCode == D2D.ResultCode.RecreateTarget)
                     {
@@ -119,7 +119,7 @@ namespace SeeingSharp.Drawing3D
         {
             _renderTargetTexture = GraphicsHelper.Internals.CreateRenderTargetTexture(
                 device, _width, _height, new GraphicsViewConfiguration { AntialiasingEnabled = false });
-            _renderTargetTextureView = new D3D11.ShaderResourceView(device.DeviceD3D11_1, _renderTargetTexture);
+            _renderTargetTextureView = device.DeviceD3D11_1.CreateShaderResourceView(_renderTargetTexture);
 
             _overlayRenderer = new Direct2DOverlayRenderer(
                 device,

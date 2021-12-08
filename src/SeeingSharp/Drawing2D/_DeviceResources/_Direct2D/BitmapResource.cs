@@ -1,7 +1,7 @@
 ﻿using System;
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
-using D2D = SharpDX.Direct2D1;
+using D2D = Vortice.Direct2D1;
 
 namespace SeeingSharp.Drawing2D
 {
@@ -51,7 +51,7 @@ namespace SeeingSharp.Drawing2D
         {
             get;
         }
-        internal abstract D2D.Bitmap GetBitmap(EngineDevice engineDevice);
+        internal abstract D2D.ID2D1Bitmap GetBitmap(EngineDevice engineDevice);
 
         /// <summary>
         /// Gets the input object for an effect.
@@ -60,7 +60,7 @@ namespace SeeingSharp.Drawing2D
         IDisposable IImageInternal.GetImageObject(EngineDevice device)
         {
             return this.GetBitmap(device)
-                .QueryInterface<D2D.Bitmap>();
+                .QueryInterface<D2D.ID2D1Bitmap>();
         }
 
         /// <summary>

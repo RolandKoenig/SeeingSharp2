@@ -1,4 +1,4 @@
-﻿using D3D11 = SharpDX.Direct3D11;
+﻿using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Drawing3D
 {
@@ -8,7 +8,7 @@ namespace SeeingSharp.Drawing3D
     public class RenderingChunk
     {
         internal RenderingChunkTemplate Template;
-        internal D3D11.InputLayout InputLayout;
+        internal D3D11.ID3D11InputLayout InputLayout;
         internal MaterialResource Material;
     }
 }

@@ -575,16 +575,16 @@ namespace SeeingSharp.Drawing2D
             else
             {
                 var nativeBitmap = bitmap.GetBitmap(this.Device);
-                var destinationRectangle = new Vortice.RawRectF(
+                var destinationRectangle = new System.Drawing.RectangleF(
                     destinationOrigin.X, destinationOrigin.Y,
                     destinationOrigin.X + bitmap.PixelWidth, destinationOrigin.Y + bitmap.PixelHeight);
 
                 // Render non-tiled bitmap
                 _renderTarget.DrawBitmap(
                     nativeBitmap,
-                    destinationRectangle,
                     opacity,
-                    (D2D.BitmapInterpolationMode)interpolationMode);
+                    (D2D.BitmapInterpolationMode)interpolationMode,
+                    destinationRectangle);
             }
         }
 

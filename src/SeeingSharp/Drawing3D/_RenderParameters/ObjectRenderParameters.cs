@@ -76,8 +76,8 @@ namespace SeeingSharp.Drawing3D
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
             // Apply constant buffer on shaders
-            deviceContext.VertexShader.SetConstantBuffer(2, _cbPerObject.ConstantBuffer);
-            deviceContext.PixelShader.SetConstantBuffer(2, _cbPerObject.ConstantBuffer);
+            deviceContext.VSSetConstantBuffer(2, _cbPerObject.ConstantBuffer);
+            deviceContext.PSSetConstantBuffer(2, _cbPerObject.ConstantBuffer);
         }
     }
 }

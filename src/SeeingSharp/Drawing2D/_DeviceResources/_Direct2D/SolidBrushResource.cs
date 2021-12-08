@@ -5,14 +5,14 @@ using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
-using D2D = SharpDX.Direct2D1;
+using D2D = Vortice.Direct2D1;
 
 namespace SeeingSharp.Drawing2D
 {
     public class SolidBrushResource : BrushResource
     {
         // Resources
-        private D2D.SolidColorBrush[] _loadedBrushes;
+        private D2D.ID2D1SolidColorBrush[] _loadedBrushes;
 
         public Color4 Color { get; }
 
@@ -29,7 +29,7 @@ namespace SeeingSharp.Drawing2D
         {
             opacity.EnsureInRange(0f, 1f, nameof(opacity));
 
-            _loadedBrushes = new D2D.SolidColorBrush[GraphicsCore.Current.DeviceCount];
+            _loadedBrushes = new D2D.ID2D1SolidColorBrush[GraphicsCore.Current.DeviceCount];
 
             this.Opacity = opacity;
             this.Color = singleColor;
@@ -41,7 +41,7 @@ namespace SeeingSharp.Drawing2D
         /// <param name="engineDevice">The device for which to unload the resource.</param>
         internal override void UnloadResources(EngineDevice engineDevice)
         {
-            D2D.Brush brush = _loadedBrushes[engineDevice.DeviceIndex];
+            D2D.ID2D1Brush brush = _loadedBrushes[engineDevice.DeviceIndex];
             if (brush != null)
             {
                 engineDevice.DeregisterDeviceResource(this);
@@ -55,7 +55,7 @@ namespace SeeingSharp.Drawing2D
         /// Gets the brush for the given device.
         /// </summary>
         /// <param name="engineDevice">The device for which to get the brush.</param>
-        internal override D2D.Brush GetBrush(EngineDevice engineDevice)
+        internal override D2D.ID2D1Brush GetBrush(EngineDevice engineDevice)
         {
             // Check for disposed state
             if (this.IsDisposed)
@@ -68,8 +68,8 @@ namespace SeeingSharp.Drawing2D
             if (result == null)
             {
                 // Load the brush
-                result = new D2D.SolidColorBrush(
-                    engineDevice.FakeRenderTarget2D, SdxMathHelper.RawFromColor4(this.Color),
+                result = engineDevice.FakeRenderTarget2D.CreateSolidColorBrush(
+                    SdxMathHelper.RawFromColor4(this.Color),
                     new D2D.BrushProperties
                     {
                         Opacity = this.Opacity,

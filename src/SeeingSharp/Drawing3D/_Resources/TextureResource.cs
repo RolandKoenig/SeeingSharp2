@@ -1,5 +1,5 @@
 ﻿using SeeingSharp.Core;
-using D3D11 = SharpDX.Direct3D11;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Drawing3D
 {
@@ -8,7 +8,7 @@ namespace SeeingSharp.Drawing3D
         /// <summary>
         /// Gets the texture object.
         /// </summary>
-        internal abstract D3D11.Texture2D Texture
+        internal abstract D3D11.ID3D11Texture2D Texture
         {
             get;
         }
@@ -16,7 +16,7 @@ namespace SeeingSharp.Drawing3D
         /// <summary>
         /// Gets a ShaderResourceView targeting the texture.
         /// </summary>
-        internal abstract D3D11.ShaderResourceView TextureView
+        internal abstract D3D11.ID3D11ShaderResourceView TextureView
         {
             get;
         }

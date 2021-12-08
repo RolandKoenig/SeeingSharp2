@@ -1,7 +1,6 @@
 ﻿using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
-using SharpDX.Direct2D1.Effects;
-using D2D = SharpDX.Direct2D1;
+using D2D = Vortice.Direct2D1;
 
 namespace SeeingSharp.Drawing2D
 {
@@ -30,9 +29,10 @@ namespace SeeingSharp.Drawing2D
         /// Builds the effect.
         /// </summary>
         /// <param name="device">The device on which to load the effect instance.</param>
-        protected override D2D.Effect BuildEffect(EngineDevice device)
+        protected override D2D.ID2D1Effect BuildEffect(EngineDevice device)
         {
-            var dirBlurEffect = new DirectionalBlur(device.DeviceContextD2D)
+            
+            var dirBlurEffect = new Vortice.Direct2D1.Effects.DirectionalBlur(device.DeviceContextD2D)
             {
                 Angle = this.Angle,
                 BorderMode = D2D.BorderMode.Soft,

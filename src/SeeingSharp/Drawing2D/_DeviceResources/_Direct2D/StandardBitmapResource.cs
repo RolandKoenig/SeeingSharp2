@@ -3,9 +3,9 @@ using SeeingSharp.Checking;
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
-using Vortice.DXGI;
-using SharpDX.WIC;
-using D2D = SharpDX.Direct2D1;
+using WIC = Vortice.WIC;
+using DXGI = Vortice.DXGI;
+using D2D = Vortice.Direct2D1;
 
 namespace SeeingSharp.Drawing2D
 {
@@ -16,7 +16,7 @@ namespace SeeingSharp.Drawing2D
     public class StandardBitmapResource : BitmapResource
     {
         // Resources
-        private D2D.Bitmap[] _loadedBitmaps;
+        private D2D.ID2D1Bitmap[] _loadedBitmaps;
 
         // Configuration
         private ResourceLink _resourceLink;
@@ -68,7 +68,7 @@ namespace SeeingSharp.Drawing2D
             frameCountX.EnsurePositiveAndNotZero(nameof(frameCountX));
             frameCountY.EnsurePositiveAndNotZero(nameof(frameCountY));
 
-            _loadedBitmaps = new D2D.Bitmap[GraphicsCore.Current.DeviceCount];
+            _loadedBitmaps = new D2D.ID2D1Bitmap[GraphicsCore.Current.DeviceCount];
             _resourceLink = resource;
 
             // Set default values (modified after first load)
@@ -91,7 +91,7 @@ namespace SeeingSharp.Drawing2D
         /// Gets the bitmap.
         /// </summary>
         /// <param name="engineDevice">The engine device.</param>
-        internal override D2D.Bitmap GetBitmap(EngineDevice engineDevice)
+        internal override D2D.ID2D1Bitmap GetBitmap(EngineDevice engineDevice)
         {
             if (this.IsDisposed) { throw new ObjectDisposedException(this.GetType().Name); }
 
@@ -101,7 +101,7 @@ namespace SeeingSharp.Drawing2D
                 using (var inputStream = _resourceLink.OpenInputStream())
                 using (var bitmapSourceWrapper = GraphicsHelper.Internals.LoadBitmapSource_D2D(inputStream))
                 {
-                    BitmapSource bitmapSource = bitmapSourceWrapper.Converter;
+                    WIC.IWICBitmapSource bitmapSource = bitmapSourceWrapper.Converter;
 
                     // Store common properties about the bitmap
                     if (!_firstLoadDone)
@@ -123,11 +123,11 @@ namespace SeeingSharp.Drawing2D
                     }
 
                     // Load the bitmap into Direct2D
-                    result = D2D.Bitmap.FromWicBitmap(
-                        engineDevice.FakeRenderTarget2D, bitmapSource,
-                        new D2D.BitmapProperties(new D2D.PixelFormat(
-                            Format.B8G8R8A8_UNorm,
-                            D2D.AlphaMode.Premultiplied)));
+                    result = engineDevice.FakeRenderTarget2D.CreateBitmapFromWicBitmap(
+                        bitmapSource,
+                        new D2D.BitmapProperties(new Vortice.DCommon.PixelFormat(
+                            DXGI.Format.B8G8R8A8_UNorm,
+                            Vortice.DCommon.AlphaMode.Premultiplied)));
 
                     // Register loaded bitmap
                     _loadedBitmaps[engineDevice.DeviceIndex] = result;

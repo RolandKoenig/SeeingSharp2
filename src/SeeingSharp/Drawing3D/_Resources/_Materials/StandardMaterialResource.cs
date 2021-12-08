@@ -2,7 +2,7 @@
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
-using D3D11 = SharpDX.Direct3D11;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Drawing3D
 {
@@ -244,7 +244,7 @@ namespace SeeingSharp.Drawing3D
         /// </summary>
         /// <param name="device">The device on which to create the input layout.</param>
         /// <param name="inputElements">An array of InputElements describing vertex input structure.</param>
-        internal override D3D11.InputLayout GetInputLayout(EngineDevice device, D3D11.InputElement[] inputElements)
+        internal override D3D11.ID3D11InputLayout GetInputLayout(EngineDevice device, D3D11.InputElementDescription[] inputElements)
         {
             return _vertexShader.GetInputLayout(device, inputElements);
         }
@@ -284,24 +284,24 @@ namespace SeeingSharp.Drawing3D
             // Set shaders, sampler and constants
             if (!isResourceSameType)
             {
-                deviceContext.PixelShader.SetSampler(0, _defaultResources.GetSamplerState(TextureSamplerQualityLevel.Low));
+                deviceContext.PSSetSampler(0, _defaultResources.GetSamplerState(TextureSamplerQualityLevel.Low));
 
-                deviceContext.VertexShader.Set(_vertexShader.VertexShader);
-                if(renderState.Camera.IsOrthopraphicInternal){ deviceContext.PixelShader.Set(_pixelShaderOrtho.PixelShader); }
-                else{ deviceContext.PixelShader.Set(_pixelShader.PixelShader); }
+                deviceContext.VSSetShader(_vertexShader.VertexShader);
+                if(renderState.Camera.IsOrthopraphicInternal){ deviceContext.PSSetShader(_pixelShaderOrtho.PixelShader); }
+                else{ deviceContext.PSSetShader(_pixelShader.PixelShader); }
             }
-            deviceContext.PixelShader.SetConstantBuffer(3, _cbPerMaterial.ConstantBuffer);
-            deviceContext.VertexShader.SetConstantBuffer(3, _cbPerMaterial.ConstantBuffer);
+            deviceContext.PSSetConstantBuffer(3, _cbPerMaterial.ConstantBuffer);
+            deviceContext.VSSetConstantBuffer(3, _cbPerMaterial.ConstantBuffer);
 
             // Set texture resource (if set)
             if (_textureResource != null &&
                 renderState.ViewInformation.ViewConfiguration.ShowTexturesInternal)
             {
-                deviceContext.PixelShader.SetShaderResource(0, _textureResource.TextureView);
+                deviceContext.PSSetShaderResource(0, _textureResource.TextureView);
             }
             else
             {
-                deviceContext.PixelShader.SetShaderResource(0, null);
+                deviceContext.PSSetShaderResource(0, null);
             }
         }
     }

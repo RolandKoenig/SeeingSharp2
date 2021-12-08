@@ -1,7 +1,7 @@
 ﻿using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
-using D3D11 = SharpDX.Direct3D11;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Drawing3D
 {
@@ -76,7 +76,7 @@ namespace SeeingSharp.Drawing3D
         /// </summary>
         /// <param name="device">The device on which to create the input layout.</param>
         /// <param name="inputElements">An array of InputElements describing vertex input structure.</param>
-        internal override D3D11.InputLayout GetInputLayout(EngineDevice device, D3D11.InputElement[] inputElements)
+        internal override D3D11.ID3D11InputLayout GetInputLayout(EngineDevice device, D3D11.InputElementDescription[] inputElements)
         {
             return _vertexShader.GetInputLayout(device, inputElements);
         }
@@ -95,20 +95,20 @@ namespace SeeingSharp.Drawing3D
                 previousMaterial.ResourceType == this.ResourceType;
             if (!isResourceSameType)
             {
-                deviceContext.PixelShader.SetSampler(0, _defaultResources.GetSamplerState(TextureSamplerQualityLevel.Low));
+                deviceContext.PSSetSampler(0, _defaultResources.GetSamplerState(TextureSamplerQualityLevel.Low));
 
-                deviceContext.VertexShader.Set(_vertexShader.VertexShader);
-                deviceContext.PixelShader.Set(_pixelShader.PixelShader);
+                deviceContext.VSSetShader(_vertexShader.VertexShader);
+                deviceContext.PSSetShader(_pixelShader.PixelShader);
             }
 
             // Set texture resource (if set)
             if (_textureResource != null)
             {
-                deviceContext.PixelShader.SetShaderResource(0, _textureResource.TextureView);
+                deviceContext.PSSetShaderResource(0, _textureResource.TextureView);
             }
             else
             {
-                deviceContext.PixelShader.SetShaderResource(0, null);
+                deviceContext.PSSetShaderResource(0, null);
             }
         }
     }
