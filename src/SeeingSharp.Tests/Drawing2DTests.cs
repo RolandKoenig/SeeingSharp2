@@ -9,7 +9,6 @@ using SeeingSharp.Drawing3D.Primitives;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Views;
 using SeeingSharp.Util;
-using SharpDX.Mathematics.Interop;
 
 namespace SeeingSharp.Tests
 {
@@ -494,11 +493,6 @@ namespace SeeingSharp.Tests
                     screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "SimpleBitmap_Animated.png"));
                 Assert.IsTrue(diff < 0.02, "Difference to reference image is to big!");
             }
-        }
-
-        private static RawColor4 Helper_Color4ToRaw(Color4 color)
-        {
-            return new RawColor4(color.Red, color.Green, color.Blue, color.Alpha);
         }
     }
 }

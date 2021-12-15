@@ -82,9 +82,12 @@ namespace SeeingSharp.Drawing2D
             var result = _loadedBitmaps[engineDevice.DeviceIndex];
             if (result == null)
             {
+                using var mapped = new MemoryMappedTexture<int>(_bitmapSize);
+
                 // Load the bitmap initially
                 result = engineDevice.FakeRenderTarget2D.CreateBitmap(
-                    SdxMathHelper.SdxFromSize2(_bitmapSize),
+                    new System.Drawing.Size(_bitmapSize.Width, _bitmapSize.Height),
+                    mapped.Pointer, mapped.Width * 4,
                     new D2D.BitmapProperties(_pixelFormat, (float)_dpiX, (float)_dpiY));
                 _loadedBitmaps[engineDevice.DeviceIndex] = result;
                 engineDevice.RegisterDeviceResource(this);

@@ -59,7 +59,7 @@ namespace SeeingSharp.Core.HardwareInfo
             do
             {
                 lastResult = adapter.EnumOutputs(actIndex, out var actOutput);
-                if(lastResult != null)
+                if(lastResult.Success)
                 {
                     this.Outputs.Add(new EngineOutputInfo(adapterIndex, actIndex, actOutput));
                 }

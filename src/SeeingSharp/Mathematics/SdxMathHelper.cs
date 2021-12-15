@@ -29,9 +29,14 @@ namespace SeeingSharp.Mathematics
             return *(System.Drawing.RectangleF*)(&value);
         }
 
-        internal static System.Drawing.Color RawFromColor4(Color4 color)
+        internal static unsafe Vortice.Mathematics.Color4 RawFromColor4(Color4 value)
         {
-            return System.Drawing.Color.FromArgb(color.ToArgb());
+            return *(Vortice.Mathematics.Color4*)(&value);
+        }
+
+        internal static System.Drawing.Color ColorFromColor4(Color4 value)
+        {
+            return System.Drawing.Color.FromArgb(value.ToArgb());
         }
     }
 }

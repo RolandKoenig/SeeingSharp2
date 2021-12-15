@@ -14,10 +14,9 @@ using SeeingSharp.Drawing3D;
 using SeeingSharp.Input;
 using SeeingSharp.Util;
 using SeeingSharp.Mathematics;
-using SDX = SharpDX;
-using SDXMath = SharpDX.Mathematics.Interop;
+using SDX = Vortice;
 using DXGI = Vortice.DXGI;
-using D3D11 = SharpDX.Direct3D11;
+using D3D11 = Vortice.Direct3D11;
 using GDI = System.Drawing;
 
 namespace SeeingSharp.Views
@@ -30,12 +29,12 @@ namespace SeeingSharp.Views
         private RenderLoop _renderLoop;
 
         // Resources for Direct3D 11
-        private DXGI.SwapChain1 _swapChain;
-        private D3D11.Device _renderDevice;
-        private D3D11.RenderTargetView _renderTarget;
-        private D3D11.DepthStencilView _renderTargetDepth;
-        private D3D11.Texture2D _backBuffer;
-        private D3D11.Texture2D _depthBuffer;
+        private DXGI.IDXGISwapChain1 _swapChain;
+        private D3D11.ID3D11Device _renderDevice;
+        private D3D11.ID3D11RenderTargetView _renderTarget;
+        private D3D11.ID3D11DepthStencilView _renderTargetDepth;
+        private D3D11.ID3D11Texture2D _backBuffer;
+        private D3D11.ID3D11Texture2D _depthBuffer;
 
         // Generic members
         private GDI.Brush _backBrush;
@@ -448,7 +447,7 @@ namespace SeeingSharp.Views
         /// <summary>
         /// Create all view resources.
         /// </summary>
-        Tuple<D3D11.Texture2D, D3D11.RenderTargetView, D3D11.Texture2D, D3D11.DepthStencilView, SDXMath.RawViewportF, Size2, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice device)
+        Tuple<D3D11.ID3D11Texture2D, D3D11.ID3D11RenderTargetView, D3D11.ID3D11Texture2D, D3D11.ID3D11DepthStencilView, Vortice.Mathematics.Viewport, Size2, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice device)
         {
             var width = this.Width;
             var height = this.Height;
@@ -460,12 +459,12 @@ namespace SeeingSharp.Views
 
             // Create the swap chain and the render target
             _swapChain = GraphicsHelperWinForms.CreateSwapChainForWinForms(this, device, _renderLoop.Configuration);
-            _backBuffer = D3D11.Resource.FromSwapChain<D3D11.Texture2D>(_swapChain, 0);
-            _renderTarget = new D3D11.RenderTargetView(_renderDevice, _backBuffer);
+            _backBuffer = _swapChain.GetBuffer<D3D11.ID3D11Texture2D>(0);
+            _renderTarget = _renderDevice.CreateRenderTargetView(_backBuffer);
 
             // Create the depth buffer
             _depthBuffer = GraphicsHelper.Internals.CreateDepthBufferTexture(device, width, height, _renderLoop.Configuration);
-            _renderTargetDepth = new D3D11.DepthStencilView(_renderDevice, _depthBuffer);
+            _renderTargetDepth = _renderDevice.CreateDepthStencilView(_depthBuffer);
 
             // Define the viewport for rendering
             var viewPort = GraphicsHelper.Internals.CreateDefaultViewport(width, height);
@@ -571,7 +570,7 @@ namespace SeeingSharp.Views
             {
                 _swapChain.Present(0, DXGI.PresentFlags.DoNotWait, new DXGI.PresentParameters());
             }
-            catch (SDX.SharpDXException ex)
+            catch (SharpGen.Runtime.SharpGenException ex)
             {
                 // Skip present on error DXGI_ERROR_WAS_STILL_DRAWING
                 // This error occurs some times on slower hardware

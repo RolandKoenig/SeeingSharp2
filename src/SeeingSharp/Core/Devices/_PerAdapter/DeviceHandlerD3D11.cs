@@ -117,9 +117,11 @@ namespace SeeingSharp.Core.Devices
                 try
                 {
                     // Try to create the device using current parameters
-                    D3D11CreateDevice(
-                        dxgiAdapter, D3D.DriverType.Hardware, createFlags,
+                    var result = D3D11CreateDevice(
+                        dxgiAdapter, D3D.DriverType.Unknown, createFlags,
                         new D3D.FeatureLevel[] { actFeatureLevel }, out var device);
+                    if(!result.Success){ continue; }
+
                     try
                     {
                         _device1 = device.QueryInterface<D3D11.ID3D11Device1>();

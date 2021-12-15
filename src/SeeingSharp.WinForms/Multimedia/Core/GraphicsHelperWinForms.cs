@@ -3,9 +3,8 @@ using SeeingSharp.Checking;
 using SeeingSharp.Core.Configuration;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
-using SharpDX;
-using Vortice.DXGI;
-using D3D11 = SharpDX.Direct3D11;
+using DXGI = Vortice.DXGI;
+using D3D11 = Vortice.Direct3D11;
 using GDI = System.Drawing;
 using WinForms = System.Windows.Forms;
 
@@ -48,14 +47,14 @@ namespace SeeingSharp.Core
         /// <param name="targetControl">Target control of the swap chain.</param>
         /// <param name="device">Graphics device.</param>
         /// <param name="gfxConfig">The current graphics configuration.</param>
-        internal static SwapChain1 CreateSwapChainForWinForms(WinForms.Control targetControl, EngineDevice device, GraphicsViewConfiguration gfxConfig)
+        internal static DXGI.IDXGISwapChain1 CreateSwapChainForWinForms(WinForms.Control targetControl, EngineDevice device, GraphicsViewConfiguration gfxConfig)
         {
             targetControl.EnsureNotNull(nameof(targetControl));
             device.EnsureNotNull(nameof(device));
             gfxConfig.EnsureNotNull(nameof(gfxConfig));
 
             // Create the swap chain description
-            var swapChainDesc = new SwapChainDescription1();
+            var swapChainDesc = new DXGI.SwapChainDescription1();
 
             if (gfxConfig.AntialiasingEnabled && device.IsStandardAntialiasingPossible)
             {
@@ -65,27 +64,21 @@ namespace SeeingSharp.Core
             else
             {
                 swapChainDesc.BufferCount = 2;
-                swapChainDesc.SampleDescription = new SampleDescription(1, 0);
+                swapChainDesc.SampleDescription = new DXGI.SampleDescription(1, 0);
             }
 
             // Set common parameters
             swapChainDesc.Width = targetControl.Width;
             swapChainDesc.Height = targetControl.Height;
             swapChainDesc.Format = GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT;
-            swapChainDesc.Scaling = Scaling.Stretch;
-            swapChainDesc.SwapEffect = SwapEffect.Discard;
-            swapChainDesc.Usage = Usage.RenderTargetOutput;
+            swapChainDesc.Scaling = DXGI.Scaling.Stretch;
+            swapChainDesc.SwapEffect = DXGI.SwapEffect.Discard;
+            swapChainDesc.Usage = DXGI.Usage.RenderTargetOutput;
 
             // Create and return the swap chain and the render target
-            return new SwapChain1(
-                device.Internals.FactoryDxgi, device.Internals.DeviceD3D11_1, targetControl.Handle,
-                ref swapChainDesc,
-                new SwapChainFullScreenDescription
-                {
-                    RefreshRate = new Rational(60, 1),
-                    Scaling = DisplayModeScaling.Centered,
-                    Windowed = true
-                });
+            return device.Internals.FactoryDxgi.CreateSwapChainForHwnd(
+                device.Internals.DeviceD3D11_1, targetControl.Handle,
+                swapChainDesc);
         }
 
         /// <summary>
@@ -93,7 +86,7 @@ namespace SeeingSharp.Core
         /// </summary>
         /// <param name="device">Device on which the resource should be created.</param>
         /// <param name="bitmap">The source bitmap.</param>
-        internal static D3D11.Texture2D LoadTextureFromBitmap(EngineDevice device, GDI.Bitmap bitmap)
+        internal static D3D11.ID3D11Texture2D LoadTextureFromBitmap(EngineDevice device, GDI.Bitmap bitmap)
         {
             device.EnsureNotNull(nameof(device));
             bitmap.EnsureNotNull(nameof(bitmap));
@@ -107,13 +100,13 @@ namespace SeeingSharp.Core
         /// <param name="device">Device on which the resource should be created.</param>
         /// <param name="bitmap">The source bitmap.</param>
         /// <param name="mipLevels">Total count of levels for mipmapping.</param>
-        internal static D3D11.Texture2D LoadTextureFromBitmap(EngineDevice device, GDI.Bitmap bitmap, int mipLevels)
+        internal static D3D11.ID3D11Texture2D LoadTextureFromBitmap(EngineDevice device, GDI.Bitmap bitmap, int mipLevels)
         {
             device.EnsureNotNull(nameof(device));
             bitmap.EnsureNotNull(nameof(bitmap));
             mipLevels.EnsurePositiveOrZero(nameof(mipLevels));
 
-            D3D11.Texture2D result = null;
+            D3D11.ID3D11Texture2D result = null;
 
             // Lock bitmap so it can be accessed for texture loading
             var bitmapData = bitmap.LockBits(
@@ -122,25 +115,32 @@ namespace SeeingSharp.Core
             try
             {
                 // Open a reading stream for bitmap memory
-                var dataRectangle = new DataRectangle(bitmapData.Scan0, bitmap.Width * 4);
+                var dataRectangle = new D3D11.SubresourceData(bitmapData.Scan0, bitmap.Width * 4);
 
                 // Load the texture
-                result = new D3D11.Texture2D(device.Internals.DeviceD3D11_1, new D3D11.Texture2DDescription
-                {
-                    BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget,
-                    CpuAccessFlags = D3D11.CpuAccessFlags.None,
-                    Format = GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT,
-                    OptionFlags = D3D11.ResourceOptionFlags.None | D3D11.ResourceOptionFlags.GenerateMipMaps,
-                    MipLevels = 0,
-                    Usage = D3D11.ResourceUsage.Default,
-                    Width = bitmap.Width,
-                    Height = bitmap.Height,
-                    ArraySize = 1,
-                    SampleDescription = new SampleDescription(1, 0)
-                }, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle, dataRectangle);
+                result = device.Internals.DeviceD3D11_1.CreateTexture2D(
+                    new D3D11.Texture2DDescription
+                    {
+                        BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget,
+                        CpuAccessFlags = D3D11.CpuAccessFlags.None,
+                        Format = GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT,
+                        OptionFlags = D3D11.ResourceOptionFlags.None | D3D11.ResourceOptionFlags.GenerateMips,
+                        MipLevels = 0,
+                        Usage = D3D11.ResourceUsage.Default,
+                        Width = bitmap.Width,
+                        Height = bitmap.Height,
+                        ArraySize = 1,
+                        SampleDescription = new DXGI.SampleDescription(1, 0)
+                    },
+                    new D3D11.SubresourceData[]
+                    {
+                        dataRectangle, dataRectangle, dataRectangle, dataRectangle, 
+                        dataRectangle, dataRectangle, dataRectangle, dataRectangle, 
+                        dataRectangle, dataRectangle, dataRectangle, dataRectangle 
+                    });
 
                 // Workaround for now... auto generate mip-levels
-                using var shaderResourceView = new D3D11.ShaderResourceView(device.Internals.DeviceD3D11_1, result);
+                using var shaderResourceView = device.Internals.DeviceD3D11_1.CreateShaderResourceView(result);
                 device.Internals.DeviceImmediateContextD3D11.GenerateMips(shaderResourceView);
             }
             finally
@@ -159,7 +159,7 @@ namespace SeeingSharp.Core
         /// <param name="stagingTexture">The texture to be loaded into the bitmap.</param>
         /// <param name="width">The width of the texture.</param>
         /// <param name="height">The height of the texture.</param>
-        internal static GDI.Bitmap LoadBitmapFromStagingTexture(EngineDevice device, D3D11.Texture2D stagingTexture, int width, int height)
+        internal static GDI.Bitmap LoadBitmapFromStagingTexture(EngineDevice device, D3D11.ID3D11Texture2D stagingTexture, int width, int height)
         {
             device.EnsureNotNull(nameof(device));
             stagingTexture.EnsureNotNull(nameof(stagingTexture));
@@ -168,7 +168,7 @@ namespace SeeingSharp.Core
 
             //Prepare target bitmap
             var resultBitmap = new GDI.Bitmap(width, height);
-            var dataBox = device.Internals.DeviceImmediateContextD3D11.MapSubresource(stagingTexture, 0, D3D11.MapMode.Read, D3D11.MapFlags.None);
+            var dataBox = device.Internals.DeviceImmediateContextD3D11.Map(stagingTexture, 0, D3D11.MapMode.Read, D3D11.MapFlags.None);
 
             try
             {
@@ -201,7 +201,7 @@ namespace SeeingSharp.Core
             }
             finally
             {
-                device.Internals.DeviceImmediateContextD3D11.UnmapSubresource(stagingTexture, 0);
+                device.Internals.DeviceImmediateContextD3D11.Unmap(stagingTexture, 0);
             }
             return resultBitmap;
         }

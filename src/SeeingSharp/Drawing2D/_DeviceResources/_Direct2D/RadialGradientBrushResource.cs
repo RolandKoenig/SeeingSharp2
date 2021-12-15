@@ -121,7 +121,7 @@ namespace SeeingSharp.Drawing2D
                     new D2D.BrushProperties
                     {
                         Opacity = _opacity,
-                        Transform = SdxMathHelper.RawFromMatrix3x2(Matrix3x2.Identity)
+                        Transform = Matrix3x2.Identity
                     },
                     result.GradientStops);
 

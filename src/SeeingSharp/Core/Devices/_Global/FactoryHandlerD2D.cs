@@ -32,7 +32,7 @@ namespace SeeingSharp.Core.Devices
             var factoryOptions = new D2D.FactoryOptions();
             factoryOptions.DebugLevel = coreConfiguration.DebugEnabled ? D2D.DebugLevel.Information : D2D.DebugLevel.None;
 
-            D2D1CreateFactory<D2D.ID2D1Factory2>(
+            _factory = D2D1CreateFactory<D2D.ID2D1Factory2>(
                 D2D.FactoryType.SingleThreaded,
                 factoryOptions);
         }

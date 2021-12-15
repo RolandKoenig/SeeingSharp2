@@ -117,7 +117,7 @@ namespace SeeingSharp.Drawing2D
             set
             {
                 if (_renderTarget == null) { return; }
-                _renderTarget.Transform = SdxMathHelper.RawFromMatrix3x2(value);
+                _renderTarget.Transform = value;
             }
         }
 
@@ -513,7 +513,8 @@ namespace SeeingSharp.Drawing2D
                     bitmap.GetBitmap(this.Device),
                     SdxMathHelper.RawFromRectangleF(destinationRectangle),
                     opacity,
-                    (D2D.BitmapInterpolationMode)interpolationMode);
+                    (D2D.BitmapInterpolationMode)interpolationMode, 
+                    null);
             }
         }
 

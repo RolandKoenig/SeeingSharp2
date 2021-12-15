@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SeeingSharp.Core;
 using SeeingSharp.Util;
-using SharpDX.Direct3D;
-using D3D11 = SharpDX.Direct3D11;
 
 namespace SeeingSharp.Tests
 {
@@ -27,11 +25,6 @@ namespace SeeingSharp.Tests
             }
 
             Assert.IsTrue(GraphicsCore.IsLoaded, "GraphicsCore could not be initialized!");
-        }
-
-        public static D3D11.Device CreateWarpDevice()
-        {
-            return new D3D11.Device(DriverType.Warp, D3D11.DeviceCreationFlags.BgraSupport);
         }
 
         public static AssemblyResourceLink CreateResourceLink(string subfolderName, string fileName)

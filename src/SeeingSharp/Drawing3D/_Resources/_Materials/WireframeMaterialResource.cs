@@ -216,7 +216,7 @@ namespace SeeingSharp.Drawing3D
         {
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
-            deviceContext.GeometryShader.Set(null);
+            deviceContext.GSSetShader(null);
         }
     }
 }

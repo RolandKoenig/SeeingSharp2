@@ -132,6 +132,7 @@ namespace SeeingSharp.Drawing3D
                 () =>
                 {
                     var stateDesc = new D3D11.RasterizerDescription();
+                    stateDesc.CullMode = D3D11.CullMode.Back;
                     stateDesc.AntialiasedLineEnable = true;
                     stateDesc.MultisampleEnable = true;
                     stateDesc.FillMode = D3D11.FillMode.Solid;
