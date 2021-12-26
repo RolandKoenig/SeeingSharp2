@@ -186,7 +186,8 @@ namespace SeeingSharp.Core
             }
             else
             {
-                _device.DeviceImmediateContextD3D11.CopyResource(textureToUpload, _copyHelperTextureStaging);
+                _device.DeviceImmediateContextD3D11.CopyResource(
+                    _copyHelperTextureStaging, textureToUpload);
             }
         }
     }

@@ -70,7 +70,7 @@ namespace SeeingSharp.Drawing3D
             // Create default blend state
             _defaultBlendState = new Lazy<D3D11.ID3D11BlendState>(() =>
             {
-                var blendDesc = D3D11.BlendDescription.Default;
+                var blendDesc = CreateDefaultBlendDescription();
                 return device.DeviceD3D11_1.CreateBlendState(blendDesc);
             });
 
@@ -78,7 +78,7 @@ namespace SeeingSharp.Drawing3D
             _alphaBlendingBlendState = new Lazy<D3D11.ID3D11BlendState>(() =>
             {
                 //Define the blend state (based on http://www.rastertek.com/dx11tut26.html)
-                var blendDesc = D3D11.BlendDescription.Default;
+                var blendDesc = CreateDefaultBlendDescription();
                 blendDesc.RenderTarget[0].IsBlendEnabled = true;
                 blendDesc.RenderTarget[0].SourceBlend = D3D11.Blend.SourceAlpha;
                 blendDesc.RenderTarget[0].DestinationBlend = D3D11.Blend.InverseSourceAlpha;
@@ -131,51 +131,40 @@ namespace SeeingSharp.Drawing3D
             _rasterStateDefault = new Lazy<D3D11.ID3D11RasterizerState>(
                 () =>
                 {
-                    var stateDesc = new D3D11.RasterizerDescription();
+                    var stateDesc = CreateDefaultRasterizerDescription();
                     stateDesc.CullMode = D3D11.CullMode.Back;
                     stateDesc.AntialiasedLineEnable = true;
                     stateDesc.MultisampleEnable = true;
                     stateDesc.FillMode = D3D11.FillMode.Solid;
-                    stateDesc.DepthBias = D3D11.RasterizerDescription.DefaultDepthBias;
-                    stateDesc.DepthBiasClamp = D3D11.RasterizerDescription.DefaultDepthBiasClamp;
-                    stateDesc.SlopeScaledDepthBias = D3D11.RasterizerDescription.DefaultSlopeScaledDepthBias;
                     return device.DeviceD3D11_1.CreateRasterizerState(stateDesc);
                 });
 
             // Create a raster state with depth bias
             _rasterStateBiased = new Lazy<D3D11.ID3D11RasterizerState>(() =>
             {
-                var rasterDesc = new D3D11.RasterizerDescription();
+                var rasterDesc = CreateDefaultRasterizerDescription();
                 rasterDesc.DepthBias = GraphicsHelper.Internals.GetDepthBiasValue(device, -0.00003f);
-                rasterDesc.DepthBiasClamp = D3D11.RasterizerDescription.DefaultDepthBiasClamp;
-                rasterDesc.SlopeScaledDepthBias = D3D11.RasterizerDescription.DefaultSlopeScaledDepthBias;
                 return device.DeviceD3D11_1.CreateRasterizerState(rasterDesc);
             });
 
             // Create a raster state for wireframe rendering
             _rasterStateWireframe = new Lazy<D3D11.ID3D11RasterizerState>(() =>
             {
-                var rasterDesc = new D3D11.RasterizerDescription();
+                var rasterDesc = CreateDefaultRasterizerDescription();
                 rasterDesc.FillMode = D3D11.FillMode.Wireframe;
                 rasterDesc.AntialiasedLineEnable = true;
                 rasterDesc.MultisampleEnable = true;
-                rasterDesc.DepthBias = D3D11.RasterizerDescription.DefaultDepthBias;
-                rasterDesc.DepthBiasClamp = D3D11.RasterizerDescription.DefaultDepthBiasClamp;
-                rasterDesc.SlopeScaledDepthBias = D3D11.RasterizerDescription.DefaultSlopeScaledDepthBias;
                 return device.DeviceD3D11_1.CreateRasterizerState(rasterDesc);
             });
 
             // Create the rasterizer state for line rendering
             _rasterStateLines = new Lazy<D3D11.ID3D11RasterizerState>(() =>
             {
-                var rasterDesc = new D3D11.RasterizerDescription();
+                var rasterDesc = CreateDefaultRasterizerDescription();
                 rasterDesc.CullMode = D3D11.CullMode.None;
                 rasterDesc.AntialiasedLineEnable = true;
                 rasterDesc.MultisampleEnable = true;
                 rasterDesc.FillMode = D3D11.FillMode.Solid;
-                rasterDesc.DepthBias = D3D11.RasterizerDescription.DefaultDepthBias;
-                rasterDesc.DepthBiasClamp = D3D11.RasterizerDescription.DefaultDepthBiasClamp;
-                rasterDesc.SlopeScaledDepthBias = D3D11.RasterizerDescription.DefaultSlopeScaledDepthBias;
                 return device.DeviceD3D11_1.CreateRasterizerState(rasterDesc);
             });
 
@@ -224,6 +213,56 @@ namespace SeeingSharp.Drawing3D
             }
 
             return _samplerStateLow.Value;
+        }
+
+        /// <summary>
+        /// Returns default values for <see cref="D3D11.RasterizerDescription"/>.
+        /// Original code from https://github.com/sharpdx/SharpDX/blob/master/Source/SharpDX.Direct3D11/RasterizerStateDescription.cs
+        /// </summary>
+        internal static D3D11.RasterizerDescription CreateDefaultRasterizerDescription()
+        {
+            return new D3D11.RasterizerDescription()
+            {
+                FillMode = D3D11.FillMode.Solid,
+                CullMode = D3D11.CullMode.Back,
+                FrontCounterClockwise = false,
+                DepthBias = 0,
+                SlopeScaledDepthBias = 0.0f,
+                DepthBiasClamp = 0.0f,
+                DepthClipEnable = true,
+                ScissorEnable = false,
+                MultisampleEnable = false,
+                AntialiasedLineEnable = false
+            };
+        }
+
+        /// <summary>
+        /// Returns default values for <see cref="D3D11.BlendDescription"/>.
+        /// Original code from https://github.com/sharpdx/SharpDX/blob/master/Source/SharpDX.Direct3D11/BlendStateDescription.cs
+        /// </summary>
+        internal static D3D11.BlendDescription CreateDefaultBlendDescription()
+        {
+            var description = new D3D11.BlendDescription()
+            {
+                AlphaToCoverageEnable = false,
+                IndependentBlendEnable = false,
+            };
+            var renderTargets = description.RenderTarget;
+            for (var i = 0; i < renderTargets.Length; i++)
+            {
+                renderTargets[i].IsBlendEnabled = false;
+                renderTargets[i].SourceBlend = D3D11.Blend.One;
+                renderTargets[i].DestinationBlend = D3D11.Blend.Zero;
+                renderTargets[i].BlendOperation = D3D11.BlendOperation.Add;
+
+                renderTargets[i].SourceBlendAlpha = D3D11.Blend.One;
+                renderTargets[i].DestinationBlendAlpha = D3D11.Blend.Zero;
+                renderTargets[i].BlendOperationAlpha = D3D11.BlendOperation.Add;
+
+                renderTargets[i].RenderTargetWriteMask = D3D11.ColorWriteEnable.All;
+            }
+
+            return description;
         }
     }
 }
