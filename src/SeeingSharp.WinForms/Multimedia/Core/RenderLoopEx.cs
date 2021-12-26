@@ -53,12 +53,12 @@ namespace SeeingSharp.Core
 
             // Copy resources
             currentDevice.Internals.DeviceImmediateContextD3D11.ResolveSubresource(
-                renderLoop.Internals.RenderTarget, 0,
                 renderLoop.Internals.CopyHelperTextureStandard, 0,
+                renderLoop.Internals.RenderTarget, 0,
                 GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT);
             currentDevice.Internals.DeviceImmediateContextD3D11.CopyResource(
-                renderLoop.Internals.CopyHelperTextureStandard,
-                renderLoop.Internals.CopyHelperTextureStaging);
+                renderLoop.Internals.CopyHelperTextureStaging, 
+                renderLoop.Internals.CopyHelperTextureStandard);
 
             // Load the bitmap
             var resultBitmap = GraphicsHelperWinForms.LoadBitmapFromStagingTexture(currentDevice, renderLoop.Internals.CopyHelperTextureStaging, width, height);

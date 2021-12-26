@@ -22,7 +22,6 @@ namespace SeeingSharp.Views
         // All needed direct3d resources
         private D3D11.ID3D11Device _device;
         private D3D11.ID3D11DeviceContext _deviceContext;
-        private D3D11.ID3D11Texture2D _copyHelperTextureStaging;
         private D3D11.ID3D11Texture2D _renderTarget;
         private D3D11.ID3D11Texture2D _renderTargetDepth;
         private D3D11.ID3D11RenderTargetView _renderTargetView;
@@ -115,7 +114,6 @@ namespace SeeingSharp.Views
             _renderTargetDepth = SeeingSharpUtil.DisposeObject(_renderTargetDepth);
             _renderTargetView = SeeingSharpUtil.DisposeObject(_renderTargetView);
             _renderTarget = SeeingSharpUtil.DisposeObject(_renderTarget);
-            _copyHelperTextureStaging = SeeingSharpUtil.DisposeObject(_copyHelperTextureStaging);
 
             _device = null;
             _deviceContext = null;

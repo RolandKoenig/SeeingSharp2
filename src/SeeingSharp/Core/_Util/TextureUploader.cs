@@ -176,8 +176,13 @@ namespace SeeingSharp.Core
             //  .. execute a ResolveSubresource before if the source texture is multisampled
             if (_isMultisampled)
             {
-                _device.DeviceImmediateContextD3D11.ResolveSubresource(textureToUpload, 0, _copyHelperTextureStandard, 0, _format);
-                _device.DeviceImmediateContextD3D11.CopyResource(_copyHelperTextureStandard, _copyHelperTextureStaging);
+                _device.DeviceImmediateContextD3D11.ResolveSubresource(
+                    _copyHelperTextureStandard, 0,
+                    textureToUpload, 0, 
+                     _format);
+                _device.DeviceImmediateContextD3D11.CopyResource(
+                    _copyHelperTextureStaging,
+                    _copyHelperTextureStandard);
             }
             else
             {

@@ -29,7 +29,7 @@ namespace SeeingSharp.Tests
 
                 // Take screenshot
                 var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
-                // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
+                //TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
                 var isNearEqual = BitmapComparison.IsNearEqual(
