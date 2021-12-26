@@ -52,7 +52,7 @@ namespace SeeingSharp.Drawing2D
 
             SeeingSharpUtil.SafeDispose(ref _geometry);
 
-            GraphicsCore.Current.FactoryD2D.CreateEllipseGeometry(
+            _geometry = GraphicsCore.Current.FactoryD2D.CreateEllipseGeometry(
                 new D2D.Ellipse(
                     *(System.Drawing.PointF*)&center,
                     radiusX, radiusY));

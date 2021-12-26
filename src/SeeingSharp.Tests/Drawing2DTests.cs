@@ -442,13 +442,12 @@ namespace SeeingSharp.Tests
 
                 // Take screenshot
                 var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
-                //TestUtilities.DumpToDesktop(screenshot, "Blub.png");
+                // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
 
                 // Calculate and check difference
                 var diff = BitmapComparison.CalculatePercentageDifference(
                     screenshot, TestUtilities.LoadBitmapFromResource("Drawing2D", "SimpleBitmap_Transparency.png"));
                 Assert.IsTrue(diff < 0.02, "Difference to reference image is to big!");
-
             }
         }
 

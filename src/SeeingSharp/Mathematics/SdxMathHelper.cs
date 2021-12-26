@@ -21,12 +21,14 @@ namespace SeeingSharp.Mathematics
 
         internal static unsafe System.Drawing.Rectangle RawFromRectangle(Rectangle value)
         {
-            return *(System.Drawing.Rectangle*)(&value);
+            return new System.Drawing.Rectangle(
+                value.X, value.Y, value.Width, value.Height);
         }
 
         internal static unsafe System.Drawing.RectangleF RawFromRectangleF(RectangleF value)
         {
-            return *(System.Drawing.RectangleF*)(&value);
+            return new System.Drawing.RectangleF(
+                value.X, value.Y, value.Width, value.Height);
         }
 
         internal static unsafe Vortice.Mathematics.Color4 RawFromColor4(Color4 value)
