@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Numerics;
 using System.Threading;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
@@ -11,9 +12,8 @@ using SeeingSharp.Drawing3D;
 using SeeingSharp.Input;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
-using SharpDX.Mathematics.Interop;
 using DXGI = Vortice.DXGI;
-using D3D11 = SharpDX.Direct3D11;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Views
 {
@@ -30,12 +30,12 @@ namespace SeeingSharp.Views
         private DateTime _lastSizeChange;
 
         // Resources from Direct3D 11
-        private DXGI.SwapChain1 _swapChain;
-        private D3D11.Texture2D _backBuffer;
-        private D3D11.Texture2D _backBufferMultisampled;
-        private D3D11.Texture2D _depthBuffer;
-        private D3D11.RenderTargetView _renderTargetView;
-        private D3D11.DepthStencilView _renderTargetDepth;
+        private DXGI.IDXGISwapChain1 _swapChain;
+        private D3D11.ID3D11Texture2D _backBuffer;
+        private D3D11.ID3D11Texture2D _backBufferMultisampled;
+        private D3D11.ID3D11Texture2D _depthBuffer;
+        private D3D11.ID3D11RenderTargetView _renderTargetView;
+        private D3D11.ID3D11DepthStencilView _renderTargetDepth;
 
         /// <summary>
         /// Gets the current 3D scene.
@@ -159,7 +159,7 @@ namespace SeeingSharp.Views
 
             _lastRefreshTargetSize = new Size2F(0f, 0f);
             _targetPanel = targetPanel;
-            _panelNative = SharpDX.ComObject.As<DXGI.ISwapChainPanelNative>(_targetPanel);
+            _panelNative = SharpGen.Runtime.ComObject.As<DXGI.ISwapChainPanelNative>(_targetPanel);
 
             _targetPanel.SizeChanged += this.OnTargetPanel_SizeChanged;
             _targetPanel.Loaded += this.OnTargetPanel_Loaded;
@@ -246,9 +246,9 @@ namespace SeeingSharp.Views
             }
         }
 
-        private void SetSwapChain(DXGI.SwapChain1 swapChain)
+        private void SetSwapChain(DXGI.IDXGISwapChain1 swapChain)
         {
-            if (_panelNative != null) { _panelNative.SwapChain = swapChain; }
+            if (_panelNative != null) { _panelNative.SetSwapChain(swapChain); }
             else
             {
                 throw new SeeingSharpException(
@@ -368,7 +368,7 @@ namespace SeeingSharp.Views
         /// <summary>
         /// Create all view resources.
         /// </summary>
-        Tuple<D3D11.Texture2D, D3D11.RenderTargetView, D3D11.Texture2D, D3D11.DepthStencilView, RawViewportF, Size2, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice engineDevice)
+        Tuple<D3D11.ID3D11Texture2D, D3D11.ID3D11RenderTargetView, D3D11.ID3D11Texture2D, D3D11.ID3D11DepthStencilView, Vortice.Mathematics.Viewport, Size2, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice engineDevice)
         {
             _backBufferMultisampled = null;
 
@@ -380,25 +380,25 @@ namespace SeeingSharp.Views
             _compositionScaleChanged = true;
 
             // Get the backbuffer from the SwapChain
-            _backBuffer = D3D11.Resource.FromSwapChain<D3D11.Texture2D>(_swapChain, 0);
-
+            _backBuffer = _swapChain.GetBuffer<D3D11.ID3D11Texture2D>(0);
+            
             // Define the render target (in case of multisample an own render target)
-            D3D11.Texture2D backBufferForRenderloop = null;
+            D3D11.ID3D11Texture2D backBufferForRenderloop = null;
             if (this.RenderLoop.Configuration.AntialiasingEnabled)
             {
                 _backBufferMultisampled = GraphicsHelper.Internals.CreateRenderTargetTexture(engineDevice, viewSize.Width, viewSize.Height, this.RenderLoop.Configuration);
-                _renderTargetView = new D3D11.RenderTargetView(engineDevice.Internals.DeviceD3D11_1, _backBufferMultisampled);
+                _renderTargetView = engineDevice.Internals.DeviceD3D11_1.CreateRenderTargetView(_backBufferMultisampled);
                 backBufferForRenderloop = _backBufferMultisampled;
             }
             else
             {
-                _renderTargetView = new D3D11.RenderTargetView(engineDevice.Internals.DeviceD3D11_1, _backBuffer);
+                _renderTargetView = engineDevice.Internals.DeviceD3D11_1.CreateRenderTargetView(_backBuffer);
                 backBufferForRenderloop = _backBuffer;
             }
 
             //Create the depth buffer
             _depthBuffer = GraphicsHelper.Internals.CreateDepthBufferTexture(engineDevice, viewSize.Width, viewSize.Height, this.RenderLoop.Configuration);
-            _renderTargetDepth = new D3D11.DepthStencilView(engineDevice.Internals.DeviceD3D11_1, _depthBuffer);
+            _renderTargetDepth = engineDevice.Internals.DeviceD3D11_1.CreateDepthStencilView(_depthBuffer);
 
             //Define the viewport for rendering
             var viewPort = GraphicsHelper.Internals.CreateDefaultViewport(viewSize.Width, viewSize.Height);
@@ -439,13 +439,13 @@ namespace SeeingSharp.Views
                 if (_compositionScaleChanged)
                 {
                     _compositionScaleChanged = false;
-                    var swapChain2 = _swapChain.QueryInterfaceOrNull<DXGI.SwapChain2>();
+                    var swapChain2 = _swapChain.QueryInterfaceOrNull<DXGI.IDXGISwapChain2>();
 
                     if (swapChain2 != null)
                     {
                         try
                         {
-                            var inverseScale = new RawMatrix3x2
+                            var inverseScale = new Matrix3x2
                             {
                                 M11 = 1.0f / _targetPanel.CompositionScaleX,
                                 M22 = 1.0f / _targetPanel.CompositionScaleY
@@ -480,7 +480,10 @@ namespace SeeingSharp.Views
             // Copy contents of the backbuffer if in multisampling mode
             if (_backBufferMultisampled != null)
             {
-                engineDevice.Internals.DeviceImmediateContextD3D11.ResolveSubresource(_backBufferMultisampled, 0, _backBuffer, 0, GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT);
+                engineDevice.Internals.DeviceImmediateContextD3D11.ResolveSubresource(
+                    _backBuffer, 0,
+                    _backBufferMultisampled, 0,
+                    GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT);
             }
 
             // Present all rendered stuff on screen
