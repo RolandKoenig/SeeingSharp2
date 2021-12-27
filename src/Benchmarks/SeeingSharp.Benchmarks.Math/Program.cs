@@ -6,7 +6,7 @@ namespace SeeingSharp.Benchmarks.Math
     {
         static void Main(string[] args)
         {
-            var summary = BenchmarkRunner.Run<SceneSpacialObject_Transform>();
+            //var summary = BenchmarkRunner.Run<SceneSpacialObject_Transform>();
         }
     }
 }

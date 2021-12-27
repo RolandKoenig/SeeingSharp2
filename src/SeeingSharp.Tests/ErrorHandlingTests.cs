@@ -23,6 +23,10 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGraphicsAsync();
 
+            // Ensure that any async disposal is  done before we create a new GraphicsCore
+            await GraphicsCore.Current.MainLoop.WaitForNextPassedLoopAsync();
+            await GraphicsCore.Current.MainLoop.WaitForNextPassedLoopAsync();
+
             GDI.Bitmap screenshot = null;
             using (TestUtilities.FailTestOnInternalExceptions())
             using (GraphicsCore.AutomatedTest_NewTestEnvironment())
@@ -94,11 +98,14 @@ namespace SeeingSharp.Tests
         {
             await TestUtilities.InitializeWithGraphicsAsync();
 
+            // Ensure that any async disposal is  done before we create a new GraphicsCore
+            await GraphicsCore.Current.MainLoop.WaitForNextPassedLoopAsync();
+            await GraphicsCore.Current.MainLoop.WaitForNextPassedLoopAsync();
+
             var isRenderTargetOperational = true;
             var isGraphicsCoreInitialized = true;
             var registeredRenderLoopCount = 1;
             using (GraphicsCore.AutomatedTest_NewTestEnvironment())
-
             using (GraphicsCore.AutomatedTest_ForceDeviceInitError())
             {
                 await GraphicsCore.Loader
@@ -121,6 +128,10 @@ namespace SeeingSharp.Tests
         public async Task WinForms_Parent_Child_Switch()
         {
             await TestUtilities.InitializeWithGraphicsAsync();
+
+            // Ensure that any async disposal is  done before we create a new GraphicsCore
+            await GraphicsCore.Current.MainLoop.WaitForNextPassedLoopAsync();
+            await GraphicsCore.Current.MainLoop.WaitForNextPassedLoopAsync();
 
             Panel hostPanel1 = null;
             Panel hostPanel2 = null;
