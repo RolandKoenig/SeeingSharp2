@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Drawing;
 using System.Threading.Tasks;
 using SeeingSharp.Checking;
 using SeeingSharp.Core;

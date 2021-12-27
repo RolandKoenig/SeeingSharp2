@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Drawing;
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
-using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 using DXGI = Vortice.DXGI;
 using D2D = Vortice.Direct2D1;
@@ -11,7 +11,7 @@ namespace SeeingSharp.Drawing2D
     public class WritableBitmapResource : BitmapResource
     {
         // Configuration
-        private Size2 _bitmapSize;
+        private Size _bitmapSize;
         private Vortice.DCommon.PixelFormat _pixelFormat;
         private double _dpiX;
         private double _dpiY;
@@ -41,7 +41,7 @@ namespace SeeingSharp.Drawing2D
         /// Initializes a new instance of the <see cref="WritableBitmapResource"/> class.
         /// </summary>
         public WritableBitmapResource(
-            Size2 bitmapSize,
+            Size bitmapSize,
             BitmapFormat format = BitmapFormat.Bgra,
             AlphaMode alphaMode = AlphaMode.Straight,
             double dpiX = 96.0, double dpiY = 96.0)

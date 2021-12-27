@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Drawing;
 using System.Runtime.CompilerServices;
 using SeeingSharp.Mathematics;
 
@@ -8,7 +9,7 @@ namespace SeeingSharp.Checking
     {
         [Conditional("DEBUG")]
         public static void EnsureNotEmpty(
-            this Size2 size, string checkedVariableName,
+            this Size size, string checkedVariableName,
             [CallerMemberName]
             string callerMethod = "")
         {
@@ -24,7 +25,7 @@ namespace SeeingSharp.Checking
 
         [Conditional("DEBUG")]
         public static void EnsureNotEmpty(
-            this Size2F size, string checkedVariableName,
+            this SizeF size, string checkedVariableName,
             [CallerMemberName]
             string callerMethod = "")
         {

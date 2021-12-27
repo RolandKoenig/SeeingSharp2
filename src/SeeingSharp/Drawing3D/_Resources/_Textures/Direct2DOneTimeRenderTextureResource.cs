@@ -1,4 +1,5 @@
-﻿using SeeingSharp.Checking;
+﻿using System.Drawing;
+using SeeingSharp.Checking;
 using SeeingSharp.Core;
 using SeeingSharp.Core.Configuration;
 using SeeingSharp.Core.Devices;
@@ -100,7 +101,7 @@ namespace SeeingSharp.Drawing3D
                 _width, _height,
                 DpiScaling.Default))
             {
-                var graphics2D = new Graphics2D(device, overlayRenderer.RenderTarget2D, new Size2F(_width, _height));
+                var graphics2D = new Graphics2D(device, overlayRenderer.RenderTarget2D, new SizeF(_width, _height));
 
                 // Start drawing
                 overlayRenderer.BeginDraw();

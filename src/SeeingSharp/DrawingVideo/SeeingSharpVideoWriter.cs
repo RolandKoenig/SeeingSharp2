@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using SeeingSharp.Checking;
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
@@ -13,7 +14,7 @@ namespace SeeingSharp.DrawingVideo
     public abstract class SeeingSharpVideoWriter
     {
         // Runtime values
-        private Size2 _videoSize;
+        private Size _videoSize;
         private bool _hasStarted;
         private bool _hasFinished;
         private Exception _startException;
@@ -47,7 +48,7 @@ namespace SeeingSharp.DrawingVideo
         /// <summary>
         /// Gets the current video size.
         /// </summary>
-        public Size2 VideoSize => _videoSize;
+        public Size VideoSize => _videoSize;
 
         public Exception LastStartException => _startException;
 
@@ -110,7 +111,7 @@ namespace SeeingSharp.DrawingVideo
         /// Starts rendering to the target.
         /// </summary>
         /// <param name="videoPixelSize">The pixel size of the video.</param>
-        protected abstract void StartRenderingInternal(Size2 videoPixelSize);
+        protected abstract void StartRenderingInternal(Size videoPixelSize);
 
         /// <summary>
         /// Draws the given frame to the video.
@@ -128,7 +129,7 @@ namespace SeeingSharp.DrawingVideo
         /// <summary>
         /// Starts to render the video.
         /// </summary>
-        internal void StartRendering(Size2 videoSize)
+        internal void StartRendering(Size videoSize)
         {
             videoSize.EnsureNotEmpty(nameof(videoSize));
             if (_hasStarted) { throw new SeeingSharpGraphicsException($"{nameof(SeeingSharpVideoWriter)} has already started before!"); }

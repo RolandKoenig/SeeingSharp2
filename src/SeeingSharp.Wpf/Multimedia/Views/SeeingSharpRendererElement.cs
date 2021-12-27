@@ -16,6 +16,7 @@ using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 using DXGI = Vortice.DXGI;
 using D3D11 = Vortice.Direct3D11;
+using GDI = System.Drawing;
 
 namespace SeeingSharp.Views
 {
@@ -392,7 +393,7 @@ namespace SeeingSharp.Views
         /// <summary>
         /// Create all view resources.
         /// </summary>
-        Tuple<D3D11.ID3D11Texture2D, D3D11.ID3D11RenderTargetView, D3D11.ID3D11Texture2D, D3D11.ID3D11DepthStencilView, Vortice.Mathematics.Viewport, Size2, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice engineDevice)
+        Tuple<D3D11.ID3D11Texture2D, D3D11.ID3D11RenderTargetView, D3D11.ID3D11Texture2D, D3D11.ID3D11DepthStencilView, Vortice.Mathematics.Viewport, GDI.Size, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice engineDevice)
         {
             SeeingSharpWpfUtil.GetDpiScalingFactor(this, out var dpiScaleFactorX, out var dpiScaleFactorY);
 
@@ -502,7 +503,7 @@ namespace SeeingSharp.Views
             _lastRecreateHeight = height;
 
             // Return all generated objects
-            return Tuple.Create(_backBufferD3D11, _renderTarget, _depthBuffer, _renderTargetDepth, viewPort, new Size2(width, height), this.GetDpiScaling());
+            return Tuple.Create(_backBufferD3D11, _renderTarget, _depthBuffer, _renderTargetDepth, viewPort, new GDI.Size(width, height), this.GetDpiScaling());
         }
 
         /// <summary>

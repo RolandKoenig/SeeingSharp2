@@ -54,7 +54,7 @@ namespace SeeingSharp.Tests
                     // 2D rendering is made here
                     var d2dDrawingLayer = new Custom2DDrawingLayer(graphics =>
                     {
-                        var d2dRectangle = new RectangleF(10, 10, 236, 236);
+                        var d2dRectangle = new GDI.RectangleF(10, 10, 236, 236);
                         graphics.Clear(Color4.LightBlue);
                         graphics.FillRoundedRectangle(
                             d2dRectangle, 30, 30,

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Numerics;
 using System.Text;
 
@@ -13,12 +14,12 @@ namespace SeeingSharp.Mathematics
                 EngineMath.EqualsWithTolerance(left.Y, right.Y, tolerance);
         }
 
-        public static Vector2 FromSize2(Size2 size)
+        public static Vector2 FromSize2(Size size)
         {
             return new Vector2(size.Width, size.Height);
         }
 
-        public static Vector2 FromSize2(Size2F size)
+        public static Vector2 FromSize2(SizeF size)
         {
             return new Vector2(size.Width, size.Height);
         }

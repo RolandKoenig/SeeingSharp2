@@ -14,6 +14,7 @@ using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 using DXGI = Vortice.DXGI;
 using D3D11 = Vortice.Direct3D11;
+using GDI = System.Drawing;
 
 namespace SeeingSharp.Views
 {
@@ -25,7 +26,7 @@ namespace SeeingSharp.Views
         // SwapChainPanel local members
         private SwapChainPanel _targetPanel;
         private DXGI.ISwapChainPanelNative _panelNative;
-        private Size2F _lastRefreshTargetSize;
+        private GDI.SizeF _lastRefreshTargetSize;
         private bool _compositionScaleChanged;
         private DateTime _lastSizeChange;
 
@@ -89,9 +90,9 @@ namespace SeeingSharp.Views
         /// <summary>
         /// Gets the current pixel size of the target panel.
         /// </summary>
-        public Size2 PixelSize => this.GetTargetRenderPixelSize();
+        public GDI.Size PixelSize => this.GetTargetRenderPixelSize();
 
-        public Size2 ActualSize => new Size2((int)_targetPanel.ActualWidth, (int)_targetPanel.ActualHeight);
+        public GDI.Size ActualSize => new GDI.Size((int)_targetPanel.ActualWidth, (int)_targetPanel.ActualHeight);
 
         /// <summary>
         /// Gets or sets the clear color for the 3D view.
@@ -157,7 +158,7 @@ namespace SeeingSharp.Views
         {
             if (_targetPanel != null) { throw new InvalidOperationException("Unable to attach to new SwapChainBackgroundPanel: Renderer is already attached to another one!"); }
 
-            _lastRefreshTargetSize = new Size2F(0f, 0f);
+            _lastRefreshTargetSize = new GDI.SizeF(0f, 0f);
             _targetPanel = targetPanel;
             _panelNative = SharpGen.Runtime.ComObject.As<DXGI.ISwapChainPanelNative>(_targetPanel);
 
@@ -259,14 +260,14 @@ namespace SeeingSharp.Views
         /// <summary>
         /// Gets the current target pixel size for the render panel.
         /// </summary>
-        private Size2 GetTargetRenderPixelSize()
+        private GDI.Size GetTargetRenderPixelSize()
         {
-            if (_targetPanel == null) { return new Size2((int)MIN_PIXEL_SIZE_WIDTH, (int)MIN_PIXEL_SIZE_HEIGHT); }
+            if (_targetPanel == null) { return new GDI.Size((int)MIN_PIXEL_SIZE_WIDTH, (int)MIN_PIXEL_SIZE_HEIGHT); }
 
             var currentWidth = _targetPanel.ActualWidth * _targetPanel.CompositionScaleX;
             var currentHeight = _targetPanel.ActualHeight * _targetPanel.CompositionScaleY;
 
-            return new Size2(
+            return new GDI.Size(
                 (int)(currentWidth > MIN_PIXEL_SIZE_WIDTH ? currentWidth : MIN_PIXEL_SIZE_WIDTH),
                 (int)(currentHeight > MIN_PIXEL_SIZE_HEIGHT ? currentHeight : MIN_PIXEL_SIZE_HEIGHT));
         }
@@ -368,7 +369,7 @@ namespace SeeingSharp.Views
         /// <summary>
         /// Create all view resources.
         /// </summary>
-        Tuple<D3D11.ID3D11Texture2D, D3D11.ID3D11RenderTargetView, D3D11.ID3D11Texture2D, D3D11.ID3D11DepthStencilView, Vortice.Mathematics.Viewport, Size2, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice engineDevice)
+        Tuple<D3D11.ID3D11Texture2D, D3D11.ID3D11RenderTargetView, D3D11.ID3D11Texture2D, D3D11.ID3D11DepthStencilView, Vortice.Mathematics.Viewport, GDI.Size, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice engineDevice)
         {
             _backBufferMultisampled = null;
 
@@ -402,7 +403,7 @@ namespace SeeingSharp.Views
 
             //Define the viewport for rendering
             var viewPort = GraphicsHelper.Internals.CreateDefaultViewport(viewSize.Width, viewSize.Height);
-            _lastRefreshTargetSize = new Size2F(viewSize.Width, viewSize.Height);
+            _lastRefreshTargetSize = new GDI.SizeF(viewSize.Width, viewSize.Height);
 
             var dpiScaling = new DpiScaling
             {

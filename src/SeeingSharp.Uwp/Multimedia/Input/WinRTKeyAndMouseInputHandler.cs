@@ -325,7 +325,7 @@ namespace SeeingSharp.Input
 
                 var actSize = _painter.ActualSize;
                 _stateMouseOrPointer.Internals.NotifyMouseLocation(
-                    currentLocation, moveDistance, actSize.ToVector2());
+                    currentLocation, moveDistance, new Vector2(actSize.Width, actSize.Height));
             }
 
             // Store last drag point

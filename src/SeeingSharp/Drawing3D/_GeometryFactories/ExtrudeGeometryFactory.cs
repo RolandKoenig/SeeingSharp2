@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Numerics;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
@@ -18,7 +19,7 @@ namespace SeeingSharp.Drawing3D
         /// <summary>
         /// Bounds of the given geometry.
         /// </summary>
-        public Size2F Bounds { get; private set; }
+        public SizeF Bounds { get; private set; }
 
         public ExtrudeGeometryFactoryInternals Internals { get; }
 
@@ -96,7 +97,7 @@ namespace SeeingSharp.Drawing3D
 
             //  Do some postprocessing
             var triangleCount = 0;
-            var bounds = new Size2F();
+            var bounds = new SizeF();
             foreach (var actTriangleArray in generatedTriangles)
             {
                 foreach (var actTriangle in actTriangleArray)
@@ -110,7 +111,7 @@ namespace SeeingSharp.Drawing3D
             }
             if (triangleCount > 0)
             {
-                bounds = new Size2F(maxX - minX, maxY - minY);
+                bounds = new SizeF(maxX - minX, maxY - minY);
                 minPoint = new Vector2(minX, minY);
             }
 
@@ -140,7 +141,7 @@ namespace SeeingSharp.Drawing3D
                         actTriangleArray[loop] = actTriangle;
                     }
                 }
-                bounds = new Size2F(
+                bounds = new SizeF(
                     bounds.Width * scaleFactorX,
                     bounds.Height * scaleFactorY);
                 minPoint = new Vector2(minPoint.X * scaleFactorX, minPoint.Y * scaleFactorY);

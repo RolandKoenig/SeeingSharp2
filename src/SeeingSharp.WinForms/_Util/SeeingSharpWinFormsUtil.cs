@@ -13,10 +13,5 @@ namespace SeeingSharp.Util
                 drawingColor.B / 255f,
                 drawingColor.A / 255f);
         }
-
-        public static Point PointFromGdiPoint(GDI.Point point)
-        {
-            return new Point(point.X, point.Y);
-        }
     }
 }

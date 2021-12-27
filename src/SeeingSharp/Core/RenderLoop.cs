@@ -9,6 +9,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using System.Threading;
@@ -37,7 +38,7 @@ namespace SeeingSharp.Core
 
         // Target parameters for rendering
         private EngineDevice _targetDevice;
-        private Size2 _targetSize;
+        private Size _targetSize;
         private DpiScaling _currentDpiScaling;
         private Scene _targetScene;
         private bool _viewRefreshForced;
@@ -60,7 +61,7 @@ namespace SeeingSharp.Core
         private UnsafeList<Custom2DDrawingLayer> _2dDrawingLayers;
         private DebugDrawingLayer _debugDrawingLayer;
         private EngineDevice _currentDevice;
-        private Size2 _currentViewSize;
+        private Size _currentViewSize;
 
         private Scene _currentScene;
         private Direct2DOverlayRenderer _d2dOverlay;
@@ -175,7 +176,7 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets the current view size in pixels.
         /// </summary>
-        public Size2 CurrentViewSize => _currentViewSize;
+        public Size CurrentViewSize => _currentViewSize;
 
         /// <summary>
         /// Gets the device this renderloop is using.
@@ -329,7 +330,7 @@ namespace SeeingSharp.Core
 
             // Set initial target parameters
             _targetDevice = null;
-            _targetSize = new Size2(0, 0);
+            _targetSize = new Size(0, 0);
             _loadDeviceIndex = -1;
 
             // Create default scene and camera
@@ -367,7 +368,7 @@ namespace SeeingSharp.Core
             if (width < SeeingSharpConstants.MIN_VIEW_WIDTH) { width = SeeingSharpConstants.MIN_VIEW_WIDTH; }
             if (height < SeeingSharpConstants.MIN_VIEW_HEIGHT) { height = SeeingSharpConstants.MIN_VIEW_HEIGHT; }
 
-            _targetSize = new Size2(width, height);
+            _targetSize = new Size(width, height);
         }
 
         /// <summary>
@@ -856,7 +857,7 @@ namespace SeeingSharp.Core
             _renderTargetDepth = null;
             _renderTargetDepthView = null;
             _viewport = new Vortice.Mathematics.Viewport();
-            _currentViewSize = new Size2(SeeingSharpConstants.MIN_VIEW_WIDTH, SeeingSharpConstants.MIN_VIEW_HEIGHT);
+            _currentViewSize = new Size(SeeingSharpConstants.MIN_VIEW_WIDTH, SeeingSharpConstants.MIN_VIEW_HEIGHT);
 
             // Dispose local resources
             SeeingSharpUtil.SafeDispose(ref _copyHelperTextureStaging);

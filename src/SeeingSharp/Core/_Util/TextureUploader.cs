@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using SeeingSharp.Checking;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Mathematics;
@@ -55,7 +56,7 @@ namespace SeeingSharp.Core
             if (_isDisposed) { throw new ObjectDisposedException(nameof(TextureUploader)); }
 
             var result = new MemoryMappedTexture<T>(
-                new Size2(_width, _height));
+                new Size(_width, _height));
             this.UploadToMemoryMappedTexture(textureToUpload, result);
             return result;
         }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Numerics;
 using SeeingSharp.Core.Configuration;
 using SeeingSharp.Core.Devices;
@@ -15,7 +16,7 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets the current view size.
         /// </summary>
-        public Size2 CurrentViewSize => Owner.CurrentViewSize;
+        public Size CurrentViewSize => Owner.CurrentViewSize;
 
         /// <summary>
         /// Gets the camera object that belongs to this view.

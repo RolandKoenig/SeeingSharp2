@@ -120,7 +120,7 @@ namespace SeeingSharp.Drawing3D
 
             // Update constant buffer data
             var currentViewSize = renderState.ViewInformation.CurrentViewSize;
-            _constantBufferData.ScreenPixelSize = currentViewSize.ToVector2();
+            _constantBufferData.ScreenPixelSize = new Vector2(currentViewSize.Width, currentViewSize.Height);
             _constantBufferData.Opacity = 0.9f;
             _constantBufferData.Threshold = 0.2f;
             _constantBufferData.Thickness = this.Thickness;

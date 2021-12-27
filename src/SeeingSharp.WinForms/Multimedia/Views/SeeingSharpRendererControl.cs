@@ -13,8 +13,6 @@ using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Input;
 using SeeingSharp.Util;
-using SeeingSharp.Mathematics;
-using SDX = Vortice;
 using DXGI = Vortice.DXGI;
 using D3D11 = Vortice.Direct3D11;
 using GDI = System.Drawing;
@@ -175,7 +173,7 @@ namespace SeeingSharp.Views
             if (!_isMouseInside) { return null; }
 
             var objects = await _renderLoop.PickObjectAsync(
-                SeeingSharpWinFormsUtil.PointFromGdiPoint(this.PointToClient(Cursor.Position)),
+                this.PointToClient(Cursor.Position),
                 new PickingOptions { OnlyCheckBoundingBoxes = false });
             return objects?.FirstOrDefault();
         }
@@ -191,7 +189,7 @@ namespace SeeingSharp.Views
             }
 
             return await _renderLoop.PickObjectAsync(
-                SeeingSharpWinFormsUtil.PointFromGdiPoint(this.PointToClient(Cursor.Position)),
+                this.PointToClient(Cursor.Position),
                 new PickingOptions { OnlyCheckBoundingBoxes = false });
         }
 
@@ -447,7 +445,7 @@ namespace SeeingSharp.Views
         /// <summary>
         /// Create all view resources.
         /// </summary>
-        Tuple<D3D11.ID3D11Texture2D, D3D11.ID3D11RenderTargetView, D3D11.ID3D11Texture2D, D3D11.ID3D11DepthStencilView, Vortice.Mathematics.Viewport, Size2, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice device)
+        Tuple<D3D11.ID3D11Texture2D, D3D11.ID3D11RenderTargetView, D3D11.ID3D11Texture2D, D3D11.ID3D11DepthStencilView, Vortice.Mathematics.Viewport, GDI.Size, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice device)
         {
             var width = this.Width;
             var height = this.Height;
@@ -479,7 +477,7 @@ namespace SeeingSharp.Views
             }
 
             // Return all generated objects
-            return Tuple.Create(_backBuffer, _renderTarget, _depthBuffer, _renderTargetDepth, viewPort, new Size2(width, height), dpiScaling);
+            return Tuple.Create(_backBuffer, _renderTarget, _depthBuffer, _renderTargetDepth, viewPort, new GDI.Size(width, height), dpiScaling);
         }
 
         /// <summary>

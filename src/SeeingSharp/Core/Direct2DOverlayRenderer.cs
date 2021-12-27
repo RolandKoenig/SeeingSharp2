@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing2D;
 using SeeingSharp.Mathematics;
@@ -119,7 +120,7 @@ namespace SeeingSharp.Core
         private void CreateResources(int viewWidth, int viewHeight, DpiScaling dpiScaling, bool forceInit)
         {
             // Calculate the screen size in device independent units
-            var scaledScreenSize = new Size2F(
+            var scaledScreenSize = new SizeF(
                 viewWidth / dpiScaling.ScaleFactorX,
                 viewHeight / dpiScaling.ScaleFactorY);
 

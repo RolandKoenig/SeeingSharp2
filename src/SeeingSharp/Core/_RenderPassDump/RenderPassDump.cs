@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
@@ -11,7 +12,7 @@ namespace SeeingSharp.Core
     {
         private bool _isDisposed;
         private TextureUploader _uploaderColor;
-        private Size2 _size;
+        private Size _size;
 
         private List<RenderPassDumpEntry> _dumpResults;
 
@@ -20,7 +21,7 @@ namespace SeeingSharp.Core
         /// <inheritdoc />
         public bool IsDisposed => _isDisposed;
 
-        internal RenderPassDump(EngineDevice device, Size2 size2, bool isMultisampled)
+        internal RenderPassDump(EngineDevice device, Size size2, bool isMultisampled)
         {
             _dumpResults = new List<RenderPassDumpEntry>(8);
 

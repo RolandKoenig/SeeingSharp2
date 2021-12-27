@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Drawing;
+using System.Numerics;
 
 namespace SeeingSharp.Mathematics
 {
@@ -17,18 +18,6 @@ namespace SeeingSharp.Mathematics
         internal static unsafe Vector2 Vector2FromRaw(System.Drawing.PointF value)
         {
             return *(Vector2*)(&value);
-        }
-
-        internal static unsafe System.Drawing.Rectangle RawFromRectangle(Rectangle value)
-        {
-            return new System.Drawing.Rectangle(
-                value.X, value.Y, value.Width, value.Height);
-        }
-
-        internal static unsafe System.Drawing.RectangleF RawFromRectangleF(RectangleF value)
-        {
-            return new System.Drawing.RectangleF(
-                value.X, value.Y, value.Width, value.Height);
         }
 
         internal static unsafe Vortice.Mathematics.Color4 RawFromColor4(Color4 value)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 

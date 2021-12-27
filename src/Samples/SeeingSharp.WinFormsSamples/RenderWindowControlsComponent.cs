@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.Windows.Forms;
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
@@ -179,11 +180,11 @@ namespace SeeingSharp.WinFormsSamples
             if(targetWindow == null){ return; }
 
             var currentViewSize = renderControl.RenderLoop.CurrentViewSize;
-            var currentWindowSize = new Size2(targetWindow.Width, targetWindow.Height);
-            var difference = new Size2(
+            var currentWindowSize = new Size(targetWindow.Width, targetWindow.Height);
+            var difference = new Size(
                 currentWindowSize.Width - currentViewSize.Width,
                 currentWindowSize.Height - currentViewSize.Height);
-            var newWindowSize = new Size2(width + difference.Width, height + difference.Height);
+            var newWindowSize = new Size(width + difference.Width, height + difference.Height);
 
             targetWindow.WindowState = FormWindowState.Normal;
             targetWindow.Width = newWindowSize.Width;

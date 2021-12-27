@@ -1,6 +1,6 @@
 ﻿using System;
+using System.Drawing;
 using System.Runtime.InteropServices;
-using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.Core
@@ -11,7 +11,7 @@ namespace SeeingSharp.Core
         // The native structure, where we store all texture data
         private IntPtr _pointer;
         private T* _pointerNative;
-        private Size2 _size;
+        private Size _size;
 
         /// <summary>
         /// Gets the float value which is located on the given location.
@@ -47,7 +47,7 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets the pixel size of this texture.
         /// </summary>
-        public Size2 PixelSize
+        public Size PixelSize
         {
             get
             {
@@ -99,7 +99,7 @@ namespace SeeingSharp.Core
         /// Initializes a new instance of the <see cref="MemoryMappedTexture{T}"/> class.
         /// </summary>
         /// <param name="size">The total size of the texture.</param>
-        public MemoryMappedTexture(Size2 size)
+        public MemoryMappedTexture(Size size)
         {
             _pointer = Marshal.AllocHGlobal(size.Width * size.Height * 4);
             _pointerNative = (T*)_pointer.ToPointer();
@@ -114,7 +114,7 @@ namespace SeeingSharp.Core
             Marshal.FreeHGlobal(_pointer);
             _pointer = IntPtr.Zero;
             _pointerNative = (T*)0;
-            _size = new Size2(0, 0);
+            _size = new Size(0, 0);
         }
 
         /// <summary>

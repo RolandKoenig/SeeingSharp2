@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Drawing;
 using System.Numerics;
 using SeeingSharp.Checking;
-using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
@@ -40,13 +40,13 @@ namespace SeeingSharp.Drawing2D
         /// <summary>
         /// Gets the total size of pixels (already scaled by DPI).
         /// </summary>
-        public Size2F ScreenPixelSize { get; }
+        public SizeF ScreenPixelSize { get; }
 
         /// <summary>
         /// Gets the total size of this screen.
         /// This value may be a virtual screen size (see TransformMode).
         /// </summary>
-        public Size2F ScreenSize
+        public SizeF ScreenSize
         {
             get
             {
@@ -129,7 +129,7 @@ namespace SeeingSharp.Drawing2D
         /// <param name="device">The hardware device which is used for rendering.</param>
         /// <param name="renderTarget">The render target which is used by this graphics object.</param>
         /// <param name="screenSize">The size of the screen in device independent pixels.</param>
-        internal Graphics2D(EngineDevice device, D2D.ID2D1RenderTarget renderTarget, Size2F screenSize)
+        internal Graphics2D(EngineDevice device, D2D.ID2D1RenderTarget renderTarget, SizeF screenSize)
         {
             _transformSettings = Graphics2DTransformSettings.Default;
             this.TransformStack = new Matrix3x2Stack();
@@ -228,7 +228,7 @@ namespace SeeingSharp.Drawing2D
             strokeWidth.EnsurePositiveOrZero(nameof(strokeWidth));
 
             _renderTarget.DrawRectangle(
-                SdxMathHelper.RawFromRectangleF(rectangle),
+                rectangle,
                 brush.GetBrush(this.Device),
                 strokeWidth);
         }
@@ -251,7 +251,7 @@ namespace SeeingSharp.Drawing2D
 
             var roundedRect = new D2D.RoundedRectangle
             {
-                Rect = SdxMathHelper.RawFromRectangleF(rectangle),
+                Rect = rectangle,
                 RadiusX = radiusX,
                 RadiusY = radiusY
             };
@@ -332,7 +332,7 @@ namespace SeeingSharp.Drawing2D
             brush.EnsureNotNull(nameof(brush));
 
             _renderTarget.FillRectangle(
-                SdxMathHelper.RawFromRectangleF(rectangle),
+                rectangle,
                 brush.GetBrush(this.Device));
         }
 
@@ -388,7 +388,7 @@ namespace SeeingSharp.Drawing2D
 
             var roundedRect = new D2D.RoundedRectangle
             {
-                Rect = SdxMathHelper.RawFromRectangleF(rectangle),
+                Rect = rectangle,
                 RadiusX = radiusX,
                 RadiusY = radiusY
             };
@@ -450,7 +450,7 @@ namespace SeeingSharp.Drawing2D
             _renderTarget.DrawText(
                 textToDraw,
                 textFormat.GetTextFormat(this.Device),
-                SdxMathHelper.RawFromRectangleF(targetRectangle),
+                targetRectangle,
                 brush.GetBrush(this.Device),
                 (D2D.DrawTextOptions)drawOptions, (Vortice.DCommon.MeasuringMode)measuringMode);
         }
@@ -501,17 +501,17 @@ namespace SeeingSharp.Drawing2D
                 // Render tiled bitmap
                 _renderTarget.DrawBitmap(
                     nativeBitmap,
-                    SdxMathHelper.RawFromRectangleF(destinationRectangle),
+                    destinationRectangle,
                     opacity,
                     (D2D.BitmapInterpolationMode)interpolationMode,
-                    SdxMathHelper.RawFromRectangleF(sourceRectangle));
+                    sourceRectangle);
             }
             else
             {
                 // Render non-tiled bitmap
                 _renderTarget.DrawBitmap(
                     bitmap.GetBitmap(this.Device),
-                    SdxMathHelper.RawFromRectangleF(destinationRectangle),
+                    destinationRectangle,
                     opacity,
                     (D2D.BitmapInterpolationMode)interpolationMode, 
                     null);
@@ -568,10 +568,10 @@ namespace SeeingSharp.Drawing2D
                 // Render tiled bitmap
                 _renderTarget.DrawBitmap(
                     nativeBitmap,
-                    SdxMathHelper.RawFromRectangleF(destinationRectangle),
+                    destinationRectangle,
                     opacity,
                     (D2D.BitmapInterpolationMode)interpolationMode,
-                    SdxMathHelper.RawFromRectangleF(sourceRectangle));
+                    sourceRectangle);
             }
             else
             {

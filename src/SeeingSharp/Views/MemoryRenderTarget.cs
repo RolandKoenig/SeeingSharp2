@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
 using SeeingSharp.Core;
@@ -122,7 +123,7 @@ namespace SeeingSharp.Views
         /// <summary>
         /// Create all view resources.
         /// </summary>
-        Tuple<D3D11.ID3D11Texture2D, D3D11.ID3D11RenderTargetView, D3D11.ID3D11Texture2D, D3D11.ID3D11DepthStencilView, Vortice.Mathematics.Viewport, Size2, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice device)
+        Tuple<D3D11.ID3D11Texture2D, D3D11.ID3D11RenderTargetView, D3D11.ID3D11Texture2D, D3D11.ID3D11DepthStencilView, Vortice.Mathematics.Viewport, Size, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice device)
         {
             var width = _pixelWidth;
             var height = _pixelHeight;
@@ -143,7 +144,7 @@ namespace SeeingSharp.Views
             var viewPort = GraphicsHelper.Internals.CreateDefaultViewport(width, height);
 
             //Return all generated objects
-            return Tuple.Create(_renderTarget, _renderTargetView, _renderTargetDepth, _renderTargetDepthView, viewPort, new Size2(width, height), DpiScaling.Default);
+            return Tuple.Create(_renderTarget, _renderTargetView, _renderTargetDepth, _renderTargetDepthView, viewPort, new Size(width, height), DpiScaling.Default);
         }
 
         /// <summary>

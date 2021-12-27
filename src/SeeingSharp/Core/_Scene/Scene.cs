@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using System.Threading;
@@ -103,7 +104,7 @@ namespace SeeingSharp.Core
 
         public Graphics2DTransformMode TransformMode2D { get; set; }
 
-        public Size2F VirtualScreenSize2D { get; set; }
+        public SizeF VirtualScreenSize2D { get; set; }
 
         public Matrix3x2 CustomTransform2D { get; set; }
 
@@ -137,7 +138,7 @@ namespace SeeingSharp.Core
 
             this.TransformMode2D = Graphics2DTransformMode.Custom;
             this.CustomTransform2D = Matrix3x2.Identity;
-            this.VirtualScreenSize2D = new Size2F();
+            this.VirtualScreenSize2D = new SizeF();
 
             _sceneComponents = new SceneComponentFlyweight(this);
 

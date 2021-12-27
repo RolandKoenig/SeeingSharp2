@@ -1,5 +1,5 @@
 ﻿using System;
-using SeeingSharp.Mathematics;
+using System.Drawing;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.Core
@@ -15,7 +15,7 @@ namespace SeeingSharp.Core
         /// <inheritdoc />
         public bool IsDisposed => _bufferColor == null;
 
-        internal RenderPassDumpEntry(string dumpKey, Size2 size)
+        internal RenderPassDumpEntry(string dumpKey, Size size)
         {
             this.Key = dumpKey;
             _bufferColor = new MemoryMappedTexture<int>(size);
