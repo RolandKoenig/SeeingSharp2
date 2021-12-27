@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using SharpDX;
+using SharpGen.Runtime;
 
 namespace SeeingSharp.Views
 {
@@ -14,7 +14,7 @@ namespace SeeingSharp.Views
         [Guid("63aad0b8-7c24-40ff-85a8-640d944cc325")]
         public interface ISwapChainPanelNative
         {
-            [PreserveSig] Result SetSwapChain([In]IntPtr swapChain);
+            [PreserveSig] Result SetSwapChain([In] IntPtr swapChain);
         }
     }
 }

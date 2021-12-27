@@ -617,11 +617,12 @@ namespace SeeingSharp.Views
 
                 // Copy resources
                 engineDevice.Internals.DeviceImmediateContextD3D11.ResolveSubresource(
-                    this.RenderLoop.Internals.RenderTarget, 0, this.RenderLoop.Internals.CopyHelperTextureStandard, 0,
+                    this.RenderLoop.Internals.CopyHelperTextureStandard, 0,
+                    this.RenderLoop.Internals.RenderTarget, 0,
                     GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT);
                 engineDevice.Internals.DeviceImmediateContextD3D11.CopyResource(
-                    this.RenderLoop.Internals.CopyHelperTextureStandard,
-                    this.RenderLoop.Internals.CopyHelperTextureStaging);
+                    this.RenderLoop.Internals.CopyHelperTextureStaging,
+                    this.RenderLoop.Internals.CopyHelperTextureStandard);
 
                 // Copy texture into wpf bitmap
                 GraphicsHelperWpf.LoadBitmapFromStagingTexture(

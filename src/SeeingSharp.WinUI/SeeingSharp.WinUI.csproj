@@ -36,6 +36,7 @@
 	  <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
 	  <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22000.194" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+    <PackageReference Include="Vortice.WinUI" Version="1.9.143" />
   </ItemGroup>
 
   <ItemGroup>
