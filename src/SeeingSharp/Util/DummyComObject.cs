@@ -8,12 +8,17 @@ namespace SeeingSharp.Util
         private uint _referenceCounter;
 
         /// <inheritdoc />
-        public ShadowContainer Shadow { get; set; }
+        public ShadowContainer Shadow { get; private set; }
 
-        /// <inheritdoc />
-        public virtual void Dispose()
+        public DummyComObject()
         {
+            this.Shadow = new ShadowContainer(this);
+        }
 
+        public void Dispose()
+        {
+            this.Shadow.Dispose();
+            this.Shadow = null;
         }
 
         /// <inheritdoc />

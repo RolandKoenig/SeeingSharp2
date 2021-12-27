@@ -2,11 +2,12 @@
 using System.Numerics;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
+using SharpGen.Runtime;
 using D2D = Vortice.Direct2D1;
 
 namespace SeeingSharp.Drawing3D
 {
-    internal class SimplePolygon2DGeometrySink : DummyComObject, D2D.ID2D1GeometrySink
+    internal class SimplePolygon2DGeometrySink : DummyComObject, D2D.ID2D1GeometrySink, ICallbackable
     {
         private List<Vector2> _currentPolygonBuilder;
         private Vector2 _origin;

@@ -596,7 +596,6 @@ namespace SeeingSharp.Core
                 // Set render targets to output merger
                 deviceContext.RSSetViewports(_viewports);
                 deviceContext.OMSetRenderTargets(3, _targetArray, this.RenderTargets.DepthStencilBuffer);
-     
             }
         }
     }
