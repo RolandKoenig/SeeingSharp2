@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using SeeingSharp.Util;
-using Vortice.DXGI;
-using D3D9 = SharpDX.Direct3D9;
+using DXGI = Vortice.DXGI;
+using D3D9 = Vortice.Direct3D9;
+using static Vortice.Direct3D9.D3D9;
 
 namespace SeeingSharp.Core
 {
     public class DeviceHandlerD3D9 : IDisposable
     {
-        private D3D9.DeviceEx _deviceEx;
-        private D3D9.Direct3DEx _direct3DEx;
+        private D3D9.IDirect3DDevice9Ex _deviceEx;
+        private D3D9.IDirect3D9Ex _direct3DEx;
 
         /// <summary>
         /// Is the device successfully initialized?
@@ -19,19 +20,19 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets the initialized device.
         /// </summary>
-        internal D3D9.DeviceEx Device => _deviceEx;
+        internal D3D9.IDirect3DDevice9Ex Device => _deviceEx;
 
         /// <summary>
         /// Gets current DirectX context.
         /// </summary>
-        internal D3D9.Direct3DEx Context => _direct3DEx;
+        internal D3D9.IDirect3D9Ex Context => _direct3DEx;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerD3D9"/> class.
         /// </summary>
         /// <param name="dxgiAdapter">The target adapter.</param>
         /// <param name="isSoftwareAdapter">Are we in software mode?</param>
-        internal DeviceHandlerD3D9(Adapter1 dxgiAdapter, bool isSoftwareAdapter)
+        internal DeviceHandlerD3D9(DXGI.IDXGIAdapter1 dxgiAdapter, bool isSoftwareAdapter)
         {
             try
             {
@@ -54,7 +55,8 @@ namespace SeeingSharp.Core
                     };
 
                     //Create the device finally
-                    _direct3DEx = new D3D9.Direct3DEx();
+                    var result = Create9Ex(out _direct3DEx);
+                    result.CheckError();
 
                     // Try to find the Direct3D9 adapter that matches given DXGI adapter
                     var adapterIndex = -1;
@@ -72,7 +74,9 @@ namespace SeeingSharp.Core
                     if (adapterIndex < 0) { return; }
 
                     // Try to create the device
-                    _deviceEx = new D3D9.DeviceEx(_direct3DEx, adapterIndex, D3D9.DeviceType.Hardware, IntPtr.Zero, CREATE_FLAGS, presentparams);
+                    _deviceEx = _direct3DEx.CreateDeviceEx(
+                        adapterIndex, D3D9.DeviceType.Hardware, IntPtr.Zero,
+                        CREATE_FLAGS, presentparams);
                 }
             }
             catch (Exception)

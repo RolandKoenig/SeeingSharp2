@@ -6,16 +6,16 @@ using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
 using Vortice.DXGI;
-using D3D11 = SharpDX.Direct3D11;
-using D3D9 = SharpDX.Direct3D9;
+using D3D11 = Vortice.Direct3D11;
+using D3D9 = Vortice.Direct3D9;
 using DXGI = Vortice.DXGI;
 
 namespace SeeingSharp.Views
 {
     public class HigherD3DImageSource : D3DImage, IDisposable
     {
-        private D3D9.DeviceEx _d3dDevice;
-        private D3D9.Texture _d3dRenderTarget;
+        private D3D9.IDirect3DDevice9Ex _d3dDevice;
+        private D3D9.IDirect3DTexture9 _d3dRenderTarget;
 
         public bool HasRenderTarget => _d3dRenderTarget != null;
 
@@ -47,7 +47,7 @@ namespace SeeingSharp.Views
         /// Sets the render target of this D3DImage object.
         /// </summary>
         /// <param name="renderTarget">The render target to set.</param>
-        public void SetRenderTarget(D3D11.Texture2D renderTarget)
+        public void SetRenderTarget(D3D11.ID3D11Texture2D renderTarget)
         {
             if (_d3dRenderTarget != null)
             {
@@ -79,8 +79,7 @@ namespace SeeingSharp.Views
             }
 
             //Map the texture to the D3DImage base class
-            _d3dRenderTarget = new D3D9.Texture(
-                _d3dDevice,
+            _d3dRenderTarget = _d3dDevice.CreateTexture(
                 renderTarget.Description.Width,
                 renderTarget.Description.Height,
                 1, D3D9.Usage.RenderTarget, format, D3D9.Pool.Default, ref handle);
@@ -107,11 +106,11 @@ namespace SeeingSharp.Views
         /// Gets the handle that can be used for resource sharing.
         /// </summary>
         /// <param name="texture">The texture to be shared.</param>
-        private IntPtr GetSharedHandle(D3D11.Texture2D texture)
+        private IntPtr GetSharedHandle(D3D11.ID3D11Texture2D texture)
         {
             texture.EnsureNotNull(nameof(texture));
 
-            using (var resource = texture.QueryInterface<DXGI.Resource>())
+            using (var resource = texture.QueryInterface<DXGI.IDXGIResource>())
             {
                 return resource.SharedHandle;
             }
@@ -121,7 +120,7 @@ namespace SeeingSharp.Views
         /// Gets the format for sharing.
         /// </summary>
         /// <param name="texture">The texture to get the format for.</param>
-        private static D3D9.Format TranslateFormat(D3D11.Texture2D texture)
+        private static D3D9.Format TranslateFormat(D3D11.ID3D11Texture2D texture)
         {
             switch (texture.Description.Format)
             {
@@ -143,7 +142,7 @@ namespace SeeingSharp.Views
         /// Is the given texture sharable?
         /// </summary>
         /// <param name="textureToCheck">The checker to check.</param>
-        private static bool IsShareable(D3D11.Texture2D textureToCheck)
+        private static bool IsShareable(D3D11.ID3D11Texture2D textureToCheck)
         {
             return (textureToCheck.Description.OptionFlags & D3D11.ResourceOptionFlags.Shared) != 0;
         }

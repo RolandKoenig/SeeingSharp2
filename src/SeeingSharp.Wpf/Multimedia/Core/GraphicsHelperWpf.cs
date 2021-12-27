@@ -4,7 +4,7 @@ using System.Windows.Media.Imaging;
 using SeeingSharp.Checking;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
-using D3D11 = SharpDX.Direct3D11;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Core
 {
@@ -32,7 +32,7 @@ namespace SeeingSharp.Core
         /// <param name="pixelWidth">With of the bitmap in pixels.</param>
         /// <param name="pixelHeight">Height of the bitmap in pixels.</param>
         /// <param name="lockTimeout">Timeout for locking the target bitmap.</param>
-        internal static void LoadBitmapFromStagingTexture(EngineDevice device, D3D11.Texture2D stagingTexture, WriteableBitmap targetBitmap, int pixelWidth, int pixelHeight, TimeSpan lockTimeout)
+        internal static void LoadBitmapFromStagingTexture(EngineDevice device, D3D11.ID3D11Texture2D stagingTexture, WriteableBitmap targetBitmap, int pixelWidth, int pixelHeight, TimeSpan lockTimeout)
         {
             device.EnsureNotNull(nameof(device));
             stagingTexture.EnsureNotNull(nameof(stagingTexture));
@@ -43,7 +43,7 @@ namespace SeeingSharp.Core
             pixelHeight.EnsureEqualComparable(textureDesc.Height, $"{nameof(textureDesc)}.{nameof(textureDesc.Height)}");
 
             // Prepare target bitmap
-            var dataBox = device.Internals.DeviceImmediateContextD3D11.MapSubresource(stagingTexture, 0, D3D11.MapMode.Read, D3D11.MapFlags.None);
+            var dataBox = device.Internals.DeviceImmediateContextD3D11.Map(stagingTexture, 0, D3D11.MapMode.Read, D3D11.MapFlags.None);
             try
             {
                 if (!targetBitmap.TryLock(new Duration(lockTimeout)))
@@ -74,7 +74,7 @@ namespace SeeingSharp.Core
             }
             finally
             {
-                device.Internals.DeviceImmediateContextD3D11.UnmapSubresource(stagingTexture, 0);
+                device.Internals.DeviceImmediateContextD3D11.Unmap(stagingTexture, 0);
             }
         }
     }

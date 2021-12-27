@@ -14,9 +14,8 @@ using SeeingSharp.Drawing3D;
 using SeeingSharp.Input;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
-using Vortice.DXGI;
-using SharpDX.Mathematics.Interop;
-using D3D11 = SharpDX.Direct3D11;
+using DXGI = Vortice.DXGI;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Views
 {
@@ -32,12 +31,12 @@ namespace SeeingSharp.Views
         private int _lockImageErrorCount;
 
         // All needed direct3d resources
-        private D3D11.Texture2D _backBufferForWpf;
-        private D3D11.Texture2D _backBufferD3D11;
-        private D3D11.Texture2D _depthBuffer;
-        private D3D11.RenderTargetView _renderTarget;
-        private D3D11.DepthStencilView _renderTargetDepth;
-        private Surface _renderTarget2DDxgi;
+        private D3D11.ID3D11Texture2D _backBufferForWpf;
+        private D3D11.ID3D11Texture2D _backBufferD3D11;
+        private D3D11.ID3D11Texture2D _depthBuffer;
+        private D3D11.ID3D11RenderTargetView _renderTarget;
+        private D3D11.ID3D11DepthStencilView _renderTargetDepth;
+        private DXGI.IDXGISurface _renderTarget2DDxgi;
 
         // Some size related properties
         private int _renderTargetHeight;
@@ -393,7 +392,7 @@ namespace SeeingSharp.Views
         /// <summary>
         /// Create all view resources.
         /// </summary>
-        Tuple<D3D11.Texture2D, D3D11.RenderTargetView, D3D11.Texture2D, D3D11.DepthStencilView, RawViewportF, Size2, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice engineDevice)
+        Tuple<D3D11.ID3D11Texture2D, D3D11.ID3D11RenderTargetView, D3D11.ID3D11Texture2D, D3D11.ID3D11DepthStencilView, Vortice.Mathematics.Viewport, Size2, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice engineDevice)
         {
             SeeingSharpWpfUtil.GetDpiScalingFactor(this, out var dpiScaleFactorX, out var dpiScaleFactorY);
 
@@ -407,8 +406,8 @@ namespace SeeingSharp.Views
             var height = (int)pixelSize.Height;
 
             // Get references to current render device
-            D3D11.Device renderDevice = engineDevice.Internals.DeviceD3D11_1;
-            var viewPort = default(RawViewportF);
+            D3D11.ID3D11Device renderDevice = engineDevice.Internals.DeviceD3D11_1;
+            var viewPort = default(Vortice.Mathematics.Viewport);
 
             var initializedSuccessfully = false;
             var forceFallbackSolution = _forceCompositionOverSoftware;
@@ -454,11 +453,11 @@ namespace SeeingSharp.Views
                 // Create the swap chain and the render target
                 _backBufferD3D11 = GraphicsHelper.Internals.CreateRenderTargetTexture(engineDevice, width, height, this.RenderLoop.Configuration);
                 _backBufferForWpf = GraphicsHelper.Internals.CreateSharedTexture(engineDevice, width, height);
-                _renderTarget = new D3D11.RenderTargetView(renderDevice, _backBufferD3D11);
+                _renderTarget = renderDevice.CreateRenderTargetView(_backBufferD3D11);
 
                 // Create the depth buffer
                 _depthBuffer = GraphicsHelper.Internals.CreateDepthBufferTexture(engineDevice, width, height, this.RenderLoop.Configuration);
-                _renderTargetDepth = new D3D11.DepthStencilView(renderDevice, _depthBuffer);
+                _renderTargetDepth = renderDevice.CreateDepthStencilView(_depthBuffer);
 
                 // Apply render target size values
                 _renderTargetWidth = width;
@@ -583,7 +582,10 @@ namespace SeeingSharp.Views
                 {
                     // Draw current 3d scene to wpf
                     var deviceContext = engineDevice.Internals.DeviceImmediateContextD3D11;
-                    deviceContext.ResolveSubresource(_backBufferD3D11, 0, _backBufferForWpf, 0, Format.B8G8R8A8_UNorm);
+                    deviceContext.ResolveSubresource(
+                        _backBufferForWpf, 0,
+                        _backBufferD3D11, 0,
+                        DXGI.Format.B8G8R8A8_UNorm);
                     deviceContext.Flush();
                     deviceContext.ClearState();
 
