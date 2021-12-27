@@ -3,9 +3,10 @@ using SeeingSharp.Checking;
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
-using WIC = Vortice.WIC;
-using DXGI = Vortice.DXGI;
+using Vortice.DXGI;
+using Vortice.WIC;
 using D2D = Vortice.Direct2D1;
+using PixelFormat = Vortice.DCommon.PixelFormat;
 
 namespace SeeingSharp.Drawing2D
 {
@@ -101,7 +102,7 @@ namespace SeeingSharp.Drawing2D
                 using (var inputStream = _resourceLink.OpenInputStream())
                 using (var bitmapSourceWrapper = GraphicsHelper.Internals.LoadBitmapSource_D2D(inputStream))
                 {
-                    WIC.IWICBitmapSource bitmapSource = bitmapSourceWrapper.Converter;
+                    IWICBitmapSource bitmapSource = bitmapSourceWrapper.Converter;
 
                     // Store common properties about the bitmap
                     if (!_firstLoadDone)
@@ -125,8 +126,8 @@ namespace SeeingSharp.Drawing2D
                     // Load the bitmap into Direct2D
                     result = engineDevice.FakeRenderTarget2D.CreateBitmapFromWicBitmap(
                         bitmapSource,
-                        new D2D.BitmapProperties(new Vortice.DCommon.PixelFormat(
-                            DXGI.Format.B8G8R8A8_UNorm,
+                        new D2D.BitmapProperties(new PixelFormat(
+                            Format.B8G8R8A8_UNorm,
                             Vortice.DCommon.AlphaMode.Premultiplied)));
 
                     // Register loaded bitmap

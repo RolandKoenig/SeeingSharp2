@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-
-namespace SeeingSharp.Drawing3D.Primitives
+﻿namespace SeeingSharp.Drawing3D.Primitives
 {
     public class ConeGeometryFactory : GeometryFactory
     {

@@ -13,6 +13,7 @@ using SeeingSharp.Core;
 using SeeingSharp.SampleContainer;
 using SeeingSharp.SampleContainer.Util;
 using SeeingSharp.UwpSamples.Util;
+using NavigationViewItem = Microsoft.UI.Xaml.Controls.NavigationViewItem;
 
 namespace SeeingSharp.UwpSamples
 {
@@ -295,7 +296,7 @@ namespace SeeingSharp.UwpSamples
 
         private void OnSampleCommand_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if (!(sender is Microsoft.UI.Xaml.Controls.NavigationViewItem navViewItem)) { return; }
+            if (!(sender is NavigationViewItem navViewItem)) { return; }
             if (!(navViewItem.Tag is SampleCommand sampleCommand)) { return; }
 
             sampleCommand.Execute(null);

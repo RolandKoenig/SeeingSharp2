@@ -1,27 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Numerics;
-using SeeingSharp;
-using SeeingSharp.Components;
-using SeeingSharp.Components.Input;
-using SeeingSharp.Core;
 using SeeingSharp.Core.Animations;
 using SeeingSharp.Drawing3D;
+using System.Text;
+using System.Windows;
+using SeeingSharp.Components.Input;
 using SeeingSharp.Drawing3D.Primitives;
 using SeeingSharp.Mathematics;
-using SeeingSharp.Util;
 
 namespace GettingStarted.Wpf
 {

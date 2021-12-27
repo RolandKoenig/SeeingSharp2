@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Core.Animations;

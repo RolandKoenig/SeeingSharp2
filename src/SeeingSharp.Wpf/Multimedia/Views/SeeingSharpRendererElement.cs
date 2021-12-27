@@ -12,9 +12,11 @@ using SeeingSharp.Core.Configuration;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Input;
-using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
-using DXGI = Vortice.DXGI;
+using Vortice.DXGI;
+using Vortice.Mathematics;
+using Color = System.Windows.Media.Color;
+using Color4 = SeeingSharp.Mathematics.Color4;
 using D3D11 = Vortice.Direct3D11;
 using GDI = System.Drawing;
 
@@ -37,7 +39,7 @@ namespace SeeingSharp.Views
         private D3D11.ID3D11Texture2D _depthBuffer;
         private D3D11.ID3D11RenderTargetView _renderTarget;
         private D3D11.ID3D11DepthStencilView _renderTargetDepth;
-        private DXGI.IDXGISurface _renderTarget2DDxgi;
+        private IDXGISurface _renderTarget2DDxgi;
 
         // Some size related properties
         private int _renderTargetHeight;
@@ -99,12 +101,12 @@ namespace SeeingSharp.Views
         /// <summary>
         /// Gets or sets the clear color of this 3D view.
         /// </summary>
-        public System.Windows.Media.Color ClearColor
+        public Color ClearColor
         {
             get
             {
                 var clearColor = this.RenderLoop.ClearColor;
-                var result = new System.Windows.Media.Color();
+                var result = new Color();
                 SeeingSharpWpfUtil.WpfColorFromColor4(ref clearColor, ref result);
                 return result;
             }
@@ -272,7 +274,7 @@ namespace SeeingSharp.Views
         /// Transforms the given wpf point to pure pixel coordinates.
         /// </summary>
         /// <param name="wpfPoint">The wpf point to be transformed.</param>
-        public System.Windows.Point GetPixelLocation(System.Windows.Point wpfPoint)
+        public Point GetPixelLocation(Point wpfPoint)
         {
             var source = PresentationSource.FromVisual(this);
             var dpiScaleFactorX = 1.0;
@@ -283,7 +285,7 @@ namespace SeeingSharp.Views
                 dpiScaleFactorY = source.CompositionTarget.TransformToDevice.M22;
             }
 
-            return new System.Windows.Point(
+            return new Point(
                 wpfPoint.X * dpiScaleFactorX,
                 wpfPoint.Y * dpiScaleFactorY);
         }
@@ -393,7 +395,7 @@ namespace SeeingSharp.Views
         /// <summary>
         /// Create all view resources.
         /// </summary>
-        Tuple<D3D11.ID3D11Texture2D, D3D11.ID3D11RenderTargetView, D3D11.ID3D11Texture2D, D3D11.ID3D11DepthStencilView, Vortice.Mathematics.Viewport, GDI.Size, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice engineDevice)
+        Tuple<D3D11.ID3D11Texture2D, D3D11.ID3D11RenderTargetView, D3D11.ID3D11Texture2D, D3D11.ID3D11DepthStencilView, Viewport, GDI.Size, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice engineDevice)
         {
             SeeingSharpWpfUtil.GetDpiScalingFactor(this, out var dpiScaleFactorX, out var dpiScaleFactorY);
 
@@ -408,7 +410,7 @@ namespace SeeingSharp.Views
 
             // Get references to current render device
             D3D11.ID3D11Device renderDevice = engineDevice.Internals.DeviceD3D11_1;
-            var viewPort = default(Vortice.Mathematics.Viewport);
+            var viewPort = default(Viewport);
 
             var initializedSuccessfully = false;
             var forceFallbackSolution = _forceCompositionOverSoftware;
@@ -586,7 +588,7 @@ namespace SeeingSharp.Views
                     deviceContext.ResolveSubresource(
                         _backBufferForWpf, 0,
                         _backBufferD3D11, 0,
-                        DXGI.Format.B8G8R8A8_UNorm);
+                        Format.B8G8R8A8_UNorm);
                     deviceContext.Flush();
                     deviceContext.ClearState();
 

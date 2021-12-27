@@ -3,7 +3,6 @@ using System.Diagnostics;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
 using D3D11 = Vortice.Direct3D11;
-using static Vortice.Direct3D11.D3D11;
 
 namespace SeeingSharp.Core
 {

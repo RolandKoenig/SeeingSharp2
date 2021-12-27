@@ -5,9 +5,10 @@ using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing2D;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Mathematics;
-using DXGI = Vortice.DXGI;
+using Vortice.DXGI;
 using D2D = Vortice.Direct2D1;
 using D3D11 = Vortice.Direct3D11;
+using Viewport = Vortice.Mathematics.Viewport;
 
 namespace SeeingSharp.Core
 {
@@ -90,11 +91,11 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets the current main viewport.
         /// </summary>
-        internal Vortice.Mathematics.Viewport Viewport
+        internal Viewport Viewport
         {
             get
             {
-                if (_currentRenderSettings == null) { return new Vortice.Mathematics.Viewport(); }
+                if (_currentRenderSettings == null) { return new Viewport(); }
                 return _currentRenderSettings.SingleViewport;
             }
         }
@@ -161,7 +162,7 @@ namespace SeeingSharp.Core
         internal RenderState(
             EngineDevice device,
             RenderTargets renderTargets,
-            Vortice.Mathematics.Viewport viewport,
+            Viewport viewport,
             Camera3DBase camera, ViewInformation viewInformation)
             : this(device)
         {
@@ -304,7 +305,7 @@ namespace SeeingSharp.Core
                 if (lastIndexBufferId != actChunk.Template.IndexBufferId)
                 {
                     lastIndexBufferId = actChunk.Template.IndexBufferId;
-                    deviceContext.IASetIndexBuffer(actChunk.Template.IndexBuffer, DXGI.Format.R32_UInt, 0);
+                    deviceContext.IASetIndexBuffer(actChunk.Template.IndexBuffer, Format.R32_UInt, 0);
                 }
 
                 // Apply material
@@ -458,7 +459,7 @@ namespace SeeingSharp.Core
         /// <param name="renderTargets">The render targets used for rendering.</param>
         internal void Reset(
             in RenderTargets renderTargets,
-            in Vortice.Mathematics.Viewport viewport,
+            in Viewport viewport,
             in Camera3DBase camera, in ViewInformation viewInformation)
         {
             _currentTargetDump = null;
@@ -502,7 +503,7 @@ namespace SeeingSharp.Core
         /// <exception cref="System.ObjectDisposedException">RenderState</exception>
         internal void PushRenderTarget(
             in RenderTargets renderTargets,
-            in Vortice.Mathematics.Viewport viewport,
+            in Viewport viewport,
             in Camera3DBase camera, in ViewInformation viewInformation)
         {
             if (_disposed)
@@ -540,7 +541,7 @@ namespace SeeingSharp.Core
         {
             // Local array which store all RenderTargets for usage
             private D3D11.ID3D11RenderTargetView[] _targetArray;
-            private Vortice.Mathematics.Viewport[] _viewports;
+            private Viewport[] _viewports;
 
             /// <summary>
             /// Gets the current view projection matrix.
@@ -553,13 +554,13 @@ namespace SeeingSharp.Core
 
             public RenderTargets RenderTargets { get; private set; }
 
-            public Vortice.Mathematics.Viewport SingleViewport { get; private set; }
+            public Viewport SingleViewport { get; private set; }
 
             public ViewInformation ViewInformation { get; private set; }
 
             public RenderStackEntry(
                 in Camera3DBase camera, in RenderTargets renderTargets, 
-                in Vortice.Mathematics.Viewport viewPort, in ViewInformation viewInfo)
+                in Viewport viewPort, in ViewInformation viewInfo)
             {
                 this.Matrix4Stack = new Matrix4Stack();
                 this.Reset(camera, renderTargets, viewPort, viewInfo);
@@ -567,7 +568,7 @@ namespace SeeingSharp.Core
 
             public void Reset(
                 in Camera3DBase camera, in RenderTargets renderTargets,
-                in Vortice.Mathematics.Viewport viewPort, in ViewInformation viewInfo)
+                in Viewport viewPort, in ViewInformation viewInfo)
             {
                 this.Camera = camera;
                 this.Matrix4Stack.ResetStackToIdentity();
@@ -588,7 +589,7 @@ namespace SeeingSharp.Core
                 _targetArray[1] = this.RenderTargets.ObjectIdBuffer;
                 _targetArray[2] = this.RenderTargets.NormalDepthBuffer;
 
-                if (_viewports == null){ _viewports = new Vortice.Mathematics.Viewport[3]; }
+                if (_viewports == null){ _viewports = new Viewport[3]; }
                 _viewports[0] = this.SingleViewport;
                 _viewports[1] = this.SingleViewport;
                 _viewports[2] = this.SingleViewport;

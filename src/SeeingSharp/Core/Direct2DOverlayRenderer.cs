@@ -2,9 +2,10 @@
 using System.Drawing;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing2D;
-using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
-using DXGI = Vortice.DXGI;
+using Vortice.DCommon;
+using Vortice.DXGI;
+using AlphaMode = Vortice.DCommon.AlphaMode;
 using D2D = Vortice.Direct2D1;
 using D3D11 = Vortice.Direct3D11;
 
@@ -132,16 +133,16 @@ namespace SeeingSharp.Core
             }
 
             // Create the render target
-            using (var dxgiSurface = _renderTarget3D.QueryInterface<DXGI.IDXGISurface>())
+            using (var dxgiSurface = _renderTarget3D.QueryInterface<IDXGISurface>())
             {
                 var bitmapProperties = new D2D.BitmapProperties1
                 {
                     DpiX = dpiScaling.DpiX,
                     DpiY = dpiScaling.DpiY,
                     BitmapOptions = D2D.BitmapOptions.Target | D2D.BitmapOptions.CannotDraw,
-                    PixelFormat = new Vortice.DCommon.PixelFormat(
+                    PixelFormat = new PixelFormat(
                         GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT,
-                        Vortice.DCommon.AlphaMode.Premultiplied)
+                        AlphaMode.Premultiplied)
                 };
 
                 _renderTargetBitmap = _device.DeviceContextD2D.CreateBitmapFromDxgiSurface(dxgiSurface, bitmapProperties);

@@ -14,7 +14,7 @@ namespace SeeingSharp.Input
 
         // Helper
         private bool _lastDragPointValid;
-        private System.Windows.Point _lastDragPoint;
+        private Point _lastDragPoint;
 
         // Input states
         private MouseOrPointerState _stateMouseOrPointer;
@@ -264,7 +264,7 @@ namespace SeeingSharp.Input
             _stateMouseOrPointer.Internals.NotifyInside(false);
 
             _lastDragPointValid = false;
-            _lastDragPoint = new System.Windows.Point();
+            _lastDragPoint = new Point();
         }
 
         private void OnRendererElement_MouseMove(object sender, MouseEventArgs e)

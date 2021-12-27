@@ -1,27 +1,17 @@
-﻿using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Data;
-using Microsoft.UI.Xaml.Input;
-using Microsoft.UI.Xaml.Media;
-using Microsoft.UI.Xaml.Navigation;
-using System;
+﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
-using Windows.ApplicationModel.Core;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Core;
-using Windows.UI.ViewManagement;
-using SeeingSharp.Core;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using PInvoke;
 using SeeingSharp.SampleContainer;
 using SeeingSharp.SampleContainer.Util;
+using WinRT.Interop;
 
 namespace SeeingSharp.WinUIDesktopSamples
 {
@@ -73,11 +63,11 @@ namespace SeeingSharp.WinUIDesktopSamples
         private void LoadIcon(string iconName)
         {
             //Get the Window's HWND
-            var hwnd = WinRT.Interop.WindowNative.GetWindowHandle(this);
-            var hIcon = PInvoke.User32.LoadImage(System.IntPtr.Zero, iconName,
-                PInvoke.User32.ImageType.IMAGE_ICON, 32, 32, PInvoke.User32.LoadImageFlags.LR_LOADFROMFILE);
+            var hwnd = WindowNative.GetWindowHandle(this);
+            var hIcon = User32.LoadImage(IntPtr.Zero, iconName,
+                User32.ImageType.IMAGE_ICON, 32, 32, User32.LoadImageFlags.LR_LOADFROMFILE);
 
-            PInvoke.User32.SendMessage(hwnd, PInvoke.User32.WindowMessage.WM_SETICON, (System.IntPtr)0, hIcon);
+            User32.SendMessage(hwnd, User32.WindowMessage.WM_SETICON, (IntPtr)0, hIcon);
         }
 
         /// <summary>
@@ -296,7 +286,7 @@ namespace SeeingSharp.WinUIDesktopSamples
 
         private void OnSampleCommand_Tapped(object sender, TappedRoutedEventArgs e)
         {
-            if (!(sender is Microsoft.UI.Xaml.Controls.NavigationViewItem navViewItem)) { return; }
+            if (!(sender is NavigationViewItem navViewItem)) { return; }
             if (!(navViewItem.Tag is SampleCommand sampleCommand)) { return; }
 
             sampleCommand.Execute(null);

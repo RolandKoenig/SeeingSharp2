@@ -1,5 +1,7 @@
 ﻿using System.Numerics;
+using Assimp;
 using SeeingSharp.Mathematics;
+using Matrix4x4 = System.Numerics.Matrix4x4;
 
 namespace SeeingSharp.AssimpImporter
 {
@@ -14,22 +16,22 @@ namespace SeeingSharp.AssimpImporter
                 assimpMatrix.D1, assimpMatrix.D2, assimpMatrix.D3, assimpMatrix.D4);
         }
 
-        public static Vector3 Vector3FromAssimp(Assimp.Vector3D assimpVector)
+        public static Vector3 Vector3FromAssimp(Vector3D assimpVector)
         {
             return new Vector3(assimpVector.X, assimpVector.Y, assimpVector.Z);
         }
 
-        public static Vector2 Vector2FromAssimp(Assimp.Vector2D assimpVector)
+        public static Vector2 Vector2FromAssimp(Vector2D assimpVector)
         {
             return new Vector2(assimpVector.X, assimpVector.Y);
         }
 
-        public static Vector2 Vector2FromAssimp(Assimp.Vector3D assimpVector)
+        public static Vector2 Vector2FromAssimp(Vector3D assimpVector)
         {
             return new Vector2(assimpVector.X, assimpVector.Y);
         }
 
-        public static Color4 Color4FromAssimp(Assimp.Color4D assimpColor)
+        public static Color4 Color4FromAssimp(Color4D assimpColor)
         {
             return new Color4(assimpColor.R, assimpColor.G, assimpColor.B, assimpColor.A);
         }

@@ -2,14 +2,14 @@
 using System.Threading.Tasks;
 using SeeingSharp.Core;
 using SeeingSharp.Util;
-using WIC = Vortice.WIC;
+using Vortice.WIC;
 
 namespace SeeingSharp.Drawing2D
 {
     public class WicBitmap : IDisposable
     {
         // Native resource
-        private WIC.IWICBitmap _wicBitmap;
+        private IWICBitmap _wicBitmap;
 
         public int Width
         {
@@ -33,14 +33,14 @@ namespace SeeingSharp.Drawing2D
         /// Initializes a new instance of the <see cref="WicBitmap"/> class.
         /// </summary>
         /// <param name="wicBitmap">The unmanaged bitmap data object.</param>
-        private WicBitmap(WIC.IWICBitmap wicBitmap)
+        private WicBitmap(IWICBitmap wicBitmap)
         {
             _wicBitmap = wicBitmap;
         }
 
         public static async Task<WicBitmap> FromWicBitmapSourceAsync(WicBitmapSource bitmapSource, int width, int height)
         {
-            WIC.IWICBitmap wicBitmap = null;
+            IWICBitmap wicBitmap = null;
             await Task.Factory.StartNew(() =>
             {
                 GraphicsCore.Current.FactoryWIC.CreateBitmapFromSourceRect(
@@ -56,7 +56,7 @@ namespace SeeingSharp.Drawing2D
         /// <param name="resourceLink">The source of the resource.</param>
         public static async Task<WicBitmap> FromResourceLinkAsync(ResourceLink resourceLink)
         {
-            WIC.IWICBitmap wicBitmap = null;
+            IWICBitmap wicBitmap = null;
 
             using (var inStream = await resourceLink.OpenInputStreamAsync())
 
@@ -64,7 +64,7 @@ namespace SeeingSharp.Drawing2D
             {
                 GraphicsCore.Current.FactoryWIC.CreateBitmapFromSource(
                     bitmapSourceWrapper.Converter, 
-                    WIC.BitmapCreateCacheOption.CacheOnLoad);
+                    BitmapCreateCacheOption.CacheOnLoad);
             }
 
             return new WicBitmap(wicBitmap);

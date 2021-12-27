@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using SeeingSharp.Core;
 using SeeingSharp.Util;
-using WIC = Vortice.WIC;
+using Vortice.WIC;
 
 namespace SeeingSharp.Drawing2D
 {
@@ -29,7 +29,7 @@ namespace SeeingSharp.Drawing2D
             }
         }
 
-        internal WIC.IWICBitmapSource BitmapSource => _wicBitmapSource.Converter;
+        internal IWICBitmapSource BitmapSource => _wicBitmapSource.Converter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WicBitmapSource"/> class.

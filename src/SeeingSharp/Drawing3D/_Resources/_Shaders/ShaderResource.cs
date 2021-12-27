@@ -1,7 +1,7 @@
 ﻿using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
-using D3DCompiler = Vortice.D3DCompiler;
+using Vortice.D3DCompiler;
 using D3D = Vortice.Direct3D;
 
 namespace SeeingSharp.Drawing3D
@@ -82,14 +82,14 @@ namespace SeeingSharp.Drawing3D
 
                         // device.DebugEnabled ? D3DCompiler.ShaderFlags.Debug : D3DCompiler.ShaderFlags.None
                         var shaderSource = singleShaderSourceBuilder.ToString();
-                        var compileResult = D3DCompiler.Compiler.Compile(
+                        var compileResult = Compiler.Compile(
                             shaderSource,
                             null, 
                             null,
                             "main",
                             resourceLink.ToString(),
                             shaderModel,
-                            device.DebugEnabled ? D3DCompiler.ShaderFlags.Debug : D3DCompiler.ShaderFlags.None,
+                            device.DebugEnabled ? ShaderFlags.Debug : ShaderFlags.None,
                             out var compBlob, out var compErrorBlob);
                         try
                         {

@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -13,7 +13,9 @@ using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Input;
 using SeeingSharp.Util;
-using DXGI = Vortice.DXGI;
+using SharpGen.Runtime;
+using Vortice.DXGI;
+using Vortice.Mathematics;
 using D3D11 = Vortice.Direct3D11;
 using GDI = System.Drawing;
 
@@ -27,7 +29,7 @@ namespace SeeingSharp.Views
         private RenderLoop _renderLoop;
 
         // Resources for Direct3D 11
-        private DXGI.IDXGISwapChain1 _swapChain;
+        private IDXGISwapChain1 _swapChain;
         private D3D11.ID3D11Device _renderDevice;
         private D3D11.ID3D11RenderTargetView _renderTarget;
         private D3D11.ID3D11DepthStencilView _renderTargetDepth;
@@ -445,7 +447,7 @@ namespace SeeingSharp.Views
         /// <summary>
         /// Create all view resources.
         /// </summary>
-        Tuple<D3D11.ID3D11Texture2D, D3D11.ID3D11RenderTargetView, D3D11.ID3D11Texture2D, D3D11.ID3D11DepthStencilView, Vortice.Mathematics.Viewport, GDI.Size, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice device)
+        Tuple<D3D11.ID3D11Texture2D, D3D11.ID3D11RenderTargetView, D3D11.ID3D11Texture2D, D3D11.ID3D11DepthStencilView, Viewport, GDI.Size, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice device)
         {
             var width = this.Width;
             var height = this.Height;
@@ -566,13 +568,13 @@ namespace SeeingSharp.Views
             //Present all rendered stuff on screen
             try
             {
-                _swapChain.Present(0, DXGI.PresentFlags.DoNotWait, new DXGI.PresentParameters());
+                _swapChain.Present(0, PresentFlags.DoNotWait, new PresentParameters());
             }
-            catch (SharpGen.Runtime.SharpGenException ex)
+            catch (SharpGenException ex)
             {
                 // Skip present on error DXGI_ERROR_WAS_STILL_DRAWING
                 // This error occurs some times on slower hardware
-                if (ex.ResultCode == DXGI.ResultCode.WasStillDrawing) { return; }
+                if (ex.ResultCode == ResultCode.WasStillDrawing) { return; }
 
                 throw;
             }

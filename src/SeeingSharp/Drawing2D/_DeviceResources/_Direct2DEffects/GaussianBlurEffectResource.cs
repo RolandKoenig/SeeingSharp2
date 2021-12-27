@@ -1,5 +1,5 @@
-﻿using SeeingSharp.Core;
-using SeeingSharp.Core.Devices;
+﻿using SeeingSharp.Core.Devices;
+using Vortice.Direct2D1.Effects;
 using D2D = Vortice.Direct2D1;
 
 namespace SeeingSharp.Drawing2D
@@ -24,7 +24,7 @@ namespace SeeingSharp.Drawing2D
         /// <param name="device">The device on which to load the effect instance.</param>
         protected override D2D.ID2D1Effect BuildEffect(EngineDevice device)
         {
-            var blurEffect = new Vortice.Direct2D1.Effects.GaussianBlur(device.DeviceContextD2D)
+            var blurEffect = new GaussianBlur(device.DeviceContextD2D)
             {
                 BorderMode = D2D.BorderMode.Soft,
                 Optimization = D2D.GaussianBlurOptimization.Quality,

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using SeeingSharp.Core.Configuration;
 using SeeingSharp.Util;
-using DXGI = Vortice.DXGI;
+using Vortice.DXGI;
 using D3D = Vortice.Direct3D;
 using D3D11 = Vortice.Direct3D11;
 using static Vortice.Direct3D11.D3D11;
@@ -21,7 +21,7 @@ namespace SeeingSharp.Core.Devices
     public class DeviceHandlerD3D11
     {
         // Resources from Direct3D11 api
-        private DXGI.IDXGIAdapter1 _dxgiAdapter;
+        private IDXGIAdapter1 _dxgiAdapter;
         private D3D11.ID3D11Device1 _device1;
         private D3D11.ID3D11Device3 _device3;
         private D3D11.ID3D11DeviceContext _immediateContext;
@@ -88,7 +88,7 @@ namespace SeeingSharp.Core.Devices
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerD3D11"/> class.
         /// </summary>
-        internal DeviceHandlerD3D11(GraphicsDeviceConfiguration deviceConfig, DXGI.IDXGIAdapter1 dxgiAdapter)
+        internal DeviceHandlerD3D11(GraphicsDeviceConfiguration deviceConfig, IDXGIAdapter1 dxgiAdapter)
         {
             _dxgiAdapter = dxgiAdapter;
 

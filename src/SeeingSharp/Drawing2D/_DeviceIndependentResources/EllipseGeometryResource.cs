@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Drawing;
+using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Core;
 using SeeingSharp.Util;
@@ -54,7 +55,7 @@ namespace SeeingSharp.Drawing2D
 
             _geometry = GraphicsCore.Current.FactoryD2D.CreateEllipseGeometry(
                 new D2D.Ellipse(
-                    *(System.Drawing.PointF*)&center,
+                    *(PointF*)&center,
                     radiusX, radiusY));
         }
 

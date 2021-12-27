@@ -1,22 +1,20 @@
 ﻿using System;
 using SeeingSharp.Core.Configuration;
 using SeeingSharp.Util;
-using WIC = Vortice.WIC;
-using static Vortice.WIC.WIC;
-
+using Vortice.WIC;
 
 namespace SeeingSharp.Core.Devices
 {
     public class FactoryHandlerWIC : IDisposable, ICheckDisposed
     {
-        private WIC.IWICImagingFactory _wicFactory;
+        private IWICImagingFactory _wicFactory;
 
         public bool IsDisposed => this.Factory == null;
 
         /// <summary>
         /// Gets the WIC factory object.
         /// </summary>
-        internal WIC.IWICImagingFactory Factory
+        internal IWICImagingFactory Factory
         {
             get
             {
@@ -31,7 +29,7 @@ namespace SeeingSharp.Core.Devices
         /// </summary>
         internal FactoryHandlerWIC(GraphicsCoreConfiguration coreConfiguration)
         {
-            this.Factory = new WIC.IWICImagingFactory();
+            this.Factory = new IWICImagingFactory();
         }
 
         /// <inheritdoc />

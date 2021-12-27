@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
+using Windows.UI;
 using Windows.UI.ViewManagement;
 
 namespace SeeingSharp.UwpSamples.Util
@@ -27,14 +28,14 @@ namespace SeeingSharp.UwpSamples.Util
             // 3689C4
             // Set titlebar colors
             var titleBar = appView.TitleBar;
-            titleBar.BackgroundColor = Windows.UI.Color.FromArgb(0xFF, 0x09, 0x75, 0xC6);
-            titleBar.ForegroundColor = Windows.UI.Color.FromArgb(0xFF, 0xFE, 0xFE, 0xFE);
-            titleBar.ButtonBackgroundColor = Windows.UI.Color.FromArgb(0xFF, 0x09, 0x75, 0xC6);
-            titleBar.ButtonForegroundColor = Windows.UI.Color.FromArgb(0xFF, 0xFE, 0xFE, 0xFE);
-            titleBar.InactiveBackgroundColor = Windows.UI.Color.FromArgb(0xFF, 0x36, 0x89, 0xC4);
-            titleBar.ButtonInactiveBackgroundColor = Windows.UI.Color.FromArgb(0xFF, 0x36, 0x89, 0xC4);
-            titleBar.InactiveForegroundColor = Windows.UI.Color.FromArgb(0xFF, 0xFE, 0xFE, 0xFE);
-            titleBar.ButtonInactiveForegroundColor = Windows.UI.Color.FromArgb(0xFF, 0xFE, 0xFE, 0xFE);
+            titleBar.BackgroundColor = Color.FromArgb(0xFF, 0x09, 0x75, 0xC6);
+            titleBar.ForegroundColor = Color.FromArgb(0xFF, 0xFE, 0xFE, 0xFE);
+            titleBar.ButtonBackgroundColor = Color.FromArgb(0xFF, 0x09, 0x75, 0xC6);
+            titleBar.ButtonForegroundColor = Color.FromArgb(0xFF, 0xFE, 0xFE, 0xFE);
+            titleBar.InactiveBackgroundColor = Color.FromArgb(0xFF, 0x36, 0x89, 0xC4);
+            titleBar.ButtonInactiveBackgroundColor = Color.FromArgb(0xFF, 0x36, 0x89, 0xC4);
+            titleBar.InactiveForegroundColor = Color.FromArgb(0xFF, 0xFE, 0xFE, 0xFE);
+            titleBar.ButtonInactiveForegroundColor = Color.FromArgb(0xFF, 0xFE, 0xFE, 0xFE);
         }
     }
 }

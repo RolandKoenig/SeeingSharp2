@@ -9,6 +9,7 @@ using SeeingSharp.Drawing3D;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 using D3D11 = Vortice.Direct3D11;
+using Viewport = Vortice.Mathematics.Viewport;
 
 namespace SeeingSharp.Views
 {
@@ -123,7 +124,7 @@ namespace SeeingSharp.Views
         /// <summary>
         /// Create all view resources.
         /// </summary>
-        Tuple<D3D11.ID3D11Texture2D, D3D11.ID3D11RenderTargetView, D3D11.ID3D11Texture2D, D3D11.ID3D11DepthStencilView, Vortice.Mathematics.Viewport, Size, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice device)
+        Tuple<D3D11.ID3D11Texture2D, D3D11.ID3D11RenderTargetView, D3D11.ID3D11Texture2D, D3D11.ID3D11DepthStencilView, Viewport, Size, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice device)
         {
             var width = _pixelWidth;
             var height = _pixelHeight;

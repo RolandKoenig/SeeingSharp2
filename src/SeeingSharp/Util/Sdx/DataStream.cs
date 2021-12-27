@@ -2,6 +2,7 @@
 // https://github.com/sharpdx/SharpDX
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using D3D = Vortice.Direct3D;
@@ -30,7 +31,7 @@ namespace SeeingSharp.Util.Sdx
         {
             unsafe
             {
-                System.Diagnostics.Debug.Assert(buffer.BufferSize > 0);
+                Debug.Assert(buffer.BufferSize > 0);
 
                 _buffer = (byte*)buffer.BufferPointer;
                 _size = buffer.BufferSize;
@@ -92,7 +93,7 @@ namespace SeeingSharp.Util.Sdx
         {
             unsafe
             {
-                System.Diagnostics.Debug.Assert(sizeInBytes > 0);
+                Debug.Assert(sizeInBytes > 0);
 
                 _buffer = (byte*)SdxUtilities.AllocateMemory(sizeInBytes);
                 _size = sizeInBytes;
@@ -123,8 +124,8 @@ namespace SeeingSharp.Util.Sdx
         {
             unsafe
             {
-                System.Diagnostics.Debug.Assert(userBuffer != IntPtr.Zero);
-                System.Diagnostics.Debug.Assert(sizeInBytes > 0);
+                Debug.Assert(userBuffer != IntPtr.Zero);
+                Debug.Assert(sizeInBytes > 0);
                 _buffer = (byte*)userBuffer.ToPointer();
                 _size = sizeInBytes;
                 _canRead = canRead;
@@ -134,7 +135,7 @@ namespace SeeingSharp.Util.Sdx
 
         internal unsafe DataStream(void* dataPointer, int sizeInBytes, bool canRead, bool canWrite, GCHandle handle)
         {
-            System.Diagnostics.Debug.Assert(sizeInBytes > 0);
+            Debug.Assert(sizeInBytes > 0);
             _gCHandle = handle;
             _buffer = (byte*)dataPointer;
             _size = sizeInBytes;
@@ -145,7 +146,7 @@ namespace SeeingSharp.Util.Sdx
 
         internal unsafe DataStream(void* buffer, int sizeInBytes, bool canRead, bool canWrite, bool makeCopy)
         {
-            System.Diagnostics.Debug.Assert(sizeInBytes > 0);
+            Debug.Assert(sizeInBytes > 0);
             if (makeCopy)
             {
                 _buffer = (byte*)SdxUtilities.AllocateMemory(sizeInBytes);
@@ -451,10 +452,10 @@ namespace SeeingSharp.Util.Sdx
                 if (!_canWrite)
                     throw new NotSupportedException();
 
-                System.Diagnostics.Debug.Assert(_canWrite);
-                System.Diagnostics.Debug.Assert(source != IntPtr.Zero);
-                System.Diagnostics.Debug.Assert(count > 0);
-                System.Diagnostics.Debug.Assert((_position + count) <= _size);
+                Debug.Assert(_canWrite);
+                Debug.Assert(source != IntPtr.Zero);
+                Debug.Assert(count > 0);
+                Debug.Assert((_position + count) <= _size);
 
                 // TODO: use Interop.memcpy
                 SdxUtilities.CopyMemory((IntPtr)(_buffer + _position), source, (int)count);

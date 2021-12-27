@@ -5,7 +5,7 @@ using SeeingSharp.Core.Configuration;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing2D;
 using SeeingSharp.Util;
-using SeeingSharp.Mathematics;
+using SharpGen.Runtime;
 using D2D = Vortice.Direct2D1;
 using D3D11 = Vortice.Direct3D11;
 
@@ -96,7 +96,7 @@ namespace SeeingSharp.Drawing3D
                 {
                     _overlayRenderer.EndDraw();
                 }
-                catch (SharpGen.Runtime.SharpGenException dxException)
+                catch (SharpGenException dxException)
                 {
                     if (dxException.ResultCode == D2D.ResultCode.RecreateTarget)
                     {

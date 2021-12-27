@@ -1,13 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using Windows.UI;
+using System.Collections.Generic;
 using Windows.UI.Text;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Shapes;
 
 namespace SeeingSharp.UwpSamples.Controls
 {
@@ -82,7 +81,7 @@ namespace SeeingSharp.UwpSamples.Controls
                     txtHeader.FontWeight = FontWeights.Bold;
                     GridMain.Children.Add(txtHeader);
 
-                    var rect = new Windows.UI.Xaml.Shapes.Rectangle
+                    var rect = new Rectangle
                     {
                         Height = 2d,
                         VerticalAlignment = VerticalAlignment.Bottom,

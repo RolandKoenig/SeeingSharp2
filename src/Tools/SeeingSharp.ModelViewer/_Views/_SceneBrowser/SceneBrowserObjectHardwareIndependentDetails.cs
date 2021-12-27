@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
-using SeeingSharp.ModelViewer.Util;
 using SeeingSharp.Core;
+using SeeingSharp.ModelViewer.Util;
 
 namespace SeeingSharp.ModelViewer
 {

@@ -6,41 +6,42 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using SeeingSharp.Util.Sdx;
-using WIC = Vortice.WIC;
-using DXGI = Vortice.DXGI;
+using SharpGen.Runtime.Win32;
+using Vortice.DXGI;
+using Vortice.WIC;
 
 namespace SeeingSharp.Util.SdxTK
 {
     internal class WICHelper
     {
-        private static WIC.IWICImagingFactory _factory = new WIC.IWICImagingFactory();
+        private static IWICImagingFactory _factory = new IWICImagingFactory();
 
         private static readonly WICTranslate[] WICToDXGIFormats =
             {
-                new WICTranslate(WIC.PixelFormat.Format128bppRGBAFloat, DXGI.Format.R32G32B32A32_Float),
+                new WICTranslate(Vortice.WIC.PixelFormat.Format128bppRGBAFloat, Format.R32G32B32A32_Float),
 
-                new WICTranslate(WIC.PixelFormat.Format64bppRGBAHalf, DXGI.Format.R16G16B16A16_Float),
-                new WICTranslate(WIC.PixelFormat.Format64bppRGBA, DXGI.Format.R16G16B16A16_UNorm),
+                new WICTranslate(Vortice.WIC.PixelFormat.Format64bppRGBAHalf, Format.R16G16B16A16_Float),
+                new WICTranslate(Vortice.WIC.PixelFormat.Format64bppRGBA, Format.R16G16B16A16_UNorm),
 
-                new WICTranslate(WIC.PixelFormat.Format32bppRGBA, DXGI.Format.R8G8B8A8_UNorm),
-                new WICTranslate(WIC.PixelFormat.Format32bppBGRA, DXGI.Format.B8G8R8A8_UNorm), // DXGI 1.1
-                new WICTranslate(WIC.PixelFormat.Format32bppBGR, DXGI.Format.B8G8R8X8_UNorm), // DXGI 1.1
+                new WICTranslate(Vortice.WIC.PixelFormat.Format32bppRGBA, Format.R8G8B8A8_UNorm),
+                new WICTranslate(Vortice.WIC.PixelFormat.Format32bppBGRA, Format.B8G8R8A8_UNorm), // DXGI 1.1
+                new WICTranslate(Vortice.WIC.PixelFormat.Format32bppBGR, Format.B8G8R8X8_UNorm), // DXGI 1.1
 
-                new WICTranslate(WIC.PixelFormat.Format32bppRGBA1010102XR, DXGI.Format.R10G10B10_Xr_Bias_A2_UNorm), // DXGI 1.1
-                new WICTranslate(WIC.PixelFormat.Format32bppRGBA1010102, DXGI.Format.R10G10B10A2_UNorm),
-                new WICTranslate(WIC.PixelFormat.Format32bppRGBE, DXGI.Format.R9G9B9E5_SharedExp),
+                new WICTranslate(Vortice.WIC.PixelFormat.Format32bppRGBA1010102XR, Format.R10G10B10_Xr_Bias_A2_UNorm), // DXGI 1.1
+                new WICTranslate(Vortice.WIC.PixelFormat.Format32bppRGBA1010102, Format.R10G10B10A2_UNorm),
+                new WICTranslate(Vortice.WIC.PixelFormat.Format32bppRGBE, Format.R9G9B9E5_SharedExp),
 
-                new WICTranslate(WIC.PixelFormat.Format16bppBGRA5551, DXGI.Format.B5G5R5A1_UNorm),
-                new WICTranslate(WIC.PixelFormat.Format16bppBGR565, DXGI.Format.B5G6R5_UNorm),
+                new WICTranslate(Vortice.WIC.PixelFormat.Format16bppBGRA5551, Format.B5G5R5A1_UNorm),
+                new WICTranslate(Vortice.WIC.PixelFormat.Format16bppBGR565, Format.B5G6R5_UNorm),
 
-                new WICTranslate(WIC.PixelFormat.Format32bppGrayFloat, DXGI.Format.R32_Float),
-                new WICTranslate(WIC.PixelFormat.Format16bppGrayHalf, DXGI.Format.R16_Float),
-                new WICTranslate(WIC.PixelFormat.Format16bppGray, DXGI.Format.R16_UNorm),
-                new WICTranslate(WIC.PixelFormat.Format8bppGray, DXGI.Format.R8_UNorm),
+                new WICTranslate(Vortice.WIC.PixelFormat.Format32bppGrayFloat, Format.R32_Float),
+                new WICTranslate(Vortice.WIC.PixelFormat.Format16bppGrayHalf, Format.R16_Float),
+                new WICTranslate(Vortice.WIC.PixelFormat.Format16bppGray, Format.R16_UNorm),
+                new WICTranslate(Vortice.WIC.PixelFormat.Format8bppGray, Format.R8_UNorm),
 
-                new WICTranslate(WIC.PixelFormat.Format8bppAlpha, DXGI.Format.A8_UNorm),
+                new WICTranslate(Vortice.WIC.PixelFormat.Format8bppAlpha, Format.A8_UNorm),
 
-                new WICTranslate(WIC.PixelFormat.FormatBlackWhite, DXGI.Format.R1_UNorm)
+                new WICTranslate(Vortice.WIC.PixelFormat.FormatBlackWhite, Format.R1_UNorm)
             };
 
         private static readonly WICConvert[] WICConvertTable =
@@ -48,55 +49,55 @@ namespace SeeingSharp.Util.SdxTK
                 // Directly support the formats listed in XnaTexUtil::g_WICFormats, so no conversion required
                 // Note target Guid in this conversion table must be one of those directly supported formats.
 
-                new WICConvert(WIC.PixelFormat.Format1bppIndexed, WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
-                new WICConvert(WIC.PixelFormat.Format2bppIndexed, WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
-                new WICConvert(WIC.PixelFormat.Format4bppIndexed, WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
-                new WICConvert(WIC.PixelFormat.Format8bppIndexed, WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
+                new WICConvert(Vortice.WIC.PixelFormat.Format1bppIndexed, Vortice.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
+                new WICConvert(Vortice.WIC.PixelFormat.Format2bppIndexed, Vortice.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
+                new WICConvert(Vortice.WIC.PixelFormat.Format4bppIndexed, Vortice.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
+                new WICConvert(Vortice.WIC.PixelFormat.Format8bppIndexed, Vortice.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
 
-                new WICConvert(WIC.PixelFormat.Format2bppGray, WIC.PixelFormat.Format8bppGray), // DXGI.Format.R8_UNorm
-                new WICConvert(WIC.PixelFormat.Format4bppGray, WIC.PixelFormat.Format8bppGray), // DXGI.Format.R8_UNorm
+                new WICConvert(Vortice.WIC.PixelFormat.Format2bppGray, Vortice.WIC.PixelFormat.Format8bppGray), // DXGI.Format.R8_UNorm
+                new WICConvert(Vortice.WIC.PixelFormat.Format4bppGray, Vortice.WIC.PixelFormat.Format8bppGray), // DXGI.Format.R8_UNorm
 
-                new WICConvert(WIC.PixelFormat.Format16bppGrayFixedPoint, WIC.PixelFormat.Format16bppGrayHalf), // DXGI.Format.R16_FLOAT
-                new WICConvert(WIC.PixelFormat.Format32bppGrayFixedPoint, WIC.PixelFormat.Format32bppGrayFloat), // DXGI.Format.R32_FLOAT
+                new WICConvert(Vortice.WIC.PixelFormat.Format16bppGrayFixedPoint, Vortice.WIC.PixelFormat.Format16bppGrayHalf), // DXGI.Format.R16_FLOAT
+                new WICConvert(Vortice.WIC.PixelFormat.Format32bppGrayFixedPoint, Vortice.WIC.PixelFormat.Format32bppGrayFloat), // DXGI.Format.R32_FLOAT
 
-                new WICConvert(WIC.PixelFormat.Format16bppBGR555, WIC.PixelFormat.Format16bppBGRA5551), // DXGI.Format.B5G5R5A1_UNorm
-                new WICConvert(WIC.PixelFormat.Format32bppBGR101010, WIC.PixelFormat.Format32bppRGBA1010102), // DXGI.Format.R10G10B10A2_UNorm
+                new WICConvert(Vortice.WIC.PixelFormat.Format16bppBGR555, Vortice.WIC.PixelFormat.Format16bppBGRA5551), // DXGI.Format.B5G5R5A1_UNorm
+                new WICConvert(Vortice.WIC.PixelFormat.Format32bppBGR101010, Vortice.WIC.PixelFormat.Format32bppRGBA1010102), // DXGI.Format.R10G10B10A2_UNorm
 
-                new WICConvert(WIC.PixelFormat.Format24bppBGR, WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
-                new WICConvert(WIC.PixelFormat.Format24bppRGB, WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
-                new WICConvert(WIC.PixelFormat.Format32bppPBGRA, WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
-                new WICConvert(WIC.PixelFormat.Format32bppPRGBA, WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
+                new WICConvert(Vortice.WIC.PixelFormat.Format24bppBGR, Vortice.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
+                new WICConvert(Vortice.WIC.PixelFormat.Format24bppRGB, Vortice.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
+                new WICConvert(Vortice.WIC.PixelFormat.Format32bppPBGRA, Vortice.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
+                new WICConvert(Vortice.WIC.PixelFormat.Format32bppPRGBA, Vortice.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
 
-                new WICConvert(WIC.PixelFormat.Format48bppRGB, WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
-                new WICConvert(WIC.PixelFormat.Format48bppBGR, WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
-                new WICConvert(WIC.PixelFormat.Format64bppBGRA, WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
-                new WICConvert(WIC.PixelFormat.Format64bppPRGBA, WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
-                new WICConvert(WIC.PixelFormat.Format64bppPBGRA, WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
+                new WICConvert(Vortice.WIC.PixelFormat.Format48bppRGB, Vortice.WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
+                new WICConvert(Vortice.WIC.PixelFormat.Format48bppBGR, Vortice.WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
+                new WICConvert(Vortice.WIC.PixelFormat.Format64bppBGRA, Vortice.WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
+                new WICConvert(Vortice.WIC.PixelFormat.Format64bppPRGBA, Vortice.WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
+                new WICConvert(Vortice.WIC.PixelFormat.Format64bppPBGRA, Vortice.WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
 
-                new WICConvert(WIC.PixelFormat.Format48bppRGBFixedPoint, WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT
-                new WICConvert(WIC.PixelFormat.Format48bppBGRFixedPoint, WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT
-                new WICConvert(WIC.PixelFormat.Format64bppRGBAFixedPoint, WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT
-                new WICConvert(WIC.PixelFormat.Format64bppBGRAFixedPoint, WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT
-                new WICConvert(WIC.PixelFormat.Format64bppRGBFixedPoint, WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT
-                new WICConvert(WIC.PixelFormat.Format64bppRGBHalf, WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT
-                new WICConvert(WIC.PixelFormat.Format48bppRGBHalf, WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT
+                new WICConvert(Vortice.WIC.PixelFormat.Format48bppRGBFixedPoint, Vortice.WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT
+                new WICConvert(Vortice.WIC.PixelFormat.Format48bppBGRFixedPoint, Vortice.WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT
+                new WICConvert(Vortice.WIC.PixelFormat.Format64bppRGBAFixedPoint, Vortice.WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT
+                new WICConvert(Vortice.WIC.PixelFormat.Format64bppBGRAFixedPoint, Vortice.WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT
+                new WICConvert(Vortice.WIC.PixelFormat.Format64bppRGBFixedPoint, Vortice.WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT
+                new WICConvert(Vortice.WIC.PixelFormat.Format64bppRGBHalf, Vortice.WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT
+                new WICConvert(Vortice.WIC.PixelFormat.Format48bppRGBHalf, Vortice.WIC.PixelFormat.Format64bppRGBAHalf), // DXGI.Format.R16G16B16A16_FLOAT
 
-                new WICConvert(WIC.PixelFormat.Format128bppPRGBAFloat, WIC.PixelFormat.Format128bppRGBAFloat), // DXGI.Format.R32G32B32A32_FLOAT
-                new WICConvert(WIC.PixelFormat.Format128bppRGBFloat, WIC.PixelFormat.Format128bppRGBAFloat), // DXGI.Format.R32G32B32A32_FLOAT
-                new WICConvert(WIC.PixelFormat.Format128bppRGBAFixedPoint, WIC.PixelFormat.Format128bppRGBAFloat), // DXGI.Format.R32G32B32A32_FLOAT
-                new WICConvert(WIC.PixelFormat.Format128bppRGBFixedPoint, WIC.PixelFormat.Format128bppRGBAFloat), // DXGI.Format.R32G32B32A32_FLOAT
+                new WICConvert(Vortice.WIC.PixelFormat.Format128bppPRGBAFloat, Vortice.WIC.PixelFormat.Format128bppRGBAFloat), // DXGI.Format.R32G32B32A32_FLOAT
+                new WICConvert(Vortice.WIC.PixelFormat.Format128bppRGBFloat, Vortice.WIC.PixelFormat.Format128bppRGBAFloat), // DXGI.Format.R32G32B32A32_FLOAT
+                new WICConvert(Vortice.WIC.PixelFormat.Format128bppRGBAFixedPoint, Vortice.WIC.PixelFormat.Format128bppRGBAFloat), // DXGI.Format.R32G32B32A32_FLOAT
+                new WICConvert(Vortice.WIC.PixelFormat.Format128bppRGBFixedPoint, Vortice.WIC.PixelFormat.Format128bppRGBAFloat), // DXGI.Format.R32G32B32A32_FLOAT
 
-                new WICConvert(WIC.PixelFormat.Format32bppCMYK, WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
-                new WICConvert(WIC.PixelFormat.Format64bppCMYK, WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
-                new WICConvert(WIC.PixelFormat.Format40bppCMYKAlpha, WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
-                new WICConvert(WIC.PixelFormat.Format80bppCMYKAlpha, WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
+                new WICConvert(Vortice.WIC.PixelFormat.Format32bppCMYK, Vortice.WIC.PixelFormat.Format32bppRGBA), // DXGI.Format.R8G8B8A8_UNorm
+                new WICConvert(Vortice.WIC.PixelFormat.Format64bppCMYK, Vortice.WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
+                new WICConvert(Vortice.WIC.PixelFormat.Format40bppCMYKAlpha, Vortice.WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
+                new WICConvert(Vortice.WIC.PixelFormat.Format80bppCMYKAlpha, Vortice.WIC.PixelFormat.Format64bppRGBA), // DXGI.Format.R16G16B16A16_UNorm
 
-                new WICConvert(WIC.PixelFormat.Format96bppRGBFixedPoint, WIC.PixelFormat.Format128bppRGBAFloat) // DXGI.Format.R32G32B32A32_FLOAT
+                new WICConvert(Vortice.WIC.PixelFormat.Format96bppRGBFixedPoint, Vortice.WIC.PixelFormat.Format128bppRGBAFloat) // DXGI.Format.R32G32B32A32_FLOAT
 
                 // We don't support n-channel formats
             };
 
-        private static WIC.IWICImagingFactory Factory => _factory ?? (_factory = new WIC.IWICImagingFactory());
+        private static IWICImagingFactory Factory => _factory ?? (_factory = new IWICImagingFactory());
 
         public static void Dispose()
         {
@@ -115,10 +116,10 @@ namespace SeeingSharp.Util.SdxTK
             using (var stream = Factory.CreateStream(new DataStream(pSource, size, true, false)))
             {
                 // If the decoder is unable to decode the image, than return null
-                WIC.IWICBitmapDecoder decoder = null;
+                IWICBitmapDecoder decoder = null;
                 try
                 {
-                    decoder = Factory.CreateDecoderFromStream(stream, WIC.DecodeOptions.CacheOnDemand);
+                    decoder = Factory.CreateDecoderFromStream(stream, DecodeOptions.CacheOnDemand);
                     using (var frame = decoder.GetFrame(0))
                     {
                         // Get metadata
@@ -204,7 +205,7 @@ namespace SeeingSharp.Util.SdxTK
         /// </summary>
         /// <param name="guid">A WIC <see cref="Vortice.WIC.PixelFormat"/> </param>
         /// <returns>A <see cref="Vortice.DXGI.Format"/></returns>
-        private static DXGI.Format ToDXGI(Guid guid)
+        private static Format ToDXGI(Guid guid)
         {
             for (var i = 0; i < WICToDXGIFormats.Length; ++i)
             {
@@ -214,7 +215,7 @@ namespace SeeingSharp.Util.SdxTK
                 }
             }
 
-            return DXGI.Format.Unknown;
+            return Format.Unknown;
         }
 
         /// <summary>
@@ -223,7 +224,7 @@ namespace SeeingSharp.Util.SdxTK
         /// <param name="format">A <see cref="Vortice.DXGI.Format"/></param>
         /// <param name="guid">A WIC <see cref="Vortice.WIC.PixelFormat"/> Guid.</param>
         /// <returns>True if conversion succeed, false otherwise.</returns>
-        private static bool ToWIC(DXGI.Format format, out Guid guid)
+        private static bool ToWIC(Format format, out Guid guid)
         {
             for (var i = 0; i < WICToDXGIFormats.Length; ++i)
             {
@@ -237,24 +238,24 @@ namespace SeeingSharp.Util.SdxTK
             // Special cases
             switch (format)
             {
-                case DXGI.Format.R8G8B8A8_UNorm_SRgb:
-                    guid = WIC.PixelFormat.Format32bppRGBA;
+                case Format.R8G8B8A8_UNorm_SRgb:
+                    guid = Vortice.WIC.PixelFormat.Format32bppRGBA;
                     return true;
 
-                case DXGI.Format.D32_Float:
-                    guid = WIC.PixelFormat.Format32bppGrayFloat;
+                case Format.D32_Float:
+                    guid = Vortice.WIC.PixelFormat.Format32bppGrayFloat;
                     return true;
 
-                case DXGI.Format.D16_UNorm:
-                    guid = WIC.PixelFormat.Format16bppGray;
+                case Format.D16_UNorm:
+                    guid = Vortice.WIC.PixelFormat.Format16bppGray;
                     return true;
 
-                case DXGI.Format.B8G8R8A8_UNorm_SRgb:
-                    guid = WIC.PixelFormat.Format32bppBGRA;
+                case Format.B8G8R8A8_UNorm_SRgb:
+                    guid = Vortice.WIC.PixelFormat.Format32bppBGRA;
                     return true;
 
-                case DXGI.Format.B8G8R8X8_UNorm_SRgb:
-                    guid = WIC.PixelFormat.Format32bppBGR;
+                case Format.B8G8R8X8_UNorm_SRgb:
+                    guid = Vortice.WIC.PixelFormat.Format32bppBGR;
                     return true;
             }
 
@@ -271,12 +272,12 @@ namespace SeeingSharp.Util.SdxTK
         {
             using (var info = Factory.CreateComponentInfo(targetGuid))
             {
-                if (info.ComponentType != WIC.ComponentType.PixelFormat)
+                if (info.ComponentType != ComponentType.PixelFormat)
                 {
                     return 0;
                 }
 
-                var pixelFormatInfo = info.QueryInterfaceOrNull<WIC.IWICPixelFormatInfo>();
+                var pixelFormatInfo = info.QueryInterfaceOrNull<IWICPixelFormatInfo>();
                 if (pixelFormatInfo == null)
                 {
                     return 0;
@@ -291,12 +292,12 @@ namespace SeeingSharp.Util.SdxTK
         //-------------------------------------------------------------------------------------
         // Returns the DXGI format and optionally the WIC pixel Guid to convert to
         //-------------------------------------------------------------------------------------
-        private static DXGI.Format DetermineFormat(Guid pixelFormat, WICFlags flags, out Guid pixelFormatOut)
+        private static Format DetermineFormat(Guid pixelFormat, WICFlags flags, out Guid pixelFormatOut)
         {
             var format = ToDXGI(pixelFormat);
             pixelFormatOut = Guid.Empty;
 
-            if (format == DXGI.Format.Unknown)
+            if (format == Format.Unknown)
             {
                 for (var i = 0; i < WICConvertTable.Length; ++i)
                 {
@@ -305,7 +306,7 @@ namespace SeeingSharp.Util.SdxTK
                         pixelFormatOut = WICConvertTable[i].target;
 
                         format = ToDXGI(WICConvertTable[i].target);
-                        Debug.Assert(format != DXGI.Format.Unknown);
+                        Debug.Assert(format != Format.Unknown);
                         break;
                     }
                 }
@@ -314,38 +315,38 @@ namespace SeeingSharp.Util.SdxTK
             // Handle special cases based on flags
             switch (format)
             {
-                case DXGI.Format.B8G8R8A8_UNorm: // BGRA
-                case DXGI.Format.B8G8R8X8_UNorm: // BGRX
+                case Format.B8G8R8A8_UNorm: // BGRA
+                case Format.B8G8R8X8_UNorm: // BGRX
                     if ((flags & WICFlags.ForceRgb) != 0)
                     {
-                        format = DXGI.Format.R8G8B8A8_UNorm;
-                        pixelFormatOut = WIC.PixelFormat.Format32bppRGBA;
+                        format = Format.R8G8B8A8_UNorm;
+                        pixelFormatOut = Vortice.WIC.PixelFormat.Format32bppRGBA;
                     }
                     break;
 
-                case DXGI.Format.R10G10B10_Xr_Bias_A2_UNorm:
+                case Format.R10G10B10_Xr_Bias_A2_UNorm:
                     if ((flags & WICFlags.NoX2Bias) != 0)
                     {
-                        format = DXGI.Format.R10G10B10A2_UNorm;
-                        pixelFormatOut = WIC.PixelFormat.Format32bppRGBA1010102;
+                        format = Format.R10G10B10A2_UNorm;
+                        pixelFormatOut = Vortice.WIC.PixelFormat.Format32bppRGBA1010102;
                     }
                     break;
 
-                case DXGI.Format.B5G5R5A1_UNorm:
-                case DXGI.Format.B5G6R5_UNorm:
+                case Format.B5G5R5A1_UNorm:
+                case Format.B5G6R5_UNorm:
                     if ((flags & WICFlags.No16Bpp) != 0)
                     {
-                        format = DXGI.Format.R8G8B8A8_UNorm;
-                        pixelFormatOut = WIC.PixelFormat.Format32bppRGBA;
+                        format = Format.R8G8B8A8_UNorm;
+                        pixelFormatOut = Vortice.WIC.PixelFormat.Format32bppRGBA;
                     }
                     break;
 
-                case DXGI.Format.R1_UNorm:
+                case Format.R1_UNorm:
                     if ((flags & WICFlags.FlagsAllowMono) == 0)
                     {
                         // By default we want to promote a black & white to greyscale since R1 is not a generally supported D3D format
-                        format = DXGI.Format.R8_UNorm;
-                        pixelFormatOut = WIC.PixelFormat.Format8bppGray;
+                        format = Format.R8_UNorm;
+                        pixelFormatOut = Vortice.WIC.PixelFormat.Format8bppGray;
                     }
                     break;
             }
@@ -362,7 +363,7 @@ namespace SeeingSharp.Util.SdxTK
         /// <param name="pixelFormat">The pixel format.</param>
         /// <returns></returns>
         /// <exception cref="System.InvalidOperationException">If pixel format is not supported.</exception>
-        private static ImageDescription? DecodeMetadata(WICFlags flags, WIC.IWICBitmapDecoder decoder, WIC.IWICBitmapFrameDecode frame, out Guid pixelFormat)
+        private static ImageDescription? DecodeMetadata(WICFlags flags, IWICBitmapDecoder decoder, IWICBitmapFrameDecode frame, out Guid pixelFormat)
         {
             var size = frame.Size;
 
@@ -377,7 +378,7 @@ namespace SeeingSharp.Util.SdxTK
                 Format = DetermineFormat(frame.PixelFormat, flags, out pixelFormat)
             };
 
-            if (metadata.Format == DXGI.Format.Unknown)
+            if (metadata.Format == Format.Unknown)
             {
                 return null;
             }
@@ -385,45 +386,45 @@ namespace SeeingSharp.Util.SdxTK
             return metadata;
         }
 
-        private static WIC.BitmapDitherType GetWICDither(WICFlags flags)
+        private static BitmapDitherType GetWICDither(WICFlags flags)
         {
             if ((flags & WICFlags.Dither) != 0)
             {
-                return WIC.BitmapDitherType.Ordered4x4;
+                return BitmapDitherType.Ordered4x4;
             }
 
             if ((flags & WICFlags.DitherDiffusion) != 0)
             {
-                return WIC.BitmapDitherType.ErrorDiffusion;
+                return BitmapDitherType.ErrorDiffusion;
             }
 
-            return WIC.BitmapDitherType.None;
+            return BitmapDitherType.None;
         }
 
-        private static WIC.BitmapInterpolationMode GetWICInterp(WICFlags flags)
+        private static BitmapInterpolationMode GetWICInterp(WICFlags flags)
         {
             if ((flags & WICFlags.FilterPoint) != 0)
             {
-                return WIC.BitmapInterpolationMode.NearestNeighbor;
+                return BitmapInterpolationMode.NearestNeighbor;
             }
 
             if ((flags & WICFlags.FilterLinear) != 0)
             {
-                return WIC.BitmapInterpolationMode.Linear;
+                return BitmapInterpolationMode.Linear;
             }
 
             if ((flags & WICFlags.FilterCubic) != 0)
             {
-                return WIC.BitmapInterpolationMode.Cubic;
+                return BitmapInterpolationMode.Cubic;
             }
 
-            return WIC.BitmapInterpolationMode.Fant;
+            return BitmapInterpolationMode.Fant;
         }
 
         //-------------------------------------------------------------------------------------
         // Decodes a single frame
         //-------------------------------------------------------------------------------------
-        private static Image DecodeSingleFrame(WICFlags flags, ImageDescription metadata, Guid convertGuid, WIC.IWICBitmapFrameDecode frame)
+        private static Image DecodeSingleFrame(WICFlags flags, ImageDescription metadata, Guid convertGuid, IWICBitmapFrameDecode frame)
         {
             var image = Image.New(metadata);
 
@@ -437,7 +438,7 @@ namespace SeeingSharp.Util.SdxTK
             {
                 using (var converter = Factory.CreateFormatConverter())
                 {
-                    converter.Initialize(frame, convertGuid, GetWICDither(flags), null, 0, WIC.BitmapPaletteType.Custom);
+                    converter.Initialize(frame, convertGuid, GetWICDither(flags), null, 0, BitmapPaletteType.Custom);
                     converter.CopyPixels(pixelBuffer.RowStride, pixelBuffer.BufferStride, pixelBuffer.DataPointer);
                 }
             }
@@ -448,7 +449,7 @@ namespace SeeingSharp.Util.SdxTK
         //-------------------------------------------------------------------------------------
         // Decodes an image array, resizing/format converting as needed
         //-------------------------------------------------------------------------------------
-        private static Image DecodeMultiframe(WICFlags flags, ImageDescription metadata, WIC.IWICBitmapDecoder decoder)
+        private static Image DecodeMultiframe(WICFlags flags, ImageDescription metadata, IWICBitmapDecoder decoder)
         {
             var image = Image.New(metadata);
 
@@ -489,7 +490,7 @@ namespace SeeingSharp.Util.SdxTK
                         // This frame required format conversion
                         using (var converter = Factory.CreateFormatConverter())
                         {
-                            converter.Initialize(frame, pfGuid, GetWICDither(flags), null, 0, WIC.BitmapPaletteType.Custom);
+                            converter.Initialize(frame, pfGuid, GetWICDither(flags), null, 0, BitmapPaletteType.Custom);
 
                             if (size.Width == metadata.Width && size.Height == metadata.Height)
                             {
@@ -514,7 +515,7 @@ namespace SeeingSharp.Util.SdxTK
         //-------------------------------------------------------------------------------------
         // Encodes a single frame
         //-------------------------------------------------------------------------------------
-        private static unsafe void EncodeImage(PixelBuffer image, WICFlags flags, WIC.IWICBitmapFrameEncode frame)
+        private static unsafe void EncodeImage(PixelBuffer image, WICFlags flags, IWICBitmapFrameEncode frame)
         {
             Guid pfGuid;
             if (!ToWIC(image.Format, out pfGuid))
@@ -537,7 +538,7 @@ namespace SeeingSharp.Util.SdxTK
                         using (var palette = Factory.CreatePalette())
                         {
                             palette.InitializeFromBitmap(source, 256, true);
-                            converter.Initialize(source, targetGuid, GetWICDither(flags), palette, 0, WIC.BitmapPaletteType.Custom);
+                            converter.Initialize(source, targetGuid, GetWICDither(flags), palette, 0, BitmapPaletteType.Custom);
 
                             var bpp = GetBitsPerPixel(targetGuid);
                             if (bpp == 0)
@@ -575,9 +576,9 @@ namespace SeeingSharp.Util.SdxTK
         private static void EncodeSingleFrame(PixelBuffer pixelBuffer, WICFlags flags, Guid guidContainerFormat, Stream stream)
         {
             using (var encoder = Factory.CreateEncoder(guidContainerFormat, stream))
-            using (var propBag = new SharpGen.Runtime.Win32.PropertyBag())
+            using (var propBag = new PropertyBag())
             {
-                if(guidContainerFormat == WIC.ContainerFormatGuids.Bmp)
+                if(guidContainerFormat == ContainerFormatGuids.Bmp)
                 {
                     try
                     {
@@ -609,7 +610,7 @@ namespace SeeingSharp.Util.SdxTK
             }
 
             using (var encoder = Factory.CreateEncoder(guidContainerFormat))
-            using (var propBag = new SharpGen.Runtime.Win32.PropertyBag())
+            using (var propBag = new PropertyBag())
             {
                 using (var eInfo = encoder.EncoderInfo)
                 {
@@ -639,17 +640,17 @@ namespace SeeingSharp.Util.SdxTK
             switch (fileType)
             {
                 case ImageFileType.Bmp:
-                    return WIC.ContainerFormatGuids.Bmp;
+                    return ContainerFormatGuids.Bmp;
                 case ImageFileType.Jpg:
-                    return WIC.ContainerFormatGuids.Jpeg;
+                    return ContainerFormatGuids.Jpeg;
                 case ImageFileType.Gif:
-                    return WIC.ContainerFormatGuids.Gif;
+                    return ContainerFormatGuids.Gif;
                 case ImageFileType.Png:
-                    return WIC.ContainerFormatGuids.Png;
+                    return ContainerFormatGuids.Png;
                 case ImageFileType.Tiff:
-                    return WIC.ContainerFormatGuids.Tiff;
+                    return ContainerFormatGuids.Tiff;
                 case ImageFileType.Wmp:
-                    return WIC.ContainerFormatGuids.Wmp;
+                    return ContainerFormatGuids.Wmp;
                 default:
                     throw new NotSupportedException("Format not supported");
             }
@@ -672,14 +673,14 @@ namespace SeeingSharp.Util.SdxTK
         //-------------------------------------------------------------------------------------
         private struct WICTranslate
         {
-            public WICTranslate(Guid wic, DXGI.Format format)
+            public WICTranslate(Guid wic, Format format)
             {
                 WIC = wic;
                 Format = format;
             }
 
             public readonly Guid WIC;
-            public readonly DXGI.Format Format;
+            public readonly Format Format;
         }
 
         //-------------------------------------------------------------------------------------

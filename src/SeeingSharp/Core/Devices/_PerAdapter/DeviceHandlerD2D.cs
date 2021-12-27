@@ -1,9 +1,8 @@
 ﻿using System;
 using SeeingSharp.Core.Configuration;
 using SeeingSharp.Util;
-using DXGI = Vortice.DXGI;
+using Vortice.DXGI;
 using D2D = Vortice.Direct2D1;
-using static Vortice.Direct2D1.D2D1;
 
 namespace SeeingSharp.Core.Devices
 {
@@ -41,7 +40,7 @@ namespace SeeingSharp.Core.Devices
                     throw new SeeingSharpGraphicsException("Simulation Direct2D device init exception");
                 }
 
-                using (var dxgiDevice = engineDevice.DeviceD3D11_1.QueryInterface<DXGI.IDXGIDevice>())
+                using (var dxgiDevice = engineDevice.DeviceD3D11_1.QueryInterface<IDXGIDevice>())
                 {
                     _deviceD2D = engineFactory.FactoryD2D_2.CreateDevice(dxgiDevice);
                     _deviceContextD2D = _deviceD2D

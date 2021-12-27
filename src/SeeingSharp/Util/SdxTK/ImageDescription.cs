@@ -3,7 +3,7 @@
 
 using System;
 using System.Runtime.InteropServices;
-using DXGI = Vortice.DXGI;
+using Vortice.DXGI;
 
 namespace SeeingSharp.Util.SdxTK
 {
@@ -29,7 +29,7 @@ namespace SeeingSharp.Util.SdxTK
         /// <msdn-id>ff476252</msdn-id>
         /// <unmanaged>DXGI_FORMAT Format</unmanaged>
         /// <unmanaged-short>DXGI_FORMAT Format</unmanaged-short>
-        public DXGI.Format Format;
+        public Format Format;
 
         public bool Equals(ImageDescription other)
         {

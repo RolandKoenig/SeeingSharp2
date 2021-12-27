@@ -1,4 +1,5 @@
-﻿using SeeingSharp.Checking;
+﻿using System.Drawing;
+using SeeingSharp.Checking;
 using SeeingSharp.Core;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
@@ -47,7 +48,7 @@ namespace SeeingSharp.Drawing2D
                 // Start the figure
                 var startPoint = vertices[0];
                 geoSink.BeginFigure(
-                    *(System.Drawing.PointF*)&startPoint,
+                    *(PointF*)&startPoint,
                     D2D.FigureBegin.Filled);
 
                 // AddObject all lines
@@ -56,7 +57,7 @@ namespace SeeingSharp.Drawing2D
                 for (var loop = 1; loop < vertexCount; loop++)
                 {
                     var actVectorOrig = vertices[loop];
-                    geoSink.AddLine(*(System.Drawing.PointF*)&actVectorOrig);
+                    geoSink.AddLine(*(PointF*)&actVectorOrig);
                 }
 
                 // End the figure

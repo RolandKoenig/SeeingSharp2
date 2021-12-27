@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Drawing;
 using SeeingSharp.Core.Devices;
+using Vortice.Mathematics;
 using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Core
 {
     public interface IRenderLoopHost
     {
-        Tuple<D3D11.ID3D11Texture2D, D3D11.ID3D11RenderTargetView, D3D11.ID3D11Texture2D, D3D11.ID3D11DepthStencilView, Vortice.Mathematics.Viewport, Size, DpiScaling> OnRenderLoop_CreateViewResources(EngineDevice device);
+        Tuple<D3D11.ID3D11Texture2D, D3D11.ID3D11RenderTargetView, D3D11.ID3D11Texture2D, D3D11.ID3D11DepthStencilView, Viewport, Size, DpiScaling> OnRenderLoop_CreateViewResources(EngineDevice device);
 
         void OnRenderLoop_DisposeViewResources(EngineDevice device);
 

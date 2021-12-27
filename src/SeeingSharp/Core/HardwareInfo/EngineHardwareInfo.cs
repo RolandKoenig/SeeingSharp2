@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 using SeeingSharp.Core.Devices;
+using SharpGen.Runtime;
 
 namespace SeeingSharp.Core.HardwareInfo
 {
@@ -37,7 +38,7 @@ namespace SeeingSharp.Core.HardwareInfo
         {
             _adapters = new List<EngineAdapterInfo>();
 
-            var lastResult = SharpGen.Runtime.Result.Ok;
+            var lastResult = Result.Ok;
             var actIndex = 0;
             do
             {

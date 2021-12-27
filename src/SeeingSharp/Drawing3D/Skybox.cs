@@ -2,7 +2,7 @@
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
-using DXGI = Vortice.DXGI;
+using Vortice.DXGI;
 using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Drawing3D
@@ -195,7 +195,7 @@ namespace SeeingSharp.Drawing3D
             deviceContext.PSSetShaderResource(0, localResources.CubeTexture.TextureView);
 
             // Bind index and vertex buffer
-            deviceContext.IASetIndexBuffer(localResources.IndexBuffer.Buffer, DXGI.Format.R32_UInt, 0);
+            deviceContext.IASetIndexBuffer(localResources.IndexBuffer.Buffer, Format.R32_UInt, 0);
             deviceContext.IASetVertexBuffers(0, new D3D11.VertexBufferView(
                 localResources.VertexBuffer.Buffer,
                 StandardVertex.Size, 0));

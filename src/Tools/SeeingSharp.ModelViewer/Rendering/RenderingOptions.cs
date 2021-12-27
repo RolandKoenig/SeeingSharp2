@@ -1,7 +1,7 @@
 ﻿using PropertyTools.DataAnnotations;
-using SeeingSharp.ModelViewer.Util;
 using SeeingSharp.Core;
 using SeeingSharp.Drawing3D;
+using SeeingSharp.ModelViewer.Util;
 
 namespace SeeingSharp.ModelViewer.Rendering
 {

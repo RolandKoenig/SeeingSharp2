@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using SeeingSharp.Core.Devices;
-using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
+using SharpGen.Runtime;
 using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Core
@@ -50,7 +50,7 @@ namespace SeeingSharp.Core
 
             
             var actDumpEntry = new RenderPassDumpEntry(dumpKey, _size);
-            using (var colorBufferTexture = SharpGen.Runtime.ComObject.As<D3D11.ID3D11Texture2D>(renderTargets.ColorBuffer.Resource))
+            using (var colorBufferTexture = ComObject.As<D3D11.ID3D11Texture2D>(renderTargets.ColorBuffer.Resource))
             {
                 _uploaderColor.UploadToMemoryMappedTexture(colorBufferTexture, actDumpEntry.BufferColor);
             }

@@ -2,9 +2,8 @@
 using System.Drawing;
 using SeeingSharp.Checking;
 using SeeingSharp.Core.Devices;
-using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
-using DXGI = Vortice.DXGI;
+using Vortice.DXGI;
 using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Core
@@ -15,7 +14,7 @@ namespace SeeingSharp.Core
         private EngineDevice _device;
         private int _width;
         private int _height;
-        private DXGI.Format _format;
+        private Format _format;
         private bool _isMultisampled;
         private bool _isDisposed;
 
@@ -37,7 +36,7 @@ namespace SeeingSharp.Core
         /// <param name="pixelHeight">Height of textures to be uploaded.</param>
         /// <param name="format">Format of textures to be uploaded.</param>
         /// <param name="isMultisampled">True if this uploader expects multisampled textures.</param>
-        internal TextureUploader(EngineDevice device, int pixelWidth, int pixelHeight, DXGI.Format format, bool isMultisampled)
+        internal TextureUploader(EngineDevice device, int pixelWidth, int pixelHeight, Format format, bool isMultisampled)
         {
             _device = device;
             _width = pixelWidth;
@@ -103,7 +102,7 @@ namespace SeeingSharp.Core
             }
 
             // Check format compatibility
-            var textureFormatByteSize = DXGI.FormatHelper.SizeOfInBytes(_format);
+            var textureFormatByteSize = FormatHelper.SizeOfInBytes(_format);
             if (textureFormatByteSize != sizeof(T))
             {
                 throw new SeeingSharpGraphicsException(

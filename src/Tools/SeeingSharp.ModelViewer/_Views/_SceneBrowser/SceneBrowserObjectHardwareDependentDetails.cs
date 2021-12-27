@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel;
-using SeeingSharp.ModelViewer.Util;
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing3D;
+using SeeingSharp.ModelViewer.Util;
 
 namespace SeeingSharp.ModelViewer
 {

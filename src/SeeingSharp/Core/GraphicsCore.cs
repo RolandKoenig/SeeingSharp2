@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using SeeingSharp.Checking;
@@ -11,7 +11,7 @@ using SeeingSharp.Core.HardwareInfo;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Input;
 using SeeingSharp.Util;
-using WIC = Vortice.WIC;
+using Vortice.WIC;
 using D2D = Vortice.Direct2D1;
 using DWrite = Vortice.DirectWrite;
 
@@ -207,7 +207,7 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets the WIC factory object.
         /// </summary>
-        internal WIC.IWICImagingFactory FactoryWIC;
+        internal IWICImagingFactory FactoryWIC;
 
         public GraphicsCoreInternals Internals { get; }
 
@@ -568,7 +568,7 @@ namespace SeeingSharp.Core
 
             public DWrite.IDWriteFactory FactoryDWrite => _parent.FactoryDWrite;
 
-            public WIC.IWICImagingFactory FactoryWIC => _parent.FactoryWIC;
+            public IWICImagingFactory FactoryWIC => _parent.FactoryWIC;
 
             internal GraphicsCoreInternals(GraphicsCore parent)
             {

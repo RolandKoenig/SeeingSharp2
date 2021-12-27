@@ -1,6 +1,7 @@
 ﻿using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
+using Vortice.Mathematics;
 using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Drawing3D
@@ -16,7 +17,7 @@ namespace SeeingSharp.Drawing3D
         private int _height;
         private bool _antialiasingEnabled;
         private AntialiasingQualityLevel _antialiasingQuality;
-        private Vortice.Mathematics.Viewport _viewportF;
+        private Viewport _viewportF;
         private bool _forceRecreateResources;
 
         // Resources for depth buffer
@@ -74,7 +75,7 @@ namespace SeeingSharp.Drawing3D
             _creationMode = creationMode;
             _width = -1;
             _height = -1;
-            _viewportF = new Vortice.Mathematics.Viewport();
+            _viewportF = new Viewport();
             _shaderResourceCreated = false;
         }
 

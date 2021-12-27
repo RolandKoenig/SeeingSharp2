@@ -1,5 +1,4 @@
-﻿using SeeingSharp.Core;
-using SeeingSharp.Core.Devices;
+﻿using SeeingSharp.Core.Devices;
 using D2D = Vortice.Direct2D1;
 
 namespace SeeingSharp.Drawing2D

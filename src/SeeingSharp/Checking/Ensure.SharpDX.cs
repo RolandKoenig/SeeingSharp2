@@ -1,6 +1,6 @@
-﻿using SharpGen.Runtime;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using SharpGen.Runtime;
 
 namespace SeeingSharp.Checking
 {

@@ -7,9 +7,9 @@ using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Resources;
 using SeeingSharp.Util;
-using Sdx = SeeingSharp.Util.Sdx;
-using DXGI = Vortice.DXGI;
-using WIC = Vortice.WIC;
+using SeeingSharp.Util.Sdx;
+using Vortice.DXGI;
+using Vortice.WIC;
 using VMath = Vortice.Mathematics;
 using D3D11 = Vortice.Direct3D11;
 using SDXTK = SeeingSharp.Util.SdxTK;
@@ -45,7 +45,7 @@ namespace SeeingSharp.Core
                 ArraySize = rawImage.Description.ArraySize,
                 Format = rawImage.Description.Format,
                 Usage = D3D11.ResourceUsage.Default,
-                SampleDescription = new DXGI.SampleDescription(1, 0),
+                SampleDescription = new SampleDescription(1, 0),
                 BindFlags = D3D11.BindFlags.ShaderResource,
                 CpuAccessFlags = D3D11.CpuAccessFlags.None,
                 OptionFlags = D3D11.ResourceOptionFlags.None
@@ -74,14 +74,14 @@ namespace SeeingSharp.Core
         public static class Internals
         {
             // All default texture formats
-            public const DXGI.Format DEFAULT_TEXTURE_FORMAT = DXGI.Format.B8G8R8A8_UNorm;
-            public const DXGI.Format DEFAULT_TEXTURE_FORMAT_SHARING = DXGI.Format.B8G8R8A8_UNorm;
-            public const DXGI.Format DEFAULT_TEXTURE_FORMAT_SHARING_DIRECT_2D = DXGI.Format.B8G8R8A8_UNorm;
-            public const DXGI.Format DEFAULT_TEXTURE_FORMAT_NORMAL_DEPTH = DXGI.Format.R16G16B16A16_Float;
-            public const DXGI.Format DEFAULT_TEXTURE_FORMAT_OBJECT_ID = DXGI.Format.R32_Float;
-            public const DXGI.Format DEFAULT_TEXTURE_FORMAT_DEPTH = DXGI.Format.D32_Float_S8X24_UInt;
-            public static readonly Guid DEFAULT_WIC_BITMAP_FORMAT = WIC.PixelFormat.Format32bppBGRA;
-            public static readonly Guid DEFAULT_WIC_BITMAP_FORMAT_DIRECT_2D = WIC.PixelFormat.Format32bppPBGRA;
+            public const Format DEFAULT_TEXTURE_FORMAT = Format.B8G8R8A8_UNorm;
+            public const Format DEFAULT_TEXTURE_FORMAT_SHARING = Format.B8G8R8A8_UNorm;
+            public const Format DEFAULT_TEXTURE_FORMAT_SHARING_DIRECT_2D = Format.B8G8R8A8_UNorm;
+            public const Format DEFAULT_TEXTURE_FORMAT_NORMAL_DEPTH = Format.R16G16B16A16_Float;
+            public const Format DEFAULT_TEXTURE_FORMAT_OBJECT_ID = Format.R32_Float;
+            public const Format DEFAULT_TEXTURE_FORMAT_DEPTH = Format.D32_Float_S8X24_UInt;
+            public static readonly Guid DEFAULT_WIC_BITMAP_FORMAT = PixelFormat.Format32bppBGRA;
+            public static readonly Guid DEFAULT_WIC_BITMAP_FORMAT_DIRECT_2D = PixelFormat.Format32bppPBGRA;
 
             /// <summary>
             /// Loads a bitmap using WIC.
@@ -105,15 +105,15 @@ namespace SeeingSharp.Core
 
                 var wicFactory = GraphicsCore.Current.FactoryWIC;
                 var bitmapDecoder = wicFactory.CreateDecoderFromStream(
-                    inStream, WIC.DecodeOptions.CacheOnDemand);
+                    inStream, DecodeOptions.CacheOnDemand);
                 var formatConverter = wicFactory.CreateFormatConverter();
                 formatConverter.Initialize(
                     bitmapDecoder.GetFrame(0),
                     DEFAULT_WIC_BITMAP_FORMAT,
-                    WIC.BitmapDitherType.None,
+                    BitmapDitherType.None,
                     null,
                     0.0,
-                    WIC.BitmapPaletteType.Custom);
+                    BitmapPaletteType.Custom);
 
                 return new WicBitmapSourceInternal(bitmapDecoder, formatConverter);
             }
@@ -143,15 +143,15 @@ namespace SeeingSharp.Core
 
                 var wicFactory = GraphicsCore.Current.FactoryWIC;
                 var bitmapDecoder = wicFactory.CreateDecoderFromStream(
-                    inStream, WIC.DecodeOptions.CacheOnLoad);
+                    inStream, DecodeOptions.CacheOnLoad);
                 var formatConverter = wicFactory.CreateFormatConverter();
                 formatConverter.Initialize(
                     bitmapDecoder.GetFrame(0),
                     DEFAULT_WIC_BITMAP_FORMAT_DIRECT_2D,
-                    WIC.BitmapDitherType.None,
+                    BitmapDitherType.None,
                     null,
                     0.0,
-                    WIC.BitmapPaletteType.MedianCut);
+                    BitmapPaletteType.MedianCut);
 
                 return new WicBitmapSourceInternal(bitmapDecoder, formatConverter);
             }
@@ -175,7 +175,7 @@ namespace SeeingSharp.Core
                     Width = width,
                     Height = height,
                     MipLevels = 1,
-                    SampleDescription = new DXGI.SampleDescription(1, 0),
+                    SampleDescription = new SampleDescription(1, 0),
                     Usage = D3D11.ResourceUsage.Default,
                     OptionFlags = D3D11.ResourceOptionFlags.Shared,
                     CpuAccessFlags = D3D11.CpuAccessFlags.None,
@@ -206,7 +206,7 @@ namespace SeeingSharp.Core
                             Format = DEFAULT_TEXTURE_FORMAT,
                             MipLevels = 0,
                             OptionFlags = D3D11.ResourceOptionFlags.None | D3D11.ResourceOptionFlags.GenerateMips,
-                            SampleDescription = new DXGI.SampleDescription(1, 0)
+                            SampleDescription = new SampleDescription(1, 0)
                         }, 
                         new D3D11.SubresourceData[] 
                         { 
@@ -234,7 +234,7 @@ namespace SeeingSharp.Core
                             Format = DEFAULT_TEXTURE_FORMAT,
                             MipLevels = 1,
                             OptionFlags = D3D11.ResourceOptionFlags.None,
-                            SampleDescription = new DXGI.SampleDescription(1, 0)
+                            SampleDescription = new SampleDescription(1, 0)
                         }, 
                         new D3D11.SubresourceData[] { dataRectangle });
                 }
@@ -265,7 +265,7 @@ namespace SeeingSharp.Core
             /// <param name="width">Width of generated texture.</param>
             /// <param name="height">Height of generated texture.</param>
             /// <param name="format">The format which is used to create the texture.</param>
-            public static D3D11.ID3D11Texture2D CreateTexture(EngineDevice device, int width, int height, DXGI.Format format = DEFAULT_TEXTURE_FORMAT)
+            public static D3D11.ID3D11Texture2D CreateTexture(EngineDevice device, int width, int height, Format format = DEFAULT_TEXTURE_FORMAT)
             {
                 device.EnsureNotNull(nameof(device));
                 width.EnsurePositiveOrZero(nameof(width));
@@ -279,7 +279,7 @@ namespace SeeingSharp.Core
                     ArraySize = 1,
                     Format = format,
                     Usage = D3D11.ResourceUsage.Default,
-                    SampleDescription = new DXGI.SampleDescription(1, 0),
+                    SampleDescription = new SampleDescription(1, 0),
                     BindFlags = D3D11.BindFlags.ShaderResource,
                     CpuAccessFlags = D3D11.CpuAccessFlags.None,
                     OptionFlags = D3D11.ResourceOptionFlags.None
@@ -295,7 +295,7 @@ namespace SeeingSharp.Core
             /// <param name="width">Width of generated texture.</param>
             /// <param name="height">Height of generated texture.</param>
             /// <param name="format">The format which is used to create the texture.</param>
-            public static D3D11.ID3D11Texture2D CreateCpuWritableTexture(EngineDevice device, int width, int height, DXGI.Format format = DEFAULT_TEXTURE_FORMAT)
+            public static D3D11.ID3D11Texture2D CreateCpuWritableTexture(EngineDevice device, int width, int height, Format format = DEFAULT_TEXTURE_FORMAT)
             {
                 device.EnsureNotNull(nameof(device));
                 width.EnsurePositiveOrZero(nameof(width));
@@ -309,7 +309,7 @@ namespace SeeingSharp.Core
                     ArraySize = 1,
                     Format = format,
                     Usage = D3D11.ResourceUsage.Dynamic,
-                    SampleDescription = new DXGI.SampleDescription(1, 0),
+                    SampleDescription = new SampleDescription(1, 0),
                     BindFlags = D3D11.BindFlags.ShaderResource,
                     CpuAccessFlags = D3D11.CpuAccessFlags.Write,
                     OptionFlags = D3D11.ResourceOptionFlags.None
@@ -325,7 +325,7 @@ namespace SeeingSharp.Core
             /// <param name="width">Width of generated texture.</param>
             /// <param name="height">Height of generated texture.</param>
             /// <param name="format">The format used to create the texture.</param>
-            public static D3D11.ID3D11Texture2D CreateStagingTexture(EngineDevice device, int width, int height, DXGI.Format format = DEFAULT_TEXTURE_FORMAT)
+            public static D3D11.ID3D11Texture2D CreateStagingTexture(EngineDevice device, int width, int height, Format format = DEFAULT_TEXTURE_FORMAT)
             {
                 device.EnsureNotNull(nameof(device));
                 width.EnsurePositiveOrZero(nameof(width));
@@ -342,7 +342,7 @@ namespace SeeingSharp.Core
                     ArraySize = 1,
                     Format = format,
                     Usage = D3D11.ResourceUsage.Staging,
-                    SampleDescription = new DXGI.SampleDescription(1, 0),
+                    SampleDescription = new SampleDescription(1, 0),
                     BindFlags = D3D11.BindFlags.None,
                     CpuAccessFlags = D3D11.CpuAccessFlags.Read,
                     OptionFlags = D3D11.ResourceOptionFlags.None
@@ -374,7 +374,7 @@ namespace SeeingSharp.Core
                     ArraySize = 1,
                     Format = DEFAULT_TEXTURE_FORMAT,
                     Usage = D3D11.ResourceUsage.Staging,
-                    SampleDescription = new DXGI.SampleDescription(1, 0),
+                    SampleDescription = new SampleDescription(1, 0),
                     BindFlags = D3D11.BindFlags.None,
                     CpuAccessFlags = D3D11.CpuAccessFlags.Read,
                     OptionFlags = D3D11.ResourceOptionFlags.None
@@ -423,7 +423,7 @@ namespace SeeingSharp.Core
                     textureDescription.ArraySize = 1;
                     textureDescription.Format = DEFAULT_TEXTURE_FORMAT_NORMAL_DEPTH;
                     textureDescription.Usage = D3D11.ResourceUsage.Default;
-                    textureDescription.SampleDescription = new DXGI.SampleDescription(1, 0);
+                    textureDescription.SampleDescription = new SampleDescription(1, 0);
                     textureDescription.BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget;
                     textureDescription.CpuAccessFlags = D3D11.CpuAccessFlags.None;
                     textureDescription.OptionFlags = D3D11.ResourceOptionFlags.None;
@@ -472,7 +472,7 @@ namespace SeeingSharp.Core
                     textureDescription.ArraySize = 1;
                     textureDescription.Format = DEFAULT_TEXTURE_FORMAT_OBJECT_ID;
                     textureDescription.Usage = D3D11.ResourceUsage.Default;
-                    textureDescription.SampleDescription = new DXGI.SampleDescription(1, 0);
+                    textureDescription.SampleDescription = new SampleDescription(1, 0);
                     textureDescription.BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget;
                     textureDescription.CpuAccessFlags = D3D11.CpuAccessFlags.None;
                     textureDescription.OptionFlags = D3D11.ResourceOptionFlags.None;
@@ -520,7 +520,7 @@ namespace SeeingSharp.Core
                     textureDescription.ArraySize = 1;
                     textureDescription.Format = DEFAULT_TEXTURE_FORMAT;
                     textureDescription.Usage = D3D11.ResourceUsage.Default;
-                    textureDescription.SampleDescription = new DXGI.SampleDescription(1, 0);
+                    textureDescription.SampleDescription = new SampleDescription(1, 0);
                     textureDescription.BindFlags = D3D11.BindFlags.ShaderResource | D3D11.BindFlags.RenderTarget;
                     textureDescription.CpuAccessFlags = D3D11.CpuAccessFlags.None;
                     textureDescription.OptionFlags = D3D11.ResourceOptionFlags.None;
@@ -565,14 +565,14 @@ namespace SeeingSharp.Core
                     textureDescription.MipLevels = 1;
                     textureDescription.ArraySize = 1;
                     textureDescription.Usage = D3D11.ResourceUsage.Default;
-                    textureDescription.SampleDescription = new DXGI.SampleDescription(1, 0);
+                    textureDescription.SampleDescription = new SampleDescription(1, 0);
                     textureDescription.BindFlags = D3D11.BindFlags.DepthStencil;
                     textureDescription.CpuAccessFlags = D3D11.CpuAccessFlags.None;
                     textureDescription.OptionFlags = D3D11.ResourceOptionFlags.None;
                 }
 
                 // Set buffer format
-                textureDescription.Format = DXGI.Format.D32_Float_S8X24_UInt;
+                textureDescription.Format = Format.D32_Float_S8X24_UInt;
 
                 // Create the texture finally
                 return device.DeviceD3D11_1.CreateTexture2D(textureDescription);
@@ -656,7 +656,7 @@ namespace SeeingSharp.Core
 
                 var vertexCount = vertices.Sum(actArray => actArray.Length);
                 var vertexSize = sizeof(T);
-                using var outStream = new Sdx.DataStream(
+                using var outStream = new DataStream(
                     vertexCount * vertexSize,
                     true, true);
 
@@ -693,7 +693,7 @@ namespace SeeingSharp.Core
 
                 const int BYTES_PER_INDEX = sizeof(uint);
                 var countIndices = indices.Sum(actArray => actArray.Length);
-                using var outStreamIndex = new Sdx.DataStream(
+                using var outStreamIndex = new DataStream(
                     countIndices *
                     BYTES_PER_INDEX, true, true);
 

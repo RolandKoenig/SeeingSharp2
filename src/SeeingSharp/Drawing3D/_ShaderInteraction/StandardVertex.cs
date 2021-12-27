@@ -4,7 +4,7 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using SeeingSharp.Checking;
 using SeeingSharp.Mathematics;
-using DXGI = Vortice.DXGI;
+using Vortice.DXGI;
 using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Drawing3D
@@ -18,11 +18,11 @@ namespace SeeingSharp.Drawing3D
         // Constants
         public static readonly int Size = Marshal.SizeOf<StandardVertex>();
         public static readonly D3D11.InputElementDescription[] InputElements = {
-            new ("POSITION", 0, DXGI.Format.R32G32B32_Float, 0, 0),
-            new ("NORMAL", 0, DXGI.Format.R32G32B32_Float, 12, 0),
-            new ("COLOR", 0, DXGI.Format.R8G8B8A8_UNorm, 24, 0),
-            new ("TEXCOORD", 0, DXGI.Format.R32G32_Float, 28, 0),
-            new ("TEXCOORD", 1, DXGI.Format.R32_Float, 36, 0)
+            new ("POSITION", 0, Format.R32G32B32_Float, 0, 0),
+            new ("NORMAL", 0, Format.R32G32B32_Float, 12, 0),
+            new ("COLOR", 0, Format.R8G8B8A8_UNorm, 24, 0),
+            new ("TEXCOORD", 0, Format.R32G32_Float, 28, 0),
+            new ("TEXCOORD", 1, Format.R32_Float, 36, 0)
         };
 
         // All vertex elements

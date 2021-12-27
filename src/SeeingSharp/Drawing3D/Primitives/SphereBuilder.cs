@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Numerics;
+using System.Text;
 using SeeingSharp.Mathematics;
 
 namespace SeeingSharp.Drawing3D.Primitives

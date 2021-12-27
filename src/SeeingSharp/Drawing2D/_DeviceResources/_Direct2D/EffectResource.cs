@@ -2,6 +2,7 @@
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
+using SharpGen.Runtime;
 using D2D = Vortice.Direct2D1;
 
 namespace SeeingSharp.Drawing2D
@@ -87,7 +88,7 @@ namespace SeeingSharp.Drawing2D
                 {
                     using (var actInput = _effectInputs[loop].GetImageObject(device) as D2D.ID2D1Image)
                     {
-                        effect.SetInput(loop, actInput, new SharpGen.Runtime.RawBool(false));
+                        effect.SetInput(loop, actInput, new RawBool(false));
                     }
                 }
 

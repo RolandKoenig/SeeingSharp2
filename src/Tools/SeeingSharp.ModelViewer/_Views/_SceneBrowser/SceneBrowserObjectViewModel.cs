@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using SeeingSharp.ModelViewer.Util;
 using SeeingSharp.Core;
+using SeeingSharp.ModelViewer.Util;
 
 namespace SeeingSharp.ModelViewer
 {

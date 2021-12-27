@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using SeeingSharp.Util.Sdx;
-using DXGI = Vortice.DXGI;
+using Vortice.DXGI;
 using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Util.SdxTK
@@ -545,8 +545,8 @@ namespace SeeingSharp.Util.SdxTK
 
         internal unsafe void Initialize(ImageDescription description, IntPtr dataPointer, int offset, GCHandle? handle, bool bufferIsDisposable, PitchFlags pitchFlags = PitchFlags.None)
         {
-            if (!DXGI.FormatHelper.IsValid(description.Format) || 
-                DXGI.FormatHelper.IsVideo(description.Format))
+            if (!FormatHelper.IsValid(description.Format) || 
+                FormatHelper.IsVideo(description.Format))
             {
                 throw new InvalidOperationException("Unsupported DXGI Format");
             }
@@ -626,26 +626,26 @@ namespace SeeingSharp.Util.SdxTK
             dataBoxArray = this.ComputeDataBox();
         }
 
-        internal static void ComputePitch(DXGI.Format fmt, int width, int height, out int rowPitch, out int slicePitch, out int widthCount, out int heightCount, PitchFlags flags = PitchFlags.None)
+        internal static void ComputePitch(Format fmt, int width, int height, out int rowPitch, out int slicePitch, out int widthCount, out int heightCount, PitchFlags flags = PitchFlags.None)
         {
             widthCount = width;
             heightCount = height;
 
-            if (DXGI.FormatHelper.IsCompressed(fmt))
+            if (FormatHelper.IsCompressed(fmt))
             {
-                var bpb = fmt == DXGI.Format.BC1_Typeless
-                          || fmt == DXGI.Format.BC1_UNorm
-                          || fmt == DXGI.Format.BC1_UNorm_SRgb
-                          || fmt == DXGI.Format.BC4_Typeless
-                          || fmt == DXGI.Format.BC4_UNorm
-                          || fmt == DXGI.Format.BC4_SNorm ? 8 : 16;
+                var bpb = fmt == Format.BC1_Typeless
+                          || fmt == Format.BC1_UNorm
+                          || fmt == Format.BC1_UNorm_SRgb
+                          || fmt == Format.BC4_Typeless
+                          || fmt == Format.BC4_UNorm
+                          || fmt == Format.BC4_SNorm ? 8 : 16;
                 widthCount = Math.Max(1, (width + 3) / 4);
                 heightCount = Math.Max(1, (height + 3) / 4);
                 rowPitch = widthCount * bpb;
 
                 slicePitch = rowPitch * heightCount;
             }
-            else if (DXGI.FormatHelper.IsPacked(fmt))
+            else if (FormatHelper.IsPacked(fmt))
             {
                 rowPitch = ((width + 1) >> 1) * 4;
 
@@ -669,7 +669,7 @@ namespace SeeingSharp.Util.SdxTK
                 }
                 else
                 {
-                    bpp = DXGI.FormatHelper.SizeOfInBits(fmt);
+                    bpp = FormatHelper.SizeOfInBits(fmt);
                 }
 
                 if ((flags & PitchFlags.LegacyDword) != 0)
@@ -747,9 +747,9 @@ namespace SeeingSharp.Util.SdxTK
         /// Gets the databox from this image.
         /// </summary>
         /// <returns>The databox of this image.</returns>
-        private Vortice.Direct3D11.SubresourceData[] ComputeDataBox()
+        private D3D11.SubresourceData[] ComputeDataBox()
         {
-            dataBoxArray = new Vortice.Direct3D11.SubresourceData[Description.ArraySize * Description.MipLevels];
+            dataBoxArray = new D3D11.SubresourceData[Description.ArraySize * Description.MipLevels];
             var i = 0;
             for (var arrayIndex = 0; arrayIndex < Description.ArraySize; arrayIndex++)
             {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Numerics;
 using SeeingSharp.Checking;
-using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 using D2D = Vortice.Direct2D1;
 

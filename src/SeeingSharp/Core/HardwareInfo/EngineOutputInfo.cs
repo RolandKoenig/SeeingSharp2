@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using DXGI = Vortice.DXGI;
+using Vortice.DXGI;
 
 namespace SeeingSharp.Core.HardwareInfo
 {
@@ -8,7 +8,7 @@ namespace SeeingSharp.Core.HardwareInfo
     {
         private const string TRANSLATABLE_GROUP_COMMON_OUTPUT_INFO = "Common output information";
 
-        private DXGI.OutputDescription _outputDescription;
+        private OutputDescription _outputDescription;
 
         /// <summary>
         /// Gets the name of the output device.
@@ -51,7 +51,7 @@ namespace SeeingSharp.Core.HardwareInfo
         /// <summary>
         /// Initializes a new instance of the <see cref="EngineOutputInfo" /> class.
         /// </summary>
-        internal EngineOutputInfo(int adapterIndex, int outputIndex, DXGI.IDXGIOutput output)
+        internal EngineOutputInfo(int adapterIndex, int outputIndex, IDXGIOutput output)
         {
             this.AdapterIndex = adapterIndex;
             this.OutputIndex = outputIndex;
@@ -60,7 +60,7 @@ namespace SeeingSharp.Core.HardwareInfo
             // Get all supported modes
             var modes = output.GetDisplayModeList(
                 GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT,
-                DXGI.DisplayModeEnumerationFlags.Interlaced);
+                DisplayModeEnumerationFlags.Interlaced);
 
             // Convert and sort them
             var engineModes = new EngineOutputModeInfo[modes.Length];

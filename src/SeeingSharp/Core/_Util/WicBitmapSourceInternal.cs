@@ -1,6 +1,6 @@
 ﻿using System;
 using SeeingSharp.Util;
-using WIC = Vortice.WIC;
+using Vortice.WIC;
 
 namespace SeeingSharp.Core
 {
@@ -8,13 +8,13 @@ namespace SeeingSharp.Core
     {
         public bool IsDisposed => this.Converter == null;
 
-        internal WIC.IWICBitmapDecoder Decoder
+        internal IWICBitmapDecoder Decoder
         {
             get;
             private set;
         }
 
-        internal WIC.IWICFormatConverter Converter
+        internal IWICFormatConverter Converter
         {
             get;
             private set;
@@ -22,7 +22,7 @@ namespace SeeingSharp.Core
 
         public WicBitmapSourceInternalInternals Internals { get; }
 
-        internal WicBitmapSourceInternal(WIC.IWICBitmapDecoder decoder, WIC.IWICFormatConverter converter)
+        internal WicBitmapSourceInternal(IWICBitmapDecoder decoder, IWICFormatConverter converter)
         {
             this.Decoder = decoder;
             this.Converter = converter;
@@ -43,9 +43,9 @@ namespace SeeingSharp.Core
         {
             private WicBitmapSourceInternal _owner;
 
-            public WIC.IWICBitmapDecoder Decoder => _owner.Decoder;
+            public IWICBitmapDecoder Decoder => _owner.Decoder;
 
-            public WIC.IWICFormatConverter Converter => _owner.Converter;
+            public IWICFormatConverter Converter => _owner.Converter;
 
             public WicBitmapSourceInternalInternals(WicBitmapSourceInternal owner)
             {

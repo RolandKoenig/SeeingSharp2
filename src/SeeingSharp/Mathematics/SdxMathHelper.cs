@@ -10,12 +10,12 @@ namespace SeeingSharp.Mathematics
             return *(Matrix3x2*)(&value);
         }
 
-        internal static unsafe System.Drawing.PointF RawFromVector2(Vector2 value)
+        internal static unsafe PointF RawFromVector2(Vector2 value)
         {
-            return *(System.Drawing.PointF*)(&value);
+            return *(PointF*)(&value);
         }
 
-        internal static unsafe Vector2 Vector2FromRaw(System.Drawing.PointF value)
+        internal static unsafe Vector2 Vector2FromRaw(PointF value)
         {
             return *(Vector2*)(&value);
         }

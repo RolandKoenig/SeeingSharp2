@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
-using Microsoft.UI.Dispatching;
+using Windows.System;
 using Microsoft.UI.Input;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using SeeingSharp.Core;
 using SeeingSharp.Views;
+using DispatcherQueue = Microsoft.UI.Dispatching.DispatcherQueue;
+using DispatcherQueuePriority = Microsoft.UI.Dispatching.DispatcherQueuePriority;
 
 namespace SeeingSharp.Input
 {
@@ -15,7 +17,7 @@ namespace SeeingSharp.Input
     {
         private const float MOVEMENT = 0.3f;
         private const float ROTATION = 0.01f;
-        private static readonly Dictionary<Windows.System.VirtualKey, WinVirtualKey> s_keyMappingDict;
+        private static readonly Dictionary<VirtualKey, WinVirtualKey> s_keyMappingDict;
 
         // State variables for camera movement
         private PointerPoint _lastDragPoint;
@@ -40,8 +42,8 @@ namespace SeeingSharp.Input
         /// </summary>
         static WinUIKeyAndMouseInputHandler()
         {
-            s_keyMappingDict = new Dictionary<Windows.System.VirtualKey, WinVirtualKey>();
-            foreach (Windows.System.VirtualKey actVirtualKey in Enum.GetValues(typeof(Windows.System.VirtualKey)))
+            s_keyMappingDict = new Dictionary<VirtualKey, WinVirtualKey>();
+            foreach (VirtualKey actVirtualKey in Enum.GetValues(typeof(VirtualKey)))
             {
                 var actVirtualKeyCode = (short)actVirtualKey;
                 var actWinVirtualKey = (WinVirtualKey)actVirtualKeyCode;

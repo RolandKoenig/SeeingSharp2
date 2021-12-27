@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using SeeingSharp.Util;
-using DXGI = Vortice.DXGI;
+using Vortice.DXGI;
 using D3D9 = Vortice.Direct3D9;
 using static Vortice.Direct3D9.D3D9;
 
@@ -32,7 +32,7 @@ namespace SeeingSharp.Core
         /// </summary>
         /// <param name="dxgiAdapter">The target adapter.</param>
         /// <param name="isSoftwareAdapter">Are we in software mode?</param>
-        internal DeviceHandlerD3D9(DXGI.IDXGIAdapter1 dxgiAdapter, bool isSoftwareAdapter)
+        internal DeviceHandlerD3D9(IDXGIAdapter1 dxgiAdapter, bool isSoftwareAdapter)
         {
             try
             {

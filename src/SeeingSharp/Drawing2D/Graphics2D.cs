@@ -576,7 +576,7 @@ namespace SeeingSharp.Drawing2D
             else
             {
                 var nativeBitmap = bitmap.GetBitmap(this.Device);
-                var destinationRectangle = new System.Drawing.RectangleF(
+                var destinationRectangle = new RectangleF(
                     destinationOrigin.X, destinationOrigin.Y,
                     bitmap.PixelWidth, bitmap.PixelHeight);
 
@@ -586,7 +586,7 @@ namespace SeeingSharp.Drawing2D
                     destinationRectangle,
                     opacity,
                     (D2D.BitmapInterpolationMode)interpolationMode,
-                    new System.Drawing.RectangleF(0, 0, bitmap.PixelWidth, bitmap.PixelHeight));
+                    new RectangleF(0, 0, bitmap.PixelWidth, bitmap.PixelHeight));
             }
         }
 

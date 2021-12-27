@@ -1,7 +1,7 @@
 ﻿using SeeingSharp.Checking;
 using SeeingSharp.Core.Configuration;
 using SeeingSharp.Core.Devices;
-using DXGI = Vortice.DXGI;
+using Vortice.DXGI;
 
 namespace SeeingSharp.Core
 {
@@ -14,25 +14,25 @@ namespace SeeingSharp.Core
         /// <param name="width">Width of the screen in pixels.</param>
         /// <param name="height">Height of the screen in pixels.</param>
         /// <param name="gfxConfig">Current graphics configuration.</param>
-        internal static DXGI.IDXGISwapChain1 CreateSwapChainForComposition(EngineDevice device, int width, int height, GraphicsViewConfiguration gfxConfig)
+        internal static IDXGISwapChain1 CreateSwapChainForComposition(EngineDevice device, int width, int height, GraphicsViewConfiguration gfxConfig)
         {
             device.EnsureNotNull(nameof(device));
             width.EnsurePositiveOrZero(nameof(width));
             height.EnsurePositiveOrZero(nameof(height));
             gfxConfig.EnsureNotNull(nameof(gfxConfig));
 
-            var desc = new DXGI.SwapChainDescription1()
+            var desc = new SwapChainDescription1()
             {
                 Width = width,
                 Height = height,
                 Format = GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT,
                 Stereo = false,
-                SampleDescription = new DXGI.SampleDescription(1, 0),
-                Usage = DXGI.Usage.Backbuffer | DXGI.Usage.RenderTargetOutput,
+                SampleDescription = new SampleDescription(1, 0),
+                Usage = Usage.Backbuffer | Usage.RenderTargetOutput,
                 BufferCount = 2,
-                Scaling = DXGI.Scaling.Stretch,
-                SwapEffect = DXGI.SwapEffect.FlipSequential,
-                AlphaMode = gfxConfig.AlphaEnabledSwapChain ? DXGI.AlphaMode.Premultiplied : DXGI.AlphaMode.Ignore
+                Scaling = Scaling.Stretch,
+                SwapEffect = SwapEffect.FlipSequential,
+                AlphaMode = gfxConfig.AlphaEnabledSwapChain ? AlphaMode.Premultiplied : AlphaMode.Ignore
             };
 
             return device.Internals.FactoryDxgi.CreateSwapChainForComposition(device.Internals.DeviceD3D11_1, desc);

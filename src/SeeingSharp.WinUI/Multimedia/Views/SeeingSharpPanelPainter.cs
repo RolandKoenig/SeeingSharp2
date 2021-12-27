@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Threading;
 using System.Numerics;
+using System.Threading;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -13,10 +13,11 @@ using SeeingSharp.Input;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 using SharpGen.Runtime;
-using WinUI = Vortice.WinUI;
-using DXGI = Vortice.DXGI;
+using Vortice.DXGI;
 using D3D11 = Vortice.Direct3D11;
 using GDI = System.Drawing;
+using ISwapChainPanelNative = Vortice.WinUI.ISwapChainPanelNative;
+using Viewport = Vortice.Mathematics.Viewport;
 
 namespace SeeingSharp.Views
 {
@@ -27,13 +28,13 @@ namespace SeeingSharp.Views
 
         // SwapChainPanel local members
         private SwapChainPanel _targetPanel;
-        private WinUI.ISwapChainPanelNative _panelNative;
+        private ISwapChainPanelNative _panelNative;
         private GDI.SizeF _lastRefreshTargetSize;
         private bool _compositionScaleChanged;
         private DateTime _lastSizeChange;
 
         // Resources from Direct3D 11
-        private DXGI.IDXGISwapChain1 _swapChain;
+        private IDXGISwapChain1 _swapChain;
         private D3D11.ID3D11Texture2D _backBuffer;
         private D3D11.ID3D11Texture2D _backBufferMultisampled;
         private D3D11.ID3D11Texture2D _depthBuffer;
@@ -163,7 +164,7 @@ namespace SeeingSharp.Views
             _lastRefreshTargetSize = new GDI.SizeF(0f, 0f);
             _targetPanel = targetPanel;
 
-            _panelNative = ComObject.As<WinUI.ISwapChainPanelNative>(_targetPanel);
+            _panelNative = ComObject.As<ISwapChainPanelNative>(_targetPanel);
 
             _targetPanel.SizeChanged += this.OnTargetPanel_SizeChanged;
             _targetPanel.Loaded += this.OnTargetPanel_Loaded;
@@ -279,7 +280,7 @@ namespace SeeingSharp.Views
                 viewSize.Height);
         }
 
-        private void SetSwapChain(DXGI.IDXGISwapChain1 swapChain)
+        private void SetSwapChain(IDXGISwapChain1 swapChain)
         {
             if (_panelNative != null)
             {
@@ -377,7 +378,7 @@ namespace SeeingSharp.Views
         /// <summary>
         /// Create all view resources.
         /// </summary>
-        Tuple<D3D11.ID3D11Texture2D, D3D11.ID3D11RenderTargetView, D3D11.ID3D11Texture2D, D3D11.ID3D11DepthStencilView, Vortice.Mathematics.Viewport, GDI.Size, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice engineDevice)
+        Tuple<D3D11.ID3D11Texture2D, D3D11.ID3D11RenderTargetView, D3D11.ID3D11Texture2D, D3D11.ID3D11DepthStencilView, Viewport, GDI.Size, DpiScaling> IRenderLoopHost.OnRenderLoop_CreateViewResources(EngineDevice engineDevice)
         {
             _backBufferMultisampled = null;
 
@@ -449,7 +450,7 @@ namespace SeeingSharp.Views
                 if (_compositionScaleChanged)
                 {
                     _compositionScaleChanged = false;
-                    var swapChain2 = _swapChain.QueryInterfaceOrNull<DXGI.IDXGISwapChain2>();
+                    var swapChain2 = _swapChain.QueryInterfaceOrNull<IDXGISwapChain2>();
                     if (swapChain2 != null)
                     {
                         try
@@ -499,7 +500,7 @@ namespace SeeingSharp.Views
             // First parameter indicates synchronization with vertical blank
             //  see http://msdn.microsoft.com/en-us/library/windows/desktop/bb174576(v=vs.85).aspx
             //  see example http://msdn.microsoft.com/en-us/library/windows/apps/hh825871.aspx
-            _swapChain.Present(1, DXGI.PresentFlags.None);
+            _swapChain.Present(1, PresentFlags.None);
         }
 
         /// <summary>

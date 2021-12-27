@@ -252,10 +252,10 @@ namespace SeeingSharp.WinFormsSamples
         {
             if (!e.IsSelected)
             {
-                e.Item.BackColor = System.Drawing.Color.Transparent;
+                e.Item.BackColor = Color.Transparent;
                 return;
             }
-            e.Item.BackColor = System.Drawing.Color.LightBlue;
+            e.Item.BackColor = Color.LightBlue;
 
             var actListView = sender as ListView;
             actListView.EnsureNotNull(nameof(actListView));

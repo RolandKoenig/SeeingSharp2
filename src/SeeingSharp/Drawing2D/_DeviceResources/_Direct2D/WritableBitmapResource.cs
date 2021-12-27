@@ -3,7 +3,8 @@ using System.Drawing;
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
-using DXGI = Vortice.DXGI;
+using Vortice.DCommon;
+using Vortice.DXGI;
 using D2D = Vortice.Direct2D1;
 
 namespace SeeingSharp.Drawing2D
@@ -12,7 +13,7 @@ namespace SeeingSharp.Drawing2D
     {
         // Configuration
         private Size _bitmapSize;
-        private Vortice.DCommon.PixelFormat _pixelFormat;
+        private PixelFormat _pixelFormat;
         private double _dpiX;
         private double _dpiY;
 
@@ -48,8 +49,8 @@ namespace SeeingSharp.Drawing2D
         {
             _loadedBitmaps = new D2D.ID2D1Bitmap[GraphicsCore.Current.DeviceCount];
             _bitmapSize = bitmapSize;
-            _pixelFormat = new Vortice.DCommon.PixelFormat(
-                (DXGI.Format)format,
+            _pixelFormat = new PixelFormat(
+                (Format)format,
                 (Vortice.DCommon.AlphaMode)alphaMode);
             _dpiX = dpiX;
             _dpiY = dpiY;
@@ -86,7 +87,7 @@ namespace SeeingSharp.Drawing2D
 
                 // Load the bitmap initially
                 result = engineDevice.FakeRenderTarget2D.CreateBitmap(
-                    new System.Drawing.Size(_bitmapSize.Width, _bitmapSize.Height),
+                    new Size(_bitmapSize.Width, _bitmapSize.Height),
                     mapped.Pointer, mapped.Width * 4,
                     new D2D.BitmapProperties(_pixelFormat, (float)_dpiX, (float)_dpiY));
                 _loadedBitmaps[engineDevice.DeviceIndex] = result;

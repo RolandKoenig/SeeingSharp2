@@ -1,5 +1,5 @@
-﻿using SeeingSharp.Core;
-using SeeingSharp.Core.Devices;
+﻿using SeeingSharp.Core.Devices;
+using Vortice.Direct2D1.Effects;
 using D2D = Vortice.Direct2D1;
 
 namespace SeeingSharp.Drawing2D
@@ -32,7 +32,7 @@ namespace SeeingSharp.Drawing2D
         protected override D2D.ID2D1Effect BuildEffect(EngineDevice device)
         {
             
-            var dirBlurEffect = new Vortice.Direct2D1.Effects.DirectionalBlur(device.DeviceContextD2D)
+            var dirBlurEffect = new DirectionalBlur(device.DeviceContextD2D)
             {
                 Angle = this.Angle,
                 BorderMode = D2D.BorderMode.Soft,

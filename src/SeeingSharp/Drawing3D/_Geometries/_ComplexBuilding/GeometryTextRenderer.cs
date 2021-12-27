@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 using System.Numerics;
 using SeeingSharp.Core;
 using SeeingSharp.Drawing3D.Primitives;
 using SeeingSharp.Mathematics;
 using SharpGen.Runtime;
+using Vortice.DCommon;
 using D2D = Vortice.Direct2D1;
 using DWrite = Vortice.DirectWrite;
 
@@ -44,7 +45,7 @@ namespace SeeingSharp.Drawing3D
         /// </remarks>
         public override void DrawGlyphRun(
             IntPtr clientDrawingContext, float baselineOriginX, float baselineOriginY,
-            Vortice.DCommon.MeasuringMode measuringMode, DWrite.GlyphRun glyphRun, DWrite.GlyphRunDescription glyphRunDescription, IUnknown clientDrawingEffect)
+            MeasuringMode measuringMode, DWrite.GlyphRun glyphRun, DWrite.GlyphRunDescription glyphRunDescription, IUnknown clientDrawingEffect)
         {
             if (glyphRun.Indices == null ||
                 glyphRun.Indices.Length == 0)

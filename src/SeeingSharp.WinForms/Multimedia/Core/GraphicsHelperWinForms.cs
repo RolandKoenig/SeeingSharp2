@@ -3,7 +3,7 @@ using SeeingSharp.Checking;
 using SeeingSharp.Core.Configuration;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
-using DXGI = Vortice.DXGI;
+using Vortice.DXGI;
 using D3D11 = Vortice.Direct3D11;
 using GDI = System.Drawing;
 using WinForms = System.Windows.Forms;
@@ -47,14 +47,14 @@ namespace SeeingSharp.Core
         /// <param name="targetControl">Target control of the swap chain.</param>
         /// <param name="device">Graphics device.</param>
         /// <param name="gfxConfig">The current graphics configuration.</param>
-        internal static DXGI.IDXGISwapChain1 CreateSwapChainForWinForms(WinForms.Control targetControl, EngineDevice device, GraphicsViewConfiguration gfxConfig)
+        internal static IDXGISwapChain1 CreateSwapChainForWinForms(WinForms.Control targetControl, EngineDevice device, GraphicsViewConfiguration gfxConfig)
         {
             targetControl.EnsureNotNull(nameof(targetControl));
             device.EnsureNotNull(nameof(device));
             gfxConfig.EnsureNotNull(nameof(gfxConfig));
 
             // Create the swap chain description
-            var swapChainDesc = new DXGI.SwapChainDescription1();
+            var swapChainDesc = new SwapChainDescription1();
 
             if (gfxConfig.AntialiasingEnabled && device.IsStandardAntialiasingPossible)
             {
@@ -64,16 +64,16 @@ namespace SeeingSharp.Core
             else
             {
                 swapChainDesc.BufferCount = 2;
-                swapChainDesc.SampleDescription = new DXGI.SampleDescription(1, 0);
+                swapChainDesc.SampleDescription = new SampleDescription(1, 0);
             }
 
             // Set common parameters
             swapChainDesc.Width = targetControl.Width;
             swapChainDesc.Height = targetControl.Height;
             swapChainDesc.Format = GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT;
-            swapChainDesc.Scaling = DXGI.Scaling.Stretch;
-            swapChainDesc.SwapEffect = DXGI.SwapEffect.Discard;
-            swapChainDesc.Usage = DXGI.Usage.RenderTargetOutput;
+            swapChainDesc.Scaling = Scaling.Stretch;
+            swapChainDesc.SwapEffect = SwapEffect.Discard;
+            swapChainDesc.Usage = Usage.RenderTargetOutput;
 
             // Create and return the swap chain and the render target
             return device.Internals.FactoryDxgi.CreateSwapChainForHwnd(
@@ -130,7 +130,7 @@ namespace SeeingSharp.Core
                         Width = bitmap.Width,
                         Height = bitmap.Height,
                         ArraySize = 1,
-                        SampleDescription = new DXGI.SampleDescription(1, 0)
+                        SampleDescription = new SampleDescription(1, 0)
                     },
                     new D3D11.SubresourceData[]
                     {

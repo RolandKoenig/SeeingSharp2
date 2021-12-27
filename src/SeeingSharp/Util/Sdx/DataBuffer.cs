@@ -2,6 +2,7 @@
 // https://github.com/sharpdx/SharpDX
 
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using SharpGen.Runtime;
 using D3D = Vortice.Direct3D;
@@ -71,7 +72,7 @@ namespace SeeingSharp.Util.Sdx
         {
             unsafe
             {
-                System.Diagnostics.Debug.Assert(sizeInBytes > 0);
+                Debug.Assert(sizeInBytes > 0);
 
                 _buffer = (sbyte*)SdxUtilities.AllocateMemory(sizeInBytes);
                 _size = sizeInBytes;
@@ -102,7 +103,7 @@ namespace SeeingSharp.Util.Sdx
 
         internal unsafe DataBuffer(void* buffer, int sizeInBytes, GCHandle handle)
         {
-            System.Diagnostics.Debug.Assert(sizeInBytes > 0);
+            Debug.Assert(sizeInBytes > 0);
 
             _buffer = (sbyte*)buffer;
             _size = sizeInBytes;
@@ -112,7 +113,7 @@ namespace SeeingSharp.Util.Sdx
 
         internal unsafe DataBuffer(void* buffer, int sizeInBytes, bool makeCopy)
         {
-            System.Diagnostics.Debug.Assert(sizeInBytes > 0);
+            Debug.Assert(sizeInBytes > 0);
 
             if (makeCopy)
             {
@@ -129,7 +130,7 @@ namespace SeeingSharp.Util.Sdx
 
         internal unsafe DataBuffer(D3D.Blob buffer)
         {
-            System.Diagnostics.Debug.Assert(buffer.BufferSize > 0);
+            Debug.Assert(buffer.BufferSize > 0);
 
             _buffer = (sbyte*)buffer.BufferPointer;
             _size = buffer.BufferSize;

@@ -4,7 +4,7 @@
 using System;
 using System.Runtime.InteropServices;
 using SeeingSharp.Util.Sdx;
-using DXGI = Vortice.DXGI;
+using Vortice.DXGI;
 using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Util.SdxTK
@@ -199,7 +199,7 @@ namespace SeeingSharp.Util.SdxTK
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct HeaderDXT10
         {
-            public DXGI.Format DXGIFormat;
+            public Format DXGIFormat;
             public D3D11.ResourceDimension ResourceDimension;
             public D3D11.ResourceOptionFlags MiscFlags;
             public int ArraySize;

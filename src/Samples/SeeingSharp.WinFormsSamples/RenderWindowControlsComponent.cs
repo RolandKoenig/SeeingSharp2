@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
-using SeeingSharp.Mathematics;
 using SeeingSharp.Views;
 
 namespace SeeingSharp.WinFormsSamples

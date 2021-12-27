@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
 using D3D11 = Vortice.Direct3D11;

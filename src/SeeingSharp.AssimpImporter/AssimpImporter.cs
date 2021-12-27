@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Numerics;
+using Assimp;
 using SeeingSharp.Core;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Util;
+using Matrix4x4 = System.Numerics.Matrix4x4;
+using Mesh = SeeingSharp.Drawing3D.Mesh;
+using Scene = Assimp.Scene;
 
 namespace SeeingSharp.AssimpImporter
 {
@@ -19,11 +22,11 @@ namespace SeeingSharp.AssimpImporter
             var modelContainer = new ImportedModelContainer(sourceFile, importOptions);
 
             // Load Assimp scene
-            using var assimpContext = new Assimp.AssimpContext();
+            using var assimpContext = new AssimpContext();
             assimpContext.SetIOSystem(new AssimpIOSystem(sourceFile));
             var scene = assimpContext.ImportFile(
                 sourceFile.FileNameWithExtension,
-                Assimp.PostProcessPreset.TargetRealTimeFast | Assimp.PostProcessSteps.SplitLargeMeshes);
+                PostProcessPreset.TargetRealTimeFast | PostProcessSteps.SplitLargeMeshes);
 
             // Load all materials
             ProcessMaterials(modelContainer, scene);
@@ -43,7 +46,7 @@ namespace SeeingSharp.AssimpImporter
             return new AssimpImportOptions();
         }
 
-        private static void ProcessMaterials(ImportedModelContainer modelContainer, Assimp.Scene scene)
+        private static void ProcessMaterials(ImportedModelContainer modelContainer, Scene scene)
         {
             var materialCount = scene.MaterialCount;
             for(var materialIndex=0; materialIndex < materialCount; materialIndex++)
@@ -69,7 +72,7 @@ namespace SeeingSharp.AssimpImporter
 
         private static void ProcessNode(
             ImportedModelContainer modelContainer,
-            Assimp.Scene scene, Assimp.Node actNode, SceneObject actParent, 
+            Scene scene, Node actNode, SceneObject actParent, 
             ObjectTreeBoundingBoxCalculator boundingBoxCalc)
         {
             SceneObject nextParent = null;
@@ -96,13 +99,13 @@ namespace SeeingSharp.AssimpImporter
                     var actBaseVertex = newGeometry.CountVertices;
                     var actMesh = scene.Meshes[actMeshId];
 
-                    List<Assimp.Color4D> vertexColors = null;
+                    List<Color4D> vertexColors = null;
                     if (actMesh.HasVertexColors(0))
                     {
                         vertexColors = actMesh.VertexColorChannels[0];
                     }
 
-                    List<Assimp.Vector3D> textureCoords1 = null;
+                    List<Vector3D> textureCoords1 = null;
                     if (actMesh.TextureCoordinateChannelCount > 0)
                     {
                         textureCoords1 = actMesh.TextureCoordinateChannels[0];

@@ -87,7 +87,7 @@ namespace SeeingSharp.Drawing3D
             var minY = float.MaxValue;
             var maxY = float.MinValue;
             var minPoint = Vector2.Zero;
-            void UpdateMinWidthHeight(System.Drawing.PointF actCorner)
+            void UpdateMinWidthHeight(PointF actCorner)
             {
                 if (actCorner.X < minX) { minX = actCorner.X; }
                 if (actCorner.X > maxX) { maxX = actCorner.X; }
@@ -134,9 +134,9 @@ namespace SeeingSharp.Drawing3D
                     for (var loop = 0; loop < actTriangleArray.Length; loop++)
                     {
                         var actTriangle = actTriangleArray[loop];
-                        actTriangle.Point1 = new System.Drawing.PointF(actTriangle.Point1.X * scaleFactorX, actTriangle.Point1.Y * scaleFactorY);
-                        actTriangle.Point2 = new System.Drawing.PointF(actTriangle.Point2.X * scaleFactorX, actTriangle.Point2.Y * scaleFactorY);
-                        actTriangle.Point3 = new System.Drawing.PointF(actTriangle.Point3.X * scaleFactorX, actTriangle.Point3.Y * scaleFactorY);
+                        actTriangle.Point1 = new PointF(actTriangle.Point1.X * scaleFactorX, actTriangle.Point1.Y * scaleFactorY);
+                        actTriangle.Point2 = new PointF(actTriangle.Point2.X * scaleFactorX, actTriangle.Point2.Y * scaleFactorY);
+                        actTriangle.Point3 = new PointF(actTriangle.Point3.X * scaleFactorX, actTriangle.Point3.Y * scaleFactorY);
 
                         actTriangleArray[loop] = actTriangle;
                     }

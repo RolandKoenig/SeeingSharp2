@@ -1,5 +1,4 @@
 ﻿using System;
-using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 
 namespace SeeingSharp.Drawing2D

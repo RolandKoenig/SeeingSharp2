@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using DXGI = Vortice.DXGI;
+using SharpGen.Runtime;
+using Vortice.DXGI;
 using D3D = Vortice.Direct3D;
 using D3D11 = Vortice.Direct3D11;
 
@@ -8,7 +9,7 @@ namespace SeeingSharp.Core.HardwareInfo
 {
     public class EngineAdapterInfo
     {
-        private DXGI.AdapterDescription _adapterDescription;
+        private AdapterDescription _adapterDescription;
         private D3D.FeatureLevel _d3d11FeatureLevel;
 
         /// <summary>
@@ -41,7 +42,7 @@ namespace SeeingSharp.Core.HardwareInfo
         /// <summary>
         /// Initializes a new instance of the <see cref="EngineAdapterInfo" /> class.
         /// </summary>
-        internal EngineAdapterInfo(int adapterIndex, DXGI.IDXGIAdapter1 adapter)
+        internal EngineAdapterInfo(int adapterIndex, IDXGIAdapter1 adapter)
         {
             this.Outputs = new List<EngineOutputInfo>();
             this.AdapterIndex = adapterIndex;
@@ -54,7 +55,7 @@ namespace SeeingSharp.Core.HardwareInfo
             _d3d11FeatureLevel = D3D11.D3D11.GetSupportedFeatureLevel(adapter);
 
             //Query for output information
-            var lastResult = SharpGen.Runtime.Result.Ok;
+            var lastResult = Result.Ok;
             var actIndex = 0;
             do
             {

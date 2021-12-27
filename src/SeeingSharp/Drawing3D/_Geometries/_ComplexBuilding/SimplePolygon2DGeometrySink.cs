@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Drawing;
 using System.Numerics;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
@@ -55,7 +56,7 @@ namespace SeeingSharp.Drawing3D
         /// </summary>
         /// <param name="point">The end point of the line to draw.</param>
         /// <unmanaged>void AddLine([None] D2D1_POINT_2F point)</unmanaged>
-        public void AddLine(System.Drawing.PointF point)
+        public void AddLine(PointF point)
         {
             _currentPolygonBuilder.Add(new Vector2(point.X, point.Y) - _origin);
         }
@@ -98,7 +99,7 @@ namespace SeeingSharp.Drawing3D
         /// </summary>
         /// <param name="pointsRef">A pointer to an array of one or more points that describe the lines to draw. A line is drawn from the geometry sink's current point (the end point of the last segment drawn or the location specified by {{BeginFigure}}) to the first point in the array. if the array contains additional points, a line is drawn from the first point to the second point in the array, from the second point to the third point, and so on.</param>
         /// <unmanaged>void AddLines([In, Buffer] const D2D1_POINT_2F* points,[None] UINT pointsCount)</unmanaged>
-        public void AddLines(System.Drawing.PointF[] pointsRef)
+        public void AddLines(PointF[] pointsRef)
         {
             for (var loop = 0; loop < pointsRef.Length; loop++)
             {
@@ -115,7 +116,7 @@ namespace SeeingSharp.Drawing3D
         /// <remarks>
         /// If this method is called while a figure is currently in progress, the interface is invalidated and all future methods will fail.
         /// </remarks>
-        public void BeginFigure(System.Drawing.PointF startPoint, D2D.FigureBegin figureBegin)
+        public void BeginFigure(PointF startPoint, D2D.FigureBegin figureBegin)
         {
             _currentPolygonBuilder.Clear();
             _currentPolygonBuilder.Add(new Vector2(startPoint.X, startPoint.Y) - _origin);

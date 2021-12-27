@@ -1,6 +1,4 @@
-﻿using BenchmarkDotNet.Running;
-
-namespace SeeingSharp.Benchmarks.Math
+﻿namespace SeeingSharp.Benchmarks.Math
 {
     class Program
     {

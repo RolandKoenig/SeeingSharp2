@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Numerics;
+using SeeingSharp.Checking;
 using System.Text;
 using System.Text.RegularExpressions;
-using SeeingSharp.Checking;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 

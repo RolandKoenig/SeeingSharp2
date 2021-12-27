@@ -1,25 +1,29 @@
-﻿using SeeingSharp.Checking;
-using SeeingSharp.Drawing2D;
-using SeeingSharp.Drawing3D;
-using SeeingSharp.DrawingVideo;
-using SeeingSharp.Input;
-using SeeingSharp.Util;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Drawing;
-using System.Linq;
 using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
+using SeeingSharp.Checking;
 using SeeingSharp.Core.Configuration;
 using SeeingSharp.Core.Devices;
+using SeeingSharp.Drawing2D;
+using SeeingSharp.Drawing3D;
+using SeeingSharp.DrawingVideo;
+using SeeingSharp.Input;
 using SeeingSharp.Mathematics;
-using DXGI = Vortice.DXGI;
+using SeeingSharp.Util;
+using SharpGen.Runtime;
+using Vortice.DXGI;
+using BoundingBox = SeeingSharp.Mathematics.BoundingBox;
+using Color4 = SeeingSharp.Mathematics.Color4;
 using D2D = Vortice.Direct2D1;
 using D3D11 = Vortice.Direct3D11;
+using Viewport = Vortice.Mathematics.Viewport;
 
 namespace SeeingSharp.Core
 {
@@ -69,7 +73,7 @@ namespace SeeingSharp.Core
         private D3D11.ID3D11Texture2D _renderTargetDepth;
         private D3D11.ID3D11RenderTargetView _renderTargetView;
         private D3D11.ID3D11DepthStencilView _renderTargetDepthView;
-        private Vortice.Mathematics.Viewport _viewport;
+        private Viewport _viewport;
         private int _loadDeviceIndex;
 
         // Cached values
@@ -856,7 +860,7 @@ namespace SeeingSharp.Core
             _renderTargetView = null;
             _renderTargetDepth = null;
             _renderTargetDepthView = null;
-            _viewport = new Vortice.Mathematics.Viewport();
+            _viewport = new Viewport();
             _currentViewSize = new Size(SeeingSharpConstants.MIN_VIEW_WIDTH, SeeingSharpConstants.MIN_VIEW_HEIGHT);
 
             // Dispose local resources
@@ -1094,7 +1098,7 @@ namespace SeeingSharp.Core
                             {
                                 _d2dOverlay.EndDraw();
                             }
-                            catch (SharpGen.Runtime.SharpGenException dxException)
+                            catch (SharpGenException dxException)
                             {
                                 if (dxException.ResultCode == D2D.ResultCode.RecreateTarget)
                                 {
@@ -1211,10 +1215,10 @@ namespace SeeingSharp.Core
                     {
                         this.RefreshViewResources();
                     }
-                    catch (SharpGen.Runtime.SharpGenException dxException)
+                    catch (SharpGenException dxException)
                     {
-                        if (dxException.ResultCode == DXGI.ResultCode.DeviceRemoved ||
-                            dxException.ResultCode == DXGI.ResultCode.DeviceReset)
+                        if (dxException.ResultCode == ResultCode.DeviceRemoved ||
+                            dxException.ResultCode == ResultCode.DeviceReset)
                         {
                             // Mark the device as lost
                             _currentDevice.IsLost = true;
@@ -1467,10 +1471,10 @@ namespace SeeingSharp.Core
                     // Finish rendering now
                     _renderLoopHost.OnRenderLoop_AfterRendering(_currentDevice);
                 }
-                catch (SharpGen.Runtime.SharpGenException dxException)
+                catch (SharpGenException dxException)
                 {
-                    if (dxException.ResultCode == DXGI.ResultCode.DeviceRemoved ||
-                        dxException.ResultCode == DXGI.ResultCode.DeviceReset)
+                    if (dxException.ResultCode == ResultCode.DeviceRemoved ||
+                        dxException.ResultCode == ResultCode.DeviceReset)
                     {
                         // Mark the device as lost
                         _currentDevice.IsLost = true;

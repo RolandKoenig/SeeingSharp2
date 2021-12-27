@@ -8,7 +8,6 @@ using SeeingSharp.Util;
 using Vortice.DXGI;
 using D3D11 = Vortice.Direct3D11;
 using D3D9 = Vortice.Direct3D9;
-using DXGI = Vortice.DXGI;
 
 namespace SeeingSharp.Views
 {
@@ -110,7 +109,7 @@ namespace SeeingSharp.Views
         {
             texture.EnsureNotNull(nameof(texture));
 
-            using (var resource = texture.QueryInterface<DXGI.IDXGIResource>())
+            using (var resource = texture.QueryInterface<IDXGIResource>())
             {
                 return resource.SharedHandle;
             }

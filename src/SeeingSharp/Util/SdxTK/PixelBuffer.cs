@@ -1,10 +1,10 @@
 ﻿// This code is ported from SharpDX.Toolkit
 // see: https://github.com/sharpdx/Toolkit
 
-using SeeingSharp.Util.Sdx;
 using System;
 using System.IO;
-using DXGI = Vortice.DXGI;
+using SeeingSharp.Util.Sdx;
+using Vortice.DXGI;
 
 namespace SeeingSharp.Util.SdxTK
 {
@@ -13,7 +13,7 @@ namespace SeeingSharp.Util.SdxTK
     /// </summary>
     internal sealed class PixelBuffer
     {
-        private DXGI.Format format;
+        private Format format;
 
         /// <summary>
         /// True when RowStride == sizeof(pixelformat) * width
@@ -36,12 +36,12 @@ namespace SeeingSharp.Util.SdxTK
         /// Gets the format (this value can be changed)
         /// </summary>
         /// <value>The format.</value>
-        public DXGI.Format Format
+        public Format Format
         {
             get => format;
             set
             {
-                if (this.PixelSize != DXGI.FormatHelper.SizeOfInBytes(value))
+                if (this.PixelSize != FormatHelper.SizeOfInBytes(value))
                 {
                     throw new ArgumentException(
                         $"Format [{value}] doesn't have same pixel size in bytes than current format [{format}]");
@@ -83,7 +83,7 @@ namespace SeeingSharp.Util.SdxTK
         /// <param name="rowStride">The row pitch.</param>
         /// <param name="bufferStride">The slice pitch.</param>
         /// <param name="dataPointer">The pixels.</param>
-        public PixelBuffer(int width, int height, DXGI.Format format, int rowStride, int bufferStride, IntPtr dataPointer)
+        public PixelBuffer(int width, int height, Format format, int rowStride, int bufferStride, IntPtr dataPointer)
         {
             if (dataPointer == IntPtr.Zero)
             {
@@ -96,7 +96,7 @@ namespace SeeingSharp.Util.SdxTK
             this.RowStride = rowStride;
             this.BufferStride = bufferStride;
             this.DataPointer = dataPointer;
-            this.PixelSize = DXGI.FormatHelper.SizeOfInBytes(this.format);
+            this.PixelSize = FormatHelper.SizeOfInBytes(this.format);
             isStrictRowStride = this.PixelSize * width == rowStride;
         }
 
@@ -113,7 +113,7 @@ namespace SeeingSharp.Util.SdxTK
             // Check that buffers are identical
             if (this.Width != pixelBuffer.Width
                 || this.Height != pixelBuffer.Height
-                || this.PixelSize != DXGI.FormatHelper.SizeOfInBytes(pixelBuffer.Format))
+                || this.PixelSize != FormatHelper.SizeOfInBytes(pixelBuffer.Format))
             {
                 throw new ArgumentException("Invalid destination pixelBufferArray. Mush have same Width, Height and Format", "pixelBuffer");
             }

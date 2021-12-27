@@ -1,19 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Numerics;
-using System.Windows.Forms;
-using SeeingSharp;
-using SeeingSharp.Components;
-using SeeingSharp.Components.Input;
-using SeeingSharp.Core;
 using SeeingSharp.Core.Animations;
 using SeeingSharp.Drawing3D;
+using System.Text;
+using System.Windows.Forms;
+using SeeingSharp.Components.Input;
 using SeeingSharp.Drawing3D.Primitives;
 using SeeingSharp.Mathematics;
 
@@ -23,7 +15,7 @@ namespace GettingStarted.WinForms
     {
         public MainWindow()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         /// <inheritdoc />
