@@ -286,14 +286,18 @@ namespace SeeingSharp.Drawing3D
                 if (_creationMode.HasFlag(RenderTargetCreationMode.Color))
                 {
                     renderState.Device.DeviceImmediateContextD3D11.ResolveSubresource(
-                        _colorBuffer, 0, _colorBufferShaderResource, 0, GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT);
+                        _colorBufferShaderResource, 0, 
+                        _colorBuffer, 0,
+                        GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT);
                 }
 
                 // Resolve normal-depth buffer
                 if (_creationMode.HasFlag(RenderTargetCreationMode.NormalDepth))
                 {
                     renderState.Device.DeviceImmediateContextD3D11.ResolveSubresource(
-                        _normalDepthBuffer, 0, _normalDepthBufferShaderResource, 0, GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT_NORMAL_DEPTH);
+                        _normalDepthBufferShaderResource, 0, 
+                        _normalDepthBuffer, 0,
+                        GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT_NORMAL_DEPTH);
                 }
             }
         }

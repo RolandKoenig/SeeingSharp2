@@ -95,7 +95,7 @@ namespace SeeingSharp.Drawing3D
             // Create default depth stencil state
             _depthStencilStateDefault = new Lazy<D3D11.ID3D11DepthStencilState>(() =>
             {
-                var stateDesc = D3D11.DepthStencilDescription.Default;
+                var stateDesc = CreateDefaultDepthStencilDescription();
                 stateDesc.DepthFunc = D3D11.ComparisonFunction.LessEqual;
                 return device.DeviceD3D11_1.CreateDepthStencilState(stateDesc);
             });
@@ -103,7 +103,7 @@ namespace SeeingSharp.Drawing3D
             // Create the depth stencil state for disabling z writes
             _depthStencilStateDisableZWrites = new Lazy<D3D11.ID3D11DepthStencilState>(() =>
             {
-                var stateDesc = D3D11.DepthStencilDescription.Default;
+                var stateDesc = CreateDefaultDepthStencilDescription();
                 stateDesc.DepthWriteMask = D3D11.DepthWriteMask.Zero;
                 stateDesc.DepthFunc = D3D11.ComparisonFunction.LessEqual;
                 return device.DeviceD3D11_1.CreateDepthStencilState(stateDesc);
@@ -111,7 +111,7 @@ namespace SeeingSharp.Drawing3D
 
             _depthStencilStateAlwaysPass = new Lazy<D3D11.ID3D11DepthStencilState>(() =>
             {
-                var stateDesc = D3D11.DepthStencilDescription.Default;
+                var stateDesc = CreateDefaultDepthStencilDescription();
                 stateDesc.DepthWriteMask = D3D11.DepthWriteMask.Zero;
                 stateDesc.DepthFunc = D3D11.ComparisonFunction.Always;
                 stateDesc.DepthEnable = false;
@@ -121,7 +121,7 @@ namespace SeeingSharp.Drawing3D
             // Create the depth stencil state for inverting z logic
             _depthStencilStateInvertedZTest = new Lazy<D3D11.ID3D11DepthStencilState>(() =>
             {
-                var stateDesc = D3D11.DepthStencilDescription.Default;
+                var stateDesc = CreateDefaultDepthStencilDescription();
                 stateDesc.DepthFunc = D3D11.ComparisonFunction.Greater;
                 stateDesc.DepthWriteMask = D3D11.DepthWriteMask.Zero;
                 return device.DeviceD3D11_1.CreateDepthStencilState(stateDesc);
@@ -219,7 +219,7 @@ namespace SeeingSharp.Drawing3D
         /// Returns default values for <see cref="D3D11.RasterizerDescription"/>.
         /// Original code from https://github.com/sharpdx/SharpDX/blob/master/Source/SharpDX.Direct3D11/RasterizerStateDescription.cs
         /// </summary>
-        internal static D3D11.RasterizerDescription CreateDefaultRasterizerDescription()
+        private static D3D11.RasterizerDescription CreateDefaultRasterizerDescription()
         {
             return new D3D11.RasterizerDescription()
             {
@@ -240,7 +240,7 @@ namespace SeeingSharp.Drawing3D
         /// Returns default values for <see cref="D3D11.BlendDescription"/>.
         /// Original code from https://github.com/sharpdx/SharpDX/blob/master/Source/SharpDX.Direct3D11/BlendStateDescription.cs
         /// </summary>
-        internal static D3D11.BlendDescription CreateDefaultBlendDescription()
+        private static D3D11.BlendDescription CreateDefaultBlendDescription()
         {
             var description = new D3D11.BlendDescription()
             {
@@ -263,6 +263,37 @@ namespace SeeingSharp.Drawing3D
             }
 
             return description;
+        }
+
+        /// <summary>
+        /// Returns default values for <see cref="D3D11.DepthStencilDescription"/>.
+        /// Original code from https://github.com/sharpdx/SharpDX/blob/master/Source/SharpDX.Direct3D11/DepthStencilStateDescription.cs
+        /// </summary>
+        private static D3D11.DepthStencilDescription CreateDefaultDepthStencilDescription()
+        {
+            return new D3D11.DepthStencilDescription()
+            {
+                DepthEnable = true,
+                DepthWriteMask = D3D11.DepthWriteMask.All, 
+                DepthFunc = D3D11.ComparisonFunction.Less,
+                StencilEnable = false,
+                StencilReadMask = 0xFF,
+                StencilWriteMask = 0xFF,
+                FrontFace = new D3D11.DepthStencilOperationDescription()
+                {
+                    StencilFunc = D3D11.ComparisonFunction.Always,
+                    StencilDepthFailOp = D3D11.StencilOperation.Keep,
+                    StencilFailOp = D3D11.StencilOperation.Keep,
+                    StencilPassOp = D3D11.StencilOperation.Keep
+                },
+                BackFace = new D3D11.DepthStencilOperationDescription()
+                {
+                    StencilFunc = D3D11.ComparisonFunction.Always,
+                    StencilDepthFailOp = D3D11.StencilOperation.Keep,
+                    StencilFailOp = D3D11.StencilOperation.Keep,
+                    StencilPassOp = D3D11.StencilOperation.Keep
+                }
+            };
         }
     }
 }
