@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SeeingSharp.Drawing3D
+namespace SeeingSharp.Drawing3D.ImportExport
 {
     internal class ACFileInfo
     {

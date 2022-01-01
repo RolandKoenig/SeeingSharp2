@@ -1,7 +1,7 @@
 ﻿using SeeingSharp.Drawing3D.Resources;
 using SeeingSharp.Util;
 
-namespace SeeingSharp.Drawing3D
+namespace SeeingSharp.Drawing3D.ImportExport
 {
     [SupportedFileFormat("ac", "AC3D native format")]
     public class ACImporter : IModelImporter

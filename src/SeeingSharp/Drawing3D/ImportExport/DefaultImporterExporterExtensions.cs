@@ -6,7 +6,7 @@ using SeeingSharp.Core.Devices;
 using SeeingSharp.Core.HardwareInfo;
 using SeeingSharp.Input;
 
-namespace SeeingSharp.Drawing3D
+namespace SeeingSharp.Drawing3D.ImportExport
 {
     public class DefaultImporterExporterExtensions : ISeeingSharpExtensions
     {

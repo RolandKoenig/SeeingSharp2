@@ -1,6 +1,6 @@
 ﻿using SeeingSharp.Core;
 
-namespace SeeingSharp.Drawing3D
+namespace SeeingSharp.Drawing3D.ImportExport
 {
     public struct ParentChildRelationship
     {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
 
-namespace SeeingSharp.Drawing3D
+namespace SeeingSharp.Drawing3D.ImportExport
 {
     internal class ACSurface
     {

@@ -4,7 +4,7 @@ using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Core.Animations;
 using SeeingSharp.Core.Devices;
-using SeeingSharp.Drawing3D;
+using SeeingSharp.Drawing3D.ImportExport;
 using SeeingSharp.Input;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;

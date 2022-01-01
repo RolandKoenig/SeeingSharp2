@@ -6,7 +6,7 @@ using SeeingSharp.Core;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 
-namespace SeeingSharp.Drawing3D
+namespace SeeingSharp.Drawing3D.ImportExport
 {
     /// <summary>
     /// Container for imported model data.

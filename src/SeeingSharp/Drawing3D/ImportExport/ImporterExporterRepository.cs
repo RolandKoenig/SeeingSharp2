@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using SeeingSharp.Core;
 using SeeingSharp.Util;
 
-namespace SeeingSharp.Drawing3D
+namespace SeeingSharp.Drawing3D.ImportExport
 {
     public class ImporterExporterRepository
     {

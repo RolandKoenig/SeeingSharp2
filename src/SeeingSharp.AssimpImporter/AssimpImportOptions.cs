@@ -1,4 +1,4 @@
-﻿using SeeingSharp.Drawing3D;
+﻿using SeeingSharp.Drawing3D.ImportExport;
 
 namespace SeeingSharp.AssimpImporter
 {

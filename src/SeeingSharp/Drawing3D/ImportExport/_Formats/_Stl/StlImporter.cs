@@ -10,7 +10,7 @@ using SeeingSharp.Drawing3D.Resources;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 
-namespace SeeingSharp.Drawing3D
+namespace SeeingSharp.Drawing3D.ImportExport
 {
     // This code is based on HelixToolkit (MIT license)
     // https://github.com/helix-toolkit/helix-toolkit/blob/master/Source/HelixToolkit.Wpf/Importers/StLReader.cs

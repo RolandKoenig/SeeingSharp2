@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using SeeingSharp.Checking;
-using SeeingSharp.Drawing3D;
+using SeeingSharp.Drawing3D.ImportExport;
 using SeeingSharp.Util;
 
 namespace SeeingSharp.Core

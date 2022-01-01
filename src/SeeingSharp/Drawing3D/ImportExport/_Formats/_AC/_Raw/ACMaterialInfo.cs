@@ -1,6 +1,6 @@
 ﻿using SeeingSharp.Mathematics;
 
-namespace SeeingSharp.Drawing3D
+namespace SeeingSharp.Drawing3D.ImportExport
 {
     internal class ACMaterialInfo
     {

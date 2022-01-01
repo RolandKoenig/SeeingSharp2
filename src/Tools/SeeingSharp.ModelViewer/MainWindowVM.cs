@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using SeeingSharp.Components.Input;
 using SeeingSharp.Core;
-using SeeingSharp.Drawing3D;
+using SeeingSharp.Drawing3D.ImportExport;
 using SeeingSharp.Mathematics;
 using SeeingSharp.ModelViewer.Rendering;
 using SeeingSharp.ModelViewer.Util;

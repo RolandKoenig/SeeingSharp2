@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using SeeingSharp.Core;
-using SeeingSharp.Drawing3D;
+using SeeingSharp.Drawing3D.ImportExport;
 using SeeingSharp.ModelViewer.Util;
 
 namespace SeeingSharp.ModelViewer

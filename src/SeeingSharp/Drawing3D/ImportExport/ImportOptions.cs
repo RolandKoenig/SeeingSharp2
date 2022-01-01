@@ -2,7 +2,7 @@
 using SeeingSharp.Core;
 using SeeingSharp.Mathematics;
 
-namespace SeeingSharp.Drawing3D
+namespace SeeingSharp.Drawing3D.ImportExport
 {
     public class ImportOptions
     {

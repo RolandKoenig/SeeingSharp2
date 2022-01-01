@@ -1,4 +1,4 @@
-﻿namespace SeeingSharp.Drawing3D
+﻿namespace SeeingSharp.Drawing3D.ImportExport
 {
     public class ACImportOptions : ImportOptions
     {}

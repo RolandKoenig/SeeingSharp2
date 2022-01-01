@@ -7,7 +7,7 @@ using SeeingSharp.Drawing3D.Primitives;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 
-namespace SeeingSharp.Drawing3D
+namespace SeeingSharp.Drawing3D.ImportExport
 {
     public static class ACFileLoader
     {

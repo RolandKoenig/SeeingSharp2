@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SeeingSharp.Drawing3D
+namespace SeeingSharp.Drawing3D.ImportExport
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public class SupportedFileFormatAttribute : Attribute

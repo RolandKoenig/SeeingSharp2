@@ -3,7 +3,7 @@ using SeeingSharp.Checking;
 using SeeingSharp.Core;
 using SeeingSharp.Util;
 
-namespace SeeingSharp.Drawing3D
+namespace SeeingSharp.Drawing3D.ImportExport
 {
     /// <summary>
     /// Container for export model data.

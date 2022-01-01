@@ -1,6 +1,6 @@
 ﻿using SeeingSharp.Util;
 
-namespace SeeingSharp.Drawing3D
+namespace SeeingSharp.Drawing3D.ImportExport
 {
     /// <summary>
     /// All needed information for exported geometry.
