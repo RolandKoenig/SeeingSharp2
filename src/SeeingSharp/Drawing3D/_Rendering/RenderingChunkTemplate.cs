@@ -1,5 +1,6 @@
 ﻿using System;
 using SeeingSharp.Core.Devices;
+using SeeingSharp.Drawing3D.Geometries;
 using SeeingSharp.Drawing3D.Resources;
 using SeeingSharp.Util;
 using D3D11 = Vortice.Direct3D11;

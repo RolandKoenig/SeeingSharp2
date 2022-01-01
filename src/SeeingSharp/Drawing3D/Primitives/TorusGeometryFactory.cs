@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using SeeingSharp.Drawing3D.Geometries;
 
 namespace SeeingSharp.Drawing3D.Primitives
 {

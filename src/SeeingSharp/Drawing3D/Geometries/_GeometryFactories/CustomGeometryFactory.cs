@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SeeingSharp.Drawing3D
+namespace SeeingSharp.Drawing3D.Geometries
 {
     public class CustomGeometryFactory : GeometryFactory
     {

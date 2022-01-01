@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using SeeingSharp.Drawing3D.Geometries;
 
 namespace SeeingSharp.Drawing3D.Primitives
 {

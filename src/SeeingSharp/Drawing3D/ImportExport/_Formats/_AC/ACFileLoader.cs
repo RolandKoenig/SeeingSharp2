@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Numerics;
+using SeeingSharp.Drawing3D.Geometries;
 using SeeingSharp.Drawing3D.Primitives;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;

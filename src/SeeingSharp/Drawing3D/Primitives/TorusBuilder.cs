@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Numerics;
+using SeeingSharp.Drawing3D.Geometries;
 using SeeingSharp.Mathematics;
 
 namespace SeeingSharp.Drawing3D.Primitives

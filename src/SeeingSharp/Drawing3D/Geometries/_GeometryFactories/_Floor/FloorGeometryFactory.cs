@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using SeeingSharp.Drawing3D.Primitives;
 
-namespace SeeingSharp.Drawing3D
+namespace SeeingSharp.Drawing3D.Geometries
 {
     public class FloorGeometryFactory : GeometryFactory
     {

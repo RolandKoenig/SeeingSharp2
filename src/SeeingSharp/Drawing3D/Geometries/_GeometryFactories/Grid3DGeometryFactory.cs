@@ -1,7 +1,7 @@
 ﻿using System.Numerics;
 using SeeingSharp.Mathematics;
 
-namespace SeeingSharp.Drawing3D
+namespace SeeingSharp.Drawing3D.Geometries
 {
     public class Grid3DGeometryFactory : GeometryFactory
     {

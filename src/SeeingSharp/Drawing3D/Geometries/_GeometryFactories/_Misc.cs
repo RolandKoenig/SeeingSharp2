@@ -1,7 +1,7 @@
 ﻿using System;
 using SeeingSharp.Core;
 
-namespace SeeingSharp.Drawing3D
+namespace SeeingSharp.Drawing3D.Geometries
 {
     public struct GeometryBuildOptions
     {

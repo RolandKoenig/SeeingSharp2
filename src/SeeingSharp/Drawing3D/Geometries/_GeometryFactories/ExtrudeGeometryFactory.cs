@@ -5,7 +5,7 @@ using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 using D2D = Vortice.Direct2D1;
 
-namespace SeeingSharp.Drawing3D
+namespace SeeingSharp.Drawing3D.Geometries
 {
     public class ExtrudeGeometryFactory : GeometryFactory
     {

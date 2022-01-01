@@ -8,7 +8,7 @@ using System.Collections.ObjectModel;
 using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Core.Devices;
-using SeeingSharp.Drawing3D;
+using SeeingSharp.Drawing3D.Geometries;
 using SeeingSharp.Drawing3D.Primitives;
 using SeeingSharp.Drawing3D.Resources;
 using SeeingSharp.Mathematics;

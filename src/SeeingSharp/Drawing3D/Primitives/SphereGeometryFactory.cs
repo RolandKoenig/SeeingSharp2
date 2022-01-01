@@ -1,4 +1,6 @@
-﻿namespace SeeingSharp.Drawing3D.Primitives
+﻿using SeeingSharp.Drawing3D.Geometries;
+
+namespace SeeingSharp.Drawing3D.Primitives
 {
     public class SphereGeometryFactory : GeometryFactory
     {

@@ -6,7 +6,7 @@ using SeeingSharp.Util;
 using SharpGen.Runtime;
 using D2D = Vortice.Direct2D1;
 
-namespace SeeingSharp.Drawing3D
+namespace SeeingSharp.Drawing3D.Geometries
 {
     internal class SimplePolygon2DGeometrySink : DummyComObject, D2D.ID2D1GeometrySink, ICallbackable
     {

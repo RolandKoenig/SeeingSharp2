@@ -10,7 +10,7 @@ using Vortice.DCommon;
 using D2D = Vortice.Direct2D1;
 using DWrite = Vortice.DirectWrite;
 
-namespace SeeingSharp.Drawing3D
+namespace SeeingSharp.Drawing3D.Geometries
 {
     internal class GeometryTextRenderer : DWrite.TextRendererBase
     {

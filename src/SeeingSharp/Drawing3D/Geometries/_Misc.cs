@@ -3,7 +3,7 @@ using SeeingSharp.Drawing2D;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 
-namespace SeeingSharp.Drawing3D
+namespace SeeingSharp.Drawing3D.Geometries
 {
     /// <summary>
     /// Delegate used for accessing a tesselation function

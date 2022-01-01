@@ -7,7 +7,7 @@ using SeeingSharp.Core;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 
-namespace SeeingSharp.Drawing3D
+namespace SeeingSharp.Drawing3D.Geometries
 {
     /// <summary>
     /// Describes a 3D geometry in memory.

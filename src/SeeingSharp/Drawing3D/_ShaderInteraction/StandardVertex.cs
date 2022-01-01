@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using SeeingSharp.Checking;
+using SeeingSharp.Drawing3D.Geometries;
 using SeeingSharp.Mathematics;
 using Vortice.DXGI;
 using D3D11 = Vortice.Direct3D11;

@@ -7,7 +7,7 @@ using SeeingSharp.Checking;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 
-namespace SeeingSharp.Drawing3D
+namespace SeeingSharp.Drawing3D.Geometries
 {
     /// <summary>
     /// A set of triangles of a Geometry which share the

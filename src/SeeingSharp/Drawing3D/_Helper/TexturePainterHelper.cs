@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using SeeingSharp.Core;
+using SeeingSharp.Drawing3D.Geometries;
 using SeeingSharp.Drawing3D.Resources;
 using SeeingSharp.Util;
 

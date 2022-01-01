@@ -2,7 +2,7 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using SeeingSharp.Mathematics;
 
-namespace SeeingSharp.Drawing3D
+namespace SeeingSharp.Drawing3D.Geometries
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct VertexBasic

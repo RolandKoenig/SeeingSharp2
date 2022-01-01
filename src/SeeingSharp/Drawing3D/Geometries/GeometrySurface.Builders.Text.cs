@@ -2,7 +2,7 @@
 using SeeingSharp.Core;
 using DWrite = Vortice.DirectWrite;
 
-namespace SeeingSharp.Drawing3D
+namespace SeeingSharp.Drawing3D.Geometries
 {
     public partial class GeometrySurface
     {

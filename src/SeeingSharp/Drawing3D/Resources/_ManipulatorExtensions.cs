@@ -1,4 +1,5 @@
 ﻿using SeeingSharp.Core;
+using SeeingSharp.Drawing3D.Geometries;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 
