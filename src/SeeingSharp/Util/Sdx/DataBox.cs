@@ -10,7 +10,7 @@ namespace SeeingSharp.Util.Sdx
     /// Provides access to data organized in 3D.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct DataBox
+    internal struct DataBox
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DataBox"/> struct.

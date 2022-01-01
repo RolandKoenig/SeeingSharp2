@@ -96,7 +96,7 @@ namespace SeeingSharp.Drawing2D
                 {
                     d2dGradientStops[loop] = new D2D.GradientStop
                     {
-                        Color = SdxMathHelper.RawFromColor4(_gradientStops[loop].Color),
+                        Color = MathConverter.RawFromColor4(_gradientStops[loop].Color),
                         Position = _gradientStops[loop].Position
                     };
                 }
@@ -113,8 +113,8 @@ namespace SeeingSharp.Drawing2D
                 result.Brush = engineDevice.FakeRenderTarget2D.CreateRadialGradientBrush(
                     new D2D.RadialGradientBrushProperties
                     {
-                        Center = SdxMathHelper.RawFromVector2(this.Center),
-                        GradientOriginOffset = SdxMathHelper.RawFromVector2(this.GradientOriginOffset),
+                        Center = MathConverter.RawFromVector2(this.Center),
+                        GradientOriginOffset = MathConverter.RawFromVector2(this.GradientOriginOffset),
                         RadiusX = this.RadiusX,
                         RadiusY = this.RadiusY
                     },

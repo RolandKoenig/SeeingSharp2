@@ -7,8 +7,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <OutputPath>..\bin\Debug.AnyCPU\</OutputPath>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
     <DocumentationFile>..\bin\Debug.AnyCPU\SeeingSharp.xml</DocumentationFile>
     <NoWarn>1701;1702;1591</NoWarn>
@@ -99,9 +98,7 @@
     <None Include="..\..\LICENSE.md" Link="LICENSE.md" Pack="true" PackagePath="LICENSE.md" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="System.Memory" Version="4.5.4" />
-    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0" />
+	  <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
     <PackageReference Include="Vortice.D3DCompiler" Version="1.9.143" />
     <PackageReference Include="Vortice.Direct2D1" Version="1.9.143" />
     <PackageReference Include="Vortice.Direct3D11" Version="1.9.143" />

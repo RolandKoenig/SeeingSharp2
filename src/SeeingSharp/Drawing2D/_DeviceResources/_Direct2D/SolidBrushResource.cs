@@ -69,7 +69,7 @@ namespace SeeingSharp.Drawing2D
             {
                 // Load the brush
                 result = engineDevice.FakeRenderTarget2D.CreateSolidColorBrush(
-                    SdxMathHelper.RawFromColor4(this.Color),
+                    MathConverter.RawFromColor4(this.Color),
                     new D2D.BrushProperties
                     {
                         Opacity = this.Opacity,

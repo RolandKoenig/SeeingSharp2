@@ -19,12 +19,12 @@ namespace SeeingSharp.Util.Sdx
         /// <remarks>
         /// To free this buffer, call <see cref="FreeMemory"/>.
         /// </remarks>
-        public unsafe static IntPtr AllocateMemory(int sizeInBytes, int align = 16)
+        public static unsafe IntPtr AllocateMemory(int sizeInBytes, int align = 16)
         {
             int mask = align - 1;
             var memPtr = Marshal.AllocHGlobal(sizeInBytes + mask + IntPtr.Size);
             var ptr = (long)((byte*)memPtr + sizeof(void*) + mask) & ~mask;
-            ((IntPtr*)ptr)[-1] = memPtr;
+            (((IntPtr*)ptr)!)[-1] = memPtr;
             return new IntPtr((void*)ptr);
         }
 
@@ -35,10 +35,10 @@ namespace SeeingSharp.Util.Sdx
         /// <remarks>
         /// The buffer must have been allocated with <see cref="AllocateMemory"/>.
         /// </remarks>
-        public unsafe static void FreeMemory(IntPtr alignedBuffer)
+        public static unsafe void FreeMemory(IntPtr alignedBuffer)
         {
             if (alignedBuffer == IntPtr.Zero) return;
-            Marshal.FreeHGlobal(((IntPtr*)alignedBuffer)[-1]);
+            Marshal.FreeHGlobal((((IntPtr*)alignedBuffer)!)[-1]);
         }
 
         /// <summary>
@@ -209,7 +209,6 @@ namespace SeeingSharp.Util.Sdx
         {
             unsafe
             {
-                // TODO plug in Interop a pluggable CopyMemory using cpblk or memcpy based on architecture
                 Interop.memcpy((void*)dest, (void*)src, sizeInBytesToCopy);
             }
         }
@@ -243,7 +242,7 @@ namespace SeeingSharp.Util.Sdx
 
             Debug.Assert(num >= 0);
             if (num == 0)
-                return new byte[0];
+                return Array.Empty<byte>();
 
             byte[] buffer = new byte[num];
             int bytesRead = 0;

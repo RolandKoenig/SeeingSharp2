@@ -1035,7 +1035,7 @@ namespace SeeingSharp.Core
                 {
                     // Paint using Direct3D
                     _currentDevice.DeviceImmediateContextD3D11.ClearRenderTargetView(_renderTargetView,
-                        SdxMathHelper.RawFromColor4(this.ClearColor));
+                        MathConverter.RawFromColor4(this.ClearColor));
                     _currentDevice.DeviceImmediateContextD3D11.ClearDepthStencilView(_renderTargetDepthView,
                         D3D11.DepthStencilClearFlags.Depth | D3D11.DepthStencilClearFlags.Stencil, 1f, 0);
 

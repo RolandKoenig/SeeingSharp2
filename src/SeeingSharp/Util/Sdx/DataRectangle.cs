@@ -9,7 +9,7 @@ namespace SeeingSharp.Util.Sdx
     /// Provides access to data organized in 2D.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct DataRectangle
+    internal struct DataRectangle
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DataRectangle"/> class.

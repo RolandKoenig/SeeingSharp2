@@ -7,17 +7,12 @@
     <PackageId>SeeingSharp2.AssimpImporter</PackageId>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\bin\Debug.AnyCPU\</OutputPath>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  <PropertyGroup>
+	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\bin\Release.AnyCPU\</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup>
+	<PropertyGroup>
     <!-- Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>

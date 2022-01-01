@@ -112,7 +112,7 @@ namespace SeeingSharp.Drawing2D
             get
             {
                 if (_renderTarget == null) { return Matrix3x2.Identity; }
-                return SdxMathHelper.Matrix3x2FromRaw(_renderTarget.Transform);
+                return _renderTarget.Transform;
             }
             set
             {
@@ -196,7 +196,7 @@ namespace SeeingSharp.Drawing2D
         /// <param name="clearColor">Color of the clear.</param>
         public void Clear(Color4 clearColor)
         {
-            _renderTarget?.Clear(SdxMathHelper.RawFromColor4(clearColor));
+            _renderTarget?.Clear(MathConverter.RawFromColor4(clearColor));
         }
 
         /// <summary>
@@ -267,7 +267,7 @@ namespace SeeingSharp.Drawing2D
         /// </summary>
         public void DrawEllipse(Vector2 center, float radiusX, float radiusY, BrushResource brush, float strokeWidth = 1f)
         {
-            var ellipse = new D2D.Ellipse(SdxMathHelper.RawFromVector2(center), radiusX, radiusY);
+            var ellipse = new D2D.Ellipse(MathConverter.RawFromVector2(center), radiusX, radiusY);
 
             _renderTarget.DrawEllipse(
                 ellipse,
@@ -285,7 +285,7 @@ namespace SeeingSharp.Drawing2D
             var center = new Vector2(
                 rectangle.X + radiusX,
                 rectangle.Y + radiusY);
-            var ellipse = new D2D.Ellipse(SdxMathHelper.RawFromVector2(center), radiusX, radiusY);
+            var ellipse = new D2D.Ellipse(MathConverter.RawFromVector2(center), radiusX, radiusY);
 
             _renderTarget.DrawEllipse(
                 ellipse,
@@ -314,7 +314,7 @@ namespace SeeingSharp.Drawing2D
             strokeWidth.EnsurePositiveAndNotZero(nameof(strokeWidth));
 
             _renderTarget.DrawLine(
-                SdxMathHelper.RawFromVector2(start), SdxMathHelper.RawFromVector2(end),
+                MathConverter.RawFromVector2(start), MathConverter.RawFromVector2(end),
                 brush.GetBrush(this.Device),
                 strokeWidth);
         }
@@ -403,7 +403,7 @@ namespace SeeingSharp.Drawing2D
         /// </summary>
         public void FillEllipse(Vector2 center, float radiusX, float radiusY, BrushResource brush)
         {
-            var ellipse = new D2D.Ellipse(SdxMathHelper.RawFromVector2(center), radiusX, radiusY);
+            var ellipse = new D2D.Ellipse(MathConverter.RawFromVector2(center), radiusX, radiusY);
 
             _renderTarget.FillEllipse(
                 ellipse,
@@ -420,7 +420,7 @@ namespace SeeingSharp.Drawing2D
             var center = new Vector2(
                 rectangle.X + radiusX,
                 rectangle.Y + radiusY);
-            var ellipse = new D2D.Ellipse(SdxMathHelper.RawFromVector2(center), radiusX, radiusY);
+            var ellipse = new D2D.Ellipse(MathConverter.RawFromVector2(center), radiusX, radiusY);
 
             _renderTarget.FillEllipse(
                 ellipse,
@@ -613,7 +613,7 @@ namespace SeeingSharp.Drawing2D
 
                 _deviceContext.DrawImage(
                     d2dImage,
-                    SdxMathHelper.RawFromVector2(destinationOrigin),
+                    MathConverter.RawFromVector2(destinationOrigin),
                     null,
                     D2D.InterpolationMode.Linear,
                     D2D.CompositeMode.SourceOver);

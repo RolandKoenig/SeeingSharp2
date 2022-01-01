@@ -158,9 +158,9 @@ namespace SeeingSharp.Drawing3D
                     for (var loop = 0; loop < actTriangleArray.Length; loop++)
                     {
                         var actTriangle = actTriangleArray[loop];
-                        actTriangle.Point1 = SdxMathHelper.RawFromVector2(SdxMathHelper.Vector2FromRaw(actTriangle.Point1) - newOrigin);
-                        actTriangle.Point2 = SdxMathHelper.RawFromVector2(SdxMathHelper.Vector2FromRaw(actTriangle.Point2) - newOrigin);
-                        actTriangle.Point3 = SdxMathHelper.RawFromVector2(SdxMathHelper.Vector2FromRaw(actTriangle.Point3) - newOrigin);
+                        actTriangle.Point1 = MathConverter.RawFromVector2(MathConverter.Vector2FromRaw(actTriangle.Point1) - newOrigin);
+                        actTriangle.Point2 = MathConverter.RawFromVector2(MathConverter.Vector2FromRaw(actTriangle.Point2) - newOrigin);
+                        actTriangle.Point3 = MathConverter.RawFromVector2(MathConverter.Vector2FromRaw(actTriangle.Point3) - newOrigin);
 
                         actTriangleArray[loop] = actTriangle;
                     }

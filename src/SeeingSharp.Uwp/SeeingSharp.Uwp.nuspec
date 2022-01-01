@@ -32,7 +32,7 @@
   <files>
     <file src="bin\Release\SeeingSharp.Uwp.dll" target="lib/uap10" />
     <file src="bin\Release\SeeingSharp.Uwp.pri" target="lib/uap10" />
-    <file src="../License.md" target="LICENSE.md" />
+    <file src="../../License.md" target="LICENSE.md" />
     <file src="../../misc/Nuget/SeeingSharp_128.png" />
   </files>
 

@@ -10,7 +10,7 @@ namespace SeeingSharp.Util.Sdx
     /// Pointer to a native buffer with a specific size.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct DataPointer : IEquatable<DataPointer>
+    internal struct DataPointer : IEquatable<DataPointer>
     {
         /// <summary>
         /// Gets an Empty Data Pointer.

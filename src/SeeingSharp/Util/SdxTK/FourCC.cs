@@ -11,7 +11,7 @@ namespace SeeingSharp.Util.SdxTK
     /// A FourCC descriptor.
     /// </summary>
     [StructLayout(LayoutKind.Sequential, Size = 4)]
-    public struct FourCC : IEquatable<FourCC>, IFormattable
+    internal struct FourCC : IEquatable<FourCC>, IFormattable
     {
         /// <summary>
         /// Empty FourCC.

@@ -12,7 +12,7 @@ namespace SeeingSharp.Util.Sdx
     /// <summary>
     ///   Provides a stream interface to a buffer located in unmanaged memory.
     /// </summary>
-    public class DataStream : Stream
+    internal class DataStream : Stream
     {
         private unsafe byte* _buffer;
         private readonly bool _canRead;

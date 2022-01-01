@@ -233,7 +233,7 @@ namespace SeeingSharp.Core
             {
                 this.Device.DeviceImmediateContextD3D11.ClearRenderTargetView(
                     currentTargets.ColorBuffer,
-                    SdxMathHelper.RawFromColor4(color));
+                    MathConverter.RawFromColor4(color));
             }
         }
 
@@ -253,7 +253,7 @@ namespace SeeingSharp.Core
             {
                 this.Device.DeviceImmediateContextD3D11.ClearRenderTargetView(
                     currentTargets.NormalDepthBuffer,
-                    SdxMathHelper.RawFromColor4(Color4.Transparent));
+                    MathConverter.RawFromColor4(Color4.Transparent));
             }
         }
 
