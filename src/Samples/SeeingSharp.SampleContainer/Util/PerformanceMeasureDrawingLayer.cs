@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Text;
 using SeeingSharp.Core;
 using SeeingSharp.Drawing2D;
+using SeeingSharp.Drawing2D.Resources;
 using SeeingSharp.Input;
 using SeeingSharp.Mathematics;
 

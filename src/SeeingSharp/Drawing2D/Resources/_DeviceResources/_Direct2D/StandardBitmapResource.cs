@@ -8,7 +8,7 @@ using Vortice.WIC;
 using D2D = Vortice.Direct2D1;
 using PixelFormat = Vortice.DCommon.PixelFormat;
 
-namespace SeeingSharp.Drawing2D
+namespace SeeingSharp.Drawing2D.Resources
 {
     /// <summary>
     /// This object represents a in-memory cached bitmap which is

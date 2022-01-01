@@ -3,7 +3,7 @@ using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
 
-namespace SeeingSharp.Drawing2D
+namespace SeeingSharp.Drawing2D.Resources
 {
     public abstract class Drawing2DResourceBase : IDisposable, ICheckDisposed, IEngineDeviceResource
     {

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using SeeingSharp.Checking;
 using SeeingSharp.Core;
 using SeeingSharp.Drawing2D;
+using SeeingSharp.Drawing2D.Resources;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 

@@ -4,7 +4,7 @@ using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
 using DWrite = Vortice.DirectWrite;
 
-namespace SeeingSharp.Drawing2D
+namespace SeeingSharp.Drawing2D.Resources
 {
     public class TextFormatResource : Drawing2DResourceBase
     {

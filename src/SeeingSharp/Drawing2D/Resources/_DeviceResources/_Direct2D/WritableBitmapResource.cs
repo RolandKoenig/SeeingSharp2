@@ -7,7 +7,7 @@ using Vortice.DCommon;
 using Vortice.DXGI;
 using D2D = Vortice.Direct2D1;
 
-namespace SeeingSharp.Drawing2D
+namespace SeeingSharp.Drawing2D.Resources
 {
     public class WritableBitmapResource : BitmapResource
     {

@@ -2,7 +2,7 @@
 using Vortice.Direct2D1.Effects;
 using D2D = Vortice.Direct2D1;
 
-namespace SeeingSharp.Drawing2D
+namespace SeeingSharp.Drawing2D.Resources
 {
     public class DirectionalBlurEffectResource : EffectResource
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using SeeingSharp.Core.Devices;
 
-namespace SeeingSharp.Drawing2D
+namespace SeeingSharp.Drawing2D.Resources
 {
     public interface IImage
     {

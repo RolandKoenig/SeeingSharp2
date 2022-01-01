@@ -4,6 +4,7 @@ using SeeingSharp.Core;
 using SeeingSharp.Core.Configuration;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing2D;
+using SeeingSharp.Drawing2D.Resources;
 using SeeingSharp.Util;
 using D3D11 = Vortice.Direct3D11;
 

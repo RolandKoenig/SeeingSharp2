@@ -1,7 +1,7 @@
 ﻿using SeeingSharp.Core.Devices;
 using D2D = Vortice.Direct2D1;
 
-namespace SeeingSharp.Drawing2D
+namespace SeeingSharp.Drawing2D.Resources
 {
     public abstract class BrushResource : Drawing2DResourceBase
     {

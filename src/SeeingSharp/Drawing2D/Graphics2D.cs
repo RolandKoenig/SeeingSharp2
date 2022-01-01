@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Numerics;
 using SeeingSharp.Checking;
 using SeeingSharp.Core.Devices;
+using SeeingSharp.Drawing2D.Resources;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 using D2D = Vortice.Direct2D1;

@@ -4,7 +4,7 @@ using SeeingSharp.Core;
 using SeeingSharp.Util;
 using Vortice.WIC;
 
-namespace SeeingSharp.Drawing2D
+namespace SeeingSharp.Drawing2D.Resources
 {
     public class WicBitmap : IDisposable
     {

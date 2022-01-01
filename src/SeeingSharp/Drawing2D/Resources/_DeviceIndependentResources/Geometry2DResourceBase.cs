@@ -4,7 +4,7 @@ using SeeingSharp.Checking;
 using SeeingSharp.Util;
 using D2D = Vortice.Direct2D1;
 
-namespace SeeingSharp.Drawing2D
+namespace SeeingSharp.Drawing2D.Resources
 {
     public abstract class Geometry2DResourceBase : IDisposable, ICheckDisposed
     {

@@ -5,7 +5,7 @@ using SeeingSharp.Util;
 using SharpGen.Runtime;
 using D2D = Vortice.Direct2D1;
 
-namespace SeeingSharp.Drawing2D
+namespace SeeingSharp.Drawing2D.Resources
 {
     public abstract class EffectResource : Drawing2DResourceBase, IImage, IImageInternal
     {
