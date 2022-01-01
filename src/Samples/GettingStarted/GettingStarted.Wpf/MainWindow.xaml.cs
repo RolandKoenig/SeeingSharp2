@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
-using SeeingSharp.Core.Animations;
-using SeeingSharp.Drawing3D;
 using System.Text;
 using System.Windows;
+using SeeingSharp.Core.Animations;
+using SeeingSharp.Drawing3D;
 using SeeingSharp.Components.Input;
 using SeeingSharp.Drawing3D.Primitives;
+using SeeingSharp.Drawing3D.Resources;
 using SeeingSharp.Mathematics;
 
 namespace GettingStarted.Wpf

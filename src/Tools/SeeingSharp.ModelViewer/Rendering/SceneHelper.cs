@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using SeeingSharp.Core;
 using SeeingSharp.Drawing3D;
+using SeeingSharp.Drawing3D.Resources;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 

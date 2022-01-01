@@ -1,5 +1,5 @@
 ﻿using SeeingSharp.Core.Devices;
-using SeeingSharp.Drawing3D;
+using SeeingSharp.Drawing3D.Resources;
 using D3D = Vortice.Direct3D;
 
 namespace SeeingSharp.Core

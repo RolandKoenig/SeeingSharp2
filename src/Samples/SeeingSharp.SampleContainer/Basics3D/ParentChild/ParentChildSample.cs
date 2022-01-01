@@ -7,6 +7,7 @@ using SeeingSharp.Core;
 using SeeingSharp.Core.Animations;
 using SeeingSharp.Drawing3D;
 using SeeingSharp.Drawing3D.Primitives;
+using SeeingSharp.Drawing3D.Resources;
 using SeeingSharp.Mathematics;
 
 namespace SeeingSharp.SampleContainer.Basics3D.ParentChild

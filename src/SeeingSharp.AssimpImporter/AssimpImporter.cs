@@ -2,6 +2,7 @@
 using Assimp;
 using SeeingSharp.Core;
 using SeeingSharp.Drawing3D;
+using SeeingSharp.Drawing3D.Resources;
 using SeeingSharp.Util;
 using Matrix4x4 = System.Numerics.Matrix4x4;
 using Mesh = SeeingSharp.Drawing3D.Mesh;

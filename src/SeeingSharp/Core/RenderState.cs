@@ -4,6 +4,7 @@ using System.Numerics;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing2D;
 using SeeingSharp.Drawing3D;
+using SeeingSharp.Drawing3D.Resources;
 using SeeingSharp.Mathematics;
 using Vortice.DXGI;
 using D2D = Vortice.Direct2D1;

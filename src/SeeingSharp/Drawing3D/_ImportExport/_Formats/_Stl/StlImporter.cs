@@ -6,6 +6,7 @@ using System.Numerics;
 using SeeingSharp.Checking;
 using System.Text;
 using System.Text.RegularExpressions;
+using SeeingSharp.Drawing3D.Resources;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
 

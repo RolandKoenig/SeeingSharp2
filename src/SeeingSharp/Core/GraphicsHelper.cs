@@ -4,7 +4,7 @@ using System.Linq;
 using SeeingSharp.Checking;
 using SeeingSharp.Core.Configuration;
 using SeeingSharp.Core.Devices;
-using SeeingSharp.Drawing3D;
+using SeeingSharp.Drawing3D.Resources;
 using SeeingSharp.Resources;
 using SeeingSharp.Util;
 using SeeingSharp.Util.Sdx;

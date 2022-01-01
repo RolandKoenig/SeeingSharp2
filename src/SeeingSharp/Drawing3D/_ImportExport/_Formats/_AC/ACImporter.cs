@@ -1,4 +1,5 @@
-﻿using SeeingSharp.Util;
+﻿using SeeingSharp.Drawing3D.Resources;
+using SeeingSharp.Util;
 
 namespace SeeingSharp.Drawing3D
 {

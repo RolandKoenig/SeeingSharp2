@@ -1,4 +1,5 @@
-﻿using D3D11 = Vortice.Direct3D11;
+﻿using SeeingSharp.Drawing3D.Resources;
+using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Drawing3D
 {
