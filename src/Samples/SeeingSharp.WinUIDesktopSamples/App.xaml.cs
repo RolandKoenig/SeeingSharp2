@@ -8,6 +8,7 @@ namespace SeeingSharp.WinUIDesktopSamples
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
+    [System.Runtime.Versioning.SupportedOSPlatform("windows10.0.19041.0")]
     public partial class App : Application
     {
         private Window _window;

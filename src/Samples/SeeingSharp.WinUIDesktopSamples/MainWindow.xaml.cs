@@ -15,6 +15,7 @@ using WinRT.Interop;
 
 namespace SeeingSharp.WinUIDesktopSamples
 {
+    [System.Runtime.Versioning.SupportedOSPlatform("windows10.0.19041.0")]
     public sealed partial class MainWindow : Window, INotifyPropertyChanged
     {
         private SampleBase _actSample;

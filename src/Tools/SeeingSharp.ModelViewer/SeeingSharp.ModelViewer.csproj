@@ -9,13 +9,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsAsErrors />
-    <NoWarn>1701;1702</NoWarn>
-  </PropertyGroup>
-
-  <ItemGroup>
+	<ItemGroup>
     <None Remove="Assets\Background.dds" />
     <None Remove="Assets\SeeingSharp.ico" />
   </ItemGroup>

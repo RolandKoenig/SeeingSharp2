@@ -7,15 +7,12 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsAsErrors />
-    <DocumentationFile>..\bin\Debug.AnyCPU\SeeingSharp.xml</DocumentationFile>
-    <NoWarn>1701;1702;1591</NoWarn>
+	  <DocumentationFile>bin\Debug.AnyCPU\SeeingSharp.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <OutputPath>..\bin\Release.AnyCPU\</OutputPath>
+	  <DocumentationFile>bin\Release.AnyCPU\SeeingSharp.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup>

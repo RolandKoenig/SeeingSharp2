@@ -4,17 +4,7 @@
     <LangVersion>9.0</LangVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>..\..\bin\Debug.AnyCPU\</OutputPath>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningsAsErrors />
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>..\..\bin\Release.AnyCPU\</OutputPath>
-  </PropertyGroup>
-
-  <ItemGroup>
+	<ItemGroup>
     <None Remove="Assets\Background.dds" />
     <None Remove="Assets\Background.png" />
     <None Remove="Assets\Floor.dds" />

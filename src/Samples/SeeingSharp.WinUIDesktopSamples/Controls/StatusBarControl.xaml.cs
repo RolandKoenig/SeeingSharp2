@@ -7,6 +7,7 @@ using SeeingSharp.Views;
 
 namespace SeeingSharp.WinUIDesktopSamples.Controls
 {
+    [System.Runtime.Versioning.SupportedOSPlatform("windows10.0.19041.0")]
     public sealed partial class StatusBarControl : UserControl, INotifyPropertyChanged
     {
         public static readonly DependencyProperty CtrlRendererProperty =
