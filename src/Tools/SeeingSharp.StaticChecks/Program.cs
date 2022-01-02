@@ -118,7 +118,7 @@ namespace PublicSharpDXChecker
 
         private static bool IsInvalidPublicSharpDXType(TypeReference typeDefinition)
         {
-            return typeDefinition.Namespace.StartsWith("SharpDX");
+            return typeDefinition.Namespace.StartsWith("Vortice");
         }
 
         private static void WriteError(string error)
