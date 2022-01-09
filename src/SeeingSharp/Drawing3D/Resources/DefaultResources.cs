@@ -2,6 +2,7 @@
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
+using SeeingSharp.Checking;
 using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Drawing3D.Resources
@@ -11,25 +12,25 @@ namespace SeeingSharp.Drawing3D.Resources
         public static readonly NamedOrGenericKey RESOURCE_KEY = new NamedOrGenericKey(typeof(DefaultResources));
 
         // Blend states
-        private Lazy<D3D11.ID3D11BlendState> _defaultBlendState;
-        private Lazy<D3D11.ID3D11BlendState> _alphaBlendingBlendState;
+        private Lazy<D3D11.ID3D11BlendState>? _defaultBlendState;
+        private Lazy<D3D11.ID3D11BlendState>? _alphaBlendingBlendState;
 
         // Depth stencil states
-        private Lazy<D3D11.ID3D11DepthStencilState> _depthStencilStateDefault;
-        private Lazy<D3D11.ID3D11DepthStencilState> _depthStencilStateDisableZWrites;
-        private Lazy<D3D11.ID3D11DepthStencilState> _depthStencilStateInvertedZTest;
-        private Lazy<D3D11.ID3D11DepthStencilState> _depthStencilStateAlwaysPass;
+        private Lazy<D3D11.ID3D11DepthStencilState>? _depthStencilStateDefault;
+        private Lazy<D3D11.ID3D11DepthStencilState>? _depthStencilStateDisableZWrites;
+        private Lazy<D3D11.ID3D11DepthStencilState>? _depthStencilStateInvertedZTest;
+        private Lazy<D3D11.ID3D11DepthStencilState>? _depthStencilStateAlwaysPass;
 
         // Rasterizer states
-        private Lazy<D3D11.ID3D11RasterizerState> _rasterStateLines;
-        private Lazy<D3D11.ID3D11RasterizerState> _rasterStateDefault;
-        private Lazy<D3D11.ID3D11RasterizerState> _rasterStateBiased;
-        private Lazy<D3D11.ID3D11RasterizerState> _rasterStateWireframe;
+        private Lazy<D3D11.ID3D11RasterizerState>? _rasterStateLines;
+        private Lazy<D3D11.ID3D11RasterizerState>? _rasterStateDefault;
+        private Lazy<D3D11.ID3D11RasterizerState>? _rasterStateBiased;
+        private Lazy<D3D11.ID3D11RasterizerState>? _rasterStateWireframe;
 
         // Sample states
-        private Lazy<D3D11.ID3D11SamplerState> _samplerStateLow;
-        private Lazy<D3D11.ID3D11SamplerState> _samplerStateMedium;
-        private Lazy<D3D11.ID3D11SamplerState> _samplerStateHigh;
+        private Lazy<D3D11.ID3D11SamplerState>? _samplerStateLow;
+        private Lazy<D3D11.ID3D11SamplerState>? _samplerStateMedium;
+        private Lazy<D3D11.ID3D11SamplerState>? _samplerStateHigh;
 
         /// <summary>
         /// Are resources loaded?
@@ -38,27 +39,104 @@ namespace SeeingSharp.Drawing3D.Resources
 
         public override bool IsLoaded => _defaultBlendState != null;
 
-        internal D3D11.ID3D11BlendState DefaultBlendState => _defaultBlendState?.Value;
+        internal D3D11.ID3D11BlendState DefaultBlendState
+        {
+            get
+            {
+                _defaultBlendState.EnsureResourceLoaded(typeof(DefaultResources));
+                return _defaultBlendState!.Value;
+            }
+        }
 
-        internal D3D11.ID3D11BlendState AlphaBlendingBlendState => _alphaBlendingBlendState?.Value;
+        internal D3D11.ID3D11BlendState AlphaBlendingBlendState
+        {
+            get
+            {
+                _alphaBlendingBlendState.EnsureResourceLoaded(typeof(DefaultResources));
+                return _alphaBlendingBlendState!.Value;
+            }
+        }
 
-        internal D3D11.ID3D11DepthStencilState DepthStencilStateDefault => _depthStencilStateDefault?.Value;
+        internal D3D11.ID3D11DepthStencilState DepthStencilStateDefault
+        {
+            get
+            {
+                _depthStencilStateDefault.EnsureResourceLoaded(typeof(DefaultResources));
+                return _depthStencilStateDefault!.Value;
+            }
+        }
 
-        internal D3D11.ID3D11DepthStencilState DepthStencilStateDisableZWrites => _depthStencilStateDisableZWrites?.Value;
+        internal D3D11.ID3D11DepthStencilState DepthStencilStateDisableZWrites
+        {
+            get
+            {
+                _depthStencilStateDisableZWrites.EnsureResourceLoaded(typeof(DefaultResources));
+                return _depthStencilStateDisableZWrites!.Value;
+            }
+        }
 
-        internal D3D11.ID3D11DepthStencilState DepthStencilStateAlwaysPassDepth => _depthStencilStateAlwaysPass?.Value;
+        internal D3D11.ID3D11DepthStencilState DepthStencilStateAlwaysPassDepth
+        {
+            get
+            {
+                _depthStencilStateAlwaysPass.EnsureResourceLoaded(typeof(DefaultResources));
+                return _depthStencilStateAlwaysPass!.Value;
+            }
+        }
 
-        internal D3D11.ID3D11DepthStencilState DepthStencilStateInvertedZTest => _depthStencilStateInvertedZTest?.Value;
+        internal D3D11.ID3D11DepthStencilState DepthStencilStateInvertedZTest
+        {
+            get
+            {
+                _depthStencilStateInvertedZTest.EnsureResourceLoaded(typeof(DefaultResources));
+                return _depthStencilStateInvertedZTest!.Value;
+            }
+        }
 
-        internal D3D11.ID3D11RasterizerState RasterStateDefault => _rasterStateDefault?.Value;
+        internal D3D11.ID3D11RasterizerState RasterStateDefault
+        {
+            get
+            {
+                _rasterStateDefault.EnsureResourceLoaded(typeof(DefaultResources));
+                return _rasterStateDefault!.Value;
+            }
+        }
 
-        internal D3D11.ID3D11RasterizerState RasterStateBiased => _rasterStateBiased?.Value;
+        internal D3D11.ID3D11RasterizerState RasterStateBiased
+        {
+            get
+            {
+                _rasterStateBiased.EnsureResourceLoaded(typeof(DefaultResources));
+                return _rasterStateBiased!.Value;
+            }
+        }
 
-        internal D3D11.ID3D11RasterizerState RasterStateWireframe => _rasterStateWireframe?.Value;
+        internal D3D11.ID3D11RasterizerState RasterStateWireframe
+        {
+            get
+            {
+                _rasterStateWireframe.EnsureResourceLoaded(typeof(DefaultResources));
+                return _rasterStateWireframe!.Value;
+            }
+        }
 
-        internal D3D11.ID3D11RasterizerState RasterStateLines => _rasterStateLines?.Value;
+        internal D3D11.ID3D11RasterizerState RasterStateLines
+        {
+            get
+            {
+                _rasterStateLines.EnsureResourceLoaded(typeof(DefaultResources));
+                return _rasterStateLines!.Value;
+            }
+        }
 
-        internal D3D11.ID3D11SamplerState SamplerStateDefault => _samplerStateMedium?.Value;
+        internal D3D11.ID3D11SamplerState SamplerStateDefault
+        {
+            get
+            {
+                _samplerStateMedium.EnsureResourceLoaded(typeof(DefaultResources));
+                return _samplerStateMedium!.Value;
+            }
+        }
 
         /// <summary>
         /// Loads the resource.
@@ -203,16 +281,16 @@ namespace SeeingSharp.Drawing3D.Resources
             switch (qualityLevel)
             {
                 case TextureSamplerQualityLevel.High:
-                    return _samplerStateHigh.Value;
+                    return _samplerStateHigh!.Value;
 
                 case TextureSamplerQualityLevel.Medium:
-                    return _samplerStateMedium.Value;
+                    return _samplerStateMedium!.Value;
 
                 case TextureSamplerQualityLevel.Low:
-                    return _samplerStateLow.Value;
+                    return _samplerStateLow!.Value;
             }
 
-            return _samplerStateLow.Value;
+            return _samplerStateLow!.Value;
         }
 
         /// <summary>

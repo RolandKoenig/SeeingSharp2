@@ -20,11 +20,11 @@ namespace SeeingSharp.Drawing3D.Resources
         private Color4 _borderColor;
 
         // Resources
-        private RenderTargetTextureResource _renderTarget;
-        private DefaultResources _defaultResources;
-        private PixelShaderResource _pixelShaderBlur;
+        private RenderTargetTextureResource? _renderTarget;
+        private DefaultResources? _defaultResources;
+        private PixelShaderResource? _pixelShaderBlur;
         private CBPerObject _constantBufferData;
-        private TypeSafeConstantBufferResource<CBPerObject> _constantBuffer;
+        private TypeSafeConstantBufferResource<CBPerObject>? _constantBuffer;
 
         /// <inheritdoc />
         public override bool IsLoaded =>
@@ -92,8 +92,8 @@ namespace SeeingSharp.Drawing3D.Resources
                 // 1. Pass: Draw all pixels that ly behind other already rendered elements
                 case 0:
                     // Apply current render target size an push render target texture on current rendering stack
-                    _renderTarget.ApplySize(renderState);
-                    _renderTarget.PushOnRenderState(renderState, PushRenderTargetMode.Default_OwnColor_PrevDepthObjectIdNormalDepth);
+                    _renderTarget!.ApplySize(renderState);
+                    _renderTarget!.PushOnRenderState(renderState, PushRenderTargetMode.Default_OwnColor_PrevDepthObjectIdNormalDepth);
 
                     // Clear current render target
                     renderState.ClearCurrentColorBuffer(new Color(0f, 0f, 0f, 0f));
@@ -113,20 +113,20 @@ namespace SeeingSharp.Drawing3D.Resources
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
             // Reset settings made on render state (needed for all passes)
-            deviceContext.RSSetState(_defaultResources.RasterStateDefault);
+            deviceContext.RSSetState(_defaultResources!.RasterStateDefault);
 
             // Reset render target (needed for all passes)
-            _renderTarget.PopFromRenderState(renderState);
+            _renderTarget!.PopFromRenderState(renderState);
 
             // Update constant buffer data
-            var currentViewSize = renderState.ViewInformation.CurrentViewSize;
+            var currentViewSize = renderState.ViewInformation!.CurrentViewSize;
             _constantBufferData.ScreenPixelSize = new Vector2(currentViewSize.Width, currentViewSize.Height);
             _constantBufferData.Opacity = 0.9f;
             _constantBufferData.Threshold = 0.2f;
             _constantBufferData.Thickness = this.Thickness;
             _constantBufferData.BorderColor = _borderColor.ToVector3();
             _constantBufferData.OriginalColorAlpha = this.DrawOriginalObject ? 1f : 0f;
-            _constantBuffer.SetData(deviceContext, _constantBufferData);
+            _constantBuffer!.SetData(deviceContext, _constantBufferData);
 
             // Render result of current pass to the main render target
             switch (passId)
@@ -138,7 +138,7 @@ namespace SeeingSharp.Drawing3D.Resources
                         deviceContext.PSSetShaderResource(0, _renderTarget.TextureView);
                         deviceContext.PSSetSampler(0, _defaultResources.GetSamplerState(TextureSamplerQualityLevel.Low));
                         deviceContext.PSSetConstantBuffer(2, _constantBuffer.ConstantBuffer);
-                        deviceContext.PSSetShader(_pixelShaderBlur.PixelShader);
+                        deviceContext.PSSetShader(_pixelShaderBlur!.PixelShader);
                         deviceContext.Draw(3, 0);
                     }
                     finally

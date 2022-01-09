@@ -22,7 +22,9 @@ namespace SeeingSharp.Drawing3D.Geometries
         /// <param name="geometryOptions">Some configuration for geometry creation.</param>
         public void BuildTextGeometry(string stringToBuild, TextGeometryOptions geometryOptions)
         {
-            var writeFactory = GraphicsCore.Current.FactoryDWrite;
+            GraphicsCore.EnsureGraphicsSupportLoaded();
+
+            var writeFactory = GraphicsCore.Current.FactoryDWrite!;
 
             // Get font properties
             var fontWeight = geometryOptions.FontWeight;
@@ -31,8 +33,6 @@ namespace SeeingSharp.Drawing3D.Geometries
             // Create the text layout object
             try
             {
-                
-
                 using var textLayout = writeFactory.CreateTextLayout(
                     stringToBuild,
                     writeFactory.CreateTextFormat(

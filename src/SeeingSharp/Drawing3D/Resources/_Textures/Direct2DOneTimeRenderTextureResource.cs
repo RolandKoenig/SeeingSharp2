@@ -18,14 +18,14 @@ namespace SeeingSharp.Drawing3D.Resources
     public class Direct2DOneTimeRenderTextureResource : TextureResource
     {
         // Configuration
-        private Custom2DDrawingLayer _drawingLayer;
-        private BrushResource _fillBrush;
+        private Custom2DDrawingLayer? _drawingLayer;
+        private BrushResource? _fillBrush;
         private int _width;
         private int _height;
 
         // Resources for Direct3D
-        private D3D11.ID3D11Texture2D _renderTargetTexture;
-        private D3D11.ID3D11ShaderResourceView _renderTargetTextureView;
+        private D3D11.ID3D11Texture2D? _renderTargetTexture;
+        private D3D11.ID3D11ShaderResourceView? _renderTargetTextureView;
 
         /// <summary>
         /// Is the resource loaded?
@@ -35,12 +35,26 @@ namespace SeeingSharp.Drawing3D.Resources
         /// <summary>
         /// Gets the texture object.
         /// </summary>
-        internal override D3D11.ID3D11Texture2D Texture => _renderTargetTexture;
+        internal override D3D11.ID3D11Texture2D Texture
+        {
+            get
+            {
+                _renderTargetTexture.EnsureResourceLoaded(typeof(Direct2DOneTimeRenderTextureResource));
+                return _renderTargetTexture!;
+            }
+        }
 
         /// <summary>
         /// Gets a ShaderResourceView targeting the texture.
         /// </summary>
-        internal override D3D11.ID3D11ShaderResourceView TextureView => _renderTargetTextureView;
+        internal override D3D11.ID3D11ShaderResourceView TextureView
+        {
+            get
+            {
+                _renderTargetTextureView.EnsureResourceLoaded(typeof(Direct2DOneTimeRenderTextureResource));
+                return _renderTargetTextureView!;
+            }
+        }
 
         /// <summary>
         /// Gets the size of the texture array.

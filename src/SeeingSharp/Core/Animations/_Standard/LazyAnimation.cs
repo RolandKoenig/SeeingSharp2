@@ -4,7 +4,7 @@ namespace SeeingSharp.Core.Animations
 {
     public class LazyAnimation : IAnimation
     {
-        private IAnimation _animation;
+        private IAnimation? _animation;
         private Func<IAnimation> _animationCreator;
 
         /// <summary>
@@ -14,7 +14,7 @@ namespace SeeingSharp.Core.Animations
         {
             get
             {
-                if (_animation == null) { _animation = _animationCreator(); }
+                _animation ??= _animationCreator();
                 if (_animation == null) { return true; }
                 return _animation.Finished;
             }
@@ -27,7 +27,7 @@ namespace SeeingSharp.Core.Animations
         {
             get
             {
-                if (_animation == null) { _animation = _animationCreator(); }
+                _animation ??= _animationCreator();
                 if (_animation == null) { return false; }
                 return _animation.IsBlockingAnimation;
             }
@@ -64,7 +64,7 @@ namespace SeeingSharp.Core.Animations
         /// <param name="targetObject">The object to check for.</param>
         public bool IsObjectAnimated(object targetObject)
         {
-            if (_animation == null) { _animation = _animationCreator(); }
+            _animation ??= _animationCreator();
             if (_animation == null) { return false; }
 
             return _animation.IsObjectAnimated(targetObject);
@@ -77,7 +77,7 @@ namespace SeeingSharp.Core.Animations
         /// <param name="animationState">The current state of the animation.</param>
         public AnimationUpdateResult Update(IAnimationUpdateState updateState, AnimationState animationState)
         {
-            if (_animation == null) { _animation = _animationCreator(); }
+            _animation ??= _animationCreator();
             if (_animation == null) { return AnimationUpdateResult.EMPTY; }
 
             return _animation.Update(updateState, animationState);
@@ -88,7 +88,7 @@ namespace SeeingSharp.Core.Animations
         /// </summary>
         public void Reset()
         {
-            if (_animation == null) { _animation = _animationCreator(); }
+            _animation ??= _animationCreator();
 
             _animation?.Reset();
         }
@@ -102,7 +102,7 @@ namespace SeeingSharp.Core.Animations
         /// <param name="defaultCycleTime">The default cycle time if we would be in continuous calculation mode.</param>
         public TimeSpan GetTimeTillNextEvent(TimeSpan previousMinFinishTime, TimeSpan previousMaxFinishTime, TimeSpan defaultCycleTime)
         {
-            if (_animation == null) { _animation = _animationCreator(); }
+            _animation ??= _animationCreator();
             if (_animation == null) { return TimeSpan.Zero; }
 
             return _animation.GetTimeTillNextEvent(previousMinFinishTime, previousMaxFinishTime, defaultCycleTime);

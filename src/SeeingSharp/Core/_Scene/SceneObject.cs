@@ -20,12 +20,12 @@ namespace SeeingSharp.Core
         private VisibilityTestMethod _prevVisibilityTestMethod;
 
         // Some information about parent containers
-        private Scene _scene;
-        private SceneLayer _sceneLayer;
+        private Scene? _scene;
+        private SceneLayer? _sceneLayer;
 
         // Collections for describing object hierarchies
         private UnsafeList<SceneObject> _children;
-        private SceneObject _parent;
+        private SceneObject? _parent;
 
         // Members for animations
         private AnimationHandler _animationHandler;
@@ -44,12 +44,12 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets or sets an additional data object.
         /// </summary>
-        public object Tag1 { get; set; }
+        public object? Tag1 { get; set; }
 
         /// <summary>
         /// Gets or sets an additional data object.
         /// </summary>
-        public object Tag2 { get; set; }
+        public object? Tag2 { get; set; }
 
         /// <summary>
         /// Is this object visible for picking-test?
@@ -63,12 +63,12 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets current scene.
         /// </summary>
-        public Scene Scene => _scene;
+        public Scene? Scene => _scene;
 
         /// <summary>
         /// Gets or sets the scene layer.
         /// </summary>
-        public SceneLayer SceneLayer => _sceneLayer;
+        public SceneLayer? SceneLayer => _sceneLayer;
 
         /// <summary>
         /// Is this object a static object?
@@ -104,7 +104,7 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets the parent object.
         /// </summary>
-        public SceneObject Parent => _parent;
+        public SceneObject? Parent => _parent;
 
         /// <summary>
         /// Gets or sets the method how visibility of this object is calculated.
@@ -119,7 +119,7 @@ namespace SeeingSharp.Core
             get
             {
                 var children = _children;
-                return children != null && children.Count > 0;
+                return children.Count > 0;
             }
         }
 
@@ -247,7 +247,6 @@ namespace SeeingSharp.Core
             if (viewInfo.Scene != this.Scene) { throw new SeeingSharpGraphicsException("Given ViewInformation object is not attached to this scene!"); }
 
             var checkData = _visibilityData[viewInfo.ViewIndex];
-
             if (checkData == null)
             {
                 return false;
@@ -436,7 +435,7 @@ namespace SeeingSharp.Core
             _sceneLayer = null;
 
             // Call virtual event
-            this.OnRemovedFromScene(oldScene);
+            this.OnRemovedFromScene(oldScene!);
         }
 
         /// <summary>
@@ -566,7 +565,7 @@ namespace SeeingSharp.Core
         internal void Update(SceneRelatedUpdateState updateState)
         {
             // Update current animation state
-            _animationHandler?.Update(updateState);
+            _animationHandler.Update(updateState);
 
             // Check for changed visibility test method
             if (_prevVisibilityTestMethod != this.VisibilityTestMethod)

@@ -1,4 +1,5 @@
 ﻿using System;
+using SeeingSharp.Checking;
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
@@ -10,12 +11,19 @@ namespace SeeingSharp.Drawing3D.Resources
         where T : unmanaged
     {
         // Direct3D resources
-        private D3D11.ID3D11Buffer _buffer;
+        private D3D11.ID3D11Buffer? _buffer;
 
         // Configuration
         private Func<T[]> _bufferDataFactory;
 
-        internal D3D11.ID3D11Buffer Buffer => _buffer;
+        internal D3D11.ID3D11Buffer Buffer
+        {
+            get
+            {
+                _buffer.EnsureResourceLoaded(typeof(ImmutableVertexBufferResource<T>));
+                return _buffer!;
+            }
+        }
 
         public override bool IsLoaded => _buffer != null;
 

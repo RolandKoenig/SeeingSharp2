@@ -11,5 +11,15 @@ namespace SeeingSharp.Drawing3D
         internal RenderingChunkTemplate Template;
         internal D3D11.ID3D11InputLayout InputLayout;
         internal MaterialResource Material;
+
+        internal RenderingChunk(
+            RenderingChunkTemplate template,
+            D3D11.ID3D11InputLayout inputLayout,
+            MaterialResource material)
+        {
+            this.Template = template;
+            this.InputLayout = inputLayout;
+            this.Material = material;
+        }
     }
 }

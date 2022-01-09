@@ -57,9 +57,9 @@ namespace SeeingSharp.Core
 
         public Matrix4Stack World { get; }
 
-        public SceneLayer SceneLayer { get; internal set; }
+        public SceneLayer? SceneLayer { get; internal set; }
 
-        public Scene Scene => this.SceneLayer?.Scene;
+        public Scene? Scene => this.SceneLayer?.Scene;
 
         public bool IsPaused => _isPaused;
 

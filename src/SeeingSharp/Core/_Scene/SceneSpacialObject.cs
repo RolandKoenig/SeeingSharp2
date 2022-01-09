@@ -26,13 +26,13 @@ namespace SeeingSharp.Core
         private Vector3 _scaling;
         private Matrix4x4 _transform;
         private Matrix4x4 _customTransform;
-        private SceneSpacialObject _transformSourceObject;
+        private SceneSpacialObject? _transformSourceObject;
         private bool _transformParamsChanged;
         private bool _forceTransformUpdateOnChildren;
 
         // Parameters for object hosting
-        private IEngineHostedSceneObject _hostedObject;
-        private IEngineOpacityProvider _hostedObjectOpacity;
+        private IEngineHostedSceneObject? _hostedObject;
+        private IEngineOpacityProvider? _hostedObjectOpacity;
         private ObjectHostMode _hostedObjectMode;
         private bool _hostedObjectChanged;
 
@@ -232,7 +232,7 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets or sets the source of the transformation value when SpacialTransformationType.CustomTransform is set.
         /// </summary>
-        public SceneSpacialObject TransformSourceObject
+        public SceneSpacialObject? TransformSourceObject
         {
             get => _transformSourceObject;
             set
@@ -329,9 +329,9 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Sets an hosted object (or null, to reset previous).
         /// </summary>
-        /// <param name="hostedObject">The hosted object to be set.</param>
+        /// <param name="hostedObject">The hosted object to be set. Null if hosting should be disabled.</param>
         /// <param name="hostMode">Describes the specific host mode.</param>
-        public void SetHostedObject(IEngineHostedSceneObject hostedObject, ObjectHostMode hostMode)
+        public void SetHostedObject(IEngineHostedSceneObject? hostedObject, ObjectHostMode hostMode)
         {
             if (hostedObject != null)
             {

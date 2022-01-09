@@ -8,7 +8,7 @@ namespace SeeingSharp.Core.Devices
 {
     public class FactoryHandlerDWrite : IDisposable, ICheckDisposed
     {
-        private DWrite.IDWriteFactory _factory;
+        private DWrite.IDWriteFactory? _factory;
 
         /// <summary>
         /// Is DirectWrite initialized successfully?

@@ -1,4 +1,5 @@
-﻿using SeeingSharp.Core;
+﻿using SeeingSharp.Checking;
+using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
 using D3D11 = Vortice.Direct3D11;
@@ -15,9 +16,9 @@ namespace SeeingSharp.Drawing3D.Resources
         private static readonly NamedOrGenericKey s_keyConstantBuffer = GraphicsCore.GetNextGenericResourceKey();
 
         // Resources
-        private VertexShaderResource _vertexShader;
-        private PixelShaderResource _pixelShader;
-        private D3D11.ID3D11InputLayout _inputLayout;
+        private VertexShaderResource? _vertexShader;
+        private PixelShaderResource? _pixelShader;
+        private D3D11.ID3D11InputLayout? _inputLayout;
 
         /// <summary>
         /// Is the resource loaded correctly?
@@ -27,17 +28,38 @@ namespace SeeingSharp.Drawing3D.Resources
         /// <summary>
         /// Gets the vertex shader resource.
         /// </summary>
-        public VertexShaderResource VertexShader => _vertexShader;
+        internal VertexShaderResource VertexShader
+        {
+            get
+            {
+                _vertexShader.EnsureResourceLoaded(typeof(LineRenderResources));
+                return _vertexShader!;
+            }
+        }
 
         /// <summary>
         /// Gets the pixel shader resource.
         /// </summary>
-        public PixelShaderResource PixelShader => _pixelShader;
+        internal PixelShaderResource PixelShader
+        {
+            get
+            {
+                _pixelShader.EnsureResourceLoaded(typeof(LineRenderResources));
+                return _pixelShader!;
+            }
+        }
 
         /// <summary>
         /// Gets the input layout for the vertex shader.
         /// </summary>
-        internal D3D11.ID3D11InputLayout InputLayout => _inputLayout;
+        internal D3D11.ID3D11InputLayout InputLayout
+        {
+            get
+            {
+                _inputLayout.EnsureResourceLoaded(typeof(LineRenderResources));
+                return _inputLayout!;
+            }
+        }
 
         /// <summary>
         /// Loads the resource.

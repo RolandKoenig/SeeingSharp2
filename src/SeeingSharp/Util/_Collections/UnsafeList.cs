@@ -80,7 +80,7 @@ namespace SeeingSharp.Util
 
         bool ICollection<T>.IsReadOnly => false;
 
-        public T[] BackingArray => _backingArray;
+        public T?[] BackingArray => _backingArray;
 
         public UnsafeList()
         {

@@ -13,10 +13,10 @@ namespace SeeingSharp.Core
         private EngineMainLoop _mainLoop;
 
         // Dependencies for one pass
-        private IReadOnlyList<RenderLoop> _registeredRenderLoops;
-        private IReadOnlyList<Scene> _scenesToRender;
-        private IReadOnlyList<EngineDevice> _devicesInUse;
-        private UpdateState _updateState;
+        private IReadOnlyList<RenderLoop>? _registeredRenderLoops;
+        private IReadOnlyList<Scene>? _scenesToRender;
+        private IReadOnlyList<EngineDevice>? _devicesInUse;
+        private UpdateState? _updateState;
 
         // Cached values and collections
         private Action<int> _actionTriggerRenderOrUpdateBesideTask;
@@ -74,13 +74,13 @@ namespace SeeingSharp.Core
         {
             using (_core.BeginMeasureActivityDuration(SeeingSharpConstants.PERF_GLOBAL_RENDER_AND_UPDATE_BESIDE))
             {
-                for (var loop = 0; loop < _scenesToRender.Count; loop++)
+                for (var loop = 0; loop < _scenesToRender!.Count; loop++)
                 {
-                    _scenesToRender[loop].UpdateObjectFilterState(_updateState);
+                    _scenesToRender[loop].UpdateObjectFilterState(_updateState!);
                 }
 
                 // Trigger all tasks for 'Update' pass
-                Parallel.For(0, _devicesInUse.Count + _scenesToRender.Count, _actionTriggerRenderOrUpdateBesideTask);
+                Parallel.For(0, _devicesInUse!.Count + _scenesToRender.Count, _actionTriggerRenderOrUpdateBesideTask);
 
                 // Handle all invalid render loops
                 while (_invalidRenderLoops.TryDequeue(out var actRenderLoop))
@@ -89,7 +89,7 @@ namespace SeeingSharp.Core
                 }
 
                 // Reset camera changed flags
-                for (var loop = 0; loop < _registeredRenderLoops.Count; loop++)
+                for (var loop = 0; loop < _registeredRenderLoops!.Count; loop++)
                 {
                     _registeredRenderLoops[loop].Camera.StateChanged = false;
                 }
@@ -98,13 +98,13 @@ namespace SeeingSharp.Core
 
         private void TriggerRenderOrUpdateBesideTask(int actTaskIndex)
         {   
-            if (actTaskIndex < _devicesInUse.Count)
+            if (actTaskIndex < _devicesInUse!.Count)
             {
                 // Render all targets for the current device
                 var actDevice = _devicesInUse[actTaskIndex];
                 using (_core.BeginMeasureActivityDuration(_perfDeviceRenderActivityNames[actDevice.DeviceIndex]))
                 {
-                    for (var loop = 0; loop < _registeredRenderLoops.Count; loop++)
+                    for (var loop = 0; loop < _registeredRenderLoops!.Count; loop++)
                     {
                         var actRenderLoop = _registeredRenderLoops[loop];
 
@@ -132,10 +132,10 @@ namespace SeeingSharp.Core
                 var sceneIndex = actTaskIndex - _devicesInUse.Count;
                 using (_core.BeginMeasureActivityDuration(_perfSceneUpdateBesideActivityNames[sceneIndex]))
                 {
-                    var actScene = _scenesToRender[sceneIndex];
+                    var actScene = _scenesToRender![sceneIndex];
                     var actUpdateState = actScene.CachedUpdateState;
 
-                    actUpdateState.OnStartSceneUpdate(actScene, _updateState);
+                    actUpdateState.OnStartSceneUpdate(actScene, _updateState!);
                     actScene.UpdateBesideRender(actUpdateState);
                 }
             }

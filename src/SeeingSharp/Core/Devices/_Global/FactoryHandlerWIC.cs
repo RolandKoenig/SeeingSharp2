@@ -7,9 +7,9 @@ namespace SeeingSharp.Core.Devices
 {
     public class FactoryHandlerWIC : IDisposable, ICheckDisposed
     {
-        private IWICImagingFactory _wicFactory;
+        private IWICImagingFactory? _wicFactory;
 
-        public bool IsDisposed => this.Factory == null;
+        public bool IsDisposed => _wicFactory == null;
 
         /// <summary>
         /// Gets the WIC factory object.
@@ -21,7 +21,6 @@ namespace SeeingSharp.Core.Devices
                 if(_wicFactory == null){ throw new ObjectDisposedException(nameof(FactoryHandlerWIC)); }
                 return _wicFactory;
             }
-            private set => _wicFactory = value;
         }
 
         /// <summary>
@@ -29,13 +28,13 @@ namespace SeeingSharp.Core.Devices
         /// </summary>
         internal FactoryHandlerWIC(GraphicsCoreConfiguration coreConfiguration)
         {
-            this.Factory = new IWICImagingFactory();
+            _wicFactory = new IWICImagingFactory();
         }
 
         /// <inheritdoc />
         public void Dispose()
         {
-            this.Factory = SeeingSharpUtil.DisposeObject(this.Factory);
+            _wicFactory = SeeingSharpUtil.DisposeObject(this.Factory);
         }
     }
 }

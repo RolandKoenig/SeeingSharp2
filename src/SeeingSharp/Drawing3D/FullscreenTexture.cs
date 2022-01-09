@@ -116,7 +116,7 @@ namespace SeeingSharp.Drawing3D
             if (this.Opacity < 1f) { return; }
 
             // Get and configure helper object
-            var actHelper = _texturePainterHelpers[renderState.DeviceIndex];
+            var actHelper = _texturePainterHelpers[renderState.DeviceIndex]!;
             actHelper.Scaling = this.Scaling;
             actHelper.Opacity = this.Opacity;
             actHelper.AccentuationFactor = this.AccentuationFactor;
@@ -135,7 +135,7 @@ namespace SeeingSharp.Drawing3D
             if (this.Opacity < 1f)
             {
                 // Get and configure helper object
-                var actHelper = _texturePainterHelpers[renderState.DeviceIndex];
+                var actHelper = _texturePainterHelpers[renderState.DeviceIndex]!;
                 actHelper.Scaling = this.Scaling;
                 actHelper.Opacity = this.Opacity;
                 actHelper.AccentuationFactor = this.AccentuationFactor;

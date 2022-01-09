@@ -8,7 +8,7 @@ namespace SeeingSharp.Core.Devices
 {
     public class FactoryHandlerD2D : IDisposable, ICheckDisposed
     {
-        private D2D.ID2D1Factory2 _factory;
+        private D2D.ID2D1Factory2? _factory;
 
         /// <summary>
         /// Is Direct2D initialized?

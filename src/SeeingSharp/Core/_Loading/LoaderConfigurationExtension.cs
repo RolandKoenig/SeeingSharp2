@@ -10,36 +10,36 @@ namespace SeeingSharp.Core
 {
     internal class LoaderConfigurationExtension : ISeeingSharpExtensions
     {
-        private Action<GraphicsCoreConfiguration> _manipulateCoreConfig;
-        private Action<EngineAdapterInfo, GraphicsDeviceConfiguration> _manipulateDeviceConfig;
-        private Action<RenderLoop, GraphicsViewConfiguration> _manipulateViewConfig;
+        private Action<GraphicsCoreConfiguration>? _manipulateCoreConfig;
+        private Action<EngineAdapterInfo, GraphicsDeviceConfiguration>? _manipulateDeviceConfig;
+        private Action<RenderLoop, GraphicsViewConfiguration>? _manipulateViewConfig;
 
         public LoaderConfigurationExtension(
-            Action<GraphicsCoreConfiguration> manipulateCoreConfig,
-            Action<EngineAdapterInfo, GraphicsDeviceConfiguration> manipulateDeviceConfig,
-            Action<RenderLoop, GraphicsViewConfiguration> manipulateViewConfig)
+            Action<GraphicsCoreConfiguration>? manipulateCoreConfig,
+            Action<EngineAdapterInfo, GraphicsDeviceConfiguration>? manipulateDeviceConfig,
+            Action<RenderLoop, GraphicsViewConfiguration>? manipulateViewConfig)
         {
             _manipulateCoreConfig = manipulateCoreConfig;
             _manipulateDeviceConfig = manipulateDeviceConfig;
             _manipulateViewConfig = manipulateViewConfig;
         }
 
-        public IEnumerable<IDisposable> CreateAdditionalDeviceHandlers(EngineDevice device)
+        public IEnumerable<IDisposable>? CreateAdditionalDeviceHandlers(EngineDevice device)
         {
             return null;
         }
 
-        public IEnumerable<IInputHandler> CreateInputHandlers()
+        public IEnumerable<IInputHandler>? CreateInputHandlers()
         {
             return null;
         }
 
-        public IEnumerable<IModelImporter> CreateModelImporters()
+        public IEnumerable<IModelImporter>? CreateModelImporters()
         {
             return null;
         }
 
-        public IEnumerable<IModelExporter> CreateModelExporters()
+        public IEnumerable<IModelExporter>? CreateModelExporters()
         {
             return null;
         }

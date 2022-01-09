@@ -230,14 +230,13 @@ namespace SeeingSharp.Core
         /// Adds the given object to the scene.
         /// </summary>
         /// <param name="sceneObject">Object to add.</param>
-        public T AddObject<T>(T sceneObject)
+        public void AddObject<T>(T sceneObject)
             where T : SceneObject
         {
             this.CheckValid();
 
-            var result = this.Owner.Add(sceneObject, Scene.DEFAULT_LAYER_NAME);
-            _createdObjects.Add(result);
-            return result;
+            this.Owner.Add(sceneObject, Scene.DEFAULT_LAYER_NAME);
+            _createdObjects.Add(sceneObject);
         }
 
         /// <summary>
@@ -245,14 +244,13 @@ namespace SeeingSharp.Core
         /// </summary>
         /// <param name="sceneObject">Object to add.</param>
         /// <param name="layer">Layer on which the object should be added.</param>
-        public T AddObject<T>(T sceneObject, string layer)
+        public void AddObject<T>(T sceneObject, string layer)
             where T : SceneObject
         {
             this.CheckValid();
 
-            var result = this.Owner.Add(sceneObject, layer);
-            _createdObjects.Add(result);
-            return result;
+            this.Owner.Add(sceneObject, layer);
+            _createdObjects.Add(sceneObject);
         }
 
         /// <summary>
@@ -282,7 +280,7 @@ namespace SeeingSharp.Core
                 textOptions);
             if (realignToCenter) { newGeometry.RealignToCenter(); }
 
-            return this.AddResource(device => new GeometryResource(newGeometry));
+            return this.AddResource(_ => new GeometryResource(newGeometry));
         }
 
         /// <summary>
@@ -292,7 +290,9 @@ namespace SeeingSharp.Core
         /// <param name="resMaterials">All materials to be mapped to the geometry.</param>
         public Mesh AddMeshObject(NamedOrGenericKey resGeometry, params NamedOrGenericKey[] resMaterials)
         {
-            return this.AddObject(new Mesh(resGeometry, resMaterials));
+            var result = new Mesh(resGeometry, resMaterials);
+            this.AddObject(result);
+            return result;
         }
 
         /// <summary>
@@ -303,7 +303,9 @@ namespace SeeingSharp.Core
         /// <param name="resMaterials">All materials to be mapped to the geometry.</param>
         public Mesh AddMeshObject(NamedOrGenericKey resGeometry, string layer, params NamedOrGenericKey[] resMaterials)
         {
-            return this.AddObject(new Mesh(resGeometry, resMaterials), layer);
+            var result = new Mesh(resGeometry, resMaterials);
+            this.AddObject(result, layer);
+            return result;
         }
 
         /// <summary>
@@ -463,7 +465,7 @@ namespace SeeingSharp.Core
             return this.Owner.TryGetLayer(layerName) != null;
         }
 
-        public SceneLayer TryGetLayer(string layerName)
+        public SceneLayer? TryGetLayer(string layerName)
         {
             this.CheckValid();
             return this.Owner.TryGetLayer(layerName);

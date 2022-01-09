@@ -1,4 +1,5 @@
-﻿using SeeingSharp.Core.Devices;
+﻿using SeeingSharp.Checking;
+using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
 using D3D11 = Vortice.Direct3D11;
 
@@ -7,7 +8,7 @@ namespace SeeingSharp.Drawing3D.Resources
     public class PixelShaderResource : ShaderResource
     {
         // Resources for Direct3D 11 rendering
-        private D3D11.ID3D11PixelShader _pixelShader;
+        private D3D11.ID3D11PixelShader? _pixelShader;
 
         /// <summary>
         /// Is the resource loaded?
@@ -17,7 +18,14 @@ namespace SeeingSharp.Drawing3D.Resources
         /// <summary>
         /// Gets the loaded PixelShader object.
         /// </summary>
-        internal D3D11.ID3D11PixelShader PixelShader => _pixelShader;
+        internal D3D11.ID3D11PixelShader PixelShader
+        {
+            get
+            {
+                _pixelShader.EnsureResourceLoaded(typeof(PixelShaderResource));
+                return _pixelShader!;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VertexShaderResource" /> class.

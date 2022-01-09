@@ -11,8 +11,8 @@ namespace SeeingSharp.Drawing3D
         private readonly NamedOrGenericKey _keyConstantBuffer = GraphicsCore.GetNextGenericResourceKey();
 
         // Resources
-        private TypeSafeConstantBufferResource<CBPerView> _cbPerView;
-        private PostprocessEffectResource _postprocessEffect;
+        private TypeSafeConstantBufferResource<CBPerView>? _cbPerView;
+        private PostprocessEffectResource? _postprocessEffect;
 
         /// <summary>
         /// Is the resource loaded?
@@ -56,7 +56,7 @@ namespace SeeingSharp.Drawing3D
         /// </summary>
         /// <param name="namedOrGenericKey">The key of the effect.</param>
         /// <param name="resourceDictionary">The resource dictionary where to load the effect.</param>
-        internal PostprocessEffectResource GetPostprocessEffect(NamedOrGenericKey namedOrGenericKey, ResourceDictionary resourceDictionary)
+        internal PostprocessEffectResource? GetPostprocessEffect(NamedOrGenericKey namedOrGenericKey, ResourceDictionary resourceDictionary)
         {
             this.PostprocessEffectKey = namedOrGenericKey;
 
@@ -87,7 +87,7 @@ namespace SeeingSharp.Drawing3D
         /// </summary>
         internal void UpdateValues(RenderState renderState, CBPerView cbPerView)
         {
-            _cbPerView.SetData(renderState.Device.DeviceImmediateContextD3D11, cbPerView);
+            _cbPerView!.SetData(renderState.Device.DeviceImmediateContextD3D11, cbPerView);
         }
 
         /// <summary>
@@ -99,8 +99,8 @@ namespace SeeingSharp.Drawing3D
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
             // Apply constant buffer on shaders
-            deviceContext.VSSetConstantBuffer(1, _cbPerView.ConstantBuffer);
-            deviceContext.PSSetConstantBuffer(1, _cbPerView.ConstantBuffer);
+            deviceContext.VSSetConstantBuffer(1, _cbPerView!.ConstantBuffer);
+            deviceContext.PSSetConstantBuffer(1, _cbPerView!.ConstantBuffer);
         }
     }
 }

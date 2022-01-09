@@ -34,7 +34,7 @@ namespace SeeingSharp.Mathematics
         /// <returns>
         /// collection of triangle Vector2s
         /// </returns>
-        public static IEnumerable<int> Triangulate(IList<Vector2> contour)
+        public static IEnumerable<int>? Triangulate(IList<Vector2> contour)
         {
             // allocate and initialize list of indices in polygon
             var result = new List<int>(contour.Count * 3);

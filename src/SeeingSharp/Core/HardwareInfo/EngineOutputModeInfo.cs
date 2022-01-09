@@ -4,7 +4,7 @@ using Vortice.DXGI;
 
 namespace SeeingSharp.Core.HardwareInfo
 {
-    public struct EngineOutputModeInfo : IEquatable<EngineOutputModeInfo>
+    public readonly struct EngineOutputModeInfo : IEquatable<EngineOutputModeInfo>
     {
         public static readonly EngineOutputModeInfo Empty = default;
 
@@ -46,7 +46,7 @@ namespace SeeingSharp.Core.HardwareInfo
         /// <returns>
         /// <c>true</c> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public override bool Equals(object value)
+        public override bool Equals(object? value)
         {
             if (value == null)
             {

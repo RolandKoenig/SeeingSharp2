@@ -53,7 +53,8 @@ namespace SeeingSharp.Drawing3D.Geometries
                 return;
             }
 
-            var d2DFactory = GraphicsCore.Current.FactoryD2D;
+            GraphicsCore.EnsureGraphicsSupportLoaded();
+            var d2DFactory = GraphicsCore.Current.FactoryD2D!;
 
             // Extrude geometry data out of given glyph run
             var geometryExtruder = new SimplePolygon2DGeometrySink(new Vector2(baselineOriginX, baselineOriginY));
@@ -63,7 +64,7 @@ namespace SeeingSharp.Drawing3D.Geometries
                 // Write all geometry data into a standard PathGeometry object
                 using (var geoSink = pathGeometry.Open())
                 {
-                    glyphRun.FontFace.GetGlyphRunOutline(
+                    glyphRun.FontFace!.GetGlyphRunOutline(
                         glyphRun.FontSize,
                         glyphRun.Indices,
                         glyphRun.Advances,
@@ -268,8 +269,6 @@ namespace SeeingSharp.Drawing3D.Geometries
 
             // Merge temporary geometry to target geometry
             _targetSurface.AddGeometry(tempGeometry);
-
-            return;
         }
 
         /// <summary>
@@ -288,7 +287,7 @@ namespace SeeingSharp.Drawing3D.Geometries
         /// <unmanaged>HRESULT DrawInlineObject([None] void* clientDrawingContext,[None] FLOAT originX,[None] FLOAT originY,[None] IDWriteInlineObject* inlineObject,[None] BOOL isSideways,[None] BOOL isRightToLeft,[None] IUnknown* clientDrawingEffect)</unmanaged>
         public override void DrawInlineObject(IntPtr clientDrawingContext, float originX, float originY, DWrite.IDWriteInlineObject inlineObject, RawBool isSideways, RawBool isRightToLeft, IUnknown clientDrawingEffect)
         {
-            return;
+
         }
 
         /// <summary>
@@ -308,7 +307,7 @@ namespace SeeingSharp.Drawing3D.Geometries
         /// </remarks>
         public override void DrawStrikethrough(IntPtr clientDrawingContext, float baselineOriginX, float baselineOriginY, ref DWrite.Strikethrough strikethrough, IUnknown clientDrawingEffect)
         {
-            return;
+
         }
 
         /// <summary>
@@ -328,7 +327,7 @@ namespace SeeingSharp.Drawing3D.Geometries
         /// </remarks>
         public override void DrawUnderline(IntPtr clientDrawingContext, float baselineOriginX, float baselineOriginY, ref DWrite.Underline underline, IUnknown clientDrawingEffect)
         {
-            return;
+
         }
     }
 }

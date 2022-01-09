@@ -178,7 +178,7 @@ namespace SeeingSharp.Core
             where T : Resource
         {
             var resourceType = typeof(T);
-            T result = null;
+            T? result = null;
 
             // Try to create default resources
             if (resourceType == typeof(MaterialResource))
@@ -241,8 +241,8 @@ namespace SeeingSharp.Core
         /// Adds the given resource to the dictionary.
         /// </summary>
         /// <param name="resource">The key of the resource.</param>
-        internal ResourceType AddResource<ResourceType>(ResourceType resource)
-            where ResourceType : Resource
+        internal TResourceType AddResource<TResourceType>(TResourceType resource)
+            where TResourceType : Resource
         {
             return this.AddResource(NamedOrGenericKey.Empty, resource);
         }
@@ -252,8 +252,8 @@ namespace SeeingSharp.Core
         /// </summary>
         /// <param name="resource">The resource to add.</param>
         /// <param name="resourceKey">The key of the resource.</param>
-        internal ResourceType AddResource<ResourceType>(NamedOrGenericKey resourceKey, ResourceType resource)
-            where ResourceType : Resource
+        internal TResourceType AddResource<TResourceType>(NamedOrGenericKey resourceKey, TResourceType resource)
+            where TResourceType : Resource
         {
             resource.EnsureNotNull(nameof(resource));
 
@@ -340,8 +340,8 @@ namespace SeeingSharp.Core
         /// </summary>
         /// <param name="resourceKey">The key of the resource.</param>
         /// <param name="resource">The resource to add.</param>
-        internal ResourceType AddAndLoadResource<ResourceType>(NamedOrGenericKey resourceKey, ResourceType resource)
-            where ResourceType : Resource
+        internal TResourceType AddAndLoadResource<TResourceType>(NamedOrGenericKey resourceKey, TResourceType resource)
+            where TResourceType : Resource
         {
             this.AddResource(resourceKey, resource);
             if (!resource.IsLoaded) { resource.LoadResource(); }
@@ -390,25 +390,21 @@ namespace SeeingSharp.Core
             }
 
             var newResource = createMethod();
-
-            if (newResource == null)
-            {
-                return null;
-            }
-
             this.AddResource(resourceKey, newResource);
+
             return newResource;
         }
 
         /// <summary>
         /// Gets the resource with the given name.
+        /// A default resource is created if the key does not exist.
         /// </summary>
         /// <typeparam name="T">Type of the resource.</typeparam>
         /// <param name="resourceKey">Key of the resource.</param>
         internal T GetResource<T>(NamedOrGenericKey resourceKey)
             where T : Resource
         {
-            T result = null;
+            T? result = null;
             if (!this.ContainsResource(resourceKey))
             {
                 // Try to query for existing default resources if given key is empty
@@ -430,12 +426,11 @@ namespace SeeingSharp.Core
                 // Resource does exist, so return existing
                 var currentResource = _resources[resourceKey].Resource;
                 result = currentResource as T;
-                if (currentResource != null && result == null)
+                if (result == null)
                 {
                     throw new SeeingSharpGraphicsException("Resource type mismatch: Behind the requested key " + resourceKey + " is a resource of another type (requested: " + typeof(T).FullName + ", current: " + currentResource.GetType().FullName + ")");
                 }
             }
-
             return result;
         }
 
@@ -492,8 +487,8 @@ namespace SeeingSharp.Core
         //*********************************************************************
         private class ResourceInfo
         {
-            public IRenderableResource RenderableResource;
-            public IUpdatableResource UpdatableResource;
+            public IRenderableResource? RenderableResource;
+            public IUpdatableResource? UpdatableResource;
             public Resource Resource;
 
             /// <summary>
@@ -522,7 +517,7 @@ namespace SeeingSharp.Core
             /// <returns>
             /// The element in the collection at the current position of the enumerator.
             /// </returns>
-            public Resource Current => _resourceInfoEnumerator.Current?.Resource;
+            public Resource Current => _resourceInfoEnumerator.Current!.Resource;
 
             /// <summary>
             /// Gets the element in the collection at the current position of the enumerator.

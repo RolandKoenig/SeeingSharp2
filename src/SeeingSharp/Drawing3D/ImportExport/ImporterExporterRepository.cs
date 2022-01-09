@@ -147,7 +147,7 @@ namespace SeeingSharp.Drawing3D.ImportExport
         /// </summary>
         /// <param name="source">The source where to load all objects from..</param>
         /// <param name="importOptions">The import options.</param>
-        public Task<ImportedModelContainer> ImportAsync(ResourceLink source, ImportOptions importOptions)
+        public Task<ImportedModelContainer> ImportAsync(ResourceLink source, ImportOptions? importOptions)
         {
             var importer = this.GetImporterBySource(source);
 

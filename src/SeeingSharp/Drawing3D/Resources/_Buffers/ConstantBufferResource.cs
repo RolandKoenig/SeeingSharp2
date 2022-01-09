@@ -1,4 +1,5 @@
 ﻿using System;
+using SeeingSharp.Checking;
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
@@ -9,7 +10,7 @@ namespace SeeingSharp.Drawing3D.Resources
     public class ConstantBufferResource : Resource
     {
         // Direct3D resources
-        private D3D11.ID3D11Buffer _constantBuffer;
+        private D3D11.ID3D11Buffer? _constantBuffer;
 
         /// <summary>
         /// Is the buffer loaded correctly?
@@ -24,7 +25,14 @@ namespace SeeingSharp.Drawing3D.Resources
         /// <summary>
         /// Gets the buffer object.
         /// </summary>
-        internal D3D11.ID3D11Buffer ConstantBuffer => _constantBuffer;
+        internal D3D11.ID3D11Buffer ConstantBuffer
+        {
+            get
+            {
+                _constantBuffer.EnsureResourceLoaded(typeof(ConstantBufferResource));
+                return _constantBuffer!;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConstantBufferResource" /> class.

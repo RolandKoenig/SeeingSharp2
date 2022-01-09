@@ -1,6 +1,5 @@
 ﻿using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
-using SeeingSharp.Drawing3D.ImportExport;
 using D3D11 = Vortice.Direct3D11;
 
 namespace SeeingSharp.Drawing3D.Resources
@@ -10,19 +9,11 @@ namespace SeeingSharp.Drawing3D.Resources
         public virtual bool IsExportable => false;
 
         /// <summary>
-        /// Stores all required data into a new <see cref="ExportMaterialInfo"/>.
-        /// </summary>
-        public virtual ExportMaterialInfo PrepareForExport()
-        {
-            return null;
-        }
-
-        /// <summary>
         /// Applies the material to the given render state.
         /// </summary>
         /// <param name="renderState">Current render state</param>
         /// <param name="previousMaterial">The previously applied material.</param>
-        internal virtual void Apply(RenderState renderState, MaterialResource previousMaterial) { }
+        internal virtual void Apply(RenderState renderState, MaterialResource? previousMaterial) { }
 
         /// <summary>
         /// Discards the material in current render state.

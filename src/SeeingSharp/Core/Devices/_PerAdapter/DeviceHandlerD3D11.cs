@@ -21,11 +21,11 @@ namespace SeeingSharp.Core.Devices
     public class DeviceHandlerD3D11
     {
         // Resources from Direct3D11 api
-        private IDXGIAdapter1 _dxgiAdapter;
-        private D3D11.ID3D11Device1 _device1;
-        private D3D11.ID3D11Device3 _device3;
-        private D3D11.ID3D11DeviceContext _immediateContext;
-        private D3D11.ID3D11DeviceContext3 _immediateContext3;
+        private IDXGIAdapter1? _dxgiAdapter;
+        private D3D11.ID3D11Device1? _device1;
+        private D3D11.ID3D11Device3? _device3;
+        private D3D11.ID3D11DeviceContext? _immediateContext;
+        private D3D11.ID3D11DeviceContext3? _immediateContext3;
 
         // Parameters of created device
         private D3D11.DeviceCreationFlags _creationFlags;
@@ -69,21 +69,49 @@ namespace SeeingSharp.Core.Devices
         /// <summary>
         /// Gets the Direct3D 11 device.
         /// </summary>
-        internal D3D11.ID3D11Device1 Device1 => _device1;
+        internal D3D11.ID3D11Device1 Device1
+        {
+            get
+            {
+                if (_device1 == null) { throw new ObjectDisposedException(nameof(DeviceHandlerD3D11)); }
+                return _device1;
+            }
+        }
 
-        internal D3D11.ID3D11Device3 Device3 => _device3;
+        internal D3D11.ID3D11Device3? Device3
+        {
+            get
+            {
+                if (_device1 == null) { throw new ObjectDisposedException(nameof(DeviceHandlerD3D11)); }
+                return _device3;
+            }
+        }
 
         internal D3D11.DeviceCreationFlags CreationFlags => _creationFlags;
 
         /// <summary>
         /// Gets the immediate context.
         /// </summary>
-        internal D3D11.ID3D11DeviceContext ImmediateContext => _immediateContext;
+        internal D3D11.ID3D11DeviceContext ImmediateContext
+        {
+            get
+            {
+                if (_immediateContext == null) { throw new ObjectDisposedException(nameof(DeviceHandlerD3D11)); }
+                return _immediateContext;
+            }
+        }
 
         /// <summary>
         /// Gets the immediate context.
         /// </summary>
-        internal D3D11.ID3D11DeviceContext3 ImmediateContext3 => _immediateContext3;
+        internal D3D11.ID3D11DeviceContext3? ImmediateContext3
+        {
+            get
+            {
+                if (_immediateContext == null) { throw new ObjectDisposedException(nameof(DeviceHandlerD3D11)); }
+                return _immediateContext3;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerD3D11"/> class.
@@ -120,7 +148,8 @@ namespace SeeingSharp.Core.Devices
                     var result = D3D11CreateDevice(
                         dxgiAdapter, D3D.DriverType.Unknown, createFlags,
                         new D3D.FeatureLevel[] { actFeatureLevel }, out var device);
-                    if(!result.Success){ continue; }
+                    if (!result.Success) { continue; }
+                    if (device == null) { continue; }
 
                     try
                     {

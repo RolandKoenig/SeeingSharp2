@@ -8,7 +8,7 @@
     {
         public SceneComponentBase Component;
         public object Context;
-        public ViewInformation CorrespondingView;
+        public ViewInformation? CorrespondingView;
     }
 
     /// <summary>
@@ -20,7 +20,7 @@
     {
         public SceneComponentRequestType RequestType;
         public SceneComponentBase Component;
-        public ViewInformation CorrespondingView;
+        public ViewInformation? CorrespondingView;
     }
 
     /// <summary>

@@ -6,11 +6,18 @@ namespace SeeingSharp.Core
 {
     public class RenderPassDumpEntry : IDisposable, ICheckDisposed
     {
-        private MemoryMappedTexture<int> _bufferColor;
+        private MemoryMappedTexture<int>? _bufferColor;
 
         public string Key { get; }
 
-        public MemoryMappedTexture<int> BufferColor => _bufferColor;
+        public MemoryMappedTexture<int> BufferColor
+        {
+            get
+            {
+                if (_bufferColor == null) { throw new ObjectDisposedException(nameof(RenderPassDumpEntry)); }
+                return _bufferColor;
+            }
+        }
 
         /// <inheritdoc />
         public bool IsDisposed => _bufferColor == null;

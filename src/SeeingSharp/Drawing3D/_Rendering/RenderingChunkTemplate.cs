@@ -9,24 +9,24 @@ namespace SeeingSharp.Drawing3D
 {
     public class RenderingChunkTemplate : IDisposable, ICheckDisposed
     {
-        internal D3D11.ID3D11Buffer IndexBuffer;
+        internal D3D11.ID3D11Buffer? IndexBuffer;
         internal int IndexBufferId;
         internal int IndexCount;
         internal int SizePerVertex;
         internal int StartIndex;
-        internal D3D11.ID3D11Buffer VertexBuffer;
+        internal D3D11.ID3D11Buffer? VertexBuffer;
         internal int VertexBufferId;
-        internal Geometry Geometry;
-        internal D3D11.InputElementDescription[] InputElements;
+        internal Geometry Geometry = null!;
+        internal D3D11.InputElementDescription[] InputElements = null!;
 
         public bool IsDisposed => IndexBuffer != null;
 
         public RenderingChunk CreateChunk(EngineDevice device, MaterialResource material)
         {
-            var result = new RenderingChunk();
-            result.Template = this;
-            result.Material = material;
-            result.InputLayout = material.GetInputLayout(device, InputElements);
+            var result = new RenderingChunk(
+                this, 
+                material.GetInputLayout(device, InputElements),
+                material);
 
             return result;
         }

@@ -32,7 +32,7 @@ namespace SeeingSharp.Core
         /// </summary>
         /// <param name="component">The component to be attached.</param>
         /// <param name="sourceView">The view which attaches the component.</param>
-        internal void AttachComponent(SceneComponentBase component, ViewInformation sourceView)
+        internal void AttachComponent(SceneComponentBase component, ViewInformation? sourceView)
         {
             component.EnsureNotNull(nameof(component));
             if (component.IsViewSpecific)
@@ -53,7 +53,7 @@ namespace SeeingSharp.Core
         /// </summary>
         /// <param name="component">The component to be detached.</param>
         /// <param name="sourceView">The view which attached the component initially.</param>
-        internal void DetachComponent(SceneComponentBase component, ViewInformation sourceView)
+        internal void DetachComponent(SceneComponentBase component, ViewInformation? sourceView)
         {
             component.EnsureNotNull(nameof(component));
             if (component.IsViewSpecific)
@@ -73,7 +73,7 @@ namespace SeeingSharp.Core
         /// Detaches all currently attached components.
         /// </summary>
         /// <param name="sourceView">The view from which we've to detach all components.</param>
-        internal void DetachAllComponents(ViewInformation sourceView)
+        internal void DetachAllComponents(ViewInformation? sourceView)
         {
             _componentRequests.Enqueue(new SceneComponentRequest
             {
@@ -216,7 +216,7 @@ namespace SeeingSharp.Core
             }
         }
 
-        private IEnumerable<SceneComponentInfo> GetExistingComponentsByGroup(string groupName, ViewInformation correspondingView)
+        private IEnumerable<SceneComponentInfo> GetExistingComponentsByGroup(string groupName, ViewInformation? correspondingView)
         {
             var attachedComponentCount = _attachedComponents.Count;
             for (var loop = 0; loop < attachedComponentCount; loop++)
@@ -233,7 +233,7 @@ namespace SeeingSharp.Core
         /// Tries the get information about a currently attached component.
         /// </summary>
         private bool TryGetAttachedComponent(
-            SceneComponentBase component, ViewInformation correspondingView,
+            SceneComponentBase component, ViewInformation? correspondingView,
             out SceneComponentInfo componentInfo, out int componentIndex)
         {
             var attachedComponentCount = _attachedComponents.Count;

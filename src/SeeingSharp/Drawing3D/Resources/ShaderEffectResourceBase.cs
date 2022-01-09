@@ -10,8 +10,8 @@ namespace SeeingSharp.Drawing3D.Resources
         private static readonly NamedOrGenericKey s_resKeyVertexShader = GraphicsCore.GetNextGenericResourceKey();
 
         // Resources
-        private VertexShaderResource _vertexShader;
-        private DefaultResources _defaultResources;
+        private VertexShaderResource? _vertexShader;
+        private DefaultResources? _defaultResources;
 
         /// <summary>
         /// Applies alpha based sprite rendering.
@@ -19,8 +19,8 @@ namespace SeeingSharp.Drawing3D.Resources
         /// <param name="deviceContext">The target device context.</param>
         protected void ApplySpriteRendering(D3D11.ID3D11DeviceContext deviceContext)
         {
-            deviceContext.VSSetShader(_vertexShader.VertexShader);
-            deviceContext.OMSetDepthStencilState(_defaultResources.DepthStencilStateAlwaysPassDepth);
+            deviceContext.VSSetShader(_vertexShader!.VertexShader);
+            deviceContext.OMSetDepthStencilState(_defaultResources!.DepthStencilStateAlwaysPassDepth);
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace SeeingSharp.Drawing3D.Resources
         /// <param name="deviceContext">The target device context.</param>
         protected void DiscardSpriteRendering(D3D11.ID3D11DeviceContext deviceContext)
         {
-            deviceContext.OMSetDepthStencilState(_defaultResources.DepthStencilStateDefault);
+            deviceContext.OMSetDepthStencilState(_defaultResources!.DepthStencilStateDefault);
         }
 
         /// <summary>
@@ -38,9 +38,9 @@ namespace SeeingSharp.Drawing3D.Resources
         /// <param name="deviceContext">The target device context.</param>
         protected void ApplyAlphaBasedSpriteRendering(D3D11.ID3D11DeviceContext deviceContext)
         {
-            deviceContext.VSSetShader(_vertexShader.VertexShader);
+            deviceContext.VSSetShader(_vertexShader!.VertexShader);
 
-            deviceContext.OMSetDepthStencilState(_defaultResources.DepthStencilStateAlwaysPassDepth);
+            deviceContext.OMSetDepthStencilState(_defaultResources!.DepthStencilStateAlwaysPassDepth);
             deviceContext.OMSetBlendState(_defaultResources.AlphaBlendingBlendState);
         }
 
@@ -50,8 +50,8 @@ namespace SeeingSharp.Drawing3D.Resources
         /// <param name="deviceContext">The target device context.</param>
         protected void DiscardAlphaBasedSpriteRendering(D3D11.ID3D11DeviceContext deviceContext)
         {
-            deviceContext.OMSetBlendState(_defaultResources.DefaultBlendState);
-            deviceContext.OMSetDepthStencilState(_defaultResources.DepthStencilStateDefault);
+            deviceContext.OMSetBlendState(_defaultResources!.DefaultBlendState);
+            deviceContext.OMSetDepthStencilState(_defaultResources!.DepthStencilStateDefault);
         }
 
         /// <summary>

@@ -9,13 +9,13 @@ namespace SeeingSharp.Drawing3D.Resources
     public class StandardTextureResource : TextureResource
     {
         // Configuration
-        private ResourceLink _resourceLinkHighQuality;
-        private ResourceLink _resourceLinkLowQuality;
-        private MemoryMappedTexture<int> _inMemoryTexture;
-
+        private ResourceLink? _resourceLinkHighQuality;
+        private ResourceLink? _resourceLinkLowQuality;
+        private MemoryMappedTexture<int>? _inMemoryTexture;
+        
         // Loaded resources
-        private D3D11.ID3D11Texture2D _texture;
-        private D3D11.ID3D11ShaderResourceView _textureView;
+        private D3D11.ID3D11Texture2D? _texture;
+        private D3D11.ID3D11ShaderResourceView? _textureView;
 
         // Runtime
         private bool _isCubeTexture;
@@ -25,12 +25,26 @@ namespace SeeingSharp.Drawing3D.Resources
         /// Gets the texture object.
         /// </summary>
         /// <exception cref="System.NotImplementedException"></exception>
-        internal override D3D11.ID3D11Texture2D Texture => _texture;
+        internal override D3D11.ID3D11Texture2D Texture
+        {
+            get
+            {
+                _texture.EnsureResourceLoaded(typeof(StandardTextureResource));
+                return _texture!;
+            }
+        }
 
         /// <summary>
         /// Gets a ShaderResourceView targeting the texture.
         /// </summary>
-        internal override D3D11.ID3D11ShaderResourceView TextureView => _textureView;
+        internal override D3D11.ID3D11ShaderResourceView TextureView
+        {
+            get
+            {
+                _textureView.EnsureResourceLoaded(typeof(StandardTextureResource));
+                return _textureView!;
+            }
+        }
 
         /// <summary>
         /// Is the object loaded correctly?
@@ -52,7 +66,14 @@ namespace SeeingSharp.Drawing3D.Resources
         /// 1 for normal textures.
         /// 6 for cubemap textures.
         /// </summary>
-        public override int ArraySize => _texture.Description.ArraySize;
+        public override int ArraySize
+        {
+            get
+            {
+                _texture.EnsureResourceLoaded(typeof(StandardTextureResource));
+                return _texture!.Description.ArraySize;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StandardTextureResource" /> class.
@@ -101,9 +122,9 @@ namespace SeeingSharp.Drawing3D.Resources
             {
                 _texture = GraphicsHelper.CreateTexture(device, source);
             }
-            else if (_inMemoryTexture != null)
+            else 
             {
-                _texture = GraphicsHelper.Internals.LoadTexture2DFromMappedTexture(device, _inMemoryTexture, true);
+                _texture = GraphicsHelper.Internals.LoadTexture2DFromMappedTexture(device, _inMemoryTexture!, true);
             }
 
             // Create view for shaders

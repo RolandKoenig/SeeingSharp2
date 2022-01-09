@@ -171,9 +171,9 @@ namespace SeeingSharp.Drawing3D
         /// <param name="lineList">List containing the lines.</param>
         public static StandardVertex[] FromLineList(Color4 lineColor, params Vector3[] lineList)
         {
-            if (lineList == null || lineList.Length == 0)
+            if (lineList.Length == 0)
             {
-                return new StandardVertex[0];
+                return Array.Empty<StandardVertex>();
             }
 
             var result = new StandardVertex[lineList.Length];

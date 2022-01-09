@@ -9,23 +9,44 @@ namespace SeeingSharp.Core.Devices
     public class DeviceHandlerD2D
     {
         // Main references for Direct2D
-        private D2D.ID2D1RenderTarget _renderTarget;
-        private D2D.ID2D1Device _deviceD2D;
-        private D2D.ID2D1DeviceContext _deviceContextD2D;
+        private D2D.ID2D1RenderTarget? _renderTarget;
+        private D2D.ID2D1Device? _deviceD2D;
+        private D2D.ID2D1DeviceContext? _deviceContextD2D;
 
         public bool IsLoaded => _renderTarget != null;
 
         /// <summary>
         /// Gets a reference to the Direct2D view to the device.
         /// </summary>
-        internal D2D.ID2D1Device Device => _deviceD2D;
+        internal D2D.ID2D1Device Device
+        {
+            get
+            {
+                if (_deviceD2D == null) { throw new ObjectDisposedException(nameof(DeviceHandlerD2D)); }
+                return _deviceD2D;
+            }
+        }
 
         /// <summary>
         /// Gets a reference to the device DeviceContext for rendering.
         /// </summary>
-        internal D2D.ID2D1DeviceContext DeviceContext => _deviceContextD2D;
+        internal D2D.ID2D1DeviceContext DeviceContext
+        {
+            get
+            {
+                if (_deviceContextD2D == null) { throw new ObjectDisposedException(nameof(DeviceHandlerD2D)); }
+                return _deviceContextD2D;
+            }
+        }
 
-        internal D2D.ID2D1RenderTarget RenderTarget => _renderTarget;
+        internal D2D.ID2D1RenderTarget RenderTarget
+        {
+            get
+            {
+                if (_renderTarget == null) { throw new ObjectDisposedException(nameof(DeviceHandlerD2D)); }
+                return _renderTarget;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerD3D11" /> class.

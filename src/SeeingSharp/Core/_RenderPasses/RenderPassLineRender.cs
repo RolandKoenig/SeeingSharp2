@@ -6,8 +6,8 @@ namespace SeeingSharp.Core
 {
     public class RenderPassLineRender : RenderPassBase
     {
-        private DefaultResources _defaultResources;
-        private LineRenderResources _lineRenderResources;
+        private DefaultResources? _defaultResources;
+        private LineRenderResources? _lineRenderResources;
 
         /// <summary>
         /// Is the resource loaded?
@@ -23,9 +23,9 @@ namespace SeeingSharp.Core
         {
             var device = renderState.Device;
 
-            device.DeviceImmediateContextD3D11.RSSetState(_defaultResources.RasterStateLines);
+            device.DeviceImmediateContextD3D11.RSSetState(_defaultResources!.RasterStateLines);
             device.DeviceImmediateContextD3D11.IASetPrimitiveTopology(D3D.PrimitiveTopology.LineList);
-            device.DeviceImmediateContextD3D11.IASetInputLayout(_lineRenderResources.InputLayout);
+            device.DeviceImmediateContextD3D11.IASetInputLayout(_lineRenderResources!.InputLayout);
 
             device.DeviceImmediateContextD3D11.VSSetShader(_lineRenderResources.VertexShader.VertexShader);
             device.DeviceImmediateContextD3D11.PSSetShader(_lineRenderResources.PixelShader.PixelShader);
@@ -39,7 +39,7 @@ namespace SeeingSharp.Core
         {
             var device = renderState.Device;
 
-            device.DeviceImmediateContextD3D11.RSSetState(_defaultResources.RasterStateDefault);
+            device.DeviceImmediateContextD3D11.RSSetState(_defaultResources!.RasterStateDefault);
             device.DeviceImmediateContextD3D11.IASetPrimitiveTopology(D3D.PrimitiveTopology.TriangleList);
         }
 

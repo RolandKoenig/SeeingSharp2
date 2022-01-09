@@ -7,14 +7,14 @@ namespace SeeingSharp.Drawing3D.Geometries
         /// <summary>
         /// Gets the containing geometry.
         /// </summary>
-        public Geometry Geometry { get; }
+        public Geometry? Geometry { get; }
 
         /// <summary>
         /// Gets the containing geometry for low detail level.
         /// </summary>
-        public Geometry GeometryLowDetail { get; }
+        public Geometry? GeometryLowDetail { get; }
 
-        public Func<GeometryBuildOptions, Geometry> BuilderFunction { get; }
+        public Func<GeometryBuildOptions, Geometry>? BuilderFunction { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomGeometryFactory"/> class.
@@ -61,8 +61,8 @@ namespace SeeingSharp.Drawing3D.Geometries
                 return this.BuilderFunction(buildOptions);
             }
 
-            if (buildOptions.IsHighDetail) { return this.Geometry; }
-            return this.GeometryLowDetail;
+            if (buildOptions.IsHighDetail) { return this.Geometry!; }
+            return this.GeometryLowDetail!;
         }
     }
 }

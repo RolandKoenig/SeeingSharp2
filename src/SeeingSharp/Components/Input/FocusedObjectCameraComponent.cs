@@ -5,7 +5,7 @@ namespace SeeingSharp.Components.Input
 {
     public class FocusedObjectCameraComponent : FocusedCameraComponent
     {
-        public SceneSpacialObject FocusedObject
+        public SceneSpacialObject? FocusedObject
         {
             get;
             set;

@@ -50,7 +50,7 @@ namespace SeeingSharp.Core.Animations
         /// <param name="actionToCall">The action to be called after animation has finished.</param>
         /// <param name="cancelAction">The action to be called when the animation gets canceled.</param>
         /// <param name="ignorePause">Should this animation ignore pause state</param>
-        void Apply(Action actionToCall = null, Action cancelAction = null, bool? ignorePause = null);
+        void Apply(Action? actionToCall = null, Action? cancelAction = null, bool? ignorePause = null);
 
         /// <summary>
         /// Finishes the AnimationSequence and adds it to the AnimationHandler it was created with.
@@ -70,7 +70,7 @@ namespace SeeingSharp.Core.Animations
         /// <param name="actionToCall">The action to be called after animation has finished.</param>
         /// <param name="cancelAction">The action to be called when the animation gets canceled.</param>
         /// <param name="ignorePause">Should this animation ignore pause state</param>
-        void ApplyAsSecondary(Action actionToCall = null, Action cancelAction = null, bool? ignorePause = null);
+        void ApplyAsSecondary(Action? actionToCall = null, Action? cancelAction = null, bool? ignorePause = null);
 
         /// <summary>
         /// Finishes the AnimationSequence and adds it to the AnimationHandler it was created with.

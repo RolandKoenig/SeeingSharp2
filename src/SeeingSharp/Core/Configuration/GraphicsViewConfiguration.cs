@@ -189,13 +189,13 @@ namespace SeeingSharp.Core.Configuration
         /// Gets current device configuration.
         /// </summary>
         [Browsable(false)]
-        public GraphicsDeviceConfiguration DeviceConfiguration { get; internal set; }
+        public GraphicsDeviceConfiguration? DeviceConfiguration { get; internal set; }
 
         /// <summary>
         /// Gets current core configuration.
         /// </summary>
         [Browsable(false)]
-        public GraphicsCoreConfiguration CoreConfiguration => this.DeviceConfiguration?.CoreConfiguration;
+        public GraphicsCoreConfiguration? CoreConfiguration => this.DeviceConfiguration?.CoreConfiguration;
 
         /// <summary>
         /// Internal accessor for ShowTextures variable.
@@ -206,7 +206,7 @@ namespace SeeingSharp.Core.Configuration
         /// Occurs when any configuration flag has changed.
         /// This event may occur in different threads!
         /// </summary>
-        public event EventHandler ConfigurationChanged;
+        public event EventHandler? ConfigurationChanged;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GraphicsViewConfiguration" /> class.

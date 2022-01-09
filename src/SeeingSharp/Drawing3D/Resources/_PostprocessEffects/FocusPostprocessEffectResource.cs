@@ -22,12 +22,12 @@ namespace SeeingSharp.Drawing3D.Resources
         private float _fadeIntensity;
 
         // Resources
-        private SingleForcedColorMaterialResource _singleForcedColor;
-        private RenderTargetTextureResource _renderTarget;
-        private DefaultResources _defaultResources;
-        private PixelShaderResource _pixelShaderBlur;
-        private TypeSafeConstantBufferResource<CbPerObject> _cbFirstPass;
-        private TypeSafeConstantBufferResource<CbPerObject> _cbSecondPass;
+        private SingleForcedColorMaterialResource? _singleForcedColor;
+        private RenderTargetTextureResource? _renderTarget;
+        private DefaultResources? _defaultResources;
+        private PixelShaderResource? _pixelShaderBlur;
+        private TypeSafeConstantBufferResource<CbPerObject>? _cbFirstPass;
+        private TypeSafeConstantBufferResource<CbPerObject>? _cbSecondPass;
 
         /// <inheritdoc />
         public override bool IsLoaded =>
@@ -111,43 +111,43 @@ namespace SeeingSharp.Drawing3D.Resources
                     // 1. Pass: Draw all pixels that ly behind other already rendered elements
                     case 0:
                         // Force the single color material
-                        renderState.ForceMaterial(_singleForcedColor);
+                        renderState.ForceMaterial(_singleForcedColor!);
 
                         // Apply current render target size an push render target texture on current rendering stack
-                        _renderTarget.ApplySize(renderState);
-                        _renderTarget.PushOnRenderState(renderState, PushRenderTargetMode.Default_OwnColor_PrevDepthObjectIdNormalDepth);
+                        _renderTarget!.ApplySize(renderState);
+                        _renderTarget!.PushOnRenderState(renderState, PushRenderTargetMode.Default_OwnColor_PrevDepthObjectIdNormalDepth);
 
                         // Clear current render target
                         renderState.ClearCurrentColorBuffer(new Color4(1f, 1f, 1f, 0f));
 
                         // ConfigureLoading stencil state(invert z logic, disable z writes)
-                        renderState.Device.DeviceImmediateContextD3D11.OMSetDepthStencilState(_defaultResources.DepthStencilStateInvertedZTest);
+                        renderState.Device.DeviceImmediateContextD3D11.OMSetDepthStencilState(_defaultResources!.DepthStencilStateInvertedZTest);
                         break;
 
                     //******************************
                     // 2. Pass: Draw all visible pixels with some blur effect
                     case 1:
                         // Force the single color material
-                        renderState.ForceMaterial(_singleForcedColor);
+                        renderState.ForceMaterial(_singleForcedColor!);
 
                         // Push render target texture on current rendering stack again
-                        _renderTarget.PushOnRenderState(renderState, PushRenderTargetMode.Default_OwnColor_PrevDepthObjectIdNormalDepth);
+                        _renderTarget!.PushOnRenderState(renderState, PushRenderTargetMode.Default_OwnColor_PrevDepthObjectIdNormalDepth);
 
                         // Clear current render target
                         renderState.ClearCurrentColorBuffer(new Color4(1f, 1f, 1f, 0f));
 
                         // Change raster state
-                        renderState.Device.DeviceImmediateContextD3D11.RSSetState(_defaultResources.RasterStateBiased);
-                        renderState.Device.DeviceImmediateContextD3D11.OMSetDepthStencilState(_defaultResources.DepthStencilStateDisableZWrites);
+                        renderState.Device.DeviceImmediateContextD3D11.RSSetState(_defaultResources!.RasterStateBiased);
+                        renderState.Device.DeviceImmediateContextD3D11.OMSetDepthStencilState(_defaultResources!.DepthStencilStateDisableZWrites);
                         break;
                 }
             }
             else
             {
-                renderState.ForceMaterial(_singleForcedColor);
+                renderState.ForceMaterial(_singleForcedColor!);
 
                 // Change raster state
-                renderState.Device.DeviceImmediateContextD3D11.RSSetState(_defaultResources.RasterStateBiased);
+                renderState.Device.DeviceImmediateContextD3D11.RSSetState(_defaultResources!.RasterStateBiased);
             }
         }
 
@@ -165,14 +165,14 @@ namespace SeeingSharp.Drawing3D.Resources
             if (renderState.Device.IsHighDetailSupported && !_forceSimpleMethod)
             {
                 // Reset settings made on render state (needed for all passes)
-                deviceContext.RSSetState(_defaultResources.RasterStateDefault);
+                deviceContext.RSSetState(_defaultResources!.RasterStateDefault);
                 deviceContext.OMSetDepthStencilState(_defaultResources.DepthStencilStateDefault);
                 renderState.ForceMaterial(null);
 
                 renderState.DumpCurrentRenderTargetsIfActivated(layerName, passId, "FocusAfterRender");
 
                 // Reset render target (needed for all passes)
-                _renderTarget.PopFromRenderState(renderState);
+                _renderTarget!.PopFromRenderState(renderState);
 
                 // Clear cached material resource because we work with shaders directly here
                 renderState.ClearCachedAppliedMaterial();
@@ -186,8 +186,8 @@ namespace SeeingSharp.Drawing3D.Resources
                         {
                             deviceContext.PSSetShaderResource(0, _renderTarget.TextureView);
                             deviceContext.PSSetSampler(0, _defaultResources.GetSamplerState(TextureSamplerQualityLevel.Low));
-                            deviceContext.PSSetConstantBuffer(2, _cbFirstPass.ConstantBuffer);
-                            deviceContext.PSSetShader(_pixelShaderBlur.PixelShader);
+                            deviceContext.PSSetConstantBuffer(2, _cbFirstPass!.ConstantBuffer);
+                            deviceContext.PSSetShader(_pixelShaderBlur!.PixelShader);
                             deviceContext.Draw(3, 0);
                         }
                         finally
@@ -202,8 +202,8 @@ namespace SeeingSharp.Drawing3D.Resources
                         {
                             deviceContext.PSSetShaderResource(0, _renderTarget.TextureView);
                             deviceContext.PSSetSampler(0, _defaultResources.GetSamplerState(TextureSamplerQualityLevel.Low));
-                            deviceContext.PSSetConstantBuffer(2, _cbSecondPass.ConstantBuffer);
-                            deviceContext.PSSetShader(_pixelShaderBlur.PixelShader);
+                            deviceContext.PSSetConstantBuffer(2, _cbSecondPass!.ConstantBuffer);
+                            deviceContext.PSSetShader(_pixelShaderBlur!.PixelShader);
                             deviceContext.Draw(3, 0);
 
                         }
@@ -217,7 +217,7 @@ namespace SeeingSharp.Drawing3D.Resources
             else
             {
                 // Reset changes from before
-                deviceContext.RSSetState(_defaultResources.RasterStateDefault);
+                deviceContext.RSSetState(_defaultResources!.RasterStateDefault);
                 renderState.ForceMaterial(null);
 
                 // Now we ware finished

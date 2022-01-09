@@ -1,4 +1,5 @@
-﻿using SeeingSharp.Core;
+﻿using System;
+using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
 using Vortice.D3DCompiler;
@@ -10,14 +11,24 @@ namespace SeeingSharp.Drawing3D.Resources
     {
         // Generic members
         private string _shaderProfile;
-        private byte[] _shaderBytecode;
+        private byte[]? _shaderBytecode;
         private ResourceLink _resourceLink;
         private ShaderResourceKind _resourceKind;
 
         /// <summary>
         /// Gets the shaders raw bytecode.
         /// </summary>
-        public byte[] ShaderBytecode => _shaderBytecode;
+        public byte[] ShaderBytecode
+        {
+            get
+            {
+                if (_shaderBytecode == null)
+                {
+                    throw new SeeingSharpResourcesNotLoadedException(typeof(ShaderResource), nameof(this.ShaderBytecode));
+                }
+                return _shaderBytecode;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShaderResource"/> class.
@@ -84,8 +95,8 @@ namespace SeeingSharp.Drawing3D.Resources
                         var shaderSource = singleShaderSourceBuilder.ToString();
                         var compileResult = Compiler.Compile(
                             shaderSource,
-                            null, 
-                            null,
+                            Array.Empty<D3D.ShaderMacro>(),
+                            null!,
                             "main",
                             resourceLink.ToString(),
                             shaderModel,

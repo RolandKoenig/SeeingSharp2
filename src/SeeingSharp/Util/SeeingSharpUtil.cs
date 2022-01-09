@@ -24,12 +24,12 @@ namespace SeeingSharp.Util
             var fInfo = queue.GetType().GetTypeInfo().GetField("_array", BindingFlags.NonPublic | BindingFlags.Instance);
             if (fInfo != null)
             {
-                return fInfo.GetValue(queue) as T[];
+                if (fInfo.GetValue(queue) is T[] result) { return result; }
             }
             throw new SeeingSharpException("Unable to get backing array from Queue<T>!");
         }
 
-        public static T TryExecute<T>(Func<T> funcToExec)
+        public static T? TryExecute<T>(Func<T?> funcToExec)
         {
             try
             {
@@ -221,7 +221,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Disposes the given object.
         /// </summary>
-        public static void SafeDispose<T>(ref T toDispose)
+        public static void SafeDispose<T>(ref T? toDispose)
             where T : class, IDisposable
         {
             toDispose = DisposeObject(toDispose);
@@ -230,7 +230,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Disposes the given object.
         /// </summary>
-        public static void SafeDisposeLazy<T>(ref Lazy<T> toDispose)
+        public static void SafeDisposeLazy<T>(ref Lazy<T>? toDispose)
             where T : class, IDisposable
         {
             toDispose = DisposeObjectLazy(toDispose);
@@ -239,7 +239,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Disposes the given object and returns null.
         /// </summary>
-        public static T DisposeObject<T>(T objectToDispose)
+        public static T? DisposeObject<T>(T? objectToDispose)
             where T : class, IDisposable
         {
             if (objectToDispose == null) { return null; }
@@ -257,7 +257,7 @@ namespace SeeingSharp.Util
         /// Disposes the given lazy object (if created already).
         /// </summary>
         /// <param name="objectToDispose">The object to be disposed.</param>
-        public static Lazy<T> DisposeObjectLazy<T>(Lazy<T> objectToDispose)
+        public static Lazy<T>? DisposeObjectLazy<T>(Lazy<T>? objectToDispose)
             where T : class, IDisposable
         {
             if (objectToDispose == null) { return null; }

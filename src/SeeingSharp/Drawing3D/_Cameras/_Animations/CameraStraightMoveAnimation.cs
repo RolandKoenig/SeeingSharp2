@@ -8,7 +8,7 @@ namespace SeeingSharp.Drawing3D
     {
         // Configuration
         private Camera3DBase _camera;
-        private OrthographicCamera3D _cameraOrthographic;
+        private OrthographicCamera3D? _cameraOrthographic;
         private Camera3DViewPoint _viewPointSource;
         private Camera3DViewPoint _viewPointTarget;
 

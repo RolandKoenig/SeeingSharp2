@@ -103,8 +103,10 @@ namespace SeeingSharp.Core
                 inStream.EnsureNotNull(nameof(inStream));
                 inStream.EnsureReadable(nameof(inStream));
 
+                GraphicsCore.EnsureGraphicsSupportLoaded();
+
                 var wicFactory = GraphicsCore.Current.FactoryWIC;
-                var bitmapDecoder = wicFactory.CreateDecoderFromStream(
+                var bitmapDecoder = wicFactory!.CreateDecoderFromStream(
                     inStream, DecodeOptions.CacheOnDemand);
                 var formatConverter = wicFactory.CreateFormatConverter();
                 formatConverter.Initialize(
@@ -138,11 +140,13 @@ namespace SeeingSharp.Core
                 inStream.EnsureNotNull(nameof(inStream));
                 inStream.EnsureReadable(nameof(inStream));
 
+                GraphicsCore.EnsureGraphicsSupportLoaded();
+
                 // Parameter changed to represent this article (important is the correct Direct2D format):
                 // https://msdn.microsoft.com/en-us/library/windows/desktop/dd756686(v=vs.85).aspx
 
                 var wicFactory = GraphicsCore.Current.FactoryWIC;
-                var bitmapDecoder = wicFactory.CreateDecoderFromStream(
+                var bitmapDecoder = wicFactory!.CreateDecoderFromStream(
                     inStream, DecodeOptions.CacheOnLoad);
                 var formatConverter = wicFactory.CreateFormatConverter();
                 formatConverter.Initialize(
@@ -825,7 +829,7 @@ namespace SeeingSharp.Core
 
             public static AssemblyResourceLink GetShaderResourceLink(string subdirectory, string shaderNameWithoutExt)
             {
-                AssemblyResourceLink resourceLink = null;
+                AssemblyResourceLink resourceLink;
                 if (string.IsNullOrEmpty(subdirectory))
                 {
                     resourceLink = new AssemblyResourceLink(

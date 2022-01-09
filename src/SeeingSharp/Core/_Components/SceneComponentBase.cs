@@ -20,10 +20,10 @@
         /// </summary>
         public virtual bool IsViewSpecific => false;
 
-        internal abstract object AttachInternal(SceneManipulator manipulator, ViewInformation correspondingView);
+        internal abstract object AttachInternal(SceneManipulator manipulator, ViewInformation? correspondingView);
 
-        internal abstract void DetachInternal(SceneManipulator manipulator, ViewInformation correspondingView, object componentContext);
+        internal abstract void DetachInternal(SceneManipulator manipulator, ViewInformation? correspondingView, object componentContext);
 
-        internal abstract void UpdateInternal(SceneRelatedUpdateState updateState, ViewInformation correspondingView, object componentContext);
+        internal abstract void UpdateInternal(SceneRelatedUpdateState updateState, ViewInformation? correspondingView, object componentContext);
     }
 }

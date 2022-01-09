@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using SeeingSharp.Checking;
@@ -27,14 +26,14 @@ namespace SeeingSharp.Core
         private static bool s_throwDeviceInitError;
 
         // Singleton instance
-        private static GraphicsCore s_current;
+        private static GraphicsCore? s_current;
 
         // Hardware 
         private List<EngineDevice> _devices;
-        private EngineDevice _defaultDevice;
+        private EngineDevice? _defaultDevice;
 
         // Global device handlers
-        private Exception _initException;
+        private Exception? _initException;
 
         // Misc dependencies
         private SeeingSharpLoader _loader;
@@ -46,13 +45,6 @@ namespace SeeingSharp.Core
         {
             get
             {
-
-                // Do nothing if we are within the Wpf designer
-                if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
-                {
-                    return null;
-                }
-
                 if (s_current == null)
                 {
                     throw new SeeingSharpException($"Unable to access {nameof(GraphicsCore)}.{nameof(Current)} before Load was called or a rendering control created!");
@@ -74,25 +66,29 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets the dxgi factory object.
         /// </summary>
-        public EngineHardwareInfo HardwareInfo { get; }
+        public EngineHardwareInfo? HardwareInfo { get; }
 
         /// <summary>
         /// Gets the first output monitor.
         /// </summary>
-        public EngineOutputInfo DefaultOutput =>
-            this.HardwareInfo.Adapters
+        public EngineOutputInfo? DefaultOutput =>
+            this.HardwareInfo?.Adapters
                 .FirstOrDefault()?
                 .Outputs.FirstOrDefault();
 
         /// <summary>
         /// Is GraphicsCore loaded successfully?
         /// </summary>
-        public static bool IsLoaded =>
-            s_current != null &&
-            s_current._devices.Count > 0 &&
-            s_current._initException == null;
+        public static bool IsLoaded => s_current != null;
 
-        public Exception InitException => s_current?._initException;
+        /// <summary>
+        /// Is GraphicsCore loaded successfully with all graphics support?
+        /// </summary>
+        public static bool IsGraphicsLoaded =>
+            s_current != null &&
+            s_current.MainLoop != null;
+
+        public Exception? InitException => s_current?._initException;
 
         /// <summary>
         /// Is debug enabled?
@@ -112,12 +108,12 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets the default device.
         /// </summary>
-        public EngineDevice DefaultDevice
+        public EngineDevice? DefaultDevice
         {
             get => _defaultDevice;
             set
             {
-                if (value == null) { throw new ArgumentNullException(nameof(this.DefaultDevice)); }
+                if (value == null) { throw new ArgumentNullException(nameof(value)); }
                 if (!_devices.Contains(value)) { throw new ArgumentException("Device is not available on this GraphicsCore!"); }
 
                 _defaultDevice = value;
@@ -149,11 +145,11 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets the default software device.
         /// </summary>
-        public EngineDevice DefaultSoftwareDevice
+        public EngineDevice? DefaultSoftwareDevice
         {
             get
             {
-                return _devices?.FirstOrDefault(actDevice => actDevice.IsSoftware);
+                return _devices.FirstOrDefault(actDevice => actDevice.IsSoftware);
             }
         }
 
@@ -165,53 +161,53 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets a list containing all input handlers.
         /// </summary>
-        public InputHandlerFactory InputHandlers { get; }
+        public InputHandlerFactory? InputHandlers { get; }
 
         /// <summary>
         /// Gets an object which manages all importers and exporters.
         /// </summary>
-        public ImporterExporterRepository ImportersAndExporters { get; }
+        public ImporterExporterRepository? ImportersAndExporters { get; }
 
         /// <summary>
         /// Gets the current main loop object of the graphics engine.
         /// </summary>
-        public EngineMainLoop MainLoop { get; }
+        public EngineMainLoop? MainLoop { get; }
 
         /// <summary>
         /// Gets the task that represents the main loop (the task should never stop)
         /// </summary>
-        public Task MainLoopTask { get; }
+        public Task? MainLoopTask { get; }
 
         /// <summary>
         /// Gets global factories.
         /// </summary>
-        public EngineFactory Factory { get; }
+        public EngineFactory? Factory { get; }
 
-        public InputGathererThread InputGatherer { get; }
+        public InputGathererThread? InputGatherer { get; }
 
         /// <summary>
         /// Gets the current performance calculator.
         /// </summary>
-        public PerformanceAnalyzer PerformanceAnalyzer { get; }
+        public PerformanceAnalyzer? PerformanceAnalyzer { get; }
 
         /// <summary>
         /// Gets the DirectWrite factory object.
         /// </summary>
-        internal DWrite.IDWriteFactory FactoryDWrite { get; }
+        internal DWrite.IDWriteFactory? FactoryDWrite { get; }
 
         /// <summary>
         /// Gets the Direct2D factory object.
         /// </summary>
-        internal D2D.ID2D1Factory2 FactoryD2D;
+        internal D2D.ID2D1Factory2? FactoryD2D;
 
         /// <summary>
         /// Gets the WIC factory object.
         /// </summary>
-        internal IWICImagingFactory FactoryWIC;
+        internal IWICImagingFactory? FactoryWIC;
 
         public GraphicsCoreInternals Internals { get; }
 
-        public static event EventHandler<InternalCatchedExceptionEventArgs> InternalCatchedException
+        public static event EventHandler<InternalCatchedExceptionEventArgs>? InternalCatchedException
         {
             add
             {
@@ -244,29 +240,23 @@ namespace SeeingSharp.Core
         {
             this.Internals = new GraphicsCoreInternals(this);
 
+            _loader = loader;
+            _devices = new List<EngineDevice>();
+
+            // Create CoreConfiguration object
+            this.Configuration = new GraphicsCoreConfiguration
+            {
+                DebugEnabled = loadSettings.DebugEnabled,
+                ThrowD2DInitDeviceError = loadSettings.ThrowD2DInitDeviceError
+            };
+
             try
             {
-                _loader = loader;
-                _devices = new List<EngineDevice>();
-
-                // Start performance value measuring
-                this.PerformanceAnalyzer =
-                    new PerformanceAnalyzer(TimeSpan.FromSeconds(1.0));
-
-                // Create CoreConfiguration object
-                this.Configuration = new GraphicsCoreConfiguration
-                {
-                    DebugEnabled = loadSettings.DebugEnabled,
-                    ThrowD2DInitDeviceError = loadSettings.ThrowD2DInitDeviceError
-                };
+                // Modify configuration by loaders
                 foreach (var actExtension in loader.Extensions)
                 {
                     actExtension.EditCoreConfiguration(this.Configuration);
                 }
-
-                // Create container object for all input handlers
-                this.InputHandlers = new InputHandlerFactory(loader);
-                this.ImportersAndExporters = new ImporterExporterRepository(loader);
 
                 // Try to load global api factories (mostly for 2D rendering / operations)
                 try
@@ -285,14 +275,13 @@ namespace SeeingSharp.Core
                     _devices.Clear();
                     return;
                 }
-                FactoryD2D = this.Factory.Direct2D.Factory;
+                this.FactoryD2D = this.Factory.Direct2D.Factory;
                 this.FactoryDWrite = this.Factory.DirectWrite.Factory;
-                FactoryWIC = this.Factory.WIC.Factory;
+                this.FactoryWIC = this.Factory.WIC.Factory;
 
                 // Create the object containing all hardware information
                 this.HardwareInfo = new EngineHardwareInfo(this.Factory);
                 var actIndex = 0;
-
                 foreach (var actAdapterInfo in this.HardwareInfo.Adapters)
                 {
                     var actEngineDevice = new EngineDevice(loader, this.Factory, this.Configuration, actAdapterInfo);
@@ -304,12 +293,19 @@ namespace SeeingSharp.Core
                         _devices.Add(actEngineDevice);
                     }
                 }
-
                 _defaultDevice = _devices.FirstOrDefault();
+
+                // Start performance value measuring
+                this.PerformanceAnalyzer =
+                    new PerformanceAnalyzer(TimeSpan.FromSeconds(1.0));
 
                 // Start input gathering
                 this.InputGatherer = new InputGathererThread();
                 this.InputGatherer.Start();
+
+                // Create container object for all input handlers
+                this.InputHandlers = new InputHandlerFactory(loader);
+                this.ImportersAndExporters = new ImporterExporterRepository(loader);
 
                 // Start main loop
                 this.MainLoop = new EngineMainLoop(this);
@@ -324,7 +320,14 @@ namespace SeeingSharp.Core
 
                 this.HardwareInfo = null;
                 _devices.Clear();
-                this.Configuration = null;
+            }
+        }
+
+        public static void EnsureGraphicsSupportLoaded()
+        {
+            if (!IsGraphicsLoaded)
+            {
+                throw new SeeingSharpGraphicsException($"Graphics support on {nameof(GraphicsCore)} not loaded!");
             }
         }
 
@@ -366,7 +369,7 @@ namespace SeeingSharp.Core
         /// Gets the device with the given luid.
         /// Null is returned if no device found.
         /// </summary>
-        public EngineDevice TryGetDeviceByLuid(long luid)
+        public EngineDevice? TryGetDeviceByLuid(long luid)
         {
             return _devices.FirstOrDefault(
                 actDevice => actDevice.Luid == luid);
@@ -380,8 +383,10 @@ namespace SeeingSharp.Core
             localeName.EnsureNotNullOrEmpty(nameof(localeName));
             localeName = localeName.ToLower();
 
+            if (this.FactoryDWrite == null) { return Array.Empty<string>(); }
+
             // Query for all available FontFamilies installed on the system
-            List<string> result = null;
+            List<string> result;
             using (var fontCollection = this.FactoryDWrite.GetSystemFontCollection(false))
             {
                 var fontFamilyCount = fontCollection.FontFamilyCount;
@@ -485,7 +490,7 @@ namespace SeeingSharp.Core
             InternalExceptionLocation location)
         {
             // Get current list of event listeners
-            List<EventHandler<InternalCatchedExceptionEventArgs>> handlers = null;
+            List<EventHandler<InternalCatchedExceptionEventArgs>>? handlers = null;
             lock (s_internalExListenersLock)
             {
                 if (s_internalExListeners.Count > 0)
@@ -534,6 +539,11 @@ namespace SeeingSharp.Core
         /// <param name="activityName">The name of the activity.</param>
         internal IDisposable BeginMeasureActivityDuration(string activityName)
         {
+            if (this.PerformanceAnalyzer == null)
+            {
+                throw new SeeingSharpException($"Performance measuring on {nameof(GraphicsCore)} is only available when all graphics support loaded successfully!");
+            }
+
             return this.PerformanceAnalyzer.BeginMeasureActivityDuration(activityName);
         }
 
@@ -544,6 +554,11 @@ namespace SeeingSharp.Core
         /// <param name="activityAction">The activity action.</param>
         internal void ExecuteAndMeasureActivityDuration(string activityName, Action activityAction)
         {
+            if (this.PerformanceAnalyzer == null)
+            {
+                throw new SeeingSharpException($"Performance measuring on {nameof(GraphicsCore)} is only available when all graphics support loaded successfully!");
+            }
+
             this.PerformanceAnalyzer.ExecuteAndMeasureActivityDuration(activityName, activityAction);
         }
 
@@ -554,6 +569,11 @@ namespace SeeingSharp.Core
         /// <param name="durationTicks"></param>
         internal void NotifyActivityDuration(string activityName, long durationTicks)
         {
+            if (this.PerformanceAnalyzer == null)
+            {
+                throw new SeeingSharpException($"Performance measuring on {nameof(GraphicsCore)} is only available when all graphics support loaded successfully!");
+            }
+
             this.PerformanceAnalyzer.NotifyActivityDuration(activityName, durationTicks);
         }
 
@@ -564,11 +584,11 @@ namespace SeeingSharp.Core
         {
             private GraphicsCore _parent;
 
-            public D2D.ID2D1Factory2 FactoryD2D => _parent.FactoryD2D;
+            public D2D.ID2D1Factory2? FactoryD2D => _parent.FactoryD2D;
 
-            public DWrite.IDWriteFactory FactoryDWrite => _parent.FactoryDWrite;
+            public DWrite.IDWriteFactory? FactoryDWrite => _parent.FactoryDWrite;
 
-            public IWICImagingFactory FactoryWIC => _parent.FactoryWIC;
+            public IWICImagingFactory? FactoryWIC => _parent.FactoryWIC;
 
             internal GraphicsCoreInternals(GraphicsCore parent)
             {

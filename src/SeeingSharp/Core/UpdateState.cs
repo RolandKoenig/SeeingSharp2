@@ -12,7 +12,7 @@ namespace SeeingSharp.Core
     public class UpdateState : IAnimationUpdateState
     {
         // Constants
-        private static readonly InputFrame[] s_dummyFrameCollection = new InputFrame[0];
+        private static readonly InputFrame[] s_dummyFrameCollection = Array.Empty<InputFrame>();
 
         // Parameters passed by global loop
         private int _updateTimeMilliseconds;
@@ -48,20 +48,14 @@ namespace SeeingSharp.Core
         public ulong MainLoopCycleId => _cycleId;
 
         /// <summary>
-        /// Prevents a default instance of the <see cref="UpdateState"/> class from being created.
-        /// </summary>
-        private UpdateState()
-        {
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="UpdateState"/> class.
         /// </summary>
         /// <param name="updateTime">The update time.</param>
         /// <param name="inputFrames">A list containing all gathered InputFrames since last update pass.</param>
-        internal UpdateState(TimeSpan updateTime, IEnumerable<InputFrame> inputFrames)
-            : this()
+        internal UpdateState(TimeSpan updateTime, IEnumerable<InputFrame>? inputFrames)
         {
+            _inputFrames = null!;
+
             this.Reset(updateTime, inputFrames);
         }
 
@@ -165,32 +159,16 @@ namespace SeeingSharp.Core
         }
 
         /// <summary>
-        /// Called internally by EngineMainLoop and creates a copy of this object
-        /// for each updated scene.
-        /// </summary>
-        internal UpdateState CopyForSceneUpdate()
-        {
-            var result = new UpdateState
-            {
-                _updateTime = _updateTime,
-                _updateTimeMilliseconds = _updateTimeMilliseconds
-            };
-
-            return result;
-        }
-
-        /// <summary>
         /// Resets this UpdateState to the given update time.
         /// </summary>
         /// <param name="updateTime">The update time.</param>
         /// <param name="inputFrames">A list containing all gathered InputFrames since last update pass.</param>
-        internal void Reset(TimeSpan updateTime, IEnumerable<InputFrame> inputFrames)
+        internal void Reset(TimeSpan updateTime, IEnumerable<InputFrame>? inputFrames)
         {
             _updateTime = updateTime;
             _updateTimeMilliseconds = (int)updateTime.TotalMilliseconds;
 
-            _inputFrames = inputFrames;
-            if (_inputFrames == null) { _inputFrames = s_dummyFrameCollection; }
+            _inputFrames = inputFrames ?? s_dummyFrameCollection;
 
             if (_cycleId < ulong.MaxValue) { _cycleId++; }
             else { _cycleId = 0; }

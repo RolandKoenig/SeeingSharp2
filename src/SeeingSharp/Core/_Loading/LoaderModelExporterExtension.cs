@@ -17,17 +17,17 @@ namespace SeeingSharp.Core
             _modelExporter = modelExporter;
         }
 
-        public IEnumerable<IDisposable> CreateAdditionalDeviceHandlers(EngineDevice device)
+        public IEnumerable<IDisposable>? CreateAdditionalDeviceHandlers(EngineDevice device)
         {
             return null;
         }
 
-        public IEnumerable<IInputHandler> CreateInputHandlers()
+        public IEnumerable<IInputHandler>? CreateInputHandlers()
         {
             return null;
         }
 
-        public IEnumerable<IModelImporter> CreateModelImporters()
+        public IEnumerable<IModelImporter>? CreateModelImporters()
         {
             return null;
         }

@@ -211,7 +211,7 @@ namespace SeeingSharp.Mathematics
         /// <summary>
         /// Triangulates this polygon using the cutting ears triangulator.
         /// </summary>
-        public IEnumerable<int> TriangulateUsingCuttingEars()
+        public IEnumerable<int>? TriangulateUsingCuttingEars()
         {
             return CuttingEarsTriangulator.Triangulate(_vertices);
         }

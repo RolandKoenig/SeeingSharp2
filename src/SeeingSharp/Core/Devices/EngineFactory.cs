@@ -7,10 +7,10 @@ namespace SeeingSharp.Core.Devices
 {
     public class EngineFactory : IDisposable, ICheckDisposed
     {
-        private FactoryHandlerDXGI _handlerDXGI;
-        private FactoryHandlerD2D _handlerDirect2D;
-        private FactoryHandlerDWrite _handlerDirectWrite;
-        private FactoryHandlerWIC _handlerWIC;
+        private FactoryHandlerDXGI? _handlerDXGI;
+        private FactoryHandlerD2D? _handlerDirect2D;
+        private FactoryHandlerDWrite? _handlerDirectWrite;
+        private FactoryHandlerWIC? _handlerWIC;
 
         public bool IsDisposed { get; private set; }
 
@@ -19,7 +19,7 @@ namespace SeeingSharp.Core.Devices
             get
             {
                 if(this.IsDisposed){ throw new ObjectDisposedException(nameof(EngineFactory)); }
-                return _handlerDXGI;
+                return _handlerDXGI!;
             }
             private set => _handlerDXGI = value;
         }
@@ -29,7 +29,7 @@ namespace SeeingSharp.Core.Devices
             get
             {
                 if(this.IsDisposed){ throw new ObjectDisposedException(nameof(EngineFactory)); }
-                return _handlerDirect2D;
+                return _handlerDirect2D!;
             }
             private set => _handlerDirect2D = value;
         }
@@ -39,7 +39,7 @@ namespace SeeingSharp.Core.Devices
             get
             {
                 if(this.IsDisposed){ throw new ObjectDisposedException(nameof(EngineFactory)); }
-                return _handlerDirectWrite;
+                return _handlerDirectWrite!;
             }
             private set => _handlerDirectWrite = value;
         }
@@ -49,7 +49,7 @@ namespace SeeingSharp.Core.Devices
             get
             {
                 if(this.IsDisposed){ throw new ObjectDisposedException(nameof(EngineFactory)); }
-                return _handlerWIC;
+                return _handlerWIC!;
             }
             private set => _handlerWIC = value;
         }
@@ -74,10 +74,10 @@ namespace SeeingSharp.Core.Devices
         /// <inheritdoc />
         public void Dispose()
         {
-            this.DXGI = SeeingSharpUtil.DisposeObject(this.DXGI);
-            this.Direct2D = SeeingSharpUtil.DisposeObject(this.Direct2D);
-            this.DirectWrite = SeeingSharpUtil.DisposeObject(this.DirectWrite);
-            this.WIC = SeeingSharpUtil.DisposeObject(this.WIC);
+            _handlerDXGI = SeeingSharpUtil.DisposeObject(_handlerDXGI);
+            _handlerDirect2D = SeeingSharpUtil.DisposeObject(_handlerDirect2D);
+            _handlerDirectWrite = SeeingSharpUtil.DisposeObject(_handlerDirectWrite);
+            _handlerWIC = SeeingSharpUtil.DisposeObject(_handlerWIC);
             this.IsDisposed = true;
         }
     }

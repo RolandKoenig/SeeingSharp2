@@ -24,10 +24,10 @@ namespace SeeingSharp.Drawing3D.Resources
         private bool _useVertexColors;
 
         // Resource members
-        private VertexShaderResource _vertexShader;
-        private GeometryShaderResource _geoShader;
-        private PixelShaderResource _pixelShader;
-        private TypeSafeConstantBufferResource<CBPerMaterial> _cbPerMaterial;
+        private VertexShaderResource? _vertexShader;
+        private GeometryShaderResource? _geoShader;
+        private PixelShaderResource? _pixelShader;
+        private TypeSafeConstantBufferResource<CBPerMaterial>? _cbPerMaterial;
 
         /// <inheritdoc />
         public override bool IsLoaded => _vertexShader != null;
@@ -166,11 +166,11 @@ namespace SeeingSharp.Drawing3D.Resources
         /// <inheritdoc />
         internal override D3D11.ID3D11InputLayout GetInputLayout(EngineDevice device, D3D11.InputElementDescription[] inputElements)
         {
-            return _vertexShader.GetInputLayout(device, inputElements);
+            return _vertexShader!.GetInputLayout(device, inputElements);
         }
 
         /// <inheritdoc />
-        internal override void Apply(RenderState renderState, MaterialResource previousMaterial)
+        internal override void Apply(RenderState renderState, MaterialResource? previousMaterial)
         {
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
             var isResourceSameType =
@@ -180,7 +180,7 @@ namespace SeeingSharp.Drawing3D.Resources
             // Apply local shader configuration
             if (_cbPerMaterialDataChanged)
             {
-                _cbPerMaterial.SetData(
+                _cbPerMaterial!.SetData(
                     deviceContext,
                     new CBPerMaterial
                     {
@@ -196,18 +196,18 @@ namespace SeeingSharp.Drawing3D.Resources
             }
 
             // Apply sampler and constants
-            deviceContext.PSSetConstantBuffer(3, _cbPerMaterial.ConstantBuffer);
-            deviceContext.VSSetConstantBuffer(3, _cbPerMaterial.ConstantBuffer);
+            deviceContext.PSSetConstantBuffer(3, _cbPerMaterial!.ConstantBuffer);
+            deviceContext.VSSetConstantBuffer(3, _cbPerMaterial!.ConstantBuffer);
 
             // Set texture resource (if set)
-            deviceContext.PSSetShaderResource(0, null);
+            deviceContext.PSSetShaderResource(0, null!);
 
             // Set shader resources
             if (!isResourceSameType)
             {
-                deviceContext.VSSetShader(_vertexShader.VertexShader);
-                deviceContext.GSSetShader(_geoShader.GeometryShader);
-                deviceContext.PSSetShader(_pixelShader.PixelShader);
+                deviceContext.VSSetShader(_vertexShader!.VertexShader);
+                deviceContext.GSSetShader(_geoShader!.GeometryShader);
+                deviceContext.PSSetShader(_pixelShader!.PixelShader);
             }
         }
 
@@ -216,7 +216,7 @@ namespace SeeingSharp.Drawing3D.Resources
         {
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
-            deviceContext.GSSetShader(null);
+            deviceContext.GSSetShader(null!);
         }
     }
 }

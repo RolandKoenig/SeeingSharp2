@@ -30,7 +30,7 @@ namespace SeeingSharp.Drawing3D.Geometries
         /// Sets the tilemap.
         /// </summary>
         /// <param name="tileMap">The new tilemap to apply (use null for empty tiles).</param>
-        public void SetTilemap(FloorTileInfo[,] tileMap)
+        public void SetTilemap(FloorTileInfo?[,] tileMap)
         {
             //Get width and height of the tilemap
             var tilesX = tileMap.GetLength(0);
@@ -59,7 +59,7 @@ namespace SeeingSharp.Drawing3D.Geometries
                 {
                     if (tileMap[loopX, loopY] != null)
                     {
-                        var newTile = new FloorTile(loopX, loopY, tileMap[loopX, loopY]);
+                        var newTile = new FloorTile(loopX, loopY, tileMap[loopX, loopY]!);
                         _groundTiles.Add(newTile);
                     }
                 }
@@ -174,12 +174,11 @@ namespace SeeingSharp.Drawing3D.Geometries
                 }
 
                 // Get surface object
-                GeometrySurface actSurface = null;
                 while (result.CountSurfaces <= actMaterialIndex)
                 {
                     result.CreateSurface();
                 }
-                actSurface = result.Surfaces[actMaterialIndex];
+                var actSurface = result.Surfaces[actMaterialIndex];
 
                 // Get position of the tile
                 var tilePosition = new Vector3(

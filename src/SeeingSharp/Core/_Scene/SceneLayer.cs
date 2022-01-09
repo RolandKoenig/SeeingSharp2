@@ -203,13 +203,13 @@ namespace SeeingSharp.Core
         /// Adds the given object to the layer.
         /// </summary>
         /// <param name="sceneObject">Object to add.</param>
-        internal bool AddObject(SceneObject sceneObject)
+        internal void AddObject(SceneObject sceneObject)
         {
             if (_isInUpdate || _isInUpdateBeside) { throw new InvalidOperationException("Unable to manipulate object list while SceneLayout is on updating!"); }
             if (sceneObject == null) { throw new ArgumentNullException(nameof(sceneObject)); }
-            if (sceneObject.Scene == this.Scene) { return false; }
+            if (sceneObject.Scene == this.Scene) { return; }
             if (sceneObject.Scene != null) { throw new ArgumentException("Given object does already belong to another scene!", nameof(sceneObject)); }
-            if (sceneObject.SceneLayer == this) { return false; }
+            if (sceneObject.SceneLayer == this) { return; }
             if (sceneObject.SceneLayer != null) { throw new ArgumentException("Given object does already belong to another scene layer!", nameof(sceneObject)); }
 
             this.ObjectsInternal.Add(sceneObject);
@@ -240,8 +240,6 @@ namespace SeeingSharp.Core
             {
                 actViewSubset.RegisterObject(sceneObject);
             }
-
-            return true;
         }
 
         /// <summary>
@@ -338,7 +336,7 @@ namespace SeeingSharp.Core
         /// <param name="renderState">Current render state.</param>
         internal void PrepareRendering(RenderState renderState)
         {
-            List<SceneObject> invalidObjects = null;
+            List<SceneObject>? invalidObjects = null;
 
             // Load all resources
             var sceneObjectArrayLength = this.ObjectsInternal.Count;
@@ -346,6 +344,7 @@ namespace SeeingSharp.Core
             for (var loop = 0; loop < sceneObjectArrayLength; loop++)
             {
                 var actObject = sceneObjectArray[loop];
+                if (actObject == null){ continue; }
 
                 try
                 {
@@ -404,18 +403,24 @@ namespace SeeingSharp.Core
                 var updateList = _sceneObjectsNotStatic.BackingArray;
                 for (var actIndex = 0; actIndex < updateListLength; actIndex++)
                 {
-                    if (!updateList[actIndex].HasParent)
+                    var actObject = updateList[actIndex];
+                    if (actObject == null){ continue; }
+
+                    if (!actObject.HasParent)
                     {
-                        updateList[actIndex].Update(updateState);
+                        actObject.Update(updateState);
                     }
                 }
 
                 // Call overall updates on all objects
-                for (var loop = 0; loop < updateListLength; loop++)
+                for (var actIndex = 0; actIndex < updateListLength; actIndex++)
                 {
-                    if (!updateList[loop].HasParent)
+                    var actObject = updateList[actIndex];
+                    if (actObject == null){ continue; }
+
+                    if (!actObject.HasParent)
                     {
-                        updateList[loop].UpdateOverall(updateState);
+                        actObject.UpdateOverall(updateState);
                     }
                 }
 
@@ -479,11 +484,7 @@ namespace SeeingSharp.Core
             try
             {
                 //Delegate render call to corresponding view subset
-                var viewSubset = _viewSubsets[renderState.ViewIndex];
-                if (viewSubset != null)
-                {
-                    _viewSubsets[renderState.ViewIndex].Render(renderState);
-                }
+                _viewSubsets[renderState.ViewIndex]?.Render(renderState);
             }
             finally
             {
@@ -502,12 +503,7 @@ namespace SeeingSharp.Core
         internal void Render2DOverlay(RenderState renderState)
         {
             //Delegate render call to corresponding view subset
-            var viewSubset = _viewSubsets[renderState.ViewIndex];
-
-            if (viewSubset != null)
-            {
-                _viewSubsets[renderState.ViewIndex].Render2DOverlay(renderState);
-            }
+            _viewSubsets[renderState.ViewIndex]?.Render2DOverlay(renderState);
         }
 
         /// <summary>

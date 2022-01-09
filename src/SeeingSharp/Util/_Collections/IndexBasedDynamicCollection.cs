@@ -7,7 +7,7 @@ namespace SeeingSharp.Util
     public class IndexBasedDynamicCollection<T> : IEnumerable<T>
         where T : class
     {
-        private UnsafeList<T> _list;
+        private UnsafeList<T?> _list;
         private int _listCount;
         private object _lockObject;
         private Dictionary<T, int> _objectIndices;
@@ -16,7 +16,7 @@ namespace SeeingSharp.Util
         /// Gets the element at the given index.
         /// </summary>
         /// <param name="index">The index of the element to get.</param>
-        public T this[int index]
+        public T? this[int index]
         {
             get
             {
@@ -29,7 +29,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets the first item or null if there is none.
         /// </summary>
-        public T FirstOrDefaultItem
+        public T? FirstOrDefaultItem
         {
             get
             {
@@ -61,7 +61,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public IndexBasedDynamicCollection()
         {
-            _list = new UnsafeList<T>(10);
+            _list = new UnsafeList<T?>(10);
             _listCount = 0;
             _objectIndices = new Dictionary<T, int>();
             _lockObject = new object();
@@ -211,7 +211,10 @@ namespace SeeingSharp.Util
         public void RemoveObject(int index)
         {
             var objectToRemove = _list[index];
-            this.RemoveObject(objectToRemove);
+            if (objectToRemove != null)
+            {
+                this.RemoveObject(objectToRemove);
+            }
         }
 
         /// <summary>

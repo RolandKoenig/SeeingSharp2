@@ -3,12 +3,12 @@
     public class PickingInformation
     {
         private float _distance;
-        private SceneObject _pickedObject;
+        private SceneObject? _pickedObject;
 
         /// <summary>
         /// The picked object.
         /// </summary>
-        public SceneObject PickedObject => _pickedObject;
+        public SceneObject? PickedObject => _pickedObject;
 
         /// <summary>
         /// Gets the distance to the picked object.

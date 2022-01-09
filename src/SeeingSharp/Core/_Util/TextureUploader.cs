@@ -22,8 +22,8 @@ namespace SeeingSharp.Core
         // A staging texture for reading contents by Cpu
         // A standard texture for copying data from multisample texture to standard one
         // see http://www.rolandk.de/wp/2013/06/inhalt-der-rendertarget-textur-in-ein-bitmap-kopieren/
-        private D3D11.ID3D11Texture2D _copyHelperTextureStaging;
-        private D3D11.ID3D11Texture2D _copyHelperTextureStandard;
+        private D3D11.ID3D11Texture2D? _copyHelperTextureStaging;
+        private D3D11.ID3D11Texture2D? _copyHelperTextureStandard;
 
         /// <inheritdoc />
         public bool IsDisposed => _isDisposed;

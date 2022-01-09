@@ -6,8 +6,8 @@ namespace SeeingSharp.Core.Devices
     public class DeviceResourceManager
     {
         private EngineDevice _device;
-        private List<IEngineDeviceResource> _deviceResources;
-        private List<IEngineDeviceResource> _deviceResourcesPrev;
+        private List<IEngineDeviceResource?> _deviceResources;
+        private List<IEngineDeviceResource?> _deviceResourcesPrev;
         private bool _cleanupNeeded;
 
         internal bool CleanupNeeded => _cleanupNeeded;
@@ -15,8 +15,8 @@ namespace SeeingSharp.Core.Devices
         internal DeviceResourceManager(EngineDevice device)
         {
             _device = device;
-            _deviceResources = new List<IEngineDeviceResource>(1024);
-            _deviceResourcesPrev = new List<IEngineDeviceResource>(1024);
+            _deviceResources = new List<IEngineDeviceResource?>(1024);
+            _deviceResourcesPrev = new List<IEngineDeviceResource?>(1024);
             _cleanupNeeded = false;
         }
 

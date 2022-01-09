@@ -6,10 +6,10 @@ namespace SeeingSharp.Core
 {
     public abstract class Resource : IDisposable
     {
-        private EngineDevice _device;
+        private EngineDevice? _device;
         private NamedOrGenericKey _key;
         private bool _markedForReloading;
-        private ResourceDictionary _resourceDictionary;
+        private ResourceDictionary? _resourceDictionary;
 
         /// <summary>
         /// Is the resource loaded?
@@ -52,7 +52,7 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets the parent ResourceDictionary object.
         /// </summary>
-        public ResourceDictionary Dictionary
+        public ResourceDictionary? Dictionary
         {
             get => _resourceDictionary;
             internal set

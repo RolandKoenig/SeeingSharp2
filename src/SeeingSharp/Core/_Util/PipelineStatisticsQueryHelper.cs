@@ -32,7 +32,7 @@ namespace SeeingSharp.Core
         /// <inheritdoc />
         public void Dispose()
         {
-            SeeingSharpUtil.SafeDispose(ref _query);
+            SeeingSharpUtil.SafeDispose(ref _query!);
         }
 
         public void PrintPipelineStatisticsToDebug(string header)

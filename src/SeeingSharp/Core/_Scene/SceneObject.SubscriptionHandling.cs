@@ -8,8 +8,7 @@ namespace SeeingSharp.Core
     {
         // This collection is synchronized with corresponding ViewRelatedSceneLayerSubsets
         // .. if differences are detected, then a SeeingSharpGraphicsException is thrown
-        private IndexBasedDynamicCollection<List<RenderPassSubscription>> _viewRelatedSubscriptions
-            = new IndexBasedDynamicCollection<List<RenderPassSubscription>>();
+        private IndexBasedDynamicCollection<List<RenderPassSubscription>> _viewRelatedSubscriptions = new();
 
         /// <summary>
         /// Counts all render pass subscriptions related to the given view subset.
@@ -17,7 +16,14 @@ namespace SeeingSharp.Core
         /// <param name="layerViewSubset">The layer view subset.</param>
         protected internal int CountRenderPassSubscriptions(ViewRelatedSceneLayerSubset layerViewSubset)
         {
-            return _viewRelatedSubscriptions[layerViewSubset.ViewIndex].Count;
+            var subscriptionList = _viewRelatedSubscriptions[layerViewSubset.ViewIndex];
+            if (subscriptionList == null) 
+            {
+                throw new SeeingSharpGraphicsException(
+                $"Internal error: Subscription list for view {layerViewSubset.ViewIndex} not set correctly!");
+            }
+
+            return subscriptionList.Count;
         }
 
         /// <summary>
@@ -33,6 +39,11 @@ namespace SeeingSharp.Core
             int zOrder = 0)
         {
             var subscriptionList = _viewRelatedSubscriptions[layerViewSubset.ViewIndex];
+            if (subscriptionList == null) 
+            {
+                throw new SeeingSharpGraphicsException(
+                    $"Internal error: Subscription list for view {layerViewSubset.ViewIndex} not set correctly!");
+            }
 
             subscriptionList.Add(layerViewSubset.SubscribeForPass(renderPass, this, renderAction, zOrder));
         }
@@ -69,6 +80,12 @@ namespace SeeingSharp.Core
         protected internal void UnsubsribeFromAllPasses(ViewRelatedSceneLayerSubset layerViewSubset)
         {
             var subscriptionList = _viewRelatedSubscriptions[layerViewSubset.ViewIndex];
+            if (subscriptionList == null) 
+            {
+                throw new SeeingSharpGraphicsException(
+                    $"Internal error: Subscription list for view {layerViewSubset.ViewIndex} not set correctly!");
+            }
+
             for (var loop = 0; loop < subscriptionList.Count; loop++)
             {
                 subscriptionList[loop].Unsubscribe();
@@ -160,6 +177,12 @@ namespace SeeingSharp.Core
         internal void ClearSubscriptionsWithoutUnsubscribeCall(ViewRelatedSceneLayerSubset layerViewSubset)
         {
             var subscriptionList = _viewRelatedSubscriptions[layerViewSubset.ViewIndex];
+            if (subscriptionList == null) 
+            {
+                throw new SeeingSharpGraphicsException(
+                    $"Internal error: Subscription list for view {layerViewSubset.ViewIndex} not set correctly!");
+            }
+
             subscriptionList.Clear();
         }
     }

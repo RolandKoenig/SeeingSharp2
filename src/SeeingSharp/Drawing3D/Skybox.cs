@@ -144,7 +144,7 @@ namespace SeeingSharp.Drawing3D
             }
 
             var geoResource = _localResources[device.DeviceIndex];
-            if (geoResource.CubeTexture == null)
+            if (geoResource?.CubeTexture == null)
             {
                 return false;
             }
@@ -191,14 +191,14 @@ namespace SeeingSharp.Drawing3D
             var localResources = _localResources[renderState.DeviceIndex];
 
             // Apply constants and shader resources
-            deviceContext.VSSetShader(localResources.VertexShader.VertexShader);
-            deviceContext.PSSetShader(localResources.PixelShader.PixelShader);
-            deviceContext.PSSetShaderResource(0, localResources.CubeTexture.TextureView);
+            deviceContext.VSSetShader(localResources!.VertexShader!.VertexShader);
+            deviceContext.PSSetShader(localResources!.PixelShader!.PixelShader);
+            deviceContext.PSSetShaderResource(0, localResources!.CubeTexture!.TextureView);
 
             // Bind index and vertex buffer
-            deviceContext.IASetIndexBuffer(localResources.IndexBuffer.Buffer, Format.R32_UInt, 0);
+            deviceContext.IASetIndexBuffer(localResources!.IndexBuffer!.Buffer, Format.R32_UInt, 0);
             deviceContext.IASetVertexBuffers(0, new D3D11.VertexBufferView(
-                localResources.VertexBuffer.Buffer,
+                localResources!.VertexBuffer!.Buffer,
                 StandardVertex.Size, 0));
 
             // Draw the skybox
@@ -214,11 +214,11 @@ namespace SeeingSharp.Drawing3D
         /// </summary>
         private class SkyboxLocalResources
         {
-            public TextureResource CubeTexture;
-            public ImmutableIndexBufferResource IndexBuffer;
-            public PixelShaderResource PixelShader;
-            public ImmutableVertexBufferResource<StandardVertex> VertexBuffer;
-            public VertexShaderResource VertexShader;
+            public TextureResource? CubeTexture;
+            public ImmutableIndexBufferResource? IndexBuffer;
+            public PixelShaderResource? PixelShader;
+            public ImmutableVertexBufferResource<StandardVertex>? VertexBuffer;
+            public VertexShaderResource? VertexShader;
         }
     }
 }

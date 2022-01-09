@@ -17,20 +17,20 @@ namespace SeeingSharp.Core
     {
         // Generic fields
         private bool _disposed;
-        private Stack<Tuple<Scene, ResourceDictionary>> _sceneStack;
-        private Scene _currentScene;
-        private ResourceDictionary _currentResourceDictionary;
+        private Stack<Tuple<Scene?, ResourceDictionary?>> _sceneStack;
+        private Scene? _currentScene;
+        private ResourceDictionary? _currentResourceDictionary;
         private Matrix4Stack _world;
 
         // Render stack
-        private RenderStackEntry _currentRenderSettings;
+        private RenderStackEntry? _currentRenderSettings;
         private Stack<RenderStackEntry> _renderSettingsStack;
         private Stack<RenderStackEntry> _cachedRenderStackEntries;
 
         // Current state
-        private MaterialResource _forcedMaterial;
-        private MaterialResource _lastAppliedMaterial;
-        private RenderPassDump _currentTargetDump;
+        private MaterialResource? _forcedMaterial;
+        private MaterialResource? _lastAppliedMaterial;
+        private RenderPassDump? _currentTargetDump;
 
         /// <summary>
         /// Gets current Device object.
@@ -40,7 +40,7 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets the ViewProj matrix.
         /// </summary>
-        public Matrix4x4 ViewProj => _currentRenderSettings.ViewProj;
+        public Matrix4x4 ViewProj => _currentRenderSettings?.ViewProj ?? Matrix4x4.Identity;
 
         /// <summary>
         /// Gets current world matrix.
@@ -51,22 +51,22 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets current scene object.
         /// </summary>
-        public Scene CurrentScene => _currentScene;
+        public Scene? CurrentScene => _currentScene;
 
         /// <summary>
         /// Gets the current ResourceDictionary object.
         /// </summary>
-        public ResourceDictionary CurrentResources => _currentResourceDictionary;
+        public ResourceDictionary? CurrentResources => _currentResourceDictionary;
 
         /// <summary>
         /// Gets current camera.
         /// </summary>
-        public Camera3DBase Camera => _currentRenderSettings?.Camera;
+        public Camera3DBase? Camera => _currentRenderSettings?.Camera;
 
         /// <summary>
         /// Gets current common information about the view.
         /// </summary>
-        public ViewInformation ViewInformation => _currentRenderSettings?.ViewInformation;
+        public ViewInformation? ViewInformation => _currentRenderSettings?.ViewInformation;
 
         /// <summary>
         /// Is this object disposed?
@@ -76,14 +76,14 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets the currently forced material.
         /// </summary>
-        public MaterialResource ForcedMaterial => _forcedMaterial;
+        public MaterialResource? ForcedMaterial => _forcedMaterial;
 
         public bool IsWritingRenderPassDump => _currentTargetDump != null;
 
         /// <summary>
         /// Gets or sets the current object for 2D rendering.
         /// </summary>
-        public Graphics2D Graphics2D
+        public Graphics2D? Graphics2D
         {
             get;
             internal set;
@@ -121,7 +121,7 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets or sets the current render target for 2D rendering.
         /// </summary>
-        internal D2D.ID2D1RenderTarget RenderTarget2D;
+        internal D2D.ID2D1RenderTarget? RenderTarget2D;
 
         /// <summary>
         /// Gets or sets the current view index.
@@ -154,7 +154,7 @@ namespace SeeingSharp.Core
             // Create settings stack
             _cachedRenderStackEntries = new Stack<RenderStackEntry>(8);
             _renderSettingsStack = new Stack<RenderStackEntry>();
-            _sceneStack = new Stack<Tuple<Scene, ResourceDictionary>>();
+            _sceneStack = new Stack<Tuple<Scene?, ResourceDictionary?>>();
         }
 
         /// <summary>
@@ -207,7 +207,6 @@ namespace SeeingSharp.Core
             }
 
             var currentTargets = this.CurrentRenderTargets;
-
             if (currentTargets.DepthStencilBuffer != null)
             {
                 this.Device.DeviceImmediateContextD3D11.ClearDepthStencilView(
@@ -229,7 +228,6 @@ namespace SeeingSharp.Core
             }
 
             var currentTargets = this.CurrentRenderTargets;
-
             if (currentTargets.ColorBuffer != null)
             {
                 this.Device.DeviceImmediateContextD3D11.ClearRenderTargetView(
@@ -266,7 +264,8 @@ namespace SeeingSharp.Core
         {
             if (_disposed) { throw new ObjectDisposedException("RenderState"); }
 
-            return world * _currentRenderSettings.ViewProj;
+            if (_currentRenderSettings != null) { return world * _currentRenderSettings.ViewProj; }
+            else { return world; }
         }
 
         /// <summary>
@@ -299,7 +298,7 @@ namespace SeeingSharp.Core
                 {
                     lastVertexBufferId = actChunk.Template.VertexBufferId;
                     deviceContext.IASetInputLayout(actChunk.InputLayout);
-                    deviceContext.IASetVertexBuffers(0, new D3D11.VertexBufferView(actChunk.Template.VertexBuffer, actChunk.Template.SizePerVertex, 0));
+                    deviceContext.IASetVertexBuffers(0, new D3D11.VertexBufferView(actChunk.Template.VertexBuffer, actChunk.Template.SizePerVertex));
                 }
 
                 // Apply IndexBuffer
@@ -357,7 +356,10 @@ namespace SeeingSharp.Core
             if (_renderSettingsStack.Count < 1) { throw new SeeingSharpGraphicsException("There is only one element on the render stack!"); }
 
             // Register current stack entry for reusing
-            _cachedRenderStackEntries.Push(_currentRenderSettings);
+            if (_currentRenderSettings != null)
+            {
+                _cachedRenderStackEntries.Push(_currentRenderSettings);
+            }
 
             // Apply old configuration
             _currentRenderSettings = _renderSettingsStack.Pop();
@@ -378,7 +380,7 @@ namespace SeeingSharp.Core
         /// Forces the use of the given material.
         /// </summary>
         /// <param name="material">The material to be forced for further rendering. Null means to disable material forcing.</param>
-        internal void ForceMaterial(MaterialResource material)
+        internal void ForceMaterial(MaterialResource? material)
         {
             _forcedMaterial = material;
         }
@@ -387,7 +389,7 @@ namespace SeeingSharp.Core
         /// Applies the given material to the renderer.
         /// </summary>
         /// <param name="resourceToApply">The material to apply.</param>
-        internal void ApplyMaterial(MaterialResource resourceToApply)
+        internal void ApplyMaterial(MaterialResource? resourceToApply)
         {
             // Use forced material if any set
             if (_forcedMaterial != null &&
@@ -461,7 +463,7 @@ namespace SeeingSharp.Core
         internal void Reset(
             in RenderTargets renderTargets,
             in Viewport viewport,
-            in Camera3DBase camera, in ViewInformation viewInformation)
+            in Camera3DBase? camera, in ViewInformation viewInformation)
         {
             _currentTargetDump = null;
             _renderSettingsStack.Clear();
@@ -528,7 +530,7 @@ namespace SeeingSharp.Core
             newEntry.Apply(this.Device.DeviceImmediateContextD3D11);
 
             // Push new entry onto the stack
-            _renderSettingsStack.Push(_currentRenderSettings);
+            _renderSettingsStack.Push(_currentRenderSettings!);
             _currentRenderSettings = newEntry;
         }
 
@@ -541,17 +543,17 @@ namespace SeeingSharp.Core
         private class RenderStackEntry
         {
             // Local array which store all RenderTargets for usage
-            private D3D11.ID3D11RenderTargetView[] _targetArray;
-            private Viewport[] _viewports;
+            private D3D11.ID3D11RenderTargetView[]? _targetArray;
+            private Viewport[]? _viewports;
 
             /// <summary>
             /// Gets the current view projection matrix.
             /// </summary>
-            public Matrix4x4 ViewProj => this.Camera.ViewProjection;
+            public Matrix4x4 ViewProj => this.Camera?.ViewProjection ?? Matrix4x4.Identity;
 
-            public Camera3DBase Camera { get; private set; }
+            public Camera3DBase? Camera { get; private set; }
 
-            public Matrix4Stack Matrix4Stack { get; private set; }
+            public Matrix4Stack Matrix4Stack { get; }
 
             public RenderTargets RenderTargets { get; private set; }
 
@@ -560,15 +562,18 @@ namespace SeeingSharp.Core
             public ViewInformation ViewInformation { get; private set; }
 
             public RenderStackEntry(
-                in Camera3DBase camera, in RenderTargets renderTargets, 
+                in Camera3DBase? camera, in RenderTargets renderTargets, 
                 in Viewport viewPort, in ViewInformation viewInfo)
             {
                 this.Matrix4Stack = new Matrix4Stack();
+
+                this.ViewInformation = null!;
+
                 this.Reset(camera, renderTargets, viewPort, viewInfo);
             }
 
             public void Reset(
-                in Camera3DBase camera, in RenderTargets renderTargets,
+                in Camera3DBase? camera, in RenderTargets renderTargets,
                 in Viewport viewPort, in ViewInformation viewInfo)
             {
                 this.Camera = camera;
@@ -585,12 +590,12 @@ namespace SeeingSharp.Core
             public void Apply(D3D11.ID3D11DeviceContext deviceContext)
             {
                 // Create render target array (if not done before)
-                if (_targetArray == null) { _targetArray = new D3D11.ID3D11RenderTargetView[3]; }
-                _targetArray[0] = this.RenderTargets.ColorBuffer;
-                _targetArray[1] = this.RenderTargets.ObjectIdBuffer;
-                _targetArray[2] = this.RenderTargets.NormalDepthBuffer;
+                _targetArray ??= new D3D11.ID3D11RenderTargetView[3];
+                _targetArray[0] = this.RenderTargets.ColorBuffer!;
+                _targetArray[1] = this.RenderTargets.ObjectIdBuffer!;
+                _targetArray[2] = this.RenderTargets.NormalDepthBuffer!;
 
-                if (_viewports == null){ _viewports = new Viewport[3]; }
+                _viewports ??= new Viewport[3];
                 _viewports[0] = this.SingleViewport;
                 _viewports[1] = this.SingleViewport;
                 _viewports[2] = this.SingleViewport;

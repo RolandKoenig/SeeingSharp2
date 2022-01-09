@@ -6,7 +6,7 @@ namespace SeeingSharp.Core
     public class SceneViewboxObjectFilter : SceneObjectFilter
     {
         // Values for viewbox clipping
-        private ViewInformation _viewInfo;
+        private ViewInformation? _viewInfo;
         private BoundingFrustum _boundingFrustum;
 
         // Values for y-filter

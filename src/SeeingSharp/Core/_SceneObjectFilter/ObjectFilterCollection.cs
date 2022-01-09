@@ -8,8 +8,6 @@ namespace SeeingSharp.Core
 {
     public class ObjectFilterCollection : IEnumerable<SceneObjectFilter>
     {
-        private ViewInformation _view;
-
         private List<SceneObjectFilter> _objectFilters;
 
         internal bool ObjectFilterCollectionChanged;
@@ -18,9 +16,8 @@ namespace SeeingSharp.Core
 
         public SceneObjectFilter this[int index] => _objectFilters[index];
 
-        internal ObjectFilterCollection(ViewInformation view)
+        internal ObjectFilterCollection()
         {
-            _view = view;
             _objectFilters = new List<SceneObjectFilter>();
         }
 

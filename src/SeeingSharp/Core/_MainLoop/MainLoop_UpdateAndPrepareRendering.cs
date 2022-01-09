@@ -16,16 +16,16 @@ namespace SeeingSharp.Core
         private List<string> _perfSceneUpdateActivityNames;
 
         // Dependencies for each render loop
-        private List<RenderLoop> _renderingRenderLoops;
-        private IReadOnlyList<Scene> _scenesToRender;
-        private IReadOnlyList<EngineDevice> _devicesInUse;
-        private UpdateState _updateState;
+        private List<RenderLoop>? _renderingRenderLoops;
+        private IReadOnlyList<Scene>? _scenesToRender;
+        private IReadOnlyList<EngineDevice>? _devicesInUse;
+        private UpdateState? _updateState;
 
         // Caches values and collections
         private ConcurrentQueue<Exception> _exceptionsDuringUpdate;
         private List<Action> _additionalContinuationActions;
         private object _additionalContinuationActionsLock;
-        private List<Task<List<Action>>> _prepareRenderTasks;
+        private List<Task<List<Action>?>> _prepareRenderTasks;
         private Action<int> _actionUpdateSingleScene;
 
         public MainLoop_UpdateAndPrepareRendering(GraphicsCore core, EngineMainLoop mainLoop)
@@ -38,7 +38,7 @@ namespace SeeingSharp.Core
             _additionalContinuationActions = new List<Action>(6);
             _additionalContinuationActionsLock = new object();
 
-            _prepareRenderTasks = new List<Task<List<Action>>>(16);
+            _prepareRenderTasks = new List<Task<List<Action>?>>(16);
 
             _actionUpdateSingleScene = this.UpdateSingleScene;
         }
@@ -71,15 +71,15 @@ namespace SeeingSharp.Core
             using (_core.BeginMeasureActivityDuration(SeeingSharpConstants.PERF_GLOBAL_UPDATE_AND_PREPARE))
             {
                 // Trigger all tasks for preparing views
-                for (var actDeviceIndex = 0; actDeviceIndex < _devicesInUse.Count; actDeviceIndex++)
+                for (var actDeviceIndex = 0; actDeviceIndex < _devicesInUse!.Count; actDeviceIndex++)
                 {
                     _prepareRenderTasks.Add(this.PrepareRenderForDeviceAsync(
-                        _renderingRenderLoops, _devicesInUse[actDeviceIndex],
+                        _renderingRenderLoops!, _devicesInUse[actDeviceIndex],
                         _additionalContinuationActions, _additionalContinuationActionsLock));
                 }
 
                 // Update all scenes
-                if(_scenesToRender.Count == 1){ this.UpdateSingleScene(0); }
+                if(_scenesToRender!.Count == 1){ this.UpdateSingleScene(0); }
                 else
                 {
                     Parallel.For(0, _scenesToRender.Count, _actionUpdateSingleScene);
@@ -93,7 +93,7 @@ namespace SeeingSharp.Core
 
                 // Handle initial configuration of render loops (=> No current device or changing device)
                 var prepareRenderingOnChangedDeviceTask = this.PrepareRenderForDeviceAsync(
-                    _renderingRenderLoops, null,
+                    _renderingRenderLoops!, null,
                     _additionalContinuationActions, _additionalContinuationActionsLock);
                 await prepareRenderingOnChangedDeviceTask;
                 _prepareRenderTasks.Add(prepareRenderingOnChangedDeviceTask);
@@ -123,17 +123,17 @@ namespace SeeingSharp.Core
                 }
 
                 // Unload all deregistered RenderLoops
-                await _mainLoop.UpdateRenderLoopRegistrationsAsync(_renderingRenderLoops);
+                await _mainLoop.UpdateRenderLoopRegistrationsAsync(_renderingRenderLoops!);
             }
         }
 
-        private async Task<List<Action>> PrepareRenderForDeviceAsync(
+        private async Task<List<Action>?> PrepareRenderForDeviceAsync(
             List<RenderLoop> renderingRenderLoops,
-            EngineDevice deviceToUpdate,
+            EngineDevice? deviceToUpdate,
             List<Action> additionalContinuationActions,
             object additionalContinuationActionsLock)
         {
-            List<Action> result = null;
+            List<Action>? result = null;
             for (var loop = 0; loop < renderingRenderLoops.Count; loop++)
             {
                 var actRenderLoop = renderingRenderLoops[loop];
@@ -161,8 +161,8 @@ namespace SeeingSharp.Core
                 if(!doCallPrepareRender){ continue; }
                 try
                 {
-                    var currentResult = await actRenderLoop.PrepareRenderAsync(_updateState);
-                    if(currentResult == null || currentResult.Count == 0)
+                    var currentResult = await actRenderLoop.PrepareRenderAsync(_updateState!);
+                    if(currentResult.Count == 0)
                     {
                         // Nothing to do in this case - no continuation actions
                     }
@@ -205,10 +205,10 @@ namespace SeeingSharp.Core
             {
                 using (_core.BeginMeasureActivityDuration(_perfSceneUpdateActivityNames[sceneIndex]))
                 {
-                    var actScene = _scenesToRender[sceneIndex];
+                    var actScene = _scenesToRender![sceneIndex];
                     var actUpdateState = actScene.CachedUpdateState;
 
-                    actUpdateState.OnStartSceneUpdate(actScene, _updateState);
+                    actUpdateState.OnStartSceneUpdate(actScene, _updateState!);
 
                     actScene.Update(actUpdateState);
                 }

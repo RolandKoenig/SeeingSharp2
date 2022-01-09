@@ -17,12 +17,12 @@ namespace SeeingSharp.Drawing3D.Geometries
         // Geometry
         private List<GeometrySurface> _surfaces;
         private UnsafeList<VertexBasic> _verticesBasic;
-        private UnsafeList<VertexBinormalTangent> _verticesBinormalTangents;
+        private UnsafeList<VertexBinormalTangent>? _verticesBinormalTangents;
 
         // Members for build time transform
         private bool _buildTimeTransformEnabled;
         private Matrix4x4 _buildTransformMatrix;
-        private Func<VertexBasic, VertexBasic> _buildTimeTransformFunc;
+        private Func<VertexBasic, VertexBasic>? _buildTimeTransformFunc;
 
         /// <summary>
         /// Gets the first surface of this geometry.
@@ -327,15 +327,9 @@ namespace SeeingSharp.Drawing3D.Geometries
         {
             var result = new BoundingBox();
 
-            if (geometries != null)
+            for (var loop = 0; loop < geometries.Length; loop++)
             {
-                for (var loop = 0; loop < geometries.Length; loop++)
-                {
-                    if (geometries[loop] != null)
-                    {
-                        result.MergeWith(geometries[loop].GenerateBoundingBox());
-                    }
-                }
+                result.MergeWith(geometries[loop].GenerateBoundingBox());
             }
 
             return result;
@@ -522,7 +516,7 @@ namespace SeeingSharp.Drawing3D.Geometries
                 for (var loop = 0; loop < vertexCount; loop++)
                 {
                     result._verticesBasic.Add(_verticesBasic[loop]);
-                    if(hasBinormalsTangents){ result._verticesBinormalTangents.Add(_verticesBinormalTangents[loop]); }
+                    if(hasBinormalsTangents){ result._verticesBinormalTangents!.Add(_verticesBinormalTangents![loop]); }
                 }
             }
 

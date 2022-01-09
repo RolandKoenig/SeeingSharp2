@@ -13,7 +13,7 @@ namespace SeeingSharp.Core.Animations
         private MovementSpeed _paramMoveSpeed;
 
         // Runtime values
-        private MovementAnimationHelper _moveHelper;
+        private MovementAnimationHelper? _moveHelper;
         private Vector3 _startVector;
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace SeeingSharp.Core.Animations
         /// </summary>
         protected override void OnCurrentTimeUpdated(IAnimationUpdateState updateState, AnimationState animationState)
         {
-            _targetObject.Position = _startVector + _moveHelper.GetPartialMoveDistance(this.CurrentTime);
+            _targetObject.Position = _startVector + _moveHelper!.GetPartialMoveDistance(this.CurrentTime);
         }
 
         /// <summary>

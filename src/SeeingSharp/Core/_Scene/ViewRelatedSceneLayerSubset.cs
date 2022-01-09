@@ -27,17 +27,17 @@ namespace SeeingSharp.Core
 
         // Special members for subscribe/unsubscribe pass logic
         private bool _isSubscribeUnsubscribeAllowed;
-        private Action _changedVisibilitiesAction;
+        private Action? _changedVisibilitiesAction;
 
         // Objects that raises exceptions during render
-        private Dictionary<SceneObject, object> _invalidObjects;
+        private Dictionary<SceneObject, object?> _invalidObjects;
         private Queue<SceneObject> _invalidObjectsToDeregister;
 
         // Resources for rendering
-        private RenderPassLineRender _renderPassLineRender;
-        private RenderPassDefaultTransparent _renderPassTransparent;
-        private RenderPass2DOverlay _renderPass2DOverlay;
-        private ViewRenderParameters _renderParameters;
+        private RenderPassLineRender? _renderPassLineRender;
+        private RenderPassDefaultTransparent? _renderPassTransparent;
+        private RenderPass2DOverlay? _renderPass2DOverlay;
+        private ViewRenderParameters? _renderParameters;
 
         // Subscription collections
         // All collections needed to link all scene objects to corresponding render passes
@@ -73,7 +73,7 @@ namespace SeeingSharp.Core
             _resources = resources;
             ViewIndex = viewIndex;
 
-            _invalidObjects = new Dictionary<SceneObject, object>();
+            _invalidObjects = new Dictionary<SceneObject, object?>();
             _invalidObjectsToDeregister = new Queue<SceneObject>();
 
             // Create temporary collections
@@ -393,6 +393,7 @@ namespace SeeingSharp.Core
                 for (var loop = 0; loop < allObjectsLength; loop++)
                 {
                     var actObject = allObjectsArray[loop];
+                    if(actObject == null){ continue; }
 
                     // Don't handle static objects here if we don't want to handle them
                     if (!refreshAllObjects)
@@ -467,7 +468,7 @@ namespace SeeingSharp.Core
                 return;
             }
 
-            List<SceneObject> invalidObjects = null;
+            List<SceneObject>? invalidObjects = null;
             var resources = renderState.CurrentResources;
 
             if (renderState.Device != _device) { throw new SeeingSharpGraphicsException("Rendering of a ViewRelatedSceneLayoutSubset is called with a wrong device object!"); }
@@ -493,7 +494,7 @@ namespace SeeingSharp.Core
                 View = Matrix4x4.Transpose(this.ViewInformation.Camera.View)
             };
 
-            _renderParameters.UpdateValues(renderState, cbPerView);
+            _renderParameters!.UpdateValues(renderState, cbPerView);
 
             // Query for postprocess effect
             var postprocessEffect = _renderParameters.GetPostprocessEffect(
@@ -660,7 +661,7 @@ namespace SeeingSharp.Core
             if (_objectsPass2DOverlay.Subscriptions.Count == 0) { return; }
 
             // Render all 2D objects
-            List<SceneObject> invalidObjects = null;
+            List<SceneObject>? invalidObjects = null;
             this.RenderPass(
                 _renderPass2DOverlay, _objectsPass2DOverlay,
                 renderState, ref invalidObjects);
@@ -684,7 +685,6 @@ namespace SeeingSharp.Core
 
             // Get visibility check data about current object
             var checkData = actObject.GetVisibilityCheckData(this.ViewInformation);
-            if (checkData == null) { return; }
 
             var oldVisible = checkData.IsVisible;
             var newVisible = oldVisible;
@@ -696,7 +696,7 @@ namespace SeeingSharp.Core
                     var filterCount = filters.Count;
                     var previousFilterExecuted = false;
                     var previousFilterResult = true;
-                    VisibilityCheckFilterStageData lastFilterStageData = null;
+                    VisibilityCheckFilterStageData? lastFilterStageData = null;
                     for (var actFilterIndex = 0; actFilterIndex < filterCount; actFilterIndex++)
                     {
                         var actFilter = filters[actFilterIndex];
@@ -788,32 +788,28 @@ namespace SeeingSharp.Core
         /// </summary>
         private void RefreshDeviceDependentResources()
         {
-            if (_renderParameters == null ||
-                !_renderParameters.IsLoaded)
+            if (_renderParameters is not {IsLoaded: true})
             {
                 _renderParameters = _resources.AddAndLoadResource(
                     GraphicsCore.GetNextGenericResourceKey(),
                     new ViewRenderParameters());
             }
 
-            if (_renderPassTransparent == null ||
-                !_renderPassTransparent.IsLoaded)
+            if (_renderPassTransparent is not {IsLoaded: true})
             {
                 _renderPassTransparent = _resources.GetResourceAndEnsureLoaded(
                     new NamedOrGenericKey(typeof(RenderPassDefaultTransparent)),
                     () => new RenderPassDefaultTransparent());
             }
 
-            if (_renderPassLineRender == null ||
-                !_renderPassLineRender.IsLoaded)
+            if (_renderPassLineRender is not {IsLoaded: true})
             {
                 _renderPassLineRender = _resources.GetResourceAndEnsureLoaded(
                     new NamedOrGenericKey(typeof(RenderPassLineRender)),
                     () => new RenderPassLineRender());
             }
 
-            if (_renderPass2DOverlay == null ||
-                !_renderPass2DOverlay.IsLoaded)
+            if (_renderPass2DOverlay is not {IsLoaded: true})
             {
                 _renderPass2DOverlay = _resources.GetResourceAndEnsureLoaded(
                     new NamedOrGenericKey(typeof(RenderPass2DOverlay)),
@@ -825,8 +821,8 @@ namespace SeeingSharp.Core
         /// Rendering logic for lines renderings.
         /// </summary>
         private void RenderPass(
-            RenderPassBase renderPass, PassSubscriptionProperties subscriptions,
-            RenderState renderState, ref List<SceneObject> invalidObjects)
+            RenderPassBase? renderPass, PassSubscriptionProperties subscriptions,
+            RenderState renderState, ref List<SceneObject>? invalidObjects)
         {
             if (subscriptions.Subscriptions.Count > 0)
             {
@@ -860,11 +856,7 @@ namespace SeeingSharp.Core
                                 ex, InternalExceptionLocation.Rendering3DObject);
 
                             // Mark this object as invalid
-                            if (invalidObjects == null)
-                            {
-                                invalidObjects = new List<SceneObject>();
-                            }
-
+                            invalidObjects ??= new List<SceneObject>();
                             invalidObjects.Add(actSubscription.SceneObject);
                         }
                     }
@@ -898,12 +890,12 @@ namespace SeeingSharp.Core
         /// </summary>
         private class PassSubscriptionProperties
         {
-            internal List<RenderPassSubscription> Subscriptions = new List<RenderPassSubscription>(DEFAULT_PASS_SUBSCRIPTION_LENGTH);
+            internal List<RenderPassSubscription> Subscriptions = new(DEFAULT_PASS_SUBSCRIPTION_LENGTH);
 
             /// <summary>
             /// A cached temporary collection which is used then updating the Subscription property
             /// </summary>
-            internal List<RenderPassSubscription> SubscriptionsTemp = new List<RenderPassSubscription>(DEFAULT_PASS_SUBSCRIPTION_LENGTH);
+            internal List<RenderPassSubscription> SubscriptionsTemp = new(DEFAULT_PASS_SUBSCRIPTION_LENGTH);
 
             /// <summary>
             /// Total count of calls to Unsubscribe in this pass

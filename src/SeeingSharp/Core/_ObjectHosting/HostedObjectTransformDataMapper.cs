@@ -12,9 +12,9 @@ namespace SeeingSharp.Core
         private Func<Vector3, Vector3> _funcPositionMapper;
         private Func<Vector3, Vector3> _funcRotationMapper;
         private Func<Vector3, Vector3> _funcScalingMapper;
-        private Func<AnimationHandler, AnimationHandler> _funcGetAnimationHandler;
-        private Func<Color4, Color4> _funcGetDisplayColor;
-        private IEngineOpacityProvider _opacityObject;
+        private Func<AnimationHandler, AnimationHandler>? _funcGetAnimationHandler;
+        private Func<Color4, Color4>? _funcGetDisplayColor;
+        private IEngineOpacityProvider? _opacityObject;
 
         public Vector3 Position => _funcPositionMapper(_original.Position);
 

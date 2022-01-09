@@ -10,7 +10,7 @@ namespace SeeingSharp.Core.Animations
 {
     public class AnimationSequence : IAnimation
     {
-        private Thread _currentWorkingThread;
+        private Thread? _currentWorkingThread;
 
         private int _currentWorkingThreadCount;
         private ConcurrentQueue<Action> _preUpdateActions;
@@ -68,7 +68,7 @@ namespace SeeingSharp.Core.Animations
         /// <summary>
         /// Raises when an animation within this sequence has failed.
         /// </summary>
-        public event EventHandler<AnimationFailedEventArgs> AnimationFailed;
+        public event EventHandler<AnimationFailedEventArgs>? AnimationFailed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AnimationSequence"/> class.

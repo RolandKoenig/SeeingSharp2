@@ -20,18 +20,11 @@ namespace SeeingSharp.Core.Animations
         {
             get
             {
-                if (this.Steps == null)
-                {
-                    return TimeSpan.Zero;
-                }
-
                 var totalTime = TimeSpan.Zero;
-
                 foreach (var actAnimStep in this.Steps)
                 {
                     totalTime = totalTime + actAnimStep.UpdateTime;
                 }
-
                 return totalTime;
             }
         }

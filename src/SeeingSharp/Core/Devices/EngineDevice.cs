@@ -27,9 +27,9 @@ namespace SeeingSharp.Core.Devices
         private DetailLevel _forcedDetailLevel;
 
         // Handlers for different DirectX Apis
-        private DeviceHandlerDXGI _handlerDXGI;
-        private DeviceHandlerD3D11 _handlerD3D11;
-        private DeviceHandlerD2D _handlerD2D;
+        private DeviceHandlerDXGI? _handlerDXGI;
+        private DeviceHandlerD3D11? _handlerD3D11;
+        private DeviceHandlerD2D? _handlerD2D;
         private List<IDisposable> _additionalDeviceHandlers;
 
         // Device resources
@@ -48,7 +48,7 @@ namespace SeeingSharp.Core.Devices
         /// <summary>
         /// Gets the exception occurred during initialization of the driver (if any).
         /// </summary>
-        public Exception InitializationException { get; private set; }
+        public Exception? InitializationException { get; private set; }
 
         /// <summary>
         /// Gets the description of this adapter.

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Numerics;
+using SeeingSharp.Core;
 using SeeingSharp.Core.Animations;
 using SeeingSharp.Mathematics;
 
@@ -8,14 +9,13 @@ namespace SeeingSharp.Drawing3D
     public abstract class Camera3DBase : IAnimatableObject
     {
         // Configuration
-        private Vector3 _position = new Vector3(0, 0, 0);
-        private Vector3 _relativeTarget = new Vector3(0, 0, 1);
-        private Vector3 _upVector = new Vector3(0, 1, 0);
+        private Vector3 _position = new(0, 0, 0);
+        private Vector3 _relativeTarget = new(0, 0, 1);
+        private Vector3 _upVector = new(0, 1, 0);
         private float _hRotation;
         private float _vRotation;
 
         // State
-        private Vector3 _lastBigStepPos = new Vector3(0, 0, 0);
         private Vector3 _up;
         private Vector3 _right;
         private Vector3 _look;
@@ -83,7 +83,7 @@ namespace SeeingSharp.Drawing3D
         /// </summary>
         public Vector2 TargetRotation
         {
-            get => new Vector2(_hRotation, _vRotation);
+            get => new(_hRotation, _vRotation);
             set
             {
                 var v = value;
@@ -196,7 +196,7 @@ namespace SeeingSharp.Drawing3D
         /// <summary>
         /// Gets the currently associated RenderLoop object.
         /// </summary>
-        public object AssociatedRenderLoop { get; internal set; }
+        public RenderLoop? AssociatedRenderLoop { get; internal set; }
 
         public bool IsOrthographic => IsOrthopraphicInternal;
 

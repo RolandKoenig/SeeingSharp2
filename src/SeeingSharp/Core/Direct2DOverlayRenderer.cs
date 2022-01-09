@@ -14,35 +14,52 @@ namespace SeeingSharp.Core
     /// <summary>
     /// This class makes a Direct3D 11 texture available for 2D rendering with Direct2D.
     /// </summary>
-    internal class Direct2DOverlayRenderer : IDisposable
+    internal class Direct2DOverlayRenderer : IDisposable, ICheckDisposed
     {
         // Graphics object
-        private Graphics2D _graphics2D;
+        private Graphics2D? _graphics2D;
 
         // Given resources
         private EngineDevice _device;
         private D3D11.ID3D11Texture2D _renderTarget3D;
 
         // Own 2D render target resource
-        private D2D.ID2D1RenderTarget _renderTarget2D;
-        private D2D.ID2D1Bitmap1 _renderTargetBitmap;
+        private D2D.ID2D1RenderTarget? _renderTarget2D;
+        private D2D.ID2D1Bitmap1? _renderTargetBitmap;
 
         /// <summary>
         /// Is this resource loaded correctly?
         /// </summary>
         public bool IsLoaded => _renderTarget2D != null;
 
+        /// <inheritdoc />
+        public bool IsDisposed => !this.IsLoaded;
+
         internal bool IsRenderTargetDisposed => _renderTarget2D?.IsDisposed == true;
 
         /// <summary>
         /// Gets the Direct2D render target.
         /// </summary>
-        internal D2D.ID2D1RenderTarget RenderTarget2D => _renderTarget2D;
+        internal D2D.ID2D1RenderTarget RenderTarget2D
+        {
+            get
+            {
+                if (_renderTarget2D == null) { throw new ObjectDisposedException(nameof(Direct2DOverlayRenderer)); }
+                return _renderTarget2D;
+            }
+        }
 
         /// <summary>
         /// Gets the 2D graphics object.
         /// </summary>
-        internal Graphics2D Graphics => _graphics2D;
+        internal Graphics2D Graphics
+        {
+            get
+            {
+                if (_graphics2D == null) { throw new ObjectDisposedException(nameof(Direct2DOverlayRenderer)); }
+                return _graphics2D;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Direct2DOverlayRenderer"/> class.
@@ -71,6 +88,7 @@ namespace SeeingSharp.Core
         {
             if (_renderTarget2D == null) { return; }
             if (_renderTarget2D.IsDisposed) { return; }
+            if (_renderTargetBitmap == null) { return; }
 
             _device.DeviceContextD2D.Target = _renderTargetBitmap;
             _device.DeviceContextD2D.Dpi = _renderTargetBitmap.Dpi;

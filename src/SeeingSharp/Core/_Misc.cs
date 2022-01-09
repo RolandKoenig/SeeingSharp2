@@ -25,11 +25,7 @@ namespace SeeingSharp.Core
 
         public override string ToString()
         {
-            if (this.Exception != null)
-            {
-                return $"{this.Location}: {this.Exception.Message} ({this.Exception.GetType().FullName})";
-            }
-            return this.Location.ToString();
+            return $"{this.Location}: {this.Exception.Message} ({this.Exception.GetType().FullName})";
         }
     }
 

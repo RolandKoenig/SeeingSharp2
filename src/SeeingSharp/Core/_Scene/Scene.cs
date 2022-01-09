@@ -166,11 +166,7 @@ namespace SeeingSharp.Core
         /// <param name="device">The device for which to check.</param>
         public int GetResourceCount(EngineDevice device)
         {
-            if(_registeredResourceDicts.HasObjectAt(device.DeviceIndex))
-            {
-                return _registeredResourceDicts[device.DeviceIndex].ResourceCount;
-            }
-            return 0;
+            return _registeredResourceDicts[device.DeviceIndex]?.ResourceCount ?? 0;
         }
 
         /// <summary>
@@ -230,7 +226,7 @@ namespace SeeingSharp.Core
             sceneObjects.EnsureNotNull(nameof(sceneObjects));
             viewInfo.EnsureNotNull(nameof(viewInfo));
 
-            var taskComplSource = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
+            var taskComplSource = new TaskCompletionSource<object?>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             // Define the poll action (polling is done inside scene update
             void PollAction()
@@ -277,7 +273,7 @@ namespace SeeingSharp.Core
         /// </summary>
         /// <param name="component">The component to be attached.</param>
         /// <param name="sourceView">The view which attaches the component.</param>
-        public void AttachComponent(SceneComponentBase component, ViewInformation sourceView = null)
+        public void AttachComponent(SceneComponentBase component, ViewInformation? sourceView = null)
         {
             _sceneComponents.AttachComponent(component, sourceView);
         }
@@ -287,7 +283,7 @@ namespace SeeingSharp.Core
         /// </summary>
         /// <param name="component">The component to be detached.</param>
         /// <param name="sourceView">The view which attached the component initially.</param>
-        public void DetachComponent(SceneComponentBase component, ViewInformation sourceView = null)
+        public void DetachComponent(SceneComponentBase component, ViewInformation? sourceView = null)
         {
             _sceneComponents.AttachComponent(component, sourceView);
         }
@@ -296,7 +292,7 @@ namespace SeeingSharp.Core
         /// Detaches all currently attached components.
         /// </summary>
         /// <param name="sourceView">The view from which we've to detach all components.</param>
-        public void DetachAllComponents(ViewInformation sourceView = null)
+        public void DetachAllComponents(ViewInformation? sourceView = null)
         {
             _sceneComponents.DetachAllComponents(sourceView);
         }
@@ -569,7 +565,7 @@ namespace SeeingSharp.Core
         /// </summary>
         /// <param name="sceneObject">Object to add.</param>
         /// <param name="layer">Layer on which the object should be added.</param>
-        internal T Add<T>(T sceneObject, string layer)
+        internal void Add<T>(T sceneObject, string layer)
             where T : SceneObject
         {
             sceneObject.EnsureNotNull(nameof(sceneObject));
@@ -578,13 +574,7 @@ namespace SeeingSharp.Core
             this.InitializeResourceDictionaries();
 
             var layerObject = this.GetLayer(layer);
-
-            if (!layerObject.AddObject(sceneObject))
-            {
-                return null;
-            }
-
-            return sceneObject;
+            layerObject.AddObject(sceneObject);
         }
 
         /// <summary>
@@ -604,7 +594,8 @@ namespace SeeingSharp.Core
             //  -> This registration is forever, no deregister is made!
             var givenDevice = viewInformation.Device;
 
-            if (!_registeredResourceDicts.HasObjectAt(givenDevice.DeviceIndex))
+            var resourceDictionary = _registeredResourceDicts[givenDevice.DeviceIndex];
+            if (resourceDictionary == null)
             {
                 throw new SeeingSharpGraphicsException("ResourceDictionary of device " + givenDevice.AdapterDescription + " not loaded in this scene!");
             }
@@ -621,7 +612,7 @@ namespace SeeingSharp.Core
 
             foreach (var actLayer in _sceneLayers)
             {
-                actLayer.RegisterView(viewIndex, viewInformation, _registeredResourceDicts[givenDevice.DeviceIndex]);
+                actLayer.RegisterView(viewIndex, viewInformation, resourceDictionary);
             }
 
             viewInformation.ViewIndex = viewIndex;
@@ -689,7 +680,6 @@ namespace SeeingSharp.Core
             name.EnsureNotNullOrEmpty(nameof(name));
 
             var currentLayer = this.TryGetLayer(name);
-
             if (currentLayer != null)
             {
                 throw new ArgumentException("There is already a SceneLayer with the given name!", nameof(name));
@@ -709,10 +699,16 @@ namespace SeeingSharp.Core
             // Register all views on the newly generated layer
             foreach (var actViewInfo in _registeredViews)
             {
+                var resourceDictionary = _registeredResourceDicts[actViewInfo.Device.DeviceIndex];
+                if (resourceDictionary == null)
+                {
+                    throw new SeeingSharpGraphicsException("ResourceDictionary of device " + actViewInfo.Device.AdapterDescription + " not loaded in this scene!");
+                }
+
                 newLayer.RegisterView(
                     _registeredViews.IndexOf(actViewInfo),
                     actViewInfo,
-                    _registeredResourceDicts[actViewInfo.Device.DeviceIndex]);
+                    resourceDictionary);
             }
 
             return newLayer;
@@ -801,7 +797,7 @@ namespace SeeingSharp.Core
         /// Gets the layer with the given name.
         /// </summary>
         /// <param name="layerName">Name of the layer.</param>
-        internal SceneLayer TryGetLayer(string layerName)
+        internal SceneLayer? TryGetLayer(string layerName)
         {
             layerName.EnsureNotNullOrEmpty(nameof(layerName));
 

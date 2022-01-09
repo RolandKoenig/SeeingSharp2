@@ -5,7 +5,7 @@ namespace SeeingSharp.Core
 {
     public class RenderPassDefaultTransparent : RenderPassBase
     {
-        private DefaultResources _defaultResources;
+        private DefaultResources? _defaultResources;
 
         /// <summary>
         /// Is the resource loaded?
@@ -20,7 +20,7 @@ namespace SeeingSharp.Core
         {
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
-            deviceContext.OMSetBlendState(_defaultResources.AlphaBlendingBlendState);
+            deviceContext.OMSetBlendState(_defaultResources!.AlphaBlendingBlendState);
             deviceContext.OMSetDepthStencilState(_defaultResources.DepthStencilStateDisableZWrites);
         }
 
@@ -32,7 +32,7 @@ namespace SeeingSharp.Core
         {
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
-            deviceContext.OMSetBlendState(_defaultResources.DefaultBlendState);
+            deviceContext.OMSetBlendState(_defaultResources!.DefaultBlendState);
             deviceContext.OMSetDepthStencilState(_defaultResources.DepthStencilStateDefault);
         }
 

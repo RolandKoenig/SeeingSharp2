@@ -17,11 +17,11 @@ namespace SeeingSharp.Drawing3D
         private NamedOrGenericKey _texture;
 
         // Used resources
-        private GeometryResource _geometryResource;
-        private SpriteMaterialResource _materialResource;
-        private DefaultResources _defaultResources;
-        private ObjectRenderParameters _renderParameters;
-        private RenderingChunk[] _renderingChunks;
+        private GeometryResource? _geometryResource;
+        private SpriteMaterialResource? _materialResource;
+        private DefaultResources? _defaultResources;
+        private ObjectRenderParameters? _renderParameters;
+        private RenderingChunk[]? _renderingChunks;
 
         /// <summary>
         /// Gets or sets the scaling.
@@ -115,7 +115,7 @@ namespace SeeingSharp.Drawing3D
         internal void RenderPlain(RenderState renderState)
         {
             // Apply rendering parameters
-            _renderParameters.UpdateValues(renderState, new CBPerObject
+            _renderParameters!.UpdateValues(renderState, new CBPerObject
             {
                 AccentuationFactor = this.AccentuationFactor,
                 Color = Vector4.One,
@@ -137,16 +137,16 @@ namespace SeeingSharp.Drawing3D
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
             // Apply all current rendering parameters
-            _renderParameters.Apply(renderState);
+            _renderParameters!.Apply(renderState);
 
-            deviceContext.OMSetDepthStencilState(_defaultResources.DepthStencilStateDisableZWrites);
+            deviceContext.OMSetDepthStencilState(_defaultResources!.DepthStencilStateDisableZWrites);
             if (this.AlphaBlendMode == TexturePainterAlphaBlendMode.AlphaBlend)
             {
                 deviceContext.OMSetBlendState(_defaultResources.AlphaBlendingBlendState);
             }
 
             // Render the object
-            renderState.RenderChunks(_renderingChunks);
+            renderState.RenderChunks(_renderingChunks!);
 
             if (this.AlphaBlendMode == TexturePainterAlphaBlendMode.AlphaBlend)
             {

@@ -18,12 +18,12 @@ namespace SeeingSharp.Drawing3D.Resources
         private int _height;
 
         // Resources for Direct3D
-        private D3D11.ID3D11Texture2D _renderTargetTexture;
-        private D3D11.ID3D11ShaderResourceView _renderTargetTextureView;
+        private D3D11.ID3D11Texture2D? _renderTargetTexture;
+        private D3D11.ID3D11ShaderResourceView? _renderTargetTextureView;
 
         // Resources for Direct2D
-        private Graphics2D _graphics2D;
-        private Direct2DOverlayRenderer _overlayRenderer;
+        private Graphics2D? _graphics2D;
+        private Direct2DOverlayRenderer? _overlayRenderer;
 
         /// <summary>
         /// Is the resource loaded?
@@ -33,12 +33,26 @@ namespace SeeingSharp.Drawing3D.Resources
         /// <summary>
         /// Gets the texture object.
         /// </summary>
-        internal override D3D11.ID3D11Texture2D Texture => _renderTargetTexture;
+        internal override D3D11.ID3D11Texture2D Texture
+        {
+            get
+            {
+                _renderTargetTexture.EnsureResourceLoaded(typeof(Direct2DTextureResource));
+                return _renderTargetTexture!;
+            }
+        }
 
         /// <summary>
         /// Gets a ShaderResourceView targeting the texture.
         /// </summary>
-        internal override D3D11.ID3D11ShaderResourceView TextureView => _renderTargetTextureView;
+        internal override D3D11.ID3D11ShaderResourceView TextureView
+        {
+            get
+            {
+                _renderTargetTextureView.EnsureResourceLoaded(typeof(Direct2DTextureResource));
+                return _renderTargetTextureView!;
+            }
+        }
 
         /// <summary>
         /// Gets the size of the texture array.
@@ -80,9 +94,9 @@ namespace SeeingSharp.Drawing3D.Resources
         public void Render(RenderState renderState)
         {
             if (renderState.Device.IsLost) { return; }
-            if (_overlayRenderer.IsRenderTargetDisposed) { return; }
+            if (_overlayRenderer!.IsRenderTargetDisposed) { return; }
 
-            _overlayRenderer.BeginDraw();
+            _overlayRenderer!.BeginDraw();
             try
             {
                 if (_graphics2D != null)
@@ -94,7 +108,7 @@ namespace SeeingSharp.Drawing3D.Resources
             {
                 try
                 {
-                    _overlayRenderer.EndDraw();
+                    _overlayRenderer!.EndDraw();
                 }
                 catch (SharpGenException dxException)
                 {

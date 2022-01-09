@@ -64,7 +64,7 @@ namespace SeeingSharp.Drawing3D
         /// Be careful: Resource objects are created on first render. If this have not happened yet, then this method returns null.
         /// </summary>
         /// <param name="device">The device for which to get the <see cref="GeometryResource"/></param>
-        public GeometryResource TryGetGeometryResource(EngineDevice device)
+        public GeometryResource? TryGetGeometryResource(EngineDevice device)
         {
             device.EnsureNotNull(nameof(device));
 
@@ -76,7 +76,7 @@ namespace SeeingSharp.Drawing3D
         /// Be careful: Resource objects are created on first render. If this have not happened yet, then this method returns null.
         /// </summary>
         /// <param name="device">The device for which to get the <see cref="GeometryResource"/></param>
-        public MaterialResource[] TryGetMaterialResources(EngineDevice device)
+        public MaterialResource[]? TryGetMaterialResources(EngineDevice device)
         {
             device.EnsureNotNull(nameof(device));
 
@@ -339,7 +339,7 @@ namespace SeeingSharp.Drawing3D
             this.UpdateAndApplyRenderParameters(renderState);
 
             renderState.RenderChunks(
-                _localChunks[renderState.DeviceIndex]);
+                _localChunks[renderState.DeviceIndex]!);
         }
     }
 }

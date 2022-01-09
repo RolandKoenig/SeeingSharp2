@@ -36,10 +36,11 @@ namespace SeeingSharp.Core.Animations
         /// <param name="owner">The owner object.</param>
         /// <exception cref="System.ArgumentException">Unable to cast target object of this AnimationSequenceBuilder to the generic type parameter!</exception>
         internal AnimationSequenceBuilder(AnimationHandler owner)
-            : this()
         {
+            _sequenceList = new List<IAnimation>();
+
             this.AnimationHandler = owner;
-            this.TargetObject = owner.Owner as TTargetType;
+            this.TargetObject = (TTargetType)owner.Owner;
         }
 
         /// <summary>
@@ -49,18 +50,11 @@ namespace SeeingSharp.Core.Animations
         /// <param name="animatedObject">The object which gets animated.</param>
         /// <exception cref="System.ArgumentException">Unable to cast target object of this AnimationSequenceBuilder to the generic type parameter!</exception>
         internal AnimationSequenceBuilder(AnimationHandler owner, TTargetType animatedObject)
-            : this()
-        {
-            this.AnimationHandler = owner;
-            this.TargetObject = animatedObject;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the AnimationSequenceBuilder class.
-        /// </summary>
-        private AnimationSequenceBuilder()
         {
             _sequenceList = new List<IAnimation>();
+
+            this.AnimationHandler = owner;
+            this.TargetObject = animatedObject;
         }
 
         /// <summary>
@@ -80,7 +74,7 @@ namespace SeeingSharp.Core.Animations
         /// <param name="actionToCall">The action to be called after animation has finished.</param>
         /// <param name="cancelAction">The action to be called when the animation gets canceled.</param>
         /// <param name="ignorePause">Should this animation ignore pause state</param>
-        public void Apply(Action actionToCall = null, Action cancelAction = null, bool? ignorePause = null)
+        public void Apply(Action? actionToCall = null, Action? cancelAction = null, bool? ignorePause = null)
         {
             if (this.AnimationHandler == null)
             {
@@ -113,7 +107,7 @@ namespace SeeingSharp.Core.Animations
         /// <param name="actionToCall">The action to be called after animation has finished.</param>
         /// <param name="cancelAction">The action to be called when the animation gets canceled.</param>
         /// <param name="ignorePause">Should this animation ignore pause state</param>
-        public void ApplyAsSecondary(Action actionToCall, Action cancelAction, bool? ignorePause = null)
+        public void ApplyAsSecondary(Action? actionToCall, Action? cancelAction, bool? ignorePause = null)
         {
             if (this.AnimationHandler == null) { throw new SeeingSharpGraphicsException("Unable to finish AnimationSequenceBuilder: No default AnimationHandler found!"); }
 

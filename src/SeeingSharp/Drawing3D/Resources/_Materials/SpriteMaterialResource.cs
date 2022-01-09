@@ -12,10 +12,10 @@ namespace SeeingSharp.Drawing3D.Resources
         private static readonly NamedOrGenericKey s_resKeyPixelShader = GraphicsCore.GetNextGenericResourceKey();
 
         // Resource members
-        private TextureResource _textureResource;
-        private DefaultResources _defaultResources;
-        private PixelShaderResource _pixelShader;
-        private VertexShaderResource _vertexShader;
+        private TextureResource? _textureResource;
+        private DefaultResources? _defaultResources;
+        private PixelShaderResource? _pixelShader;
+        private VertexShaderResource? _vertexShader;
 
         /// <summary>
         /// Gets the key of the texture resource.
@@ -78,7 +78,7 @@ namespace SeeingSharp.Drawing3D.Resources
         /// <param name="inputElements">An array of InputElements describing vertex input structure.</param>
         internal override D3D11.ID3D11InputLayout GetInputLayout(EngineDevice device, D3D11.InputElementDescription[] inputElements)
         {
-            return _vertexShader.GetInputLayout(device, inputElements);
+            return _vertexShader!.GetInputLayout(device, inputElements);
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace SeeingSharp.Drawing3D.Resources
         /// <param name="renderState">Current render state</param>
         /// <param name="previousMaterial">The previously applied material.</param>
         /// <exception cref="SeeingSharpGraphicsException">Effect  + this.Effect +  not supported!</exception>
-        internal override void Apply(RenderState renderState, MaterialResource previousMaterial)
+        internal override void Apply(RenderState renderState, MaterialResource? previousMaterial)
         {
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
             var isResourceSameType =
@@ -95,10 +95,10 @@ namespace SeeingSharp.Drawing3D.Resources
                 previousMaterial.ResourceType == this.ResourceType;
             if (!isResourceSameType)
             {
-                deviceContext.PSSetSampler(0, _defaultResources.GetSamplerState(TextureSamplerQualityLevel.Low));
+                deviceContext.PSSetSampler(0, _defaultResources!.GetSamplerState(TextureSamplerQualityLevel.Low));
 
-                deviceContext.VSSetShader(_vertexShader.VertexShader);
-                deviceContext.PSSetShader(_pixelShader.PixelShader);
+                deviceContext.VSSetShader(_vertexShader!.VertexShader);
+                deviceContext.PSSetShader(_pixelShader!.PixelShader);
             }
 
             // Set texture resource (if set)
@@ -108,7 +108,7 @@ namespace SeeingSharp.Drawing3D.Resources
             }
             else
             {
-                deviceContext.PSSetShaderResource(0, null);
+                deviceContext.PSSetShaderResource(0, null!);
             }
         }
     }

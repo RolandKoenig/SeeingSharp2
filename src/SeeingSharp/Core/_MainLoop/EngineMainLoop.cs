@@ -22,10 +22,10 @@ namespace SeeingSharp.Core
         private GraphicsCore _host;
 
         // Main thread synchronization
-        private Task _suspendWaiter;
-        private TaskCompletionSource<object> _suspendWaiterSource;
-        private TaskCompletionSource<object> _suspendCallWaiterSource;
-        private Task _runningTask;
+        private Task? _suspendWaiter;
+        private TaskCompletionSource<object?>? _suspendWaiterSource;
+        private TaskCompletionSource<object?>? _suspendCallWaiterSource;
+        private Task? _runningTask;
         private ConcurrentQueue<Action> _globalLoopAwaitors;
 
         // RenderLoop collections
@@ -64,7 +64,7 @@ namespace SeeingSharp.Core
         /// by ThreadPoolThreads.
         /// See http://www.codeproject.com/Articles/37474/Threadsafe-Events
         /// </summary>
-        public event EventHandler<GenericInputEventArgs> GenericInput;
+        public event EventHandler<GenericInputEventArgs>? GenericInput;
 
         /// <summary>
         /// Prevents a default instance of the <see cref="EngineMainLoop"/> class from being created.
@@ -96,12 +96,12 @@ namespace SeeingSharp.Core
         {
             if (_suspendWaiter == null)
             {
-                _suspendCallWaiterSource = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
-                _suspendWaiterSource = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
+                _suspendCallWaiterSource = new TaskCompletionSource<object?>(TaskCreationOptions.RunContinuationsAsynchronously);
+                _suspendWaiterSource = new TaskCompletionSource<object?>(TaskCreationOptions.RunContinuationsAsynchronously);
                 _suspendWaiter = _suspendWaiterSource.Task;
             }
 
-            return _suspendCallWaiterSource.Task;
+            return _suspendCallWaiterSource!.Task;
         }
 
         /// <summary>
@@ -111,9 +111,9 @@ namespace SeeingSharp.Core
         {
             if (_suspendWaiter != null)
             {
-                if (!_suspendCallWaiterSource.Task.IsCompleted) { _suspendCallWaiterSource.TrySetResult(null); }
+                if (!_suspendCallWaiterSource!.Task.IsCompleted) { _suspendCallWaiterSource.TrySetResult(null); }
 
-                _suspendWaiterSource.TrySetResult(null);
+                _suspendWaiterSource!.TrySetResult(null);
                 _suspendWaiterSource = null;
                 _suspendWaiter = null;
             }
@@ -124,7 +124,7 @@ namespace SeeingSharp.Core
         /// </summary>
         public Task WaitForNextPassedLoopAsync()
         {
-            var result = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
+            var result = new TaskCompletionSource<object?>(TaskCreationOptions.RunContinuationsAsynchronously);
             _globalLoopAwaitors.Enqueue(() =>
             {
                 result.SetResult(null);
@@ -352,10 +352,9 @@ namespace SeeingSharp.Core
 
                     // Handle suspend / resume
                     var suspendWaiter = _suspendWaiter;
-
                     if (suspendWaiter != null)
                     {
-                        _suspendCallWaiterSource.TrySetResult(null);
+                        _suspendCallWaiterSource!.TrySetResult(null);
 
                         // Wait for resuming
                         await suspendWaiter;
@@ -402,7 +401,7 @@ namespace SeeingSharp.Core
             if (_unregisteredRenderLoops.Count > 0)
             {
                 // Handle global and local RenderLoop collections
-                List<RenderLoop> copiedUnregisteredRenderLoops = null;
+                List<RenderLoop>? copiedUnregisteredRenderLoops = null;
 
                 lock (_registeredRenderLoopsLock)
                 {

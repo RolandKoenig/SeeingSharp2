@@ -9,7 +9,7 @@ namespace SeeingSharp.Drawing3D.Geometries
 {
     public class ExtrudeGeometryFactory : GeometryFactory
     {
-        private List<D2D.Triangle[]> _generatedTriangles;
+        private List<D2D.Triangle[]>? _generatedTriangles;
 
         /// <summary>
         /// Total count of generated triangles
@@ -37,7 +37,8 @@ namespace SeeingSharp.Drawing3D.Geometries
         public override Geometry BuildGeometry(GeometryBuildOptions buildOptions)
         {
             // Handle empty case
-            if (_generatedTriangles.Count == 0)
+            if ((_generatedTriangles == null) ||
+                (_generatedTriangles.Count == 0))
             {
                 return new Geometry(0);
             }
@@ -71,7 +72,7 @@ namespace SeeingSharp.Drawing3D.Geometries
             ExtrudeGeometryOptions extrudeOptions = ExtrudeGeometryOptions.None)
         {
             // Get triangles out of given geometry
-            List<D2D.Triangle[]> generatedTriangles = null;
+            List<D2D.Triangle[]>? generatedTriangles = null;
             using (var tessellationSink = new ExtruderTessellationSink())
             {
                 geometry.Tessellate(flatteningTolerance, tessellationSink);
@@ -209,8 +210,7 @@ namespace SeeingSharp.Drawing3D.Geometries
 
             public void AddTriangles(D2D.Triangle[] triangles)
             {
-                if (triangles == null ||
-                    triangles.Length == 0)
+                if (triangles.Length == 0)
                 {
                     return;
                 }

@@ -8,18 +8,16 @@ namespace SeeingSharp.Core.HardwareInfo
 {
     public class EngineHardwareInfo
     {
-        private List<EngineAdapterInfo> _adapters;
-
         /// <summary>
         /// Gets a collection containing all adapters.
         /// </summary>
-        public List<EngineAdapterInfo> Adapters => _adapters;
+        public List<EngineAdapterInfo> Adapters { get; }
 
-        public EngineAdapterInfo SoftwareAdapter
+        public EngineAdapterInfo? SoftwareAdapter
         {
             get
             {
-                return _adapters.FirstOrDefault(actAdapter => actAdapter.IsSoftwareAdapter);
+                return this.Adapters.FirstOrDefault(actAdapter => actAdapter.IsSoftwareAdapter);
             }
         }
 
@@ -28,15 +26,7 @@ namespace SeeingSharp.Core.HardwareInfo
         /// </summary>
         public EngineHardwareInfo(EngineFactory factory)
         {
-            this.LoadAdapterInformation(factory);
-        }
-
-        /// <summary>
-        /// Loads all adapter information and builds up all needed view models in a background thread.
-        /// </summary>
-        private void LoadAdapterInformation(EngineFactory factory)
-        {
-            _adapters = new List<EngineAdapterInfo>();
+            this.Adapters = new List<EngineAdapterInfo>();
 
             var lastResult = Result.Ok;
             var actIndex = 0;
@@ -45,7 +35,7 @@ namespace SeeingSharp.Core.HardwareInfo
                 lastResult = factory.DXGI.Factory.EnumAdapters1(actIndex, out var actAdapter);
                 if(lastResult.Success)
                 {
-                    _adapters.Add(new EngineAdapterInfo(actIndex, actAdapter));
+                    this.Adapters.Add(new EngineAdapterInfo(actIndex, actAdapter));
                 }
                 actIndex++;
             }

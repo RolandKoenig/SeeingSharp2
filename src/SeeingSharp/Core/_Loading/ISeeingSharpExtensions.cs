@@ -10,13 +10,13 @@ namespace SeeingSharp.Core
 {
     public interface ISeeingSharpExtensions
     {
-        IEnumerable<IDisposable> CreateAdditionalDeviceHandlers(EngineDevice device);
+        IEnumerable<IDisposable>? CreateAdditionalDeviceHandlers(EngineDevice device);
 
-        IEnumerable<IInputHandler> CreateInputHandlers();
+        IEnumerable<IInputHandler>? CreateInputHandlers();
 
-        IEnumerable<IModelImporter> CreateModelImporters();
+        IEnumerable<IModelImporter>? CreateModelImporters();
 
-        IEnumerable<IModelExporter> CreateModelExporters();
+        IEnumerable<IModelExporter>? CreateModelExporters();
 
         /// <summary>
         /// Change some settings before loading the GraphicsCore object.

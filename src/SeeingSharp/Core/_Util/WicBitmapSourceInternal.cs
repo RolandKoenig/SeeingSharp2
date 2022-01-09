@@ -6,34 +6,43 @@ namespace SeeingSharp.Core
 {
     public class WicBitmapSourceInternal : IDisposable, ICheckDisposed
     {
-        public bool IsDisposed => this.Converter == null;
+        private IWICBitmapDecoder? _decoder;
+        private IWICFormatConverter? _converter;
+
+        public bool IsDisposed => _decoder == null;
 
         internal IWICBitmapDecoder Decoder
         {
-            get;
-            private set;
+            get
+            {
+                if (_decoder == null) { throw new ObjectDisposedException(nameof(WicBitmapSourceInternal)); }
+                return _decoder;
+            }
         }
 
         internal IWICFormatConverter Converter
         {
-            get;
-            private set;
+            get
+            {
+                if (_converter == null) { throw new ObjectDisposedException(nameof(WicBitmapSourceInternal)); }
+                return _converter;
+            }
         }
 
         public WicBitmapSourceInternalInternals Internals { get; }
 
         internal WicBitmapSourceInternal(IWICBitmapDecoder decoder, IWICFormatConverter converter)
         {
-            this.Decoder = decoder;
-            this.Converter = converter;
+            _decoder = decoder;
+            _converter = converter;
 
             this.Internals = new WicBitmapSourceInternalInternals(this);
         }
 
         public void Dispose()
         {
-            this.Converter = SeeingSharpUtil.DisposeObject(this.Converter);
-            this.Decoder = SeeingSharpUtil.DisposeObject(this.Decoder);
+            _decoder = SeeingSharpUtil.DisposeObject(_decoder);
+            _converter = SeeingSharpUtil.DisposeObject(_converter);
         }
 
         //*********************************************************************

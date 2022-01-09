@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Mathematics;
@@ -45,6 +46,8 @@ namespace SeeingSharp.Drawing3D
         /// </summary>
         public WireObject()
         {
+            _lineData = Array.Empty<Line>();
+
             this.Color = Color4.Black;
             _localResources = new IndexBasedDynamicCollection<LocalResourceData>();
         }
@@ -241,13 +244,12 @@ namespace SeeingSharp.Drawing3D
         {
             this.UpdateAndApplyRenderParameters(renderState);
 
-            var resourceData = _localResources[renderState.DeviceIndex];
+            var resourceData = _localResources[renderState.DeviceIndex]!;
 
             // Load line data to memory if needed
             if (!resourceData.LineDataLoaded)
             {
-                if (_lineData == null ||
-                    _lineData.Length == 0)
+                if (_lineData.Length == 0)
                 {
                     return;
                 }
@@ -260,7 +262,7 @@ namespace SeeingSharp.Drawing3D
 
             // Apply vertex buffer and draw lines
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
-            deviceContext.IASetVertexBuffers(0, new D3D11.VertexBufferView(resourceData.LineVertexBuffer, LineVertex.Size, 0));
+            deviceContext.IASetVertexBuffers(0, new D3D11.VertexBufferView(resourceData.LineVertexBuffer!, LineVertex.Size, 0));
             deviceContext.Draw(_lineData.Length * 2, 0);
         }
 
@@ -270,7 +272,7 @@ namespace SeeingSharp.Drawing3D
         private class LocalResourceData
         {
             public bool LineDataLoaded;
-            public D3D11.ID3D11Buffer LineVertexBuffer;
+            public D3D11.ID3D11Buffer? LineVertexBuffer;
         }
     }
 }

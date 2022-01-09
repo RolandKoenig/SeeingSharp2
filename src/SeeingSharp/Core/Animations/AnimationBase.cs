@@ -10,7 +10,7 @@ namespace SeeingSharp.Core.Animations
         private AnimationType _animationType;
 
         // Control members for AnimationTypes
-        private Task _asyncTask;
+        private Task? _asyncTask;
         private TimeSpan _fixedTime;
         private TimeSpan _currentTime;
         private bool _finished;
@@ -74,12 +74,12 @@ namespace SeeingSharp.Core.Animations
         /// <summary>
         /// Gets the target object.
         /// </summary>
-        public object TargetObject { get; }
+        public object? TargetObject { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AnimationBase"/> class.
         /// </summary>
-        protected AnimationBase(object targetObject)
+        protected AnimationBase(object? targetObject)
         {
             this.TargetObject = targetObject;
             _fixedTime = TimeSpan.Zero;
@@ -92,7 +92,7 @@ namespace SeeingSharp.Core.Animations
         /// </summary>
         /// <param name="targetObject">The target object.</param>
         /// <param name="animationType">Type of the animation.</param>
-        protected AnimationBase(object targetObject, AnimationType animationType)
+        protected AnimationBase(object? targetObject, AnimationType animationType)
             : this(targetObject)
         {
             _animationType = animationType;
@@ -104,7 +104,7 @@ namespace SeeingSharp.Core.Animations
         /// <param name="targetObject">The target object.</param>
         /// <param name="animationType">Type of the animation.</param>
         /// <param name="fixedTime">The fixed time.</param>
-        protected AnimationBase(object targetObject, AnimationType animationType, TimeSpan fixedTime)
+        protected AnimationBase(object? targetObject, AnimationType animationType, TimeSpan fixedTime)
             : this(targetObject)
         {
             fixedTime.EnsureLongerOrEqualZero(nameof(fixedTime));
@@ -200,7 +200,7 @@ namespace SeeingSharp.Core.Animations
                     }
                     else if (_asyncTask.IsFaulted)
                     {
-                        throw new SeeingSharpGraphicsException("Async animation raised an exception!", _asyncTask.Exception);
+                        throw new SeeingSharpGraphicsException("Async animation raised an exception!", _asyncTask.Exception!);
                     }
                     else if (_asyncTask.IsCompleted || _asyncTask.IsCanceled || _asyncTask.IsFaulted)
                     {
@@ -314,7 +314,7 @@ namespace SeeingSharp.Core.Animations
         /// </summary>
         protected virtual Task OnAsyncAnimationStart()
         {
-            return null;
+            return Task.CompletedTask;
         }
 
         /// <summary>

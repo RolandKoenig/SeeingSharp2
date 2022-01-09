@@ -8,7 +8,7 @@ namespace SeeingSharp.Core.Devices
 {
     public class FactoryHandlerDXGI : IDisposable, ICheckDisposed
     {
-        private IDXGIFactory1 _dxgiFactory;
+        private IDXGIFactory1? _dxgiFactory;
 
         public bool IsDisposed => _dxgiFactory == null;
 

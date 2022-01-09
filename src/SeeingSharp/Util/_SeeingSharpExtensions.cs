@@ -184,7 +184,7 @@ namespace SeeingSharp.Util
         /// <param name="eventHandler">The event to be raised.</param>
         /// <param name="sender">The sender parameter.</param>
         /// <param name="eventArgs">The event args parameter.</param>
-        public static void Raise(this EventHandler eventHandler, object sender, EventArgs eventArgs)
+        public static void Raise(this EventHandler? eventHandler, object sender, EventArgs eventArgs)
         {
             eventHandler?.Invoke(sender, eventArgs);
         }
@@ -195,7 +195,7 @@ namespace SeeingSharp.Util
         /// <param name="eventHandler">The event to be raised.</param>
         /// <param name="sender">The sender parameter.</param>
         /// <param name="eventArgs">The event args parameter.</param>
-        public static void Raise<T>(this EventHandler<T> eventHandler, object sender, T eventArgs)
+        public static void Raise<T>(this EventHandler<T>? eventHandler, object sender, T eventArgs)
         {
             eventHandler?.Invoke(sender, eventArgs);
         }

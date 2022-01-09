@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using SeeingSharp.Checking;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
 using D3D11 = Vortice.Direct3D11;
@@ -8,7 +9,7 @@ namespace SeeingSharp.Drawing3D.Resources
     public class VertexShaderResource : ShaderResource
     {
         // Resources for Direct3D 11 rendering
-        private D3D11.ID3D11VertexShader _vertexShader;
+        private D3D11.ID3D11VertexShader? _vertexShader;
         private Dictionary<D3D11.InputElementDescription[], D3D11.ID3D11InputLayout> _inputLayouts;
 
         /// <summary>
@@ -19,7 +20,14 @@ namespace SeeingSharp.Drawing3D.Resources
         /// <summary>
         /// Gets the loaded VertexShader object.
         /// </summary>
-        internal D3D11.ID3D11VertexShader VertexShader => _vertexShader;
+        internal D3D11.ID3D11VertexShader VertexShader
+        {
+            get
+            {
+                _vertexShader.EnsureResourceLoaded(typeof(VertexShaderResource));
+                return _vertexShader!;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VertexShaderResource" /> class.

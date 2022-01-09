@@ -171,7 +171,7 @@ namespace SeeingSharp.Checking
 
         [Conditional("DEBUG")]
         public static void EnsureNotNull(
-            this object objParam, string checkedVariableName,
+            this object? objParam, string checkedVariableName,
             [CallerMemberName]
             string callerMethod = "")
         {
@@ -186,7 +186,7 @@ namespace SeeingSharp.Checking
 
         [Conditional("DEBUG")]
         public static void EnsureNotNullWhenNullIsNotAllowed<T>(
-            this object objParam, string checkedVariableName,
+            this object? objParam, string checkedVariableName,
             [CallerMemberName]
             string callerMethod = "")
         {
@@ -220,7 +220,7 @@ namespace SeeingSharp.Checking
 
         [Conditional("DEBUG")]
         public static void EnsureNull(
-            this object objParam, string checkedVariableName,
+            this object? objParam, string checkedVariableName,
             [CallerMemberName]
             string callerMethod = "")
         {

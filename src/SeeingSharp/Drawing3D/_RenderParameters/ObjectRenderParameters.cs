@@ -11,7 +11,7 @@ namespace SeeingSharp.Drawing3D
         private readonly NamedOrGenericKey _keyConstantBuffer = GraphicsCore.GetNextGenericResourceKey();
 
         // Resources
-        private TypeSafeConstantBufferResource<CBPerObject> _cbPerObject;
+        private TypeSafeConstantBufferResource<CBPerObject>? _cbPerObject;
 
         /// <summary>
         /// Is the resource loaded?
@@ -65,7 +65,7 @@ namespace SeeingSharp.Drawing3D
         /// <param name="cbPerObject">Constant buffer data.</param>
         internal void UpdateValues(RenderState renderState, CBPerObject cbPerObject)
         {
-            _cbPerObject.SetData(renderState.Device.DeviceImmediateContextD3D11, cbPerObject);
+            _cbPerObject!.SetData(renderState.Device.DeviceImmediateContextD3D11, cbPerObject);
         }
 
         /// <summary>
@@ -77,8 +77,8 @@ namespace SeeingSharp.Drawing3D
             var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
 
             // Apply constant buffer on shaders
-            deviceContext.VSSetConstantBuffer(2, _cbPerObject.ConstantBuffer);
-            deviceContext.PSSetConstantBuffer(2, _cbPerObject.ConstantBuffer);
+            deviceContext.VSSetConstantBuffer(2, _cbPerObject!.ConstantBuffer);
+            deviceContext.PSSetConstantBuffer(2, _cbPerObject!.ConstantBuffer);
         }
     }
 }

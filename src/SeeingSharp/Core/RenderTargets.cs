@@ -34,21 +34,21 @@ namespace SeeingSharp.Core
         /// <summary>
         /// The default color output.
         /// </summary>
-        internal D3D11.ID3D11RenderTargetView ColorBuffer;
+        internal D3D11.ID3D11RenderTargetView? ColorBuffer;
 
         /// <summary>
         /// The default depth-stencil output.
         /// </summary>
-        internal D3D11.ID3D11DepthStencilView DepthStencilBuffer;
+        internal D3D11.ID3D11DepthStencilView? DepthStencilBuffer;
 
         /// <summary>
         /// The ObjectId output buffer.
         /// </summary>
-        internal D3D11.ID3D11RenderTargetView ObjectIdBuffer;
+        internal D3D11.ID3D11RenderTargetView? ObjectIdBuffer;
 
         /// <summary>
         /// The normal/depth output buffer (processes the data for input on other postprocessing effects).
         /// </summary>
-        internal D3D11.ID3D11RenderTargetView NormalDepthBuffer;
+        internal D3D11.ID3D11RenderTargetView? NormalDepthBuffer;
     }
 }

@@ -44,7 +44,7 @@ namespace SeeingSharp.Core
         private EngineDevice _targetDevice;
         private Size _targetSize;
         private DpiScaling _currentDpiScaling;
-        private Scene _targetScene;
+        private Scene? _targetScene;
         private bool _viewRefreshForced;
         private bool _reregisterViewOnSceneForced;
 
@@ -322,7 +322,7 @@ namespace SeeingSharp.Core
 
             this.ViewInformation = new ViewInformation(this);
             _configuration = new GraphicsViewConfiguration();
-            _objectFilters = new ObjectFilterCollection(this.ViewInformation);
+            _objectFilters = new ObjectFilterCollection();
 
             _videoWriters = new List<SeeingSharpVideoWriter>();
 

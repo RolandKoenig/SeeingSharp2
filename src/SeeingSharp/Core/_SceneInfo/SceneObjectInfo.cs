@@ -42,7 +42,7 @@ namespace SeeingSharp.Core
 
         public bool IsAssociatedToScene => this.OriginalObject.Scene != null;
 
-        public Scene AssociatedScene => this.OriginalObject.Scene;
+        public Scene? AssociatedScene => this.OriginalObject.Scene;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneObjectInfo"/> class.

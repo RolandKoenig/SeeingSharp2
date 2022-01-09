@@ -1,4 +1,5 @@
 ﻿using System;
+using SeeingSharp.Checking;
 using SeeingSharp.Core;
 using SeeingSharp.Core.Devices;
 using SeeingSharp.Util;
@@ -9,12 +10,19 @@ namespace SeeingSharp.Drawing3D.Resources
     public class ImmutableIndexBufferResource : Resource
     {
         // Direct3D resources
-        private D3D11.ID3D11Buffer _buffer;
+        private D3D11.ID3D11Buffer? _buffer;
 
         // Configuration
         private Func<int[]> _bufferDataFactory;
 
-        internal D3D11.ID3D11Buffer Buffer => _buffer;
+        internal D3D11.ID3D11Buffer Buffer
+        {
+            get
+            {
+                _buffer.EnsureResourceLoaded(typeof(ImmutableIndexBufferResource));
+                return _buffer!;
+            }
+        }
 
         public override bool IsLoaded => _buffer != null;
 
