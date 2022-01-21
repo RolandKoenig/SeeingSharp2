@@ -19,12 +19,12 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets or sets an additional data object.
         /// </summary>
-        public object Tag1 => this.OriginalObject.Tag1;
+        public object? Tag1 => this.OriginalObject.Tag1;
 
         /// <summary>
         /// Gets or sets an additional data object.
         /// </summary>
-        public object Tag2 => this.OriginalObject.Tag2;
+        public object? Tag2 => this.OriginalObject.Tag2;
 
         /// <summary>
         /// Queries for all children of this object.

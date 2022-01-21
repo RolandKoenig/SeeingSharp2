@@ -567,7 +567,7 @@ namespace SeeingSharp.Mathematics
         /// <returns>
         /// A <see cref = "System.String" /> that represents this instance.
         /// </returns>
-        public string ToString(IFormatProvider formatProvider)
+        public string ToString(IFormatProvider? formatProvider)
         {
             return string.Format(formatProvider, "X:{0} Y:{1} Z:{2} W:{3}", X, Y, Z, W);
         }
@@ -580,7 +580,7 @@ namespace SeeingSharp.Mathematics
         /// <returns>
         /// A <see cref = "System.String" /> that represents this instance.
         /// </returns>
-        public string ToString(string format, IFormatProvider formatProvider)
+        public string ToString(string? format, IFormatProvider? formatProvider)
         {
             if (format == null)
             {
@@ -622,7 +622,7 @@ namespace SeeingSharp.Mathematics
         /// <returns>
         /// <c>true</c> if the specified <see cref = "System.Object" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public override bool Equals(object value)
+        public override bool Equals(object? value)
         {
             if (value == null)
             {

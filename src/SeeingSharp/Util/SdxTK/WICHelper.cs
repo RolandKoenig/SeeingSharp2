@@ -10,6 +10,8 @@ using SharpGen.Runtime.Win32;
 using Vortice.DXGI;
 using Vortice.WIC;
 
+#nullable disable
+
 namespace SeeingSharp.Util.SdxTK
 {
     internal class WICHelper

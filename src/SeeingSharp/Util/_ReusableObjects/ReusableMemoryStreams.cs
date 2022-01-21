@@ -10,11 +10,7 @@ namespace SeeingSharp.Util
 
         public int Count => _memoryStreams.Count;
 
-        public static ReusableMemoryStreams Current
-        {
-            get;
-            private set;
-        }
+        public static ReusableMemoryStreams Current { get; }
 
         static ReusableMemoryStreams()
         {

@@ -67,7 +67,9 @@ namespace SeeingSharp.Core
         /// <param name="importOptions">All options for import logic.</param>
         public async Task<IEnumerable<SceneObject>> ImportAsync(ResourceLink objSource, ImportOptions? importOptions)
         {
-            var modelContainer = await GraphicsCore.Current.ImportersAndExporters
+            GraphicsCore.EnsureGraphicsSupportLoaded();
+
+            var modelContainer = await GraphicsCore.Current.ImportersAndExporters!
                 .ImportAsync(objSource, importOptions);
 
             return await this.ImportAsync(modelContainer);

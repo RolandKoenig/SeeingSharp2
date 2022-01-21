@@ -104,7 +104,7 @@ namespace SeeingSharp.Drawing2D.Resources
                 // Create the brush
                 result = new LoadedBrushResources
                 {
-                    GradientStops = engineDevice.FakeRenderTarget2D.CreateGradientStopCollection(
+                    GradientStops = engineDevice.FakeRenderTarget2D!.CreateGradientStopCollection(
                         d2dGradientStops,
                         (D2D.Gamma)this.Gamma,
                         (D2D.ExtendMode)this.ExtendMode)
@@ -142,8 +142,8 @@ namespace SeeingSharp.Drawing2D.Resources
         /// </summary>
         private struct LoadedBrushResources
         {
-            public D2D.ID2D1GradientStopCollection GradientStops;
-            public D2D.ID2D1RadialGradientBrush Brush;
+            public D2D.ID2D1GradientStopCollection? GradientStops;
+            public D2D.ID2D1RadialGradientBrush? Brush;
         }
     }
 }

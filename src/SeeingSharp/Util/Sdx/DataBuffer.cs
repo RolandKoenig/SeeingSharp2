@@ -22,7 +22,7 @@ namespace SeeingSharp.Util.Sdx
         private GCHandle _gCHandle;
         private readonly bool _ownsBuffer;
         private readonly int _size;
-        private D3D.Blob _blob;
+        private D3D.Blob? _blob;
 
         /// <summary>
         /// Creates the specified user buffer.

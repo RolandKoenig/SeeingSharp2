@@ -5,7 +5,7 @@ namespace SeeingSharp.SampleContainer
 {
     public static class PlatformDependentMethods
     {
-        private static Action<string> s_showUrlInBrowser;
+        private static Action<string>? s_showUrlInBrowser;
 
         public static void SetOpenUrlInBrowser(Action<string> showUrlInBrowser)
         {

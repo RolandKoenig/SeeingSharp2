@@ -98,10 +98,12 @@ namespace SeeingSharp.Drawing3D
         {
             viewInfo.EnsureNotNull(nameof(viewInfo));
 
-            var geometryResource = this.TryGetGeometryResource(viewInfo.Device);
+            var device = viewInfo.Device;
+            device.EnsureNotNull(nameof(device));
 
-            if (geometryResource != null &&
-                geometryResource.IsLoaded)
+            var geometryResource = this.TryGetGeometryResource(device!);
+
+            if (geometryResource is {IsLoaded: true})
             {
                 var result = geometryResource.BoundingBox;
                 result.Transform(this.Transform);
@@ -120,10 +122,12 @@ namespace SeeingSharp.Drawing3D
         {
             viewInfo.EnsureNotNull(nameof(viewInfo));
 
-            var geometryResource = this.TryGetGeometryResource(viewInfo.Device);
+            var device = viewInfo.Device;
+            device.EnsureNotNull(nameof(device));
 
-            if (geometryResource != null &&
-                geometryResource.IsLoaded)
+            var geometryResource = this.TryGetGeometryResource(device!);
+
+            if (geometryResource is {IsLoaded: true})
             {
                 // Get BoundingBox object
                 var boundingBox = geometryResource.BoundingBox;
@@ -279,9 +283,11 @@ namespace SeeingSharp.Drawing3D
         /// </returns>
         internal override float Pick(Vector3 rayStart, Vector3 rayDirection, ViewInformation viewInfo, PickingOptions pickingOptions)
         {
-            var geometryResource = _localResGeometry[viewInfo.Device.DeviceIndex];
-            if (geometryResource != null &&
-                geometryResource.IsLoaded)
+            var device = viewInfo.Device;
+            if (device == null) { return float.NaN; }
+
+            var geometryResource = _localResGeometry[device.DeviceIndex];
+            if (geometryResource is {IsLoaded: true})
             {
                 var boundingBox = geometryResource.BoundingBox;
                 if (!boundingBox.IsEmpty())

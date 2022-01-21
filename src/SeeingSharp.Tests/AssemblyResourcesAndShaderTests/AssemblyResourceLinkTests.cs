@@ -18,7 +18,7 @@ namespace SeeingSharp.Tests.AssemblyResourcesAndShaderTests
             using (var inStream = resLink.OpenRead())
             using (var inStreamReader = new StreamReader(inStream))
             {
-                string actLine;
+                string? actLine;
                 while (null != (actLine = inStreamReader.ReadLine()))
                 {
                     if (actLine.StartsWith("#include"))
@@ -44,7 +44,7 @@ namespace SeeingSharp.Tests.AssemblyResourcesAndShaderTests
             using (var inStream = resLink.OpenRead())
             using (var inStreamReader = new StreamReader(inStream))
             {
-                string actLine;
+                string? actLine;
                 while (null != (actLine = inStreamReader.ReadLine()))
                 {
                     if (actLine.StartsWith("#include"))
@@ -69,7 +69,7 @@ namespace SeeingSharp.Tests.AssemblyResourcesAndShaderTests
             using (var inStream = resLink.OpenRead())
             using (var inStreamReader = new StreamReader(inStream))
             {
-                string actLine;
+                string? actLine;
                 while (null != (actLine = inStreamReader.ReadLine()))
                 {
                     if (actLine.StartsWith("#include"))

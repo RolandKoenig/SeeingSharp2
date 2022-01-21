@@ -14,7 +14,7 @@ namespace SeeingSharp.Views
     public class HigherD3DImageSource : D3DImage, IDisposable
     {
         private D3D9.IDirect3DDevice9Ex _d3dDevice;
-        private D3D9.IDirect3DTexture9 _d3dRenderTarget;
+        private D3D9.IDirect3DTexture9? _d3dRenderTarget;
 
         public bool HasRenderTarget => _d3dRenderTarget != null;
 
@@ -46,7 +46,7 @@ namespace SeeingSharp.Views
         /// Sets the render target of this D3DImage object.
         /// </summary>
         /// <param name="renderTarget">The render target to set.</param>
-        public void SetRenderTarget(D3D11.ID3D11Texture2D renderTarget)
+        public void SetRenderTarget(D3D11.ID3D11Texture2D? renderTarget)
         {
             if (_d3dRenderTarget != null)
             {

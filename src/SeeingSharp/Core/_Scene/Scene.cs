@@ -386,16 +386,13 @@ namespace SeeingSharp.Core
         internal IEnumerable<T> QueryResources<T>(NamedOrGenericKey resourceKey, Action checkValidAction)
             where T : Resource
         {
-            checkValidAction?.Invoke();
+            checkValidAction.Invoke();
 
             foreach (var actResourceDict in _registeredResourceDicts)
             {
                 if(!actResourceDict.ContainsResource(resourceKey)){ continue; }
 
-                var actResource = actResourceDict.GetResource<T>(resourceKey);
-                if(actResource == null){ continue; }
-
-                yield return actResource;
+                yield return actResourceDict.GetResource<T>(resourceKey);
 
                 checkValidAction?.Invoke();
             }
@@ -594,7 +591,7 @@ namespace SeeingSharp.Core
             //  -> This registration is forever, no deregister is made!
             var givenDevice = viewInformation.Device;
 
-            var resourceDictionary = _registeredResourceDicts[givenDevice.DeviceIndex];
+            var resourceDictionary = _registeredResourceDicts[givenDevice!.DeviceIndex];
             if (resourceDictionary == null)
             {
                 throw new SeeingSharpGraphicsException("ResourceDictionary of device " + givenDevice.AdapterDescription + " not loaded in this scene!");
@@ -620,7 +617,7 @@ namespace SeeingSharp.Core
             // Mark this scene for deletion if we don't have any other view registered
             if (isFirstView)
             {
-                GraphicsCore.Current.MainLoop.DeregisterSceneForUnload(this);
+                GraphicsCore.Current.MainLoop!.DeregisterSceneForUnload(this);
             }
         }
 
@@ -667,7 +664,7 @@ namespace SeeingSharp.Core
             if (_registeredViews.Count <= 0 &&
                 !this.DiscardAutomaticUnload)
             {
-                GraphicsCore.Current.MainLoop.RegisterSceneForUnload(this);
+                GraphicsCore.Current.MainLoop!.RegisterSceneForUnload(this);
             }
         }
 
@@ -699,7 +696,7 @@ namespace SeeingSharp.Core
             // Register all views on the newly generated layer
             foreach (var actViewInfo in _registeredViews)
             {
-                var resourceDictionary = _registeredResourceDicts[actViewInfo.Device.DeviceIndex];
+                var resourceDictionary = _registeredResourceDicts[actViewInfo.Device!.DeviceIndex];
                 if (resourceDictionary == null)
                 {
                     throw new SeeingSharpGraphicsException("ResourceDictionary of device " + actViewInfo.Device.AdapterDescription + " not loaded in this scene!");
@@ -1069,7 +1066,7 @@ namespace SeeingSharp.Core
             deviceContext.OMSetDepthStencilState(defaultResource.DepthStencilStateDefault);
 
             // Set initial rasterizer state
-            if (renderState.ViewInformation.ViewConfiguration.WireframeEnabled)
+            if (renderState.ViewInformation!.ViewConfiguration.WireframeEnabled)
             {
                 deviceContext.RSSetState(defaultResource.RasterStateWireframe);
             }
@@ -1127,7 +1124,7 @@ namespace SeeingSharp.Core
         /// <param name="renderState">The current render state.</param>
         internal void Render2DOverlay(RenderState renderState)
         {
-            var graphics = renderState.Graphics2D;
+            var graphics = renderState.Graphics2D!;
 
             graphics.PushTransformSettings(new Graphics2DTransformSettings
             {
@@ -1166,7 +1163,7 @@ namespace SeeingSharp.Core
                 // Render drawing layers
                 foreach (var actDrawingLayer in _drawing2DLayers)
                 {
-                    actDrawingLayer.Draw2DInternal(renderState.Graphics2D);
+                    actDrawingLayer.Draw2DInternal(renderState.Graphics2D!);
                 }
             }
             finally
@@ -1221,7 +1218,7 @@ namespace SeeingSharp.Core
         /// </summary>
         private void SortLayers()
         {
-            _sceneLayers.Sort((left, right) => left.OrderId.CompareTo(right.OrderId));
+            _sceneLayers.Sort((left, right) => (left?.OrderId ?? 0).CompareTo((right?.OrderId ?? 0)));
         }
     }
 }

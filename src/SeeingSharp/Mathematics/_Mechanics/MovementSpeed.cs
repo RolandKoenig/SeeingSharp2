@@ -86,7 +86,7 @@ namespace SeeingSharp.Mathematics
         /// <returns>
         /// 	<c>true</c> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public override bool Equals(object value)
+        public override bool Equals(object? value)
         {
             if (value == null)
             {

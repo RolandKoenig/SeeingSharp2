@@ -63,10 +63,10 @@ namespace SeeingSharp.Util.Sdx
             return Pointer.Equals(other.Pointer) && Size == other.Size;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            return obj is DataPointer && Equals((DataPointer)obj);
+            return obj is DataPointer casted && Equals(casted);
         }
 
         public override int GetHashCode()

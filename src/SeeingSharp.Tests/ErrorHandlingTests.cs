@@ -26,10 +26,10 @@ namespace SeeingSharp.Tests
             await TestUtilities.InitializeWithGraphicsAsync();
 
             // Ensure that any async disposal is  done before we create a new GraphicsCore
-            await GraphicsCore.Current.MainLoop.WaitForNextPassedLoopAsync();
-            await GraphicsCore.Current.MainLoop.WaitForNextPassedLoopAsync();
+            await GraphicsCore.Current.MainLoop!.WaitForNextPassedLoopAsync();
+            await GraphicsCore.Current.MainLoop!.WaitForNextPassedLoopAsync();
 
-            GDI.Bitmap screenshot = null;
+            GDI.Bitmap? screenshot = null;
             using (TestUtilities.FailTestOnInternalExceptions())
             using (GraphicsCore.AutomatedTest_NewTestEnvironment())
             {
@@ -37,7 +37,7 @@ namespace SeeingSharp.Tests
                     .ConfigureLoading(settings => settings.ThrowD2DInitDeviceError = true)
                     .LoadAsync();
                 Assert.IsTrue(GraphicsCore.IsLoaded);
-                Assert.IsFalse(GraphicsCore.Current.DefaultDevice.Supports2D);
+                Assert.IsFalse(GraphicsCore.Current.DefaultDevice!.Supports2D);
 
                 using (var solidBrush = new SolidBrushResource(Color4.Gray))
                 using (var textFormat = new TextFormatResource("Arial", 36))
@@ -70,10 +70,10 @@ namespace SeeingSharp.Tests
                     await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                     {
                         var resD2DTexture = manipulator.AddResource(
-                            device => new Direct2DTextureResource(d2dDrawingLayer, 256, 256));
+                            _ => new Direct2DTextureResource(d2dDrawingLayer, 256, 256));
                         var resD2DMaterial = manipulator.AddStandardMaterialResource(resD2DTexture);
                         var resGeometry = manipulator.AddResource(
-                            device => new GeometryResource(new CubeGeometryFactory()));
+                            _ => new GeometryResource(new CubeGeometryFactory()));
 
                         var newMesh = manipulator.AddMeshObject(resGeometry, resD2DMaterial);
                         newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
@@ -101,8 +101,8 @@ namespace SeeingSharp.Tests
             await TestUtilities.InitializeWithGraphicsAsync();
 
             // Ensure that any async disposal is  done before we create a new GraphicsCore
-            await GraphicsCore.Current.MainLoop.WaitForNextPassedLoopAsync();
-            await GraphicsCore.Current.MainLoop.WaitForNextPassedLoopAsync();
+            await GraphicsCore.Current.MainLoop!.WaitForNextPassedLoopAsync();
+            await GraphicsCore.Current.MainLoop!.WaitForNextPassedLoopAsync();
 
             var isRenderTargetOperational = true;
             var isGraphicsCoreInitialized = true;
@@ -132,22 +132,22 @@ namespace SeeingSharp.Tests
             await TestUtilities.InitializeWithGraphicsAsync();
 
             // Ensure that any async disposal is  done before we create a new GraphicsCore
-            await GraphicsCore.Current.MainLoop.WaitForNextPassedLoopAsync();
-            await GraphicsCore.Current.MainLoop.WaitForNextPassedLoopAsync();
+            await GraphicsCore.Current.MainLoop!.WaitForNextPassedLoopAsync();
+            await GraphicsCore.Current.MainLoop!.WaitForNextPassedLoopAsync();
 
-            Panel hostPanel1 = null;
-            Panel hostPanel2 = null;
-            SeeingSharpRendererControl renderControl = null;
+            Panel? hostPanel1 = null;
+            Panel? hostPanel2 = null;
+            SeeingSharpRendererControl? renderControl = null;
             var stepId = 0;
-            Exception fakeUIThreadException = null;
+            Exception? fakeUIThreadException = null;
 
             var fakeUIThread = new ObjectThread("Fake-UI", 100);
 
-            fakeUIThread.ThreadException += (sender, eArgs) =>
+            fakeUIThread.ThreadException += (_, eArgs) =>
             {
                 fakeUIThreadException = eArgs.Exception;
             };
-            fakeUIThread.Starting += (sender, eArgs) =>
+            fakeUIThread.Starting += (_, _) =>
             {
                 hostPanel1 = new Panel
                 {
@@ -168,7 +168,7 @@ namespace SeeingSharp.Tests
                 hostPanel2.CreateControl();
                 hostPanel1.Controls.Add(renderControl);
             };
-            fakeUIThread.Tick += (sender, eArgs) =>
+            fakeUIThread.Tick += (_, _) =>
             {
                 Application.DoEvents();
                 stepId++;
@@ -176,21 +176,21 @@ namespace SeeingSharp.Tests
                 switch (stepId)
                 {
                     case 2:
-                        hostPanel1.Controls.Remove(renderControl);
+                        hostPanel1!.Controls.Remove(renderControl!);
                         break;
 
                     case 4:
-                        hostPanel2.Controls.Add(renderControl);
+                        hostPanel2!.Controls.Add(renderControl!);
                         break;
 
                     case 8:
-                        hostPanel2.Controls.Remove(renderControl);
+                        hostPanel2!.Controls.Remove(renderControl!);
                         break;
 
                     case 10:
-                        renderControl.Dispose();
-                        hostPanel2.Dispose();
-                        hostPanel1.Dispose();
+                        renderControl!.Dispose();
+                        hostPanel2!.Dispose();
+                        hostPanel1!.Dispose();
                         break;
 
                     case 20:
@@ -207,7 +207,7 @@ namespace SeeingSharp.Tests
             Assert.IsTrue(GraphicsCore.Current.MainLoop.IsRunning);
             Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0);
             Assert.IsNull(fakeUIThreadException);
-            Assert.IsTrue(renderControl.IsDisposed);
+            Assert.IsTrue(renderControl!.IsDisposed);
         }
     }
 }

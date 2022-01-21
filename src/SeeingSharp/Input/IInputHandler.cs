@@ -9,13 +9,13 @@ namespace SeeingSharp.Input
         /// Gets a list containing all supported view types.
         /// Null means that this handler is not bound to a view.
         /// </summary>
-        Type[] GetSupportedViewTypes();
+        Type[]? GetSupportedViewTypes();
 
         /// <summary>
         /// Starts input handling.
         /// </summary>
         /// <param name="viewObject">The view object (e. g. Direct3D11Canvas).</param>
-        void Start(IInputEnabledView viewObject);
+        void Start(IInputEnabledView? viewObject);
 
         /// <summary>
         /// Stops input handling.

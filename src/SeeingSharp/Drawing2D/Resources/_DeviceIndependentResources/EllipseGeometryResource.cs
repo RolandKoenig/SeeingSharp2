@@ -15,7 +15,7 @@ namespace SeeingSharp.Drawing2D.Resources
         private float _radiusY;
 
         // Resources
-        private D2D.ID2D1EllipseGeometry _geometry;
+        private D2D.ID2D1EllipseGeometry? _geometry;
 
         public override bool IsDisposed => _geometry == null;
 
@@ -44,6 +44,7 @@ namespace SeeingSharp.Drawing2D.Resources
         /// <param name="radiusY">The radius in y direction.</param>
         public unsafe void SetContent(Vector2 center, float radiusX, float radiusY)
         {
+            GraphicsCore.EnsureGraphicsSupportLoaded();
             radiusX.EnsurePositiveOrZero(nameof(radiusX));
             radiusY.EnsurePositiveOrZero(nameof(radiusY));
 
@@ -53,7 +54,7 @@ namespace SeeingSharp.Drawing2D.Resources
 
             SeeingSharpUtil.SafeDispose(ref _geometry);
 
-            _geometry = GraphicsCore.Current.FactoryD2D.CreateEllipseGeometry(
+            _geometry = GraphicsCore.Current.FactoryD2D!.CreateEllipseGeometry(
                 new D2D.Ellipse(
                     *(PointF*)&center,
                     radiusX, radiusY));
@@ -71,7 +72,7 @@ namespace SeeingSharp.Drawing2D.Resources
         {
             this.EnsureNotNullOrDisposed(nameof(_geometry));
 
-            return _geometry;
+            return _geometry!;
         }
     }
 }

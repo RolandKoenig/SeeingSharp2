@@ -5,6 +5,8 @@ using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
+#nullable disable
+
 namespace SeeingSharp.Util.SdxTK
 {
     /// <summary>

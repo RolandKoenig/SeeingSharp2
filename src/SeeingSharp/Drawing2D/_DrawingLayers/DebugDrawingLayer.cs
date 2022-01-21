@@ -9,9 +9,9 @@ namespace SeeingSharp.Drawing2D
     public class DebugDrawingLayer : Custom2DDrawingLayer, IDisposable
     {
         // Drawing resources
-        private TextFormatResource _textFormat;
-        private SolidBrushResource _solidBrushForeground;
-        private SolidBrushResource _solidBrushBackground;
+        private TextFormatResource? _textFormat;
+        private SolidBrushResource? _solidBrushForeground;
+        private SolidBrushResource? _solidBrushBackground;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DebugDrawingLayer"/> class.
@@ -59,8 +59,8 @@ namespace SeeingSharp.Drawing2D
             var targetRect = new RectangleF(
                 10f, 10f,
                 280f, 80f);
-            graphics.FillRoundedRectangle(targetRect, 10f, 10f, _solidBrushBackground);
-            graphics.DrawText("! Debug-Mode !", _textFormat, targetRect, _solidBrushForeground);
+            graphics.FillRoundedRectangle(targetRect, 10f, 10f, _solidBrushBackground!);
+            graphics.DrawText("! Debug-Mode !", _textFormat, targetRect, _solidBrushForeground!);
         }
     }
 }

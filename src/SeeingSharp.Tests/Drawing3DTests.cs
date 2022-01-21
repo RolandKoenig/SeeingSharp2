@@ -40,7 +40,7 @@ namespace SeeingSharp.Tests
             }
 
             // Finishing checks
-            Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+            Assert.IsTrue(GraphicsCore.Current.MainLoop!.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
         }
 
         [TestMethod]
@@ -116,7 +116,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     var resGeometry = manipulator.AddResource(
-                        device => new GeometryResource(new CubeGeometryFactory()));
+                        _ => new GeometryResource(new CubeGeometryFactory()));
                     var resMaterial = manipulator.AddStandardMaterialResource();
 
                     var newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
@@ -138,7 +138,7 @@ namespace SeeingSharp.Tests
             }
 
             // Finishing checks
-            Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+            Assert.IsTrue(GraphicsCore.Current.MainLoop!.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
         }
 
         [TestMethod]
@@ -157,11 +157,11 @@ namespace SeeingSharp.Tests
                 camera.UpdateCamera();
 
                 // Define scene
-                Mesh newMesh = null;
+                Mesh? newMesh = null;
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     var resGeometry = manipulator.AddResource(
-                        device => new GeometryResource(new CubeGeometryFactory()));
+                        _ => new GeometryResource(new CubeGeometryFactory()));
                     var resMaterial = manipulator.AddStandardMaterialResource();
 
                     newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
@@ -173,9 +173,9 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.AwaitRenderAsync();
 
                 // Query some information from the mesh
-                var renderingChunkCount = newMesh.TryGetRenderingChunkCount(memRenderTarget.Device);
-                var geoResource = newMesh.TryGetGeometryResource(memRenderTarget.Device);
-                var materialResources = newMesh.TryGetMaterialResources(memRenderTarget.Device);
+                var renderingChunkCount = newMesh!.TryGetRenderingChunkCount(memRenderTarget.Device!);
+                var geoResource = newMesh.TryGetGeometryResource(memRenderTarget.Device!);
+                var materialResources = newMesh.TryGetMaterialResources(memRenderTarget.Device!);
 
                 // Take screenshot
                 var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
@@ -189,11 +189,11 @@ namespace SeeingSharp.Tests
                 // Check info from mesh
                 Assert.IsTrue(renderingChunkCount == 1, "Invalid count of rendering chunks");
                 Assert.IsTrue(geoResource != null, "Can not query GeometryResource");
-                Assert.IsTrue((materialResources != null) && (materialResources.Length == 1), "Can not query MaterialResource");
+                Assert.IsTrue(materialResources is {Length: 1}, "Can not query MaterialResource");
             }
 
             // Finishing checks
-            Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+            Assert.IsTrue(GraphicsCore.Current.MainLoop!.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
         }
 
         [TestMethod]
@@ -234,7 +234,7 @@ namespace SeeingSharp.Tests
             }
 
             // Finishing checks
-            Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+            Assert.IsTrue(GraphicsCore.Current.MainLoop!.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
         }
 
         [TestMethod]
@@ -256,9 +256,9 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     var resGeometry = manipulator.AddResource(
-                        device => new GeometryResource(new CubeGeometryFactory()));
+                        _ => new GeometryResource(new CubeGeometryFactory()));
                     var resMaterial = manipulator.AddResource(
-                        device => new StandardMaterialResource
+                        _ => new StandardMaterialResource
                         {
                             MaterialDiffuseColor = Color4.BlueColor,
                             UseVertexColors = false
@@ -283,7 +283,7 @@ namespace SeeingSharp.Tests
             }
 
             // Finishing checks
-            Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+            Assert.IsTrue(GraphicsCore.Current.MainLoop!.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
         }
 
         [TestMethod]
@@ -313,7 +313,7 @@ namespace SeeingSharp.Tests
                     var stackedType = new StackedGeometryFactory(cubeType, 10);
 
                     var resGeometry = manipulator.AddResource(
-                        device => new GeometryResource(stackedType));
+                        _ => new GeometryResource(stackedType));
                     var resMaterial = manipulator.AddStandardMaterialResource();
 
                     var newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
@@ -334,7 +334,7 @@ namespace SeeingSharp.Tests
             }
 
             // Finishing checks
-            Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+            Assert.IsTrue(GraphicsCore.Current.MainLoop!.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
         }
 
         [TestMethod]
@@ -356,7 +356,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     var resGeometry = manipulator.AddResource(
-                        device => new GeometryResource(new CubeGeometryFactory()));
+                        _ => new GeometryResource(new CubeGeometryFactory()));
                     var resMaterial = manipulator.AddStandardMaterialResource();
 
                     var newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
@@ -377,7 +377,7 @@ namespace SeeingSharp.Tests
             }
 
             // Finishing checks
-            Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+            Assert.IsTrue(GraphicsCore.Current.MainLoop!.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
         }
 
         [TestMethod]
@@ -404,7 +404,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     var resGeometry = manipulator.AddResource(
-                        device => new GeometryResource(new CubeGeometryFactory()));
+                        _ => new GeometryResource(new CubeGeometryFactory()));
                     var resMaterial = manipulator.AddStandardMaterialResource();
 
                     var newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
@@ -425,7 +425,7 @@ namespace SeeingSharp.Tests
             }
 
             // Finishing checks
-            Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+            Assert.IsTrue(GraphicsCore.Current.MainLoop!.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
         }
 
         [TestMethod]
@@ -449,9 +449,9 @@ namespace SeeingSharp.Tests
                     // Create pallet geometry resource
                     var cubeType = new CubeGeometryFactory();
                     var resGeometry = manipulator.AddResource(
-                        device => new GeometryResource(cubeType));
+                        _ => new GeometryResource(cubeType));
                     var resMaterial = manipulator.AddResource(
-                        device => new StandardMaterialResource(enableShaderGeneratedBorder: true));
+                        _ => new StandardMaterialResource(enableShaderGeneratedBorder: true));
 
                     // Create pallet object
                     var cubeMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
@@ -484,7 +484,7 @@ namespace SeeingSharp.Tests
             }
 
             // Finishing checks
-            Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+            Assert.IsTrue(GraphicsCore.Current.MainLoop!.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
         }
     }
 }

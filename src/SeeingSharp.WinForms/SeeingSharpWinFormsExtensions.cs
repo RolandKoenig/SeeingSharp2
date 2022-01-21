@@ -11,22 +11,22 @@ namespace SeeingSharp
 {
     internal class SeeingSharpWinFormsExtensions : ISeeingSharpExtensions
     {
-        public IEnumerable<IInputHandler> CreateInputHandlers()
+        public IEnumerable<IInputHandler>? CreateInputHandlers()
         {
             yield return new WinFormsKeyAndMouseInputHandler();
         }
 
-        public IEnumerable<IDisposable> CreateAdditionalDeviceHandlers(EngineDevice device)
+        public IEnumerable<IDisposable>? CreateAdditionalDeviceHandlers(EngineDevice device)
         {
             return null;
         }
 
-        public IEnumerable<IModelImporter> CreateModelImporters()
+        public IEnumerable<IModelImporter>? CreateModelImporters()
         {
             return null;
         }
 
-        public IEnumerable<IModelExporter> CreateModelExporters()
+        public IEnumerable<IModelExporter>? CreateModelExporters()
         {
             return null;
         }

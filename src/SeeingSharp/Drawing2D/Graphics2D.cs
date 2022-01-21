@@ -138,7 +138,7 @@ namespace SeeingSharp.Drawing2D
             this.Device = device;
             _renderTarget = renderTarget;
             this.ScreenPixelSize = screenSize;
-            _deviceContext = _renderTarget as D2D.ID2D1DeviceContext;
+            _deviceContext = (D2D.ID2D1DeviceContext)_renderTarget;
 
             this.Internals = new Graphics2DInternals(this);
         }

@@ -8,7 +8,6 @@ namespace SeeingSharp.Util
         where T : class
     {
         private UnsafeList<T?> _list;
-        private int _listCount;
         private object _lockObject;
         private Dictionary<T, int> _objectIndices;
 
@@ -62,7 +61,6 @@ namespace SeeingSharp.Util
         public IndexBasedDynamicCollection()
         {
             _list = new UnsafeList<T?>(10);
-            _listCount = 0;
             _objectIndices = new Dictionary<T, int>();
             _lockObject = new object();
         }
@@ -102,12 +100,10 @@ namespace SeeingSharp.Util
                 {
                     _list[lastValidIndex] = objectToAdd;
                     _objectIndices.Add(objectToAdd, lastValidIndex);
-                    _listCount = _list.Count;
                     return lastValidIndex;
                 }
                 _list.Add(objectToAdd);
                 _objectIndices.Add(objectToAdd, _list.Count - 1);
-                _listCount = _list.Count;
                 return _list.Count - 1;
             }
         }
@@ -158,7 +154,6 @@ namespace SeeingSharp.Util
 
                 _list[index] = objectToAdd;
                 _objectIndices[objectToAdd] = index;
-                _listCount = _list.Count;
             }
         }
 
@@ -199,7 +194,6 @@ namespace SeeingSharp.Util
 
                     _objectIndices.Remove(objectToRemove);
                     _list[objectIndex] = null;
-                    _listCount = _list.Count;
                 }
             }
         }
@@ -226,7 +220,6 @@ namespace SeeingSharp.Util
             {
                 _list.Clear();
                 _objectIndices.Clear();
-                _listCount = _list.Count;
             }
         }
 

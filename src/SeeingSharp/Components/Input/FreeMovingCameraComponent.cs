@@ -22,7 +22,7 @@ namespace SeeingSharp.Components.Input
         /// </summary>
         /// <param name="manipulator">The manipulator of the scene we attach to.</param>
         /// <param name="correspondingView">The view which attached this component.</param>
-        protected override void Attach(SceneManipulator manipulator, ViewInformation correspondingView)
+        protected override void Attach(SceneManipulator manipulator, ViewInformation? correspondingView)
         {
 
         }
@@ -34,7 +34,7 @@ namespace SeeingSharp.Components.Input
         /// </summary>
         /// <param name="manipulator">The manipulator of the scene we attach to.</param>
         /// <param name="correspondingView">The view which attached this component.</param>
-        protected override void Detach(SceneManipulator manipulator, ViewInformation correspondingView)
+        protected override void Detach(SceneManipulator manipulator, ViewInformation? correspondingView)
         {
             // nothing to be detached here
         }
@@ -45,10 +45,9 @@ namespace SeeingSharp.Components.Input
         /// </summary>
         /// <param name="updateState">Current update state.</param>
         /// <param name="correspondingView">The view which attached this component (may be null).</param>
-        protected override void Update(SceneRelatedUpdateState updateState, ViewInformation correspondingView)
+        protected override void Update(SceneRelatedUpdateState updateState, ViewInformation? correspondingView)
         {
-            var actCamera = correspondingView.Camera;
-
+            var actCamera = correspondingView?.Camera;
             if (actCamera == null)
             {
                 return;
@@ -57,7 +56,7 @@ namespace SeeingSharp.Components.Input
             foreach (var actInputFrame in updateState.InputFrames)
             {
                 var isControlKeyDown = false;
-                foreach (var actInputState in actInputFrame.GetInputStates(correspondingView))
+                foreach (var actInputState in actInputFrame.GetInputStates(correspondingView!))
                 {
                     switch (actInputState)
                     {

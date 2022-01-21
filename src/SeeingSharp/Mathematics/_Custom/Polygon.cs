@@ -71,7 +71,7 @@ namespace SeeingSharp.Mathematics
         /// <summary>
         /// Triangulates this surface using the cutting ears algorithm.
         /// </summary>
-        public IEnumerable<int> TriangulateUsingCuttingEars()
+        public IEnumerable<int>? TriangulateUsingCuttingEars()
         {
             var surface2D = this.Flattern();
             return surface2D.TriangulateUsingCuttingEars();

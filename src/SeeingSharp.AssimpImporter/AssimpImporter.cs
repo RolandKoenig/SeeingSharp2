@@ -74,10 +74,10 @@ namespace SeeingSharp.AssimpImporter
 
         private static void ProcessNode(
             ImportedModelContainer modelContainer,
-            Scene scene, Node actNode, SceneObject actParent, 
+            Scene scene, Node actNode, SceneObject? actParent, 
             ObjectTreeBoundingBoxCalculator boundingBoxCalc)
         {
-            SceneObject nextParent = null;
+            SceneObject? nextParent = null;
             if (actNode.HasMeshes)
             {
                 var actTransform = Matrix4x4.Transpose(AssimpHelper.MatrixFromAssimp(actNode.Transform));
@@ -101,13 +101,13 @@ namespace SeeingSharp.AssimpImporter
                     var actBaseVertex = newGeometry.CountVertices;
                     var actMesh = scene.Meshes[actMeshId];
 
-                    List<Color4D> vertexColors = null;
+                    List<Color4D>? vertexColors = null;
                     if (actMesh.HasVertexColors(0))
                     {
                         vertexColors = actMesh.VertexColorChannels[0];
                     }
 
-                    List<Vector3D> textureCoords1 = null;
+                    List<Vector3D>? textureCoords1 = null;
                     if (actMesh.TextureCoordinateChannelCount > 0)
                     {
                         textureCoords1 = actMesh.TextureCoordinateChannels[0];

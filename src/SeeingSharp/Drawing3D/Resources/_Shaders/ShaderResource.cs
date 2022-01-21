@@ -98,7 +98,7 @@ namespace SeeingSharp.Drawing3D.Resources
                             Array.Empty<D3D.ShaderMacro>(),
                             null!,
                             "main",
-                            resourceLink.ToString(),
+                            resourceLink.ToString() ?? "",
                             shaderModel,
                             device.DebugEnabled ? ShaderFlags.Debug : ShaderFlags.None,
                             out var compBlob, out var compErrorBlob);

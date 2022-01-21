@@ -10,7 +10,7 @@ namespace SeeingSharp.Input
     internal class WpfKeyAndMouseInputHandler : IInputHandler
     {
         // Target objects
-        private SeeingSharpRendererElement _rendererElement;
+        private SeeingSharpRendererElement? _rendererElement;
 
         // Helper
         private bool _lastDragPointValid;
@@ -46,7 +46,7 @@ namespace SeeingSharp.Input
         /// Starts input handling.
         /// </summary>
         /// <param name="viewObject">The view object (e. g. Direct3D11Canvas).</param>
-        public void Start(IInputEnabledView viewObject)
+        public void Start(IInputEnabledView? viewObject)
         {
             _rendererElement = viewObject as SeeingSharpRendererElement;
             if (_rendererElement == null) { throw new ArgumentException("Unable to handle given view object!"); }

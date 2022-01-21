@@ -30,19 +30,19 @@ namespace SeeingSharp.Tests
                 camera.UpdateCamera();
 
                 // Define scene
-                SceneObject newObject = null;
+                SceneObject? newObject = null;
 
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     var resGeometry = manipulator.AddResource(
-                        device => new GeometryResource(ACFileLoader.ImportGeometry(
+                        _ => new GeometryResource(ACFileLoader.ImportGeometry(
                             TestUtilities.CreateResourceLink("Models", "ModelFlatShading.ac"))));
                     var resMaterial = manipulator.AddStandardMaterialResource();
 
                     newObject = manipulator.AddMeshObject(resGeometry, resMaterial);
                 });
 
-                await memRenderTarget.Scene.WaitUntilVisibleAsync(newObject, memRenderTarget.RenderLoop);
+                await memRenderTarget.Scene.WaitUntilVisibleAsync(newObject!, memRenderTarget.RenderLoop);
 
                 // Take screenshot
                 var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
@@ -55,7 +55,7 @@ namespace SeeingSharp.Tests
             }
 
             // Finishing checks
-            Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+            Assert.IsTrue(GraphicsCore.Current.MainLoop!.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
         }
 
         [TestMethod]
@@ -74,18 +74,18 @@ namespace SeeingSharp.Tests
                 camera.UpdateCamera();
 
                 // Define scene
-                SceneSpacialObject newMesh = null;
+                SceneSpacialObject? newMesh = null;
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     var resGeometry = manipulator.AddResource(
-                        device => new GeometryResource(ACFileLoader.ImportGeometry(
+                        _ => new GeometryResource(ACFileLoader.ImportGeometry(
                             TestUtilities.CreateResourceLink("Models", "ModelShaded.ac"))));
                     var resMaterial = manipulator.AddStandardMaterialResource();
 
                     newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
                     newMesh.Scaling = new Vector3(0.5f, 0.5f, 0.5f);
                 });
-                await memRenderTarget.Scene.WaitUntilVisibleAsync(newMesh, memRenderTarget.RenderLoop);
+                await memRenderTarget.Scene.WaitUntilVisibleAsync(newMesh!, memRenderTarget.RenderLoop);
 
                 // Take screenshot
                 var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
@@ -98,7 +98,7 @@ namespace SeeingSharp.Tests
             }
 
             // Finishing checks
-            Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+            Assert.IsTrue(GraphicsCore.Current.MainLoop!.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
         }
 
         [TestMethod]
@@ -117,19 +117,19 @@ namespace SeeingSharp.Tests
                 camera.UpdateCamera();
 
                 // Define scene
-                SceneObject newObject = null;
+                SceneObject? newObject = null;
 
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     var resGeometry = manipulator.AddResource(
-                        device => new GeometryResource(ACFileLoader.ImportGeometry(
+                        _ => new GeometryResource(ACFileLoader.ImportGeometry(
                             TestUtilities.CreateResourceLink("Models", "ModelTwoSided.ac"))));
                     var resMaterial = manipulator.AddStandardMaterialResource();
 
                     newObject = manipulator.AddMeshObject(resGeometry, resMaterial);
                 });
 
-                await memRenderTarget.Scene.WaitUntilVisibleAsync(newObject, memRenderTarget.RenderLoop);
+                await memRenderTarget.Scene.WaitUntilVisibleAsync(newObject!, memRenderTarget.RenderLoop);
 
                 // Take screenshot
                 var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
@@ -142,7 +142,7 @@ namespace SeeingSharp.Tests
             }
 
             // Finishing checks
-            Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+            Assert.IsTrue(GraphicsCore.Current.MainLoop!.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
         }
 
         [TestMethod]
@@ -161,19 +161,19 @@ namespace SeeingSharp.Tests
                 camera.UpdateCamera();
 
                 // Define scene
-                SceneObject newObject = null;
+                SceneObject? newObject = null;
 
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     var resGeometry = manipulator.AddResource(
-                        device => new GeometryResource(ACFileLoader.ImportGeometry(
+                        _ => new GeometryResource(ACFileLoader.ImportGeometry(
                             TestUtilities.CreateResourceLink("Models", "ModelSingleSided.ac"))));
                     var resMaterial = manipulator.AddStandardMaterialResource();
 
                     newObject = manipulator.AddMeshObject(resGeometry, resMaterial);
                 });
 
-                await memRenderTarget.Scene.WaitUntilVisibleAsync(newObject, memRenderTarget.RenderLoop);
+                await memRenderTarget.Scene.WaitUntilVisibleAsync(newObject!, memRenderTarget.RenderLoop);
 
                 // Take screenshot
                 var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
@@ -186,7 +186,7 @@ namespace SeeingSharp.Tests
             }
 
             // Finishing checks
-            Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+            Assert.IsTrue(GraphicsCore.Current.MainLoop!.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
         }
     }
 }

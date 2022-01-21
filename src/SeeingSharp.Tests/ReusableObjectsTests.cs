@@ -14,7 +14,7 @@ namespace SeeingSharp.Tests
             var cache = new ReusableStringBuilders();
 
             Assert.IsTrue(cache.Count == 0);
-            StringBuilder rememberedStringBuilder = null;
+            StringBuilder? rememberedStringBuilder = null;
             using (cache.UseStringBuilder(out var stringBuilderFirst, 256))
             {
                 stringBuilderFirst.AppendLine("Test01");
@@ -39,7 +39,7 @@ namespace SeeingSharp.Tests
             var cache = new ReusableMemoryStreams();
 
             Assert.IsTrue(cache.Count == 0);
-            MemoryStream rememberedMemoryStreamFirst = null;
+            MemoryStream? rememberedMemoryStreamFirst = null;
             using (cache.UseMemoryStream(out var memoryStreamFirst, 256))
             using (var streamWriter = new StreamWriter(memoryStreamFirst))
             {
@@ -49,7 +49,7 @@ namespace SeeingSharp.Tests
             }
 
             Assert.IsTrue(cache.Count == 1);
-            MemoryStream rememberedMemoryStreamSecond = null;
+            MemoryStream? rememberedMemoryStreamSecond = null;
             using (cache.UseMemoryStream(out var memoryStreamSecond))
             {
                 Assert.IsTrue(memoryStreamSecond.Length == 0);

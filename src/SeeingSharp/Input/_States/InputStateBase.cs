@@ -12,7 +12,7 @@ namespace SeeingSharp.Input
         /// The view object this input state was queried on.
         /// Null, if this InputState does not depend on a view.
         /// </summary>
-        public ViewInformation RelatedView { get; internal set; }
+        public ViewInformation? RelatedView { get; internal set; }
 
         /// <summary>
         /// The view index this input state was queried on.

@@ -4,10 +4,20 @@ namespace SeeingSharp.Util
 {
     public struct NamedOrGenericKey : IEquatable<NamedOrGenericKey>, IComparable<NamedOrGenericKey>
     {
-        public static readonly NamedOrGenericKey Empty = new NamedOrGenericKey();
+        public static readonly NamedOrGenericKey Empty = new();
 
-        private string _hint;
+        private string? _hint;
         private readonly int _hashCode;
+
+        /// <summary>
+        /// Gets the named key.
+        /// </summary>
+        public string? NameKey { get; }
+
+        /// <summary>
+        /// Gets the generic key.
+        /// </summary>
+        public long GenericKey { get; }
 
         /// <summary>
         /// Private constructor - Just to be used for generated keys.
@@ -42,7 +52,7 @@ namespace SeeingSharp.Util
         /// </summary>
         /// <param name="targetType">The type which to bind to the key (FullTypeName is used).</param>
         public NamedOrGenericKey(Type targetType)
-            : this(targetType.FullName)
+            : this(targetType.FullName ?? string.Empty)
         {
         }
 
@@ -104,7 +114,7 @@ namespace SeeingSharp.Util
         /// <returns>
         ///   <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj is NamedOrGenericKey other)
             {
@@ -154,7 +164,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets or sets a hint for this resource key (a custom description which helps identifying what is behind this key).
         /// </summary>
-        public string Hint
+        public string? Hint
         {
             get
             {
@@ -186,15 +196,5 @@ namespace SeeingSharp.Util
                 return "Generic Id: " + this.GenericKey;
             }
         }
-
-        /// <summary>
-        /// Gets the named key.
-        /// </summary>
-        public string NameKey { get; }
-
-        /// <summary>
-        /// Gets the generic key.
-        /// </summary>
-        public long GenericKey { get; }
     }
 }

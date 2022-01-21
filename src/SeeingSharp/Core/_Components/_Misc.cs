@@ -7,7 +7,7 @@
     internal struct SceneComponentInfo
     {
         public SceneComponentBase Component;
-        public object Context;
+        public object? Context;
         public ViewInformation? CorrespondingView;
     }
 
@@ -19,7 +19,7 @@
     internal struct SceneComponentRequest
     {
         public SceneComponentRequestType RequestType;
-        public SceneComponentBase Component;
+        public SceneComponentBase? Component;
         public ViewInformation? CorrespondingView;
     }
 

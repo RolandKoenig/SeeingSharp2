@@ -15,12 +15,12 @@ namespace SeeingSharp.Util
     /// </summary>
     public sealed class ReusableAwaiter : INotifyCompletion
     {
-        private static readonly ConcurrentObjectPool<ReusableAwaiter> s_freeAwaiters = new ConcurrentObjectPool<ReusableAwaiter>(() => new ReusableAwaiter(), 16);
+        private static readonly ConcurrentObjectPool<ReusableAwaiter> s_freeAwaiters = new(() => new ReusableAwaiter(), 16);
 
         private WaitCallback _triggerContinuationCallback;
-        private Exception _exception;
+        private Exception? _exception;
         private bool _continueOnCaptureContext;
-        private Action _continuation;
+        private Action? _continuation;
         private object _stateSwitchLock;
 
         public bool IsCompleted { get; private set; }
@@ -97,7 +97,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public bool TrySetCompleted()
         {
-            Action continuation = null;
+            Action? continuation = null;
             lock (_stateSwitchLock)
             {
                 if (this.IsCompleted) { return false; }
@@ -120,7 +120,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public bool TrySetException(Exception exception)
         {
-            Action continuation = null;
+            Action? continuation = null;
             lock (_stateSwitchLock)
             {
                 if (this.IsCompleted) { return false; }
@@ -139,7 +139,7 @@ namespace SeeingSharp.Util
             return true;
         }
 
-        private void TriggerContinuation(object state)
+        private void TriggerContinuation(object? state)
         {
             var continueAction = _continuation;
             continueAction?.Invoke();

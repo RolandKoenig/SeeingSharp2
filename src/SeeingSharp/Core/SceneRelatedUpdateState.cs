@@ -14,11 +14,11 @@ namespace SeeingSharp.Core
     public class SceneRelatedUpdateState : IAnimationUpdateState
     {
         // Constants
-        private static readonly InputFrame[] s_dummyFrameCollection = new InputFrame[0];
+        private static readonly InputFrame[] s_dummyFrameCollection = Array.Empty<InputFrame>();
 
         // parameters for single update step
         private bool _isPaused;
-        private UpdateState _updateState;
+        private UpdateState? _updateState;
 
         /// <summary>
         /// Gets current update time.
@@ -30,7 +30,7 @@ namespace SeeingSharp.Core
                 _updateState.EnsureNotNull(nameof(_updateState));
 
                 if (_isPaused && !this.IgnorePauseState) { return TimeSpan.Zero; }
-                return _updateState.UpdateTime;
+                return _updateState!.UpdateTime;
             }
         }
 
@@ -44,14 +44,21 @@ namespace SeeingSharp.Core
                 _updateState.EnsureNotNull(nameof(_updateState));
 
                 if (_isPaused && !this.IgnorePauseState) { return 0; }
-                return _updateState.UpdateTimeMilliseconds;
+                return _updateState!.UpdateTimeMilliseconds;
             }
         }
 
         /// <summary>
         /// Gets the overall update state of SeeingSharp.
         /// </summary>
-        public UpdateState UpdateState => _updateState;
+        public UpdateState UpdateState
+        {
+            get
+            {
+                _updateState.EnsureNotNull(nameof(_updateState));
+                return _updateState!;
+            }
+        }
 
         public bool IgnorePauseState { get; set; }
 
@@ -66,7 +73,7 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets a collection containing all gathered InputFrames since last update pass.
         /// </summary>
-        public IEnumerable<InputFrame> InputFrames => _updateState.InputFrames;
+        public IEnumerable<InputFrame> InputFrames => _updateState?.InputFrames ?? Array.Empty<InputFrame>();
 
         internal bool ForceTransformUpdatesOnChildren;
 

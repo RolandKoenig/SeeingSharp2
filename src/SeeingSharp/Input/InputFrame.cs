@@ -61,7 +61,14 @@ namespace SeeingSharp.Input
         /// <param name="frameDuration">The TimeSpan which is covered by this InputFrame.</param>
         internal InputFrame(int expectedStateCount, TimeSpan frameDuration)
         {
-            this.Reset(expectedStateCount, frameDuration);
+            _inputStates = new List<InputStateBase>(expectedStateCount);
+            _recoveredStates = new List<InputStateBase>(expectedStateCount);
+
+            this.DefaultMouseOrPointer = MouseOrPointerState.Dummy;
+            this.DefaultGamepad = GamepadState.Dummy;
+            this.DefaultKeyboard = KeyboardState.Dummy;
+
+            _frameDuration = frameDuration;
         }
 
         /// <summary>
@@ -87,7 +94,7 @@ namespace SeeingSharp.Input
         /// The returned collection may contain no elements if there is no suitable state object available.
         /// </summary>
         /// <param name="viewInfo">The view for which to get the requested input state objects</param>
-        public IEnumerable<KeyboardState> TryGetKeyboardStates(ViewInformation viewInfo = null)
+        public IEnumerable<KeyboardState> TryGetKeyboardStates(ViewInformation? viewInfo = null)
         {
             return this.TryGetStates<KeyboardState>(viewInfo);
         }
@@ -97,7 +104,7 @@ namespace SeeingSharp.Input
         /// This method may return null if there is no <see cref="KeyboardState"/> available.
         /// </summary>
         /// <param name="viewInfo">The view for which to get the requested input state object</param>
-        public KeyboardState TryGetKeyboardState(ViewInformation viewInfo)
+        public KeyboardState? TryGetKeyboardState(ViewInformation viewInfo)
         {
             return this.TryGetState<KeyboardState>(viewInfo);
         }
@@ -107,7 +114,7 @@ namespace SeeingSharp.Input
         /// The returned collection may contain no elements if there is no suitable state object available.
         /// </summary>
         /// <param name="viewInfo">The view for which to get the requested input state objects</param>
-        public IEnumerable<MouseOrPointerState> TryGetMouseOrPointerStates(ViewInformation viewInfo = null)
+        public IEnumerable<MouseOrPointerState> TryGetMouseOrPointerStates(ViewInformation? viewInfo = null)
         {
             return this.TryGetStates<MouseOrPointerState>(viewInfo);
         }
@@ -117,7 +124,7 @@ namespace SeeingSharp.Input
         /// This method may return null if there is no <see cref="MouseOrPointerState"/> available.
         /// </summary>
         /// <param name="viewInfo">The view for which to get the requested input state object</param>
-        public MouseOrPointerState TryGetMouseOrPointerState(ViewInformation viewInfo)
+        public MouseOrPointerState? TryGetMouseOrPointerState(ViewInformation viewInfo)
         {
             return this.TryGetState<MouseOrPointerState>(viewInfo);
         }
@@ -127,7 +134,7 @@ namespace SeeingSharp.Input
         /// The returned collection may contain no elements if there is no suitable state object available.
         /// </summary>
         /// <param name="viewInfo">The view for which to get the requested input state objects</param>
-        public IEnumerable<GamepadState> TryGetGamepadStates(ViewInformation viewInfo = null)
+        public IEnumerable<GamepadState> TryGetGamepadStates(ViewInformation? viewInfo = null)
         {
             return this.TryGetStates<GamepadState>(viewInfo);
         }
@@ -137,7 +144,7 @@ namespace SeeingSharp.Input
         /// This method may return null if there is no <see cref="GamepadState"/> available.
         /// </summary>
         /// <param name="viewInfo">The view for which to get the requested input state object</param>
-        public GamepadState TryGetGamepadState(ViewInformation viewInfo)
+        public GamepadState? TryGetGamepadState(ViewInformation viewInfo)
         {
             return this.TryGetState<GamepadState>(viewInfo);
         }
@@ -147,7 +154,7 @@ namespace SeeingSharp.Input
         /// The returned collection may contain no elements if there is no suitable state object available.
         /// </summary>
         /// <param name="viewInfo">The view for which to get the requested input state objects</param>
-        public IEnumerable<T> TryGetStates<T>(ViewInformation viewInfo = null)
+        public IEnumerable<T> TryGetStates<T>(ViewInformation? viewInfo = null)
             where T : InputStateBase
         {
             var inputStateCount = _inputStates.Count;
@@ -169,7 +176,7 @@ namespace SeeingSharp.Input
         /// Gets the input state of the given type for the given view.
         /// </summary>
         /// <param name="viewInfo">The view for which to get the requested input state object</param>
-        public T TryGetState<T>(ViewInformation viewInfo)
+        public T? TryGetState<T>(ViewInformation viewInfo)
             where T : InputStateBase
         {
             viewInfo.EnsureNotNull(nameof(viewInfo));
@@ -195,16 +202,8 @@ namespace SeeingSharp.Input
         /// <param name="frameDuration">The TimeSpan which is covered by this InputFrame.</param>
         internal void Reset(int expectedStateCount, TimeSpan frameDuration)
         {
-            if (_inputStates == null)
-            {
-                _inputStates = new List<InputStateBase>(expectedStateCount);
-                _recoveredStates = new List<InputStateBase>(expectedStateCount);
-            }
-            else
-            {
-                _recoveredStates.AddRange(_inputStates);
-                _inputStates.Clear();
-            }
+            _recoveredStates.AddRange(_inputStates);
+            _inputStates.Clear();
 
             _frameDuration = frameDuration;
 
@@ -213,10 +212,10 @@ namespace SeeingSharp.Input
             this.DefaultKeyboard = KeyboardState.Dummy;
         }
 
-        internal void AddCopyOfState(InputStateBase inputState, ViewInformation viewInfo)
+        internal void AddCopyOfState(InputStateBase inputState, ViewInformation? viewInfo)
         {
             // Get the state object to where to copy the given InputState
-            InputStateBase targetState = null;
+            InputStateBase? targetState = null;
             for (var loop = 0; loop < _recoveredStates.Count; loop++)
             {
                 if (_recoveredStates[loop].CurrentType == inputState.CurrentType)
@@ -228,7 +227,7 @@ namespace SeeingSharp.Input
             }
             if (targetState == null)
             {
-                targetState = (InputStateBase)Activator.CreateInstance(inputState.CurrentType);
+                targetState = (InputStateBase)Activator.CreateInstance(inputState.CurrentType)!;
             }
 
             // Copy all state data

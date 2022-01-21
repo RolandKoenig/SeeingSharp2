@@ -30,7 +30,7 @@ namespace SeeingSharp.Drawing3D.ImportExport
             var resGeometry = modelContainer.GetResourceKey("Geometry", "Main");
             modelContainer.AddResource(new ImportedResourceInfo(
                 resGeometry,
-                device => new GeometryResource(geometry)));
+                _ => new GeometryResource(geometry)));
 
             // Generate Material resources
             var materialKeys = new NamedOrGenericKey[fileInfo.Materials.Count];
@@ -41,7 +41,7 @@ namespace SeeingSharp.Drawing3D.ImportExport
 
                 modelContainer.AddResource(new ImportedResourceInfo(
                     materialKeys[loop],
-                    device => new StandardMaterialResource
+                    _ => new StandardMaterialResource
                     {
                         UseVertexColors = false,
                         MaterialDiffuseColor = actACMaterial.Diffuse

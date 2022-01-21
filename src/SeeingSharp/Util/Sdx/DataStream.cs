@@ -18,7 +18,7 @@ namespace SeeingSharp.Util.Sdx
         private readonly bool _canRead;
         private readonly bool _canWrite;
         private GCHandle _gCHandle;
-        private D3D.Blob _blob;
+        private D3D.Blob? _blob;
         private readonly bool _ownsBuffer;
         private long _position;
         private readonly long _size;

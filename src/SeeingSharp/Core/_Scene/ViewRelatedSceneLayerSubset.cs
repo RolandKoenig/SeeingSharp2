@@ -69,7 +69,7 @@ namespace SeeingSharp.Core
             _scene = sceneLayer.Scene;
             _sceneLayer = sceneLayer;
             this.ViewInformation = viewInformation;
-            _device = this.ViewInformation.Device;
+            _device = this.ViewInformation.Device!;
             _resources = resources;
             ViewIndex = viewIndex;
 
@@ -469,7 +469,7 @@ namespace SeeingSharp.Core
             }
 
             List<SceneObject>? invalidObjects = null;
-            var resources = renderState.CurrentResources;
+            var resources = renderState.CurrentResources!;
 
             if (renderState.Device != _device) { throw new SeeingSharpGraphicsException("Rendering of a ViewRelatedSceneLayoutSubset is called with a wrong device object!"); }
             if (renderState.CurrentResources != _resources) { throw new SeeingSharpGraphicsException("Rendering of a ViewRelatedSceneLayoutSubset is called with a wrong ResourceDictionary object!"); }

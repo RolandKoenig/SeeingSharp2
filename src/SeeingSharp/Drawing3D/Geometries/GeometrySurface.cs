@@ -698,7 +698,6 @@ namespace SeeingSharp.Drawing3D.Geometries
             //Triangulate all data
             var polygon = new Polygon(coordinates);
             var triangleIndices = polygon.TriangulateUsingCuttingEars();
-
             if (triangleIndices == null)
             {
                 throw new SeeingSharpGraphicsException("Unable to triangulate given polygon!");

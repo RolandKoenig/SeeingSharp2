@@ -12,11 +12,11 @@ namespace SeeingSharp.WinFormsSamples
     [SuppressMessage("ReSharper", "LocalizableElement")]
     public class RenderWindowControlsComponent : Component
     {
-        private SeeingSharpRendererControl _renderControl;
-        private ToolStripDropDownButton _mnuChooseDevice;
-        private ToolStripDropDownButton _mnuChangeResolution;
+        private SeeingSharpRendererControl? _renderControl;
+        private ToolStripDropDownButton? _mnuChooseDevice;
+        private ToolStripDropDownButton? _mnuChangeResolution;
 
-        public SeeingSharpRendererControl RenderControl
+        public SeeingSharpRendererControl? RenderControl
         {
             get => _renderControl;
             set
@@ -32,37 +32,37 @@ namespace SeeingSharp.WinFormsSamples
             }
         }
 
-        public ToolStripStatusLabel LblCurrentResolution
+        public ToolStripStatusLabel? LblCurrentResolution
         {
             get;
             set;
         }
 
-        public ToolStripStatusLabel LblCurrentResourceCount
+        public ToolStripStatusLabel? LblCurrentResourceCount
         {
             get;
             set;
         }
 
-        public ToolStripStatusLabel LblCurrentObjectCount
+        public ToolStripStatusLabel? LblCurrentObjectCount
         {
             get;
             set;
         }
 
-        public ToolStripStatusLabel LblCurrentDrawCallCount
+        public ToolStripStatusLabel? LblCurrentDrawCallCount
         {
             get;
             set;
         }
 
-        public ToolStripStatusLabel LblCurrentDevice
+        public ToolStripStatusLabel? LblCurrentDevice
         {
             get;
             set;
         }
 
-        public ToolStripDropDownButton MnuChooseDevice
+        public ToolStripDropDownButton? MnuChooseDevice
         {
             get => _mnuChooseDevice;
             set
@@ -76,7 +76,8 @@ namespace SeeingSharp.WinFormsSamples
                     _mnuChooseDevice = value;
 
                     // Generate one menu button per device
-                    if (GraphicsCore.IsLoaded)
+                    if (GraphicsCore.IsLoaded &&
+                        (_mnuChooseDevice != null))
                     {
                         foreach (var actDevice in GraphicsCore.Current.Devices)
                         {
@@ -93,7 +94,7 @@ namespace SeeingSharp.WinFormsSamples
             }
         }
 
-        public ToolStripDropDownButton MnuChangeResolution
+        public ToolStripDropDownButton? MnuChangeResolution
         {
             get => _mnuChangeResolution;
             set
@@ -117,7 +118,8 @@ namespace SeeingSharp.WinFormsSamples
                     _mnuChangeResolution = value;
 
                     // Register on new menu
-                    if(GraphicsCore.IsLoaded)
+                    if(GraphicsCore.IsLoaded &&
+                       (_mnuChangeResolution != null))
                     {
                         foreach (var actItem in _mnuChangeResolution.DropDownItems)
                         {
@@ -132,7 +134,7 @@ namespace SeeingSharp.WinFormsSamples
             }
         }
 
-        public Form TargetWindow
+        public Form? TargetWindow
         {
             get;
             set;
@@ -141,6 +143,7 @@ namespace SeeingSharp.WinFormsSamples
         public void UpdateTargetControlStates()
         {
             if (!GraphicsCore.IsLoaded) { return; }
+            if (_renderControl == null) { return; }
 
             // Update all status labels
             if (this.LblCurrentResolution != null)
@@ -190,7 +193,7 @@ namespace SeeingSharp.WinFormsSamples
             targetWindow.Height = newWindowSize.Height;
         }
 
-        private void OnCmdChangeDevice_Click(object sender, EventArgs eArgs)
+        private void OnCmdChangeDevice_Click(object? sender, EventArgs eArgs)
         {
             if (_renderControl == null) { return; }
             if (!(sender is ToolStripButton changeButton)) { return; }
@@ -199,13 +202,13 @@ namespace SeeingSharp.WinFormsSamples
             _renderControl.RenderLoop.SetRenderingDevice(device);
         }
 
-        private void OnCmdChangeResolution_Click(object sender, EventArgs e)
+        private void OnCmdChangeResolution_Click(object? sender, EventArgs e)
         {
             var menuItem = sender as ToolStripMenuItem;
+            if (menuItem == null) { return; }
+            if (menuItem.Tag == null) { return; }
 
-            if (menuItem?.Tag == null) { return; }
-
-            var splittedResolution = menuItem.Tag.ToString().Split('x');
+            var splittedResolution = menuItem.Tag.ToString()?.Split('x') ?? Array.Empty<string>();
 
             if (splittedResolution.Length != 2) { return; }
             if (!int.TryParse(splittedResolution[0], out var width)) { return; }

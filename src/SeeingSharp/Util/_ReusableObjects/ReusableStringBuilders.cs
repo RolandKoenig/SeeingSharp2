@@ -10,11 +10,7 @@ namespace SeeingSharp.Util
 
         public int Count => _stringBuilders.Count;
 
-        public static ReusableStringBuilders Current
-        {
-            get;
-            private set;
-        }
+        public static ReusableStringBuilders Current { get; }
 
         static ReusableStringBuilders()
         {

@@ -351,7 +351,7 @@ namespace SeeingSharp.Core
                     // Load all resources of the object
                     if (!actObject.IsLoaded(renderState.Device))
                     {
-                        actObject.LoadResources(renderState.Device, renderState.CurrentResources);
+                        actObject.LoadResources(renderState.Device, renderState.CurrentResources!);
                     }
                 }
                 catch (Exception ex)
@@ -474,12 +474,12 @@ namespace SeeingSharp.Core
             }
 
             var changedWireframe = false;
-            if (this.WireframeEnabled && (!renderState.ViewInformation.ViewConfiguration.WireframeEnabled))
+            if (this.WireframeEnabled && (!renderState.ViewInformation!.ViewConfiguration.WireframeEnabled))
             {
                 changedWireframe = true;
 
                 renderState.Device.DeviceImmediateContextD3D11.RSSetState(
-                    renderState.CurrentResources.DefaultResources.RasterStateWireframe);
+                    renderState.CurrentResources!.DefaultResources.RasterStateWireframe);
             }
             try
             {
@@ -491,7 +491,7 @@ namespace SeeingSharp.Core
                 if (changedWireframe)
                 {
                     renderState.Device.DeviceImmediateContextD3D11.RSSetState(
-                        renderState.CurrentResources.DefaultResources.RasterStateDefault);
+                        renderState.CurrentResources!.DefaultResources.RasterStateDefault);
                 }
             }
         }

@@ -103,19 +103,10 @@ namespace SeeingSharp.Util
                 avgValue = sumValue / itemCount;
             }
 
-            // Create result object
-            if (result == null)
-            {
-                result = new DurationPerformanceResult(
-                    this.ActivityName, maxTimeStamp, itemCount, 
-                    avgValue, maxValue, minValue);
-            }
-            else
-            {
-                result.Update(
-                    maxTimeStamp, itemCount, 
-                    avgValue, maxValue, minValue);
-            }
+            // Update result object
+            result.Update(
+                maxTimeStamp, itemCount, 
+                avgValue, maxValue, minValue);
         }
 
         //*********************************************************************

@@ -18,13 +18,13 @@ namespace SeeingSharp.SampleContainer.Basics3D.ObjectFiltering
         typeof(ObjectFilteringSettings))]
     public class ObjectFilteringSample : SampleBase
     {
-        private ObjectFilteringSettings _settings;
+        private ObjectFilteringSettings? _castedSettings;
 
         public override async Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
             mainRenderLoop.EnsureNotNull(nameof(mainRenderLoop));
 
-            _settings = (ObjectFilteringSettings) settings;
+            _castedSettings = (ObjectFilteringSettings) settings;
 
             await mainRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
@@ -37,11 +37,11 @@ namespace SeeingSharp.SampleContainer.Basics3D.ObjectFiltering
 
                 // Create resources
                 var resGeometryCube = manipulator.AddResource(
-                    device => new GeometryResource(new CubeGeometryFactory()));
+                    _ => new GeometryResource(new CubeGeometryFactory()));
                 var resGeometrySphere = manipulator.AddResource(
-                    device => new GeometryResource(new GeosphereGeometryFactory()));
+                    _ => new GeometryResource(new GeosphereGeometryFactory()));
                 var resGeometryPyramid = manipulator.AddResource(
-                    device => new GeometryResource(new PyramidGeometryFactory()));
+                    _ => new GeometryResource(new PyramidGeometryFactory()));
 
                 // Create all objects and write a simple type name into the Tag1 property
                 // We will use this Tag1 property for filter visible objects by the object type
@@ -81,10 +81,10 @@ namespace SeeingSharp.SampleContainer.Basics3D.ObjectFiltering
             mainOrChildRenderLoop.SceneComponents.Add(new FreeMovingCameraComponent());
             
             // Register our custom filter (first step) and the filter for viewbox culling (second step)
-            mainOrChildRenderLoop.ObjectFilters.Add(_settings.Filter);
+            mainOrChildRenderLoop.ObjectFilters.Add(_castedSettings!.Filter);
             mainOrChildRenderLoop.ObjectFilters.Add(new SceneViewboxObjectFilter());
 
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
 
         //*********************************************************************
@@ -114,7 +114,7 @@ namespace SeeingSharp.SampleContainer.Basics3D.ObjectFiltering
             }
 
             [Browsable(false)]
-            public CustomByObjectFilter Filter { get; } = new CustomByObjectFilter();
+            public CustomByObjectFilter Filter { get; } = new();
         }
 
         /// <summary>

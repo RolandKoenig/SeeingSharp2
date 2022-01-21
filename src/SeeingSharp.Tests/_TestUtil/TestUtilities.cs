@@ -21,7 +21,7 @@ namespace SeeingSharp.Tests
                     .LoadAsync();
 
                 GraphicsCore.Current.SetDefaultDeviceToSoftware();
-                GraphicsCore.Current.DefaultDevice.ForceDetailLevel(DetailLevel.High);
+                GraphicsCore.Current.DefaultDevice!.ForceDetailLevel(DetailLevel.High);
             }
 
             Assert.IsTrue(GraphicsCore.IsLoaded, "GraphicsCore could not be initialized!");
@@ -67,10 +67,10 @@ namespace SeeingSharp.Tests
 
         public static IDisposable FailTestOnInternalExceptions()
         {
-            Exception internalEx = null;
+            Exception? internalEx = null;
             var location = InternalExceptionLocation.DisposeGraphicsObject;
 
-            void EventHandler(object sender, InternalCatchedExceptionEventArgs e)
+            void EventHandler(object? sender, InternalCatchedExceptionEventArgs e)
             {
                 if (internalEx == null)
                 {

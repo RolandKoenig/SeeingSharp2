@@ -233,7 +233,7 @@ namespace SeeingSharp.Util.Sdx
         public static byte[] ReadStream(Stream stream, ref int readLength)
         {
             Debug.Assert(stream != null);
-            Debug.Assert(stream.CanRead);
+            Debug.Assert(stream!.CanRead);
             int num = readLength;
             Debug.Assert(num <= (stream.Length - stream.Position));
             if (num == 0)

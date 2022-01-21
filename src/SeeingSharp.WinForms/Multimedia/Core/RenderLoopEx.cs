@@ -37,12 +37,16 @@ namespace SeeingSharp.Core
         {
             var currentViewSize = renderLoop.CurrentViewSize;
             var currentDevice = renderLoop.Device;
+            if (currentDevice == null)
+            {
+                throw new SeeingSharpException("No rendering device set!");
+            }
 
             // Concept behind this see http://www.rolandk.de/wp/2013/06/inhalt-der-rendertarget-textur-in-ein-bitmap-kopieren/
             var width = currentViewSize.Width;
             var height = currentViewSize.Height;
-            if (width <= 0) { throw new InvalidOperationException("View not initialized correctly!"); }
-            if (height <= 0) { throw new InvalidOperationException("View not initialized correctly!"); }
+            if (width <= 0) { throw new SeeingSharpException("View not initialized correctly!"); }
+            if (height <= 0) { throw new SeeingSharpException("View not initialized correctly!"); }
 
             // Get and read data from the gpu (create copy helper texture on demand)
             if (renderLoop.Internals.CopyHelperTextureStaging == null)

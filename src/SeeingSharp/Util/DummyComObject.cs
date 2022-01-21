@@ -8,7 +8,7 @@ namespace SeeingSharp.Util
         private uint _referenceCounter;
 
         /// <inheritdoc />
-        public ShadowContainer Shadow { get; private set; }
+        public ShadowContainer? Shadow { get; private set; }
 
         public DummyComObject()
         {
@@ -17,11 +17,10 @@ namespace SeeingSharp.Util
 
         public void Dispose()
         {
-            this.Shadow.Dispose();
+            this.Shadow?.Dispose();
             this.Shadow = null;
         }
 
-        /// <inheritdoc />
         public Result QueryInterface(ref Guid guid, out IntPtr comObject)
         {
             comObject = IntPtr.Zero;

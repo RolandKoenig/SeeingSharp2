@@ -35,7 +35,10 @@ namespace SeeingSharp.Drawing2D.Resources
             if (!_isDisposed)
             {
                 _isDisposed = true;
-                GraphicsCore.Current.MainLoop.RegisterForUnload(this);
+                if (GraphicsCore.IsGraphicsLoaded)
+                {
+                    GraphicsCore.Current.MainLoop!.RegisterForUnload(this);
+                }
             }
         }
 

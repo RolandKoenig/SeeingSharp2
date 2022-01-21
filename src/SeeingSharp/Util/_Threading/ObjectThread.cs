@@ -15,15 +15,15 @@ namespace SeeingSharp.Util
 
         // Members for thread runtime
         private volatile ObjectThreadState _currentState;
-        private Thread _mainThread;
+        private Thread? _mainThread;
         private CultureInfo _culture;
         private CultureInfo _uiCulture;
 
         // Threading resources
-        private ObjectThreadSynchronizationContext _syncContext;
+        private ObjectThreadSynchronizationContext? _syncContext;
         private ConcurrentQueue<Action> _taskQueue;
         private SemaphoreSlim _mainLoopSynchronizeObject;
-        private SemaphoreSlim _threadStopSynchronizeObject;
+        private SemaphoreSlim? _threadStopSynchronizeObject;
 
         /// <summary>
         /// Gets current thread time.
@@ -38,7 +38,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Gets the current SynchronizationContext object.
         /// </summary>
-        public SynchronizationContext SyncContext => _syncContext;
+        public SynchronizationContext? SyncContext => _syncContext;
 
         /// <summary>
         /// Gets the name of this thread.
@@ -53,22 +53,22 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Called when the thread ist starting.
         /// </summary>
-        public event EventHandler Starting;
+        public event EventHandler? Starting;
 
         /// <summary>
         /// Called when the thread is stopping.
         /// </summary>
-        public event EventHandler Stopping;
+        public event EventHandler? Stopping;
 
         /// <summary>
         /// Called when an unhandled exception occurred.
         /// </summary>
-        public event EventHandler<ObjectThreadExceptionEventArgs> ThreadException;
+        public event EventHandler<ObjectThreadExceptionEventArgs>? ThreadException;
 
         /// <summary>
         /// Called on each heartbeat.
         /// </summary>
-        public event EventHandler Tick;
+        public event EventHandler? Tick;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ObjectThread"/> class.
@@ -141,8 +141,8 @@ namespace SeeingSharp.Util
 
                 case ObjectThreadState.Running:
                 case ObjectThreadState.Starting:
-                    var taskSource = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
-                    this.Stopping += (sender, eArgs) =>
+                    var taskSource = new TaskCompletionSource<object?>(TaskCreationOptions.RunContinuationsAsynchronously);
+                    this.Stopping += (_, _) =>
                     {
                         taskSource.TrySetResult(null);
                     };
@@ -202,8 +202,7 @@ namespace SeeingSharp.Util
         public virtual void Trigger()
         {
             var synchronizationObject = _mainLoopSynchronizeObject;
-
-            synchronizationObject?.Release();
+            synchronizationObject.Release();
         }
 
         /// <summary>
@@ -215,7 +214,7 @@ namespace SeeingSharp.Util
             actionToInvoke.EnsureNotNull(nameof(actionToInvoke));
 
             // Enqueue the given action
-            var taskCompletionSource = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
+            var taskCompletionSource = new TaskCompletionSource<object?>(TaskCreationOptions.RunContinuationsAsynchronously);
 
             _taskQueue.Enqueue(() =>
             {
@@ -278,6 +277,9 @@ namespace SeeingSharp.Util
         {
             try
             {
+                if (_mainThread == null) { return; }
+                if (_mainThread != Thread.CurrentThread) { return; }
+
                 _mainThread.CurrentCulture = _culture;
                 _mainThread.CurrentUICulture = _uiCulture;
 
@@ -317,7 +319,7 @@ namespace SeeingSharp.Util
                             stopWatch.Reset();
                             stopWatch.Start();
 
-                            //Get current taskqueue
+                            //Get current task queue
                             var localTaskQueue = new List<Action>();
                             while (_taskQueue.TryDequeue(out var dummyAction))
                             {
@@ -337,7 +339,7 @@ namespace SeeingSharp.Util
                                 }
                             }
 
-                            //Perfoms a tick
+                            //Performs a tick
                             this.OnTick(EventArgs.Empty);
                         }
                         catch (Exception ex)
@@ -368,9 +370,17 @@ namespace SeeingSharp.Util
                 this.OnThreadException(new ObjectThreadExceptionEventArgs(_currentState, ex));
                 _currentState = ObjectThreadState.None;
             }
+            finally
+            {
+                _mainThread = null;
+            }
 
             // Notify thread stop event
-            try { _threadStopSynchronizeObject.Release(); }
+            try
+            {
+                var threadStopSynchronizeObject = _threadStopSynchronizeObject;
+                threadStopSynchronizeObject?.Release();
+            }
             catch (Exception)
             {
                 // ignored
@@ -401,7 +411,7 @@ namespace SeeingSharp.Util
             /// </summary>
             /// <param name="d">The <see cref="T:System.Threading.SendOrPostCallback"/> delegate to call.</param>
             /// <param name="state">The object passed to the delegate.</param>
-            public override void Post(SendOrPostCallback d, object state)
+            public override void Post(SendOrPostCallback d, object? state)
             {
                 _owner.InvokeAsync(() => d(state));
             }
@@ -411,7 +421,7 @@ namespace SeeingSharp.Util
             /// </summary>
             /// <param name="d">The <see cref="T:System.Threading.SendOrPostCallback"/> delegate to call.</param>
             /// <param name="state">The object passed to the delegate.</param>
-            public override void Send(SendOrPostCallback d, object state)
+            public override void Send(SendOrPostCallback d, object? state)
             {
                 throw new InvalidOperationException("Synchronous messages not supported on ObjectThreads!");
             }

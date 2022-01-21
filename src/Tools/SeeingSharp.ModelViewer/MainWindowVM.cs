@@ -77,7 +77,7 @@ namespace SeeingSharp.ModelViewer
 
         public Task LoadFileAsync(ResourceLink modelLink)
         {
-            var importOptions = GraphicsCore.Current.ImportersAndExporters.CreateImportOptions(modelLink);
+            var importOptions = GraphicsCore.Current.ImportersAndExporters!.CreateImportOptions(modelLink);
             return this.LoadSceneInternalAsync(modelLink, importOptions);
         }
 
@@ -96,7 +96,7 @@ namespace SeeingSharp.ModelViewer
 
         private async void OnCommand_OpenFile()
         {
-            var eArgs = new OpenFileDialogEventArgs(GraphicsCore.Current.ImportersAndExporters.GetOpenFileDialogFilter());
+            var eArgs = new OpenFileDialogEventArgs(GraphicsCore.Current.ImportersAndExporters!.GetOpenFileDialogFilter());
             this.OpenFileDialogRequest?.Invoke(this, eArgs);
             if(!string.IsNullOrEmpty(eArgs.SelectedFile))
             {
@@ -123,12 +123,12 @@ namespace SeeingSharp.ModelViewer
                     _loadedFile = modelLink.ToString() ?? "";
                     if (importOptions == null)
                     {
-                        importOptions = GraphicsCore.Current.ImportersAndExporters.CreateImportOptions(modelLink);
+                        importOptions = GraphicsCore.Current.ImportersAndExporters!.CreateImportOptions(modelLink);
                     }
 
                     try
                     {
-                        _loadedModel = await GraphicsCore.Current.ImportersAndExporters
+                        _loadedModel = await GraphicsCore.Current.ImportersAndExporters!
                             .ImportAsync(modelLink, importOptions);
 
                         await SceneHelper.AddModelToScene(_renderLoop, _loadedModel);

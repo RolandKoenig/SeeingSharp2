@@ -6,7 +6,7 @@ namespace SeeingSharp.Util
     public static class SynchronizationContextExtensions
     {
         private static readonly SendOrPostCallback s_postAsyncCallBack = PostAsyncCallback;
-        private static readonly ConcurrentObjectPool<PostAsyncState> s_cachedObjects = new ConcurrentObjectPool<PostAsyncState>(
+        private static readonly ConcurrentObjectPool<PostAsyncState> s_cachedObjects = new(
             () => new PostAsyncState(),
             16);
 
@@ -28,17 +28,18 @@ namespace SeeingSharp.Util
             return resultTask;
         }
 
-        private static void PostAsyncCallback(object arg)
+        private static void PostAsyncCallback(object? arg)
         {
-            var asyncStateInner = (PostAsyncState) arg;
+            var asyncStateInner = (PostAsyncState)arg!;
+
             try
             {
-                asyncStateInner.PostAction();
-                asyncStateInner.Awaiter.TrySetCompleted();
+                asyncStateInner.PostAction!.Invoke();
+                asyncStateInner.Awaiter!.TrySetCompleted();
             }
             catch (Exception ex)
             {
-                asyncStateInner.Awaiter.TrySetException(ex);
+                asyncStateInner.Awaiter!.TrySetException(ex);
             }
             finally
             {
@@ -54,8 +55,8 @@ namespace SeeingSharp.Util
         /// </summary>
         private class PostAsyncState
         {
-            public Action PostAction;
-            public ReusableAwaiter Awaiter;
+            public Action? PostAction;
+            public ReusableAwaiter? Awaiter;
 
             public static PostAsyncState Take()
             {

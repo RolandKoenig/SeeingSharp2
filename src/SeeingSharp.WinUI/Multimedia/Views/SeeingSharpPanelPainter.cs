@@ -27,19 +27,19 @@ namespace SeeingSharp.Views
         private const double MIN_PIXEL_SIZE_WIDTH = 100.0;
 
         // SwapChainPanel local members
-        private SwapChainPanel _targetPanel;
-        private ISwapChainPanelNative _panelNative;
+        private SwapChainPanel? _targetPanel;
+        private ISwapChainPanelNative? _panelNative;
         private GDI.SizeF _lastRefreshTargetSize;
         private bool _compositionScaleChanged;
         private DateTime _lastSizeChange;
 
         // Resources from Direct3D 11
-        private IDXGISwapChain1 _swapChain;
-        private D3D11.ID3D11Texture2D _backBuffer;
-        private D3D11.ID3D11Texture2D _backBufferMultisampled;
-        private D3D11.ID3D11Texture2D _depthBuffer;
-        private D3D11.ID3D11RenderTargetView _renderTargetView;
-        private D3D11.ID3D11DepthStencilView _renderTargetDepth;
+        private IDXGISwapChain1? _swapChain;
+        private D3D11.ID3D11Texture2D? _backBuffer;
+        private D3D11.ID3D11Texture2D? _backBufferMultisampled;
+        private D3D11.ID3D11Texture2D? _depthBuffer;
+        private D3D11.ID3D11RenderTargetView? _renderTargetView;
+        private D3D11.ID3D11DepthStencilView? _renderTargetDepth;
 
         /// <summary>
         /// Gets the current 3D scene.
@@ -95,7 +95,14 @@ namespace SeeingSharp.Views
         /// </summary>
         public GDI.Size PixelSize => this.GetTargetRenderPixelSize();
 
-        public GDI.Size ActualSize => new((int)_targetPanel.ActualWidth, (int)_targetPanel.ActualHeight);
+        public GDI.Size ActualSize
+        {
+            get
+            {
+                if (_targetPanel == null) { return GDI.Size.Empty; }
+                else{ return new GDI.Size((int)_targetPanel.ActualWidth, (int)_targetPanel.ActualHeight); }
+            }
+        }
 
         /// <summary>
         /// Gets or sets the clear color for the 3D view.
@@ -110,7 +117,7 @@ namespace SeeingSharp.Views
             set => this.RenderLoop.ClearColor = SeeingSharpWinUIUtil.Color4FromUIColor(ref value);
         }
 
-        public Panel TargetPanel => _targetPanel;
+        public Panel? TargetPanel => _targetPanel;
 
         /// <summary>
         /// True if the control is connected with the main rendering loop.
@@ -118,7 +125,7 @@ namespace SeeingSharp.Views
         /// </summary>
         public bool IsOperational => this.RenderLoop.IsOperational;
 
-        public DispatcherQueue DispatcherQueue => _targetPanel?.DispatcherQueue;
+        public DispatcherQueue? DispatcherQueue => _targetPanel?.DispatcherQueue;
 
         /// <summary>
         /// Does the target control have focus?
@@ -133,8 +140,14 @@ namespace SeeingSharp.Views
         {
             _lastSizeChange = DateTime.MinValue;
 
+            var syncContext = SynchronizationContext.Current;
+            if (syncContext == null)
+            {
+                throw new SeeingSharpException("Unable to determine the SynchronizationContext of the current thread!");
+            }
+
             // Create the RenderLoop object
-            this.RenderLoop = new RenderLoop(SynchronizationContext.Current, this)
+            this.RenderLoop = new RenderLoop(syncContext, this)
             {
                 ClearColor = Color4.Transparent
             };
@@ -280,11 +293,11 @@ namespace SeeingSharp.Views
                 viewSize.Height);
         }
 
-        private void SetSwapChain(IDXGISwapChain1 swapChain)
+        private void SetSwapChain(IDXGISwapChain1? swapChain)
         {
             if (_panelNative != null)
             {
-                _panelNative.SetSwapChain(swapChain);
+                _panelNative.SetSwapChain(swapChain!);
             }
             else
             {
@@ -393,7 +406,7 @@ namespace SeeingSharp.Views
             _backBuffer = _swapChain.GetBuffer<D3D11.ID3D11Texture2D>(0);
 
             // Define the render target (in case of multisample an own render target)
-            D3D11.ID3D11Texture2D backBufferForRenderloop = null;
+            D3D11.ID3D11Texture2D? backBufferForRenderloop = null;
             if (this.RenderLoop.Configuration.AntialiasingEnabled)
             {
                 _backBufferMultisampled = GraphicsHelper.Internals.CreateRenderTargetTexture(engineDevice, viewSize.Width, viewSize.Height, this.RenderLoop.Configuration);
@@ -416,8 +429,8 @@ namespace SeeingSharp.Views
 
             var dpiScaling = new DpiScaling
             {
-                DpiX = (float)(96.0 * _targetPanel.CompositionScaleX),
-                DpiY = (float)(96.0 * _targetPanel.CompositionScaleY)
+                DpiX = (float)(96.0 * _targetPanel!.CompositionScaleX),
+                DpiY = (float)(96.0 * _targetPanel!.CompositionScaleY)
             };
 
             return Tuple.Create(backBufferForRenderloop, _renderTargetView, _depthBuffer, _renderTargetDepth, viewPort, viewSize, dpiScaling);
@@ -440,12 +453,10 @@ namespace SeeingSharp.Views
         void IRenderLoopHost.OnRenderLoop_PrepareRendering(EngineDevice engineDevice)
         {
             if (_targetPanel == null) { return; }
-            if (this.RenderLoop == null) { return; }
 
             // Update swap chain scaling (only relevant for SwapChainPanel targets)
             //  see https://www.packtpub.com/books/content/integrating-direct3d-xaml-and-windows-81
-            if (this.RenderLoop.Camera != null &&
-                _swapChain != null)
+            if (_swapChain != null)
             {
                 if (_compositionScaleChanged)
                 {
@@ -500,7 +511,7 @@ namespace SeeingSharp.Views
             // First parameter indicates synchronization with vertical blank
             //  see http://msdn.microsoft.com/en-us/library/windows/desktop/bb174576(v=vs.85).aspx
             //  see example http://msdn.microsoft.com/en-us/library/windows/apps/hh825871.aspx
-            _swapChain.Present(1, PresentFlags.None);
+            _swapChain!.Present(1, PresentFlags.None);
         }
 
         /// <summary>

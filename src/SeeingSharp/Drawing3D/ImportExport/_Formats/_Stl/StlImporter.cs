@@ -54,8 +54,7 @@ namespace SeeingSharp.Drawing3D.ImportExport
                 throw new SeeingSharpException("Invalid import options for StlImporter!");
             }
 
-            ImportedModelContainer result = null;
-
+            ImportedModelContainer? result = null;
             try
             {
                 // Try to read in BINARY format first
@@ -65,12 +64,9 @@ namespace SeeingSharp.Drawing3D.ImportExport
                 }
 
                 // Read in ASCII format (if binary did not work)
-                if (result == null)
+                using (var inStream = sourceFile.OpenInputStream())
                 {
-                    using (var inStream = sourceFile.OpenInputStream())
-                    {
-                        result = this.TryReadAscii(sourceFile, inStream, stlImportOptions);
-                    }
+                    result = this.TryReadAscii(sourceFile, inStream, stlImportOptions);
                 }
             }
             catch (Exception ex)
@@ -149,6 +145,8 @@ namespace SeeingSharp.Drawing3D.ImportExport
             token.EnsureNotNull(nameof(token));
 
             var line = reader.ReadLine();
+            if (line == null) { throw new SeeingSharpException("Unexpected end of file!"); }
+
             ParseLine(line, out var id, out _);
 
             if (!string.Equals(token, id, StringComparison.OrdinalIgnoreCase))
@@ -221,6 +219,7 @@ namespace SeeingSharp.Drawing3D.ImportExport
             while (true)
             {
                 var line = reader.ReadLine();
+                if (line == null) { throw new SeeingSharpException("Unexpected end of file!"); }
 
                 if (TryParseVertex(line, out var point))
                 {
@@ -415,10 +414,10 @@ namespace SeeingSharp.Drawing3D.ImportExport
                 var resMaterialKey = modelContainer.GetResourceKey(RES_KEY_MAT_CLASS, RES_KEY_MAT_NAME);
                 modelContainer.AddResource(new ImportedResourceInfo(
                     resGeometryKey,
-                    device => new GeometryResource(newGeometry)));
+                    _ => new GeometryResource(newGeometry)));
                 modelContainer.AddResource(new ImportedResourceInfo(
                     resMaterialKey,
-                    device => new StandardMaterialResource()));
+                    _ => new StandardMaterialResource()));
                 var loadedMesh = new Mesh(resGeometryKey, resMaterialKey);
                 modelContainer.AddObject(loadedMesh);
 
@@ -432,7 +431,7 @@ namespace SeeingSharp.Drawing3D.ImportExport
         /// <summary>
         /// Reads the model from the specified binary stream.
         /// </summary>
-        private ImportedModelContainer TryReadBinary(ResourceLink source, Stream stream, StlImportOptions importOptions)
+        private ImportedModelContainer? TryReadBinary(ResourceLink source, Stream stream, StlImportOptions importOptions)
         {
             // Check length
             var length = stream.Length;
@@ -472,10 +471,10 @@ namespace SeeingSharp.Drawing3D.ImportExport
                 var resMaterialKey = modelContainer.GetResourceKey(RES_KEY_MAT_CLASS, RES_KEY_MAT_NAME);
                 modelContainer.AddResource(new ImportedResourceInfo(
                     resGeometryKey,
-                    device => new GeometryResource(newGeometry)));
+                    _ => new GeometryResource(newGeometry)));
                 modelContainer.AddResource(new ImportedResourceInfo(
                     resMaterialKey,
-                    device => new StandardMaterialResource()));
+                    _ => new StandardMaterialResource()));
                 var loadedMesh = new Mesh(resGeometryKey, resMaterialKey);
                 modelContainer.AddObject(loadedMesh);
 

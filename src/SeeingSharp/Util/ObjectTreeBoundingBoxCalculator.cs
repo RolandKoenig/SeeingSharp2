@@ -5,8 +5,8 @@ namespace SeeingSharp.Util
 {
     public class ObjectTreeBoundingBoxCalculator
     {
-        private static readonly Vector3 s_vectorMinInitial = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
-        private static readonly Vector3 s_vectorMaxInitial = new Vector3(float.MinValue, float.MinValue, float.MinValue);
+        private static readonly Vector3 s_vectorMinInitial = new(float.MaxValue, float.MaxValue, float.MaxValue);
+        private static readonly Vector3 s_vectorMaxInitial = new(float.MinValue, float.MinValue, float.MinValue);
 
         private Matrix4Stack _mStack;
         private Vector3 _minCoord;

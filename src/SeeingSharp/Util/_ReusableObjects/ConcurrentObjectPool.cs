@@ -17,9 +17,9 @@ namespace SeeingSharp.Util
     public class ConcurrentObjectPool<T> 
         where T : class
     {
-        private readonly T[] _items;
+        private readonly T?[] _items;
         private readonly Func<T> _generator;
-        private T _firstItem;
+        private T? _firstItem;
 
         public ConcurrentObjectPool(Func<T> generator, int size)
         {

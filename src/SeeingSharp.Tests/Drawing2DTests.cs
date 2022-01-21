@@ -302,9 +302,9 @@ namespace SeeingSharp.Tests
                 {
                     // Define object
                     var resGeometry = manipulator.AddResource(
-                        device => new GeometryResource(new CubeGeometryFactory()));
+                        _ => new GeometryResource(new CubeGeometryFactory()));
                     var resMaterial = manipulator.AddResource(
-                        device => new StandardMaterialResource(enableShaderGeneratedBorder: true));
+                        _ => new StandardMaterialResource(enableShaderGeneratedBorder: true));
 
                     var newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
                     newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
@@ -334,7 +334,7 @@ namespace SeeingSharp.Tests
             }
 
             // Finishing checks
-            Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+            Assert.IsTrue(GraphicsCore.Current.MainLoop!.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
         }
 
         [TestMethod]
@@ -396,10 +396,10 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     var resD2DTexture = manipulator.AddResource(
-                        device => new Direct2DTextureResource(d2dDrawingLayer, 256, 256));
+                        _ => new Direct2DTextureResource(d2dDrawingLayer, 256, 256));
                     var resD2DMaterial = manipulator.AddStandardMaterialResource(resD2DTexture);
                     var geoResource = manipulator.AddResource(
-                        device => new GeometryResource(new CubeGeometryFactory()));
+                        _ => new GeometryResource(new CubeGeometryFactory()));
 
                     var newMesh = manipulator.AddMeshObject(geoResource, resD2DMaterial);
                     newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
@@ -419,7 +419,7 @@ namespace SeeingSharp.Tests
             }
 
             // Finishing checks
-            Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+            Assert.IsTrue(GraphicsCore.Current.MainLoop!.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
         }
 
         [TestMethod]

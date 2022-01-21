@@ -26,7 +26,7 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets the device this view is using.
         /// </summary>
-        public EngineDevice Device => Owner.Device;
+        public EngineDevice? Device => Owner.Device;
 
         /// <summary>
         /// Gets the current scene rendered by this view.

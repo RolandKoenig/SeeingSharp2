@@ -17,7 +17,7 @@ namespace SeeingSharp.Drawing2D.Resources
     public class StandardBitmapResource : BitmapResource
     {
         // Resources
-        private D2D.ID2D1Bitmap[] _loadedBitmaps;
+        private D2D.ID2D1Bitmap?[] _loadedBitmaps;
 
         // Configuration
         private ResourceLink _resourceLink;
@@ -124,7 +124,7 @@ namespace SeeingSharp.Drawing2D.Resources
                     }
 
                     // Load the bitmap into Direct2D
-                    result = engineDevice.FakeRenderTarget2D.CreateBitmapFromWicBitmap(
+                    result = engineDevice.FakeRenderTarget2D!.CreateBitmapFromWicBitmap(
                         bitmapSource,
                         new D2D.BitmapProperties(new PixelFormat(
                             Format.B8G8R8A8_UNorm,

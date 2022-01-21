@@ -16,10 +16,9 @@ namespace SeeingSharp.SampleContainer.Basics2D.Rectangle
         typeof(RectangleSampleSettings))]
     public class RectangleSample : SampleBase
     {
-        private RectangleSampleSettings _castedSettings;
-
-        private SolidBrushResource _fillBrush;
-        private SolidBrushResource _fillBrushTransparent;
+        private RectangleSampleSettings? _castedSettings;
+        private SolidBrushResource? _fillBrush;
+        private SolidBrushResource? _fillBrushTransparent;
 
         public override Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
@@ -30,7 +29,7 @@ namespace SeeingSharp.SampleContainer.Basics2D.Rectangle
             _fillBrush = new SolidBrushResource(Color4.Gray);
             _fillBrushTransparent = new SolidBrushResource(Color4.Gray, 0.5f);
 
-            return Task.FromResult<object>(null);
+            return Task.FromResult<object?>(null);
         }
 
         public override async Task OnInitRenderingWindowAsync(RenderLoop mainOrChildRenderLoop)
@@ -41,26 +40,26 @@ namespace SeeingSharp.SampleContainer.Basics2D.Rectangle
                 this.Draw2DBackground(graphics);
 
                 // Calculate rectangle location
-                var width = _castedSettings.Width;
-                var height = _castedSettings.Height;
+                var width = _castedSettings!.Width;
+                var height = _castedSettings!.Height;
                 var rectToDraw = new RectangleF(
                     graphics.ScreenWidth / 2f - width / 2f,
                     graphics.ScreenHeight / 2f - height / 2f,
                     width, height);
 
                 // Draw the rectangle
-                if (_castedSettings.Rounded)
+                if (_castedSettings!.Rounded)
                 {
                     graphics.FillRoundedRectangle(
                         rectToDraw,
                         _castedSettings.RoundedRadius, _castedSettings.RoundedRadius,
-                        _castedSettings.Transparent ? _fillBrushTransparent : _fillBrush);
+                        _castedSettings!.Transparent ? _fillBrushTransparent! : _fillBrush!);
                 }
                 else
                 {
                     graphics.FillRectangle(
                         rectToDraw,
-                        _castedSettings.Transparent ? _fillBrushTransparent : _fillBrush);
+                        _castedSettings!.Transparent ? _fillBrushTransparent! : _fillBrush!);
                 }
             });
         }

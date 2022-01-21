@@ -11,24 +11,24 @@ namespace SeeingSharp
 {
     internal class SeeingSharpWpfExtensions : ISeeingSharpExtensions
     {
-        public IEnumerable<IInputHandler> CreateInputHandlers()
+        public IEnumerable<IInputHandler>? CreateInputHandlers()
         {
             yield return new WpfKeyAndMouseInputHandler();
         }
 
-        public IEnumerable<IDisposable> CreateAdditionalDeviceHandlers(EngineDevice device)
+        public IEnumerable<IDisposable>? CreateAdditionalDeviceHandlers(EngineDevice device)
         {
             yield return new DeviceHandlerD3D9(
-                device.Internals.Adapter,
+                device.Internals.Adapter!,
                 device.IsSoftware);
         }
 
-        public IEnumerable<IModelImporter> CreateModelImporters()
+        public IEnumerable<IModelImporter>? CreateModelImporters()
         {
             return null;
         }
 
-        public IEnumerable<IModelExporter> CreateModelExporters()
+        public IEnumerable<IModelExporter>? CreateModelExporters()
         {
             return null;
         }

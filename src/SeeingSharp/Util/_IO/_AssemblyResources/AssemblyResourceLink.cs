@@ -66,7 +66,7 @@ namespace SeeingSharp.Util
         /// <param name="type">The type from which to get the assembly and namespace.</param>
         /// <param name="resourceFile">The resource file.</param>
         public AssemblyResourceLink(Type type, string resourceFile)
-            : this(type.GetTypeInfo().Assembly, type.Namespace, resourceFile)
+            : this(type.GetTypeInfo().Assembly, type.Namespace ?? "", resourceFile)
         {
         }
 

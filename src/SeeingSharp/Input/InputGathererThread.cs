@@ -19,11 +19,11 @@ namespace SeeingSharp.Input
         private ConcurrentQueue<Action> _commandQueue;
         private ConcurrentQueue<InputFrame> _recoveredInputFrames;
         private ConcurrentQueue<InputFrame> _gatheredInputFrames;
-        private InputFrame _lastInputFrame;
+        private InputFrame? _lastInputFrame;
         private List<InputStateBase> _cachedStates;
 
         // Thread local state
-        private List<IInputHandler> _globalInputHandlers;
+        private List<IInputHandler>? _globalInputHandlers;
         private Dictionary<IInputEnabledView, List<IInputHandler>> _viewInputHandlers;
 
         /// <summary>
@@ -51,8 +51,7 @@ namespace SeeingSharp.Input
             // Query for all input handlers on first tick
             if (_globalInputHandlers == null)
             {
-                _globalInputHandlers = InputHandlerFactory.CreateInputHandlersForGlobal();
-
+                _globalInputHandlers = InputHandlerFactory.CreateInputHandlersForGlobal() ?? new List<IInputHandler>(0);
                 foreach (var actInputHandler in _globalInputHandlers)
                 {
                     actInputHandler.Start(null);
@@ -103,10 +102,6 @@ namespace SeeingSharp.Input
             foreach (var actViewSpecificHandlers in _viewInputHandlers)
             {
                 var renderLoop = actViewSpecificHandlers.Key.RenderLoop;
-                if (renderLoop == null)
-                {
-                    continue;
-                }
 
                 foreach (var actInputHandler in actViewSpecificHandlers.Value)
                 {

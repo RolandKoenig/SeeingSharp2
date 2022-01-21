@@ -23,7 +23,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public void Dispose()
         {
-            _onDisposeAction?.Invoke();
+            _onDisposeAction.Invoke();
         }
     }
 }

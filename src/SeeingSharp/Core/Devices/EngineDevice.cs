@@ -17,7 +17,7 @@ namespace SeeingSharp.Core.Devices
         private SampleDescription _sampleDescWithAntialiasing;
 
         // Main members
-        private ISeeingSharpExtensionProvider _extensionProvider;
+        private ISeeingSharpExtensionProvider? _extensionProvider;
         private EngineFactory _engineFactory;
         private EngineAdapterInfo _adapterInfo;
         private bool _isDisposed;
@@ -150,11 +150,32 @@ namespace SeeingSharp.Core.Devices
         /// <summary>
         /// Gets the Direct3D 11 device object.
         /// </summary>
-        internal D3D11.ID3D11Device1 DeviceD3D11_1 => _handlerD3D11.Device1;
+        internal D3D11.ID3D11Device1 DeviceD3D11_1
+        {
+            get
+            {
+                if (_handlerD3D11 == null) { throw new ObjectDisposedException(nameof(EngineDevice)); }
+                return _handlerD3D11.Device1;
+            }
+        }
 
-        internal D2D.ID2D1Device DeviceD2D => _handlerD2D.Device;
+        internal D2D.ID2D1Device DeviceD2D
+        {
+            get
+            {
+                if (_handlerD2D == null) { throw new ObjectDisposedException(nameof(EngineDevice)); }
+                return _handlerD2D.Device;
+            }
+        }
 
-        internal D2D.ID2D1DeviceContext DeviceContextD2D => _handlerD2D.DeviceContext;
+        internal D2D.ID2D1DeviceContext DeviceContextD2D
+        {
+            get
+            {
+                if (_handlerD2D == null) { throw new ObjectDisposedException(nameof(EngineDevice)); }
+                return _handlerD2D.DeviceContext;
+            }
+        }
 
         /// <summary>
         /// A unique value that identifies the adapter.
@@ -168,7 +189,14 @@ namespace SeeingSharp.Core.Devices
         /// <summary>
         /// Gets the main Direct3D 11 context object.
         /// </summary>
-        internal D3D11.ID3D11DeviceContext DeviceImmediateContextD3D11 => _handlerD3D11.ImmediateContext;
+        internal D3D11.ID3D11DeviceContext DeviceImmediateContextD3D11
+        {
+            get
+            {
+                if (_handlerD3D11 == null) { throw new ObjectDisposedException(nameof(EngineDevice)); }
+                return _handlerD3D11.ImmediateContext;
+            }
+        }
 
         /// <summary>
         /// Gets the current device configuration.
@@ -178,12 +206,19 @@ namespace SeeingSharp.Core.Devices
         /// <summary>
         /// Gets the DXGI factory object.
         /// </summary>
-        internal IDXGIFactory2 FactoryDxgi => _handlerDXGI.Factory;
+        internal IDXGIFactory2 FactoryDxgi
+        {
+            get
+            {
+                if (_handlerDXGI == null) { throw new ObjectDisposedException(nameof(EngineDevice)); }
+                return _handlerDXGI.Factory;
+            }
+        }
 
         /// <summary>
         /// Gets the 2D render target which can be used to load 2D resources on this device.
         /// </summary>
-        internal D2D.ID2D1RenderTarget FakeRenderTarget2D
+        internal D2D.ID2D1RenderTarget? FakeRenderTarget2D
         {
             get;
             set;
@@ -230,7 +265,7 @@ namespace SeeingSharp.Core.Devices
         /// Initializes a new instance of the <see cref="EngineDevice"/> class.
         /// </summary>
         internal EngineDevice(
-            ISeeingSharpExtensionProvider extensionProvider,
+            ISeeingSharpExtensionProvider? extensionProvider,
             EngineFactory engineFactory, GraphicsCoreConfiguration coreConfiguration,
             EngineAdapterInfo adapterInfo)
         {
@@ -291,7 +326,7 @@ namespace SeeingSharp.Core.Devices
         /// <summary>
         /// Tries to get a device handler which was created by an extension.
         /// </summary>
-        public T TryGetAdditionalDeviceHandler<T>()
+        public T? TryGetAdditionalDeviceHandler<T>()
             where T : class
         {
             if(_isDisposed) { throw new ObjectDisposedException(nameof(EngineDevice)); }
@@ -502,7 +537,7 @@ namespace SeeingSharp.Core.Devices
             // Very important to check possible antialiasing
             // More on the used technique
             //  see http://msdn.microsoft.com/en-us/library/windows/apps/dn458384.aspx
-            var formatSupport = _handlerD3D11.Device1.CheckFormatSupport(GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT);
+            var formatSupport = _handlerD3D11!.Device1.CheckFormatSupport(GraphicsHelper.Internals.DEFAULT_TEXTURE_FORMAT);
 
             if ((formatSupport & D3D11.FormatSupport.MultisampleRendertarget) != D3D11.FormatSupport.MultisampleRendertarget) { return false; }
             if ((formatSupport & D3D11.FormatSupport.MultisampleResolve) != D3D11.FormatSupport.MultisampleResolve) { return false; }
@@ -561,9 +596,9 @@ namespace SeeingSharp.Core.Devices
         {
             private EngineDevice _host;
 
-            public IDXGIAdapter1 Adapter => _host._handlerDXGI?.Adapter;
+            public IDXGIAdapter1? Adapter => _host._handlerDXGI?.Adapter;
 
-            public D2D.ID2D1RenderTarget FakeRenderTarget2D => _host.FakeRenderTarget2D;
+            public D2D.ID2D1RenderTarget? FakeRenderTarget2D => _host.FakeRenderTarget2D;
 
             public IDXGIFactory2 FactoryDxgi => _host.FactoryDxgi;
 

@@ -21,8 +21,8 @@ namespace SeeingSharp.Tests.Util
 
             Assert.IsTrue(calculator.RawDataEntries == 1000);
 
-            DurationPerformanceResult calcResult1 = null;
-            DurationPerformanceResult calcResult2 = null;
+            var calcResult1 = new DurationPerformanceResult(calculator.ActivityName);
+            var calcResult2 = new DurationPerformanceResult(calculator.ActivityName);
             calculator.Calculate(
                 ref calcResult1,
                 start.AddSeconds(1500), start.AddSeconds(1600));

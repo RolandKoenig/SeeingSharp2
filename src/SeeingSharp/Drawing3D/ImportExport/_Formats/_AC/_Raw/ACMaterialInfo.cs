@@ -7,7 +7,7 @@ namespace SeeingSharp.Drawing3D.ImportExport
         public Color4 Ambient;
         public Color4 Diffuse;
         public Color4 Emissive;
-        public string Name;
+        public string Name = string.Empty;
         public float Shininess;
         public Color4 Specular;
     }

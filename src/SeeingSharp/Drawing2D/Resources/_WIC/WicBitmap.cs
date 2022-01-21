@@ -9,7 +9,7 @@ namespace SeeingSharp.Drawing2D.Resources
     public class WicBitmap : IDisposable
     {
         // Native resource
-        private IWICBitmap _wicBitmap;
+        private IWICBitmap? _wicBitmap;
 
         public int Width
         {
@@ -40,14 +40,16 @@ namespace SeeingSharp.Drawing2D.Resources
 
         public static async Task<WicBitmap> FromWicBitmapSourceAsync(WicBitmapSource bitmapSource, int width, int height)
         {
-            IWICBitmap wicBitmap = null;
+            GraphicsCore.EnsureGraphicsSupportLoaded();
+
+            IWICBitmap? wicBitmap = null;
             await Task.Factory.StartNew(() =>
             {
-                GraphicsCore.Current.FactoryWIC.CreateBitmapFromSourceRect(
+                wicBitmap = GraphicsCore.Current.FactoryWIC!.CreateBitmapFromSourceRect(
                     bitmapSource.BitmapSource, 
                     0, 0, width, height);
             });
-            return new WicBitmap(wicBitmap);
+            return new WicBitmap(wicBitmap!);
         }
 
         /// <summary>
@@ -56,13 +58,14 @@ namespace SeeingSharp.Drawing2D.Resources
         /// <param name="resourceLink">The source of the resource.</param>
         public static async Task<WicBitmap> FromResourceLinkAsync(ResourceLink resourceLink)
         {
-            IWICBitmap wicBitmap = null;
+            GraphicsCore.EnsureGraphicsSupportLoaded();
+
+            IWICBitmap? wicBitmap = null;
 
             using (var inStream = await resourceLink.OpenInputStreamAsync())
-
             using (var bitmapSourceWrapper = await SeeingSharpUtil.CallAsync(() => GraphicsHelper.Internals.LoadBitmapSource(inStream)))
             {
-                GraphicsCore.Current.FactoryWIC.CreateBitmapFromSource(
+                wicBitmap = GraphicsCore.Current.FactoryWIC!.CreateBitmapFromSource(
                     bitmapSourceWrapper.Converter, 
                     BitmapCreateCacheOption.CacheOnLoad);
             }

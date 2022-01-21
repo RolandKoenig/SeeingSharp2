@@ -81,7 +81,7 @@ namespace SeeingSharp.Components
         /// <param name="manipulator">The manipulator of the scene we attach to.</param>
         /// <param name="correspondingView">The view which attached this component.</param>
         /// <returns></returns>
-        protected override PerSceneContext Attach(SceneManipulator manipulator, ViewInformation correspondingView)
+        protected override PerSceneContext Attach(SceneManipulator manipulator, ViewInformation? correspondingView)
         {
             var result = new PerSceneContext
             {
@@ -100,14 +100,14 @@ namespace SeeingSharp.Components
         /// <param name="manipulator">The manipulator of the scene we attach to.</param>
         /// <param name="correspondingView">The view which attached this component.</param>
         /// <param name="componentContext">A context variable containing all created objects during call of Attach.</param>
-        protected override void Detach(SceneManipulator manipulator, ViewInformation correspondingView, PerSceneContext componentContext)
+        protected override void Detach(SceneManipulator manipulator, ViewInformation? correspondingView, PerSceneContext componentContext)
         {
 
         }
 
-        protected override void Update(SceneRelatedUpdateState updateState, ViewInformation correspondingView, PerSceneContext componentContext)
+        protected override void Update(SceneRelatedUpdateState updateState, ViewInformation? correspondingView, PerSceneContext componentContext)
         {
-            var actCamera = correspondingView.Camera;
+            var actCamera = correspondingView?.Camera;
             if (actCamera == null)
             {
                 return;
@@ -115,7 +115,7 @@ namespace SeeingSharp.Components
 
             foreach (var actInputFrame in updateState.InputFrames)
             {
-                foreach (var actInputState in actInputFrame.GetInputStates(correspondingView))
+                foreach (var actInputState in actInputFrame.GetInputStates(correspondingView!))
                 {
                     switch (actInputState)
                     {

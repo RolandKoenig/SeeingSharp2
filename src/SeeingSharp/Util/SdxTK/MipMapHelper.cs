@@ -3,6 +3,8 @@
 
 using System;
 
+#nullable disable
+
 namespace SeeingSharp.Util.SdxTK
 {
     internal static class MipMapHelper

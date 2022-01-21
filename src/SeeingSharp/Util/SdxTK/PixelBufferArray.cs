@@ -1,6 +1,8 @@
 ﻿// This code is ported from SharpDX.Toolkit
 // see: https://github.com/sharpdx/Toolkit
 
+#nullable disable
+
 namespace SeeingSharp.Util.SdxTK
 {
     /// <summary>

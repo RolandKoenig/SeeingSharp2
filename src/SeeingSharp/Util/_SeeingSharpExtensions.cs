@@ -15,7 +15,7 @@ namespace SeeingSharp.Util
     /// </summary>
     internal static class CommonExtensions
     {
-        private static readonly CultureInfo s_cultureEn = new CultureInfo("en-GB");
+        private static readonly CultureInfo s_cultureEn = new("en-GB");
 
         /// <summary>
         /// "Forgets" the given task, but still tries to dispatch exception somewhere the user / developer
@@ -25,15 +25,6 @@ namespace SeeingSharp.Util
         public static async void FireAndForget(this Task asyncAction)
         {
             await asyncAction;
-        }
-
-        public static void CreateDummyObjectUntilCapacityReached<T>(this List<T> list, int targetCapacity)
-        {
-            if (list.Capacity < targetCapacity) { list.Capacity = targetCapacity; }
-            while (list.Count < targetCapacity)
-            {
-                list.Add(default);
-            }
         }
 
         /// <summary>
@@ -70,7 +61,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Determines whether the specified collection contains the given string.
         /// </summary>
-        /// <param name="collection">The collection to be searched for the gien string.</param>
+        /// <param name="collection">The collection to be searched for the given string.</param>
         /// <param name="compareString">The string used for comparison.</param>
         /// <param name="comparison">The comparison mode.</param>
         public static bool ContainsString(this IEnumerable<string> collection, string compareString, StringComparison comparison = StringComparison.CurrentCulture)

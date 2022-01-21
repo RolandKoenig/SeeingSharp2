@@ -28,7 +28,7 @@ namespace SeeingSharp.Drawing3D.ImportExport
         // State
         private bool _isFinished;
         private bool _isValid;
-        private Exception _finishException;
+        private Exception? _finishException;
 
         public ResourceLink Source { get; }
 
@@ -60,13 +60,13 @@ namespace SeeingSharp.Drawing3D.ImportExport
         /// <summary>
         /// An exception occurred during loading. This property may be set, when loading is finished and IsValid=false.
         /// </summary>
-        public Exception FinishException => _finishException;
+        public Exception? FinishException => _finishException;
 
         /// <summary>
         /// The root object which gets generated when loading is finished successfully.
         /// All objects loaded are children of this root object.
         /// </summary>
-        public ScenePivotObject RootObject { get; private set; }
+        public ScenePivotObject? RootObject { get; private set; }
 
         /// <summary>
         /// The bounding volume within the space of the root object.

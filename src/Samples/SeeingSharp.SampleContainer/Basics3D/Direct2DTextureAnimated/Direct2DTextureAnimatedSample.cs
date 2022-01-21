@@ -23,16 +23,16 @@ namespace SeeingSharp.SampleContainer.Basics3D.Direct2DTextureAnimated
         typeof(SampleSettingsWith3D))]
     public class Direct2DTextureAnimatedSample : SampleBase
     {
-        private SolidBrushResource _animatedRectBrush;
-        private SolidBrushResource _solidBrush;
-        private TextFormatResource _textFormat;
+        private SolidBrushResource? _animatedRectBrush;
+        private SolidBrushResource? _solidBrush;
+        private TextFormatResource? _textFormat;
 
         public override async Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
             mainRenderLoop.EnsureNotNull(nameof(mainRenderLoop));
 
             // Whole animation takes x milliseconds
-            const float animationMillis = 3000f;
+            const float ANIMATION_MILLIS = 3000f;
 
             // 2D rendering is made here
             _solidBrush = new SolidBrushResource(Color4.Gray);
@@ -48,7 +48,7 @@ namespace SeeingSharp.SampleContainer.Basics3D.Direct2DTextureAnimated
                     _solidBrush);
 
                 // Recalculate current location of the red rectangle on each frame
-                var currentLocation = (float)(DateTime.UtcNow - DateTime.UtcNow.Date).TotalMilliseconds % animationMillis / animationMillis;
+                var currentLocation = (float)(DateTime.UtcNow - DateTime.UtcNow.Date).TotalMilliseconds % ANIMATION_MILLIS / ANIMATION_MILLIS;
                 var rectPos = this.GetAnimationLocation(currentLocation, 165f, 165f);
                 graphics.FillRectangle(
                     new RectangleF(
@@ -67,12 +67,12 @@ namespace SeeingSharp.SampleContainer.Basics3D.Direct2DTextureAnimated
 
                 // Define Direct2D texture resource
                 var resD2DTexture = manipulator.AddResource(
-                    device => new Direct2DTextureResource(d2DDrawingLayer, 256, 256));
+                    _ => new Direct2DTextureResource(d2DDrawingLayer, 256, 256));
                 var resD2DMaterial = manipulator.AddStandardMaterialResource(resD2DTexture);
 
                 // Create cube geometry resource
                 var resGeometry = manipulator.AddResource(
-                    device => new GeometryResource(new CubeGeometryFactory()));
+                    _ => new GeometryResource(new CubeGeometryFactory()));
 
                 // Create cube object
                 var cubeMesh = new Mesh(resGeometry, resD2DMaterial);
@@ -104,7 +104,7 @@ namespace SeeingSharp.SampleContainer.Basics3D.Direct2DTextureAnimated
             // Add object filter for viewbox culling
             mainOrChildRenderLoop.ObjectFilters.Add(new SceneViewboxObjectFilter());
 
-            return Task.FromResult<object>(null);
+            return Task.FromResult<object?>(null);
         }
 
         public override void OnSampleClosed()
@@ -116,22 +116,22 @@ namespace SeeingSharp.SampleContainer.Basics3D.Direct2DTextureAnimated
             SeeingSharpUtil.SafeDispose(ref _textFormat);
         }
 
-        public (float x, float y) GetAnimationLocation(float procentualLoc, float maxWidth, float maxHeight)
+        public (float x, float y) GetAnimationLocation(float percentalLoc, float maxWidth, float maxHeight)
         {
             var xPos = 0f;
             var yPos = 0f;
-            var currentLineLoc = procentualLoc % 0.25f / 0.25f;
-            if (procentualLoc < 0.25f)
+            var currentLineLoc = percentalLoc % 0.25f / 0.25f;
+            if (percentalLoc < 0.25f)
             {
                 xPos = maxWidth * currentLineLoc;
                 yPos = 0f;
             }
-            else if (procentualLoc < 0.5f)
+            else if (percentalLoc < 0.5f)
             {
                 xPos = maxWidth;
                 yPos = maxHeight * currentLineLoc;
             }
-            else if (procentualLoc < 0.75f)
+            else if (percentalLoc < 0.75f)
             {
                 xPos = maxWidth - maxWidth * currentLineLoc;
                 yPos = maxHeight;

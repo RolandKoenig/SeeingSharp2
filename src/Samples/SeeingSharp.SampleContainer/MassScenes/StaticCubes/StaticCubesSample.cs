@@ -25,7 +25,7 @@ namespace SeeingSharp.SampleContainer.MassScenes.StaticCubes
         {
             mainRenderLoop.EnsureNotNull(nameof(mainRenderLoop));
 
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
 
         public override Task OnInitRenderingWindowAsync(RenderLoop mainOrChildRenderLoop)
@@ -43,7 +43,7 @@ namespace SeeingSharp.SampleContainer.MassScenes.StaticCubes
             // Add object filter for viewbox culling
             mainOrChildRenderLoop.ObjectFilters.Add(new SceneViewboxObjectFilter());
 
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
 
         public override async Task OnReloadAsync(RenderLoop mainRenderLoop, SampleSettings settings)

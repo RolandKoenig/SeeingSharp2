@@ -7,14 +7,14 @@ namespace SeeingSharp.Drawing3D.ImportExport
     {
         public List<ACObjectInfo> Children;
         public int KidCount;
-        public string Name;
+        public string? Name;
         public Matrix4x4 Rotation;
         public List<ACSurface> Surfaces;
-        public string Texture;
+        public string? Texture;
         public Vector2 TextureRepeat;
         public Vector3 Translation;
         public ACObjectType Type;
-        public string Url;
+        public string? Url;
         public List<ACVertex> Vertices;
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace SeeingSharp.Drawing3D.ImportExport
         /// </returns>
         public override string ToString()
         {
-            return Name;
+            return Name ?? string.Empty;
         }
 
         /// <summary>

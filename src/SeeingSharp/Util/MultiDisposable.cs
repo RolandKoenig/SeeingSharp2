@@ -13,13 +13,10 @@ namespace SeeingSharp.Util
 
         public void Dispose()
         {
-            if (_collection == null) { return; }
-
             foreach (var actDisposable in _collection)
             {
                 actDisposable.Dispose();
             }
-            _collection = null;
         }
     }
 }

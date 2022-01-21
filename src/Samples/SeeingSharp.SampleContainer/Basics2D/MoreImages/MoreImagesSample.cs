@@ -17,9 +17,8 @@ namespace SeeingSharp.SampleContainer.Basics2D.MoreImages
         typeof(ImageSampleSettings))]
     public class MoreImagesSample : SampleBase
     {
-        private ImageSampleSettings _castedSettings;
-
-        private StandardBitmapResource _bitmap;
+        private ImageSampleSettings? _castedSettings;
+        private StandardBitmapResource? _bitmap;
 
         public override Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
@@ -32,7 +31,7 @@ namespace SeeingSharp.SampleContainer.Basics2D.MoreImages
                     this.GetType(),
                     "SimpleImage.png"));
 
-            return Task.FromResult<object>(null);
+            return Task.FromResult<object?>(null);
         }
 
         public override async Task OnInitRenderingWindowAsync(RenderLoop mainOrChildRenderLoop)
@@ -43,12 +42,12 @@ namespace SeeingSharp.SampleContainer.Basics2D.MoreImages
                 this.Draw2DBackground(graphics);
 
                 // Get all parameters
-                var transparency = _castedSettings.Transparent ? 0.4f : 1f;
-                var imageWidth = EngineMath.Clamp(_castedSettings.ImageWidth, 5, 500);
+                var transparency = _castedSettings!.Transparent ? 0.4f : 1f;
+                var imageWidth = EngineMath.Clamp(_castedSettings!.ImageWidth, 5, 500);
                 var imageHeight = imageWidth;
                 var screenWidth = (int)graphics.ScreenWidth;
                 var screenHeight = (int)graphics.ScreenHeight;
-                var interpolationMode = _castedSettings.HighQuality
+                var interpolationMode = _castedSettings!.HighQuality
                     ? BitmapInterpolationMode.NearestNeighbor
                     : BitmapInterpolationMode.Linear;
 
@@ -58,7 +57,7 @@ namespace SeeingSharp.SampleContainer.Basics2D.MoreImages
                     for (var loopY = 0; loopY < screenHeight / imageHeight + 1; loopY++)
                     {
                         graphics.DrawBitmap(
-                            _bitmap,
+                            _bitmap!,
                             new RectangleF(
                                 loopX * (imageWidth + 3), loopY * (imageHeight + 3),
                                 imageWidth, imageHeight),

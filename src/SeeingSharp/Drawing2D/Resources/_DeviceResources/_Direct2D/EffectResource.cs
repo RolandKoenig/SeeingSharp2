@@ -13,7 +13,7 @@ namespace SeeingSharp.Drawing2D.Resources
         private IImageInternal[] _effectInputs;
 
         // Resources
-        private D2D.ID2D1Effect[] _loadedEffects;
+        private D2D.ID2D1Effect?[] _loadedEffects;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EffectResource"/> class.
@@ -26,11 +26,13 @@ namespace SeeingSharp.Drawing2D.Resources
             _effectInputs = new IImageInternal[effectInputs.Length];
             for (var loop = 0; loop < effectInputs.Length; loop++)
             {
-                _effectInputs[loop] = effectInputs[loop] as IImageInternal;
-                if (_effectInputs[loop] == null)
+                var castedInput = effectInputs[loop] as IImageInternal;
+                if (castedInput == null)
                 {
                     throw new SeeingSharpGraphicsException("Unable to process effect input at index " + loop + "!");
                 }
+
+                _effectInputs[loop] = castedInput;
             }
         }
 
@@ -60,7 +62,7 @@ namespace SeeingSharp.Drawing2D.Resources
         /// <summary>
         /// Tries to get the <see cref="BitmapResource"/> which is the source of this image.
         /// </summary>
-        BitmapResource IImageInternal.TryGetSourceBitmap()
+        BitmapResource? IImageInternal.TryGetSourceBitmap()
         {
             if (_effectInputs.Length > 0)
             {

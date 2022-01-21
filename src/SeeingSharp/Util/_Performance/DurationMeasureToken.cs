@@ -14,6 +14,8 @@ namespace SeeingSharp.Util
 
         public DurationMeasureToken(PerformanceAnalyzer owner)
         {
+            this.Activity = string.Empty;
+
             _owner = owner;
             _stopwatch = new Stopwatch();
         }

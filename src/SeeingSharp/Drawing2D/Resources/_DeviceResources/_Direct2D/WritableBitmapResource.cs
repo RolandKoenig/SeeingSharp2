@@ -18,7 +18,7 @@ namespace SeeingSharp.Drawing2D.Resources
         private double _dpiY;
 
         // Resources
-        private D2D.ID2D1Bitmap[] _loadedBitmaps;
+        private D2D.ID2D1Bitmap?[] _loadedBitmaps;
 
         public override int PixelWidth => _bitmapSize.Width;
 
@@ -79,6 +79,7 @@ namespace SeeingSharp.Drawing2D.Resources
             {
                 throw new ObjectDisposedException(this.GetType().Name);
             }
+            GraphicsCore.EnsureGraphicsSupportLoaded();
 
             var result = _loadedBitmaps[engineDevice.DeviceIndex];
             if (result == null)
@@ -86,7 +87,7 @@ namespace SeeingSharp.Drawing2D.Resources
                 using var mapped = new MemoryMappedTexture<int>(_bitmapSize);
 
                 // Load the bitmap initially
-                result = engineDevice.FakeRenderTarget2D.CreateBitmap(
+                result = engineDevice.FakeRenderTarget2D!.CreateBitmap(
                     new Size(_bitmapSize.Width, _bitmapSize.Height),
                     mapped.Pointer, mapped.Width * 4,
                     new D2D.BitmapProperties(_pixelFormat, (float)_dpiX, (float)_dpiY));

@@ -18,14 +18,14 @@ namespace SeeingSharp.SampleContainer.Postprocessing.Focus
         typeof(FocusSampleSettings))]
     public class FocusSample : SampleBase
     {
-        private FocusSampleSettings _sampleSettings;
-        private Mesh _focusMesh;
+        private FocusSampleSettings? _castedSettings;
+        private Mesh? _focusMesh;
 
         public override async Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
             mainRenderLoop.EnsureNotNull(nameof(mainRenderLoop));
 
-            _sampleSettings = (FocusSampleSettings) settings;
+            _castedSettings = (FocusSampleSettings) settings;
 
             await mainRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
@@ -37,12 +37,12 @@ namespace SeeingSharp.SampleContainer.Postprocessing.Focus
 
                     // Create the focus effect and attach it to a new 'Focus' layer
                     var keyPostprocess = manipulator.AddResource(
-                        device => new FocusPostprocessEffectResource());
+                        _ => new FocusPostprocessEffectResource());
                     var focusLayer = manipulator.AddLayer("Focus");
                     focusLayer.PostprocessEffectKey = keyPostprocess;
 
                     var resGeometry = manipulator.AddResource(
-                        device => new GeometryResource(new CubeGeometryFactory()));
+                        _ => new GeometryResource(new CubeGeometryFactory()));
                     var resMaterial = manipulator.AddStandardMaterialResource();
 
                     var frontMesh = manipulator.AddMeshObject(resGeometry, defaultLayer.Name, resMaterial);
@@ -78,7 +78,7 @@ namespace SeeingSharp.SampleContainer.Postprocessing.Focus
             // Add object filter for viewbox culling
             mainOrChildRenderLoop.ObjectFilters.Add(new SceneViewboxObjectFilter());
 
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
 
         public override void Update()
@@ -86,13 +86,13 @@ namespace SeeingSharp.SampleContainer.Postprocessing.Focus
             base.Update();
 
             // Show/Hide the focus mesh depending on the user's configuration
-            if (_sampleSettings.ShowFocusEffect)
+            if (_castedSettings!.ShowFocusEffect)
             {
-                _focusMesh.VisibilityTestMethod = VisibilityTestMethod.ByObjectFilters;
+                _focusMesh!.VisibilityTestMethod = VisibilityTestMethod.ByObjectFilters;
             }
             else
             {
-                _focusMesh.VisibilityTestMethod = VisibilityTestMethod.ForceHidden;
+                _focusMesh!.VisibilityTestMethod = VisibilityTestMethod.ForceHidden;
             }
         }
 

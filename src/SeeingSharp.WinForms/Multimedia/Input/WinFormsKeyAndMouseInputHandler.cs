@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
+using SeeingSharp.Checking;
 using SeeingSharp.Core;
 using SeeingSharp.Mathematics;
 using GDI = System.Drawing;
@@ -13,9 +14,9 @@ namespace SeeingSharp.Input
         private static readonly Dictionary<WinForms.Keys, WinVirtualKey> s_keyMappingDict;
 
         // References to the view
-        private WinForms.Control _currentControl;
-        private RenderLoop _renderLoop;
-        private IInputEnabledView _focusHandler;
+        private WinForms.Control? _currentControl;
+        private RenderLoop? _renderLoop;
+        private IInputEnabledView? _focusHandler;
 
         // Input states
         private MouseOrPointerState _stateMouseOrPointer;
@@ -76,10 +77,11 @@ namespace SeeingSharp.Input
         /// Starts input handling.
         /// </summary>
         /// <param name="viewObject">The view object (e. g. Direct3D11Canvas).</param>
-        public void Start(IInputEnabledView viewObject)
+        public void Start(IInputEnabledView? viewObject)
         {
-            _currentControl = viewObject as WinForms.Control;
+            viewObject.EnsureNotNull(nameof(viewObject));
 
+            _currentControl = viewObject as WinForms.Control;
             if (_currentControl == null)
             {
                 var inputControlHost = viewObject as IInputControlHost;
@@ -106,7 +108,7 @@ namespace SeeingSharp.Input
             }
 
             // Perform event registrations on UI thread
-            viewObject.RenderLoop.UiSynchronizationContext.Post(arg =>
+            viewObject!.RenderLoop.UiSynchronizationContext.Post(arg =>
             {
                 if (_currentControl == null)
                 {
@@ -182,7 +184,7 @@ namespace SeeingSharp.Input
         /// <summary>
         /// Called when the mouse enters the screen.
         /// </summary>
-        private void OnCurrentControl_MouseEnter(object sender, EventArgs e)
+        private void OnCurrentControl_MouseEnter(object? sender, EventArgs e)
         {
             if (_currentControl == null) { return; }
 
@@ -195,12 +197,12 @@ namespace SeeingSharp.Input
         /// <summary>
         /// Called when user clicks on this panel.
         /// </summary>
-        private void OnCurrentControl_MouseClick(object sender, WinForms.MouseEventArgs e)
+        private void OnCurrentControl_MouseClick(object? sender, WinForms.MouseEventArgs e)
         {
             _currentControl?.Focus();
         }
 
-        private void OnCurrentControl_MouseDown(object sender, WinForms.MouseEventArgs e)
+        private void OnCurrentControl_MouseDown(object? sender, WinForms.MouseEventArgs e)
         {
             if (_currentControl == null) { return; }
 
@@ -228,7 +230,7 @@ namespace SeeingSharp.Input
             }
         }
 
-        private void OnCurrentControl_MouseUp(object sender, WinForms.MouseEventArgs e)
+        private void OnCurrentControl_MouseUp(object? sender, WinForms.MouseEventArgs e)
         {
             if (_currentControl == null) { return; }
 
@@ -259,7 +261,7 @@ namespace SeeingSharp.Input
         /// <summary>
         /// Called when the mouse leaves the screen.
         /// </summary>
-        private void OnCurrentControl_MouseLeave(object sender, EventArgs e)
+        private void OnCurrentControl_MouseLeave(object? sender, EventArgs e)
         {
             if (_currentControl == null)
             {
@@ -275,9 +277,10 @@ namespace SeeingSharp.Input
         /// <summary>
         /// Called when the mouse moves on the screen.
         /// </summary>
-        private void OnCurrentControl_MouseMove(object sender, WinForms.MouseEventArgs e)
+        private void OnCurrentControl_MouseMove(object? sender, WinForms.MouseEventArgs e)
         {
-            if (_currentControl == null)
+            if ((_currentControl == null) ||
+                (_renderLoop == null))
             {
                 return;
             }
@@ -297,7 +300,7 @@ namespace SeeingSharp.Input
         /// <summary>
         /// Called when mouse wheel is used.
         /// </summary>
-        private void OnCurrentControl_MouseWheel(object sender, WinForms.MouseEventArgs e)
+        private void OnCurrentControl_MouseWheel(object? sender, WinForms.MouseEventArgs e)
         {
             if (_currentControl == null)
             {
@@ -313,7 +316,7 @@ namespace SeeingSharp.Input
         /// <summary>
         /// Called when a key is up
         /// </summary>
-        private void OnCurrentControl_KeyUp(object sender, WinForms.KeyEventArgs e)
+        private void OnCurrentControl_KeyUp(object? sender, WinForms.KeyEventArgs e)
         {
             if (_currentControl == null)
             {
@@ -332,7 +335,7 @@ namespace SeeingSharp.Input
         /// <summary>
         /// Called when a key is down.
         /// </summary>
-        private void OnCurrentControl_PreviewKeyDown(object sender, WinForms.PreviewKeyDownEventArgs e)
+        private void OnCurrentControl_PreviewKeyDown(object? sender, WinForms.PreviewKeyDownEventArgs e)
         {
             if (_currentControl == null)
             {
@@ -350,14 +353,14 @@ namespace SeeingSharp.Input
         /// <summary>
         /// Called when the focus on the target control is lost.
         /// </summary>
-        private void OnCurrentControl_LostFocus(object sender, EventArgs e)
+        private void OnCurrentControl_LostFocus(object? sender, EventArgs e)
         {
             if (_currentControl == null) { return; }
 
             _stateKeyboard.Internals.NotifyFocusLost();
         }
 
-        private void OnCurrentControl_GotFocus(object sender, EventArgs e)
+        private void OnCurrentControl_GotFocus(object? sender, EventArgs e)
         {
             if (_currentControl == null) { return; }
 

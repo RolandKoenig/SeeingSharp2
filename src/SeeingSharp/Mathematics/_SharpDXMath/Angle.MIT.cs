@@ -573,7 +573,7 @@ namespace SeeingSharp.Mathematics
         /// to the other. If the value is greater than zero, the current instance is
         /// greater than the other.
         /// </returns>
-        public int CompareTo(object other)
+        public int CompareTo(object? other)
         {
             if (other == null)
             {
@@ -677,7 +677,7 @@ namespace SeeingSharp.Mathematics
         /// <returns>
         /// A <see cref="System.String"/> that represents this instance.
         /// </returns>
-        public string ToString(IFormatProvider formatProvider)
+        public string ToString(IFormatProvider? formatProvider)
         {
             return string.Format(formatProvider, MathUtil.RadiansToDegrees(radians).ToString("0.##°"));
         }
@@ -690,7 +690,7 @@ namespace SeeingSharp.Mathematics
         /// <returns>
         /// A <see cref="System.String"/> that represents this instance.
         /// </returns>
-        public string ToString(string format, IFormatProvider formatProvider)
+        public string ToString(string? format, IFormatProvider? formatProvider)
         {
             if (format == null)
             {
@@ -720,7 +720,7 @@ namespace SeeingSharp.Mathematics
         /// its value is equal to the value of the current SeeingSharp.Angle
         /// object; otherwise, false.
         /// </returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             return obj is AngleSingle && this == (AngleSingle)obj;
         }

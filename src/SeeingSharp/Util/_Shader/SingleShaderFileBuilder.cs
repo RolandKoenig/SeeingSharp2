@@ -28,7 +28,7 @@ namespace SeeingSharp.Util
         {
             using (var streamReader = new StreamReader(resourceLink.OpenInputStream()))
             {
-                string actLine = null;
+                string? actLine = null;
                 while (null != (actLine = streamReader.ReadLine()))
                 {
                     // Handle all lines except include
@@ -53,7 +53,7 @@ namespace SeeingSharp.Util
 
                     // Build the link to the include file
                     var fileName = includeFilePathParts[includeFilePathParts.Length - 1];
-                    ResourceLink resLinkInner = null;
+                    ResourceLink? resLinkInner;
                     if (includeFilePathParts.Length < 2)
                     {
                         resLinkInner = resourceLink.GetForAnotherFile(fileName);

@@ -18,7 +18,7 @@ namespace SeeingSharp.SampleContainer
 
         public virtual Task OnReloadAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
 
         public virtual void Update()

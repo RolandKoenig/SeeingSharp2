@@ -30,13 +30,13 @@ namespace SeeingSharp.Mathematics
             return boolValue == other.boolValue;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj))
             {
                 return false;
             }
-            return obj is Bool && this.Equals((Bool)obj);
+            return obj is Bool casted && this.Equals(casted);
         }
 
         public override int GetHashCode()

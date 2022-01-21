@@ -49,7 +49,7 @@ namespace SeeingSharp.Core
             if(_isDisposed){ throw new ObjectDisposedException(nameof(RenderPassDump)); }
 
             var actDumpEntry = new RenderPassDumpEntry(dumpKey, _size);
-            using (var colorBufferTexture = ComObject.As<D3D11.ID3D11Texture2D>(renderTargets.ColorBuffer.Resource))
+            using (var colorBufferTexture = ComObject.As<D3D11.ID3D11Texture2D>(renderTargets.ColorBuffer!.Resource))
             {
                 _uploaderColor!.UploadToMemoryMappedTexture(colorBufferTexture, actDumpEntry.BufferColor);
             }

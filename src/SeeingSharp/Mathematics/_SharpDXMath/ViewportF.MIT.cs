@@ -129,13 +129,13 @@ namespace SeeingSharp.Mathematics
         /// <returns>
         /// <c>true</c> if the specified object is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (ReferenceEquals(null, obj))
             {
                 return false;
             }
-            return obj is ViewportF && this.Equals((ViewportF)obj);
+            return obj is ViewportF casted && this.Equals(casted);
         }
 
         /// <summary>

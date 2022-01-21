@@ -9,6 +9,8 @@ using SeeingSharp.Util.Sdx;
 using Vortice.DXGI;
 using D3D11 = Vortice.Direct3D11;
 
+#nullable disable
+
 namespace SeeingSharp.Util.SdxTK
 {
     /// <summary>

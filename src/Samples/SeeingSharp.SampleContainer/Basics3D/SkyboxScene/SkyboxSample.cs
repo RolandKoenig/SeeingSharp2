@@ -72,7 +72,7 @@ namespace SeeingSharp.SampleContainer.Basics3D.SkyboxScene
             // Add object filter for viewbox culling
             mainOrChildRenderLoop.ObjectFilters.Add(new SceneViewboxObjectFilter());
 
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
     }
 }

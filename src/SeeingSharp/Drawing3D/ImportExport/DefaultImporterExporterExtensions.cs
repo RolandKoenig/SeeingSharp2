@@ -10,17 +10,17 @@ namespace SeeingSharp.Drawing3D.ImportExport
 {
     public class DefaultImporterExporterExtensions : ISeeingSharpExtensions
     {
-        public IEnumerable<IDisposable> CreateAdditionalDeviceHandlers(EngineDevice device)
+        public IEnumerable<IDisposable>? CreateAdditionalDeviceHandlers(EngineDevice device)
         {
             return null;
         }
 
-        public IEnumerable<IInputHandler> CreateInputHandlers()
+        public IEnumerable<IInputHandler>? CreateInputHandlers()
         {
             return null;
         }
 
-        public IEnumerable<IModelExporter> CreateModelExporters()
+        public IEnumerable<IModelExporter>? CreateModelExporters()
         {
             return null;
         }

@@ -24,22 +24,22 @@ namespace SeeingSharp.Views
 {
     public class SeeingSharpRendererElement : Image, IInputEnabledView, ISeeingSharpPainter, IRenderLoopHost, INotifyPropertyChanged
     {
-        private static Duration s_maxImageLockDuration = new Duration(TimeSpan.FromMilliseconds(100.0));
+        private static Duration s_maxImageLockDuration = new(TimeSpan.FromMilliseconds(100.0));
 
         // Some members..
-        private HigherD3DImageSource _d3dImageSource;
-        private WriteableBitmap _fallbackWpfImageSource;
+        private HigherD3DImageSource? _d3dImageSource;
+        private WriteableBitmap? _fallbackWpfImageSource;
         private int _lastRecreateWidth;
         private int _lastRecreateHeight;
         private int _lockImageErrorCount;
 
         // All needed direct3d resources
-        private D3D11.ID3D11Texture2D _backBufferForWpf;
-        private D3D11.ID3D11Texture2D _backBufferD3D11;
-        private D3D11.ID3D11Texture2D _depthBuffer;
-        private D3D11.ID3D11RenderTargetView _renderTarget;
-        private D3D11.ID3D11DepthStencilView _renderTargetDepth;
-        private IDXGISurface _renderTarget2DDxgi;
+        private D3D11.ID3D11Texture2D? _backBufferForWpf;
+        private D3D11.ID3D11Texture2D? _backBufferD3D11;
+        private D3D11.ID3D11Texture2D? _depthBuffer;
+        private D3D11.ID3D11RenderTargetView? _renderTarget;
+        private D3D11.ID3D11DepthStencilView? _renderTargetDepth;
+        private IDXGISurface? _renderTarget2DDxgi;
 
         // Some size related properties
         private int _renderTargetHeight;
@@ -55,7 +55,7 @@ namespace SeeingSharp.Views
         public RenderLoop RenderLoop { get; }
 
         [Browsable(false)]
-        public EngineDevice Device => this.RenderLoop?.Device;
+        public EngineDevice? Device => this.RenderLoop.Device;
 
         /// <summary>
         /// Does the target control have focus?
@@ -125,12 +125,6 @@ namespace SeeingSharp.Views
         [Browsable(false)]
         public bool IsOperational => this.RenderLoop.IsOperational;
 
-        public EngineDevice SelectedDevice
-        {
-            get => this.RenderLoop.Device;
-            set => this.RenderLoop.SetRenderingDevice(value);
-        }
-
         public GraphicsViewConfiguration Configuration => this.RenderLoop.Configuration;
 
         public Size CurrentViewSize
@@ -155,7 +149,7 @@ namespace SeeingSharp.Views
             {
                 if (!GraphicsCore.IsLoaded)
                 {
-                    return new EngineDevice[0];
+                    return Array.Empty<EngineDevice>();
                 }
 
                 return GraphicsCore.Current.Devices;
@@ -193,7 +187,7 @@ namespace SeeingSharp.Views
         public ViewInformation ViewInformation => this.RenderLoop.ViewInformation;
 
         // State members for handling rendering problems
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SeeingSharpRendererElement"/> class.
@@ -212,9 +206,16 @@ namespace SeeingSharp.Views
             this.HorizontalAlignment = HorizontalAlignment.Stretch;
             this.VerticalAlignment = VerticalAlignment.Stretch;
 
+            // Determine SynchronizationContext
+            var syncContext = SynchronizationContext.Current;
+            if (syncContext == null)
+            {
+                throw new SeeingSharpException("Unable to determine the SynchronizationContext of the current thread!");
+            }
+
             // Create the RenderLoop object
             this.RenderLoop = new RenderLoop(
-                SynchronizationContext.Current, this, this.IsInDesignMode());
+                syncContext, this, this.IsInDesignMode());
             this.RenderLoop.DeviceChanged += this.OnRenderLoop_DeviceChanged;
             this.RenderLoop.CurrentViewSizeChanged += this.OnRenderLoop_CurrentViewSizeChanged;
 
@@ -342,12 +343,12 @@ namespace SeeingSharp.Views
             this.RenderLoop.RegisterRenderLoop();
         }
 
-        private void OnRenderLoop_DeviceChanged(object sender, EventArgs e)
+        private void OnRenderLoop_DeviceChanged(object? sender, EventArgs e)
         {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.SelectedDevice)));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.Device)));
         }
 
-        private void OnRenderLoop_CurrentViewSizeChanged(object sender, EventArgs e)
+        private void OnRenderLoop_CurrentViewSizeChanged(object? sender, EventArgs e)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CurrentViewSize)));
         }
@@ -505,7 +506,7 @@ namespace SeeingSharp.Views
             _lastRecreateHeight = height;
 
             // Return all generated objects
-            return Tuple.Create(_backBufferD3D11, _renderTarget, _depthBuffer, _renderTargetDepth, viewPort, new GDI.Size(width, height), this.GetDpiScaling());
+            return Tuple.Create(_backBufferD3D11!, _renderTarget!, _depthBuffer!, _renderTargetDepth!, viewPort, new GDI.Size(width, height), this.GetDpiScaling());
         }
 
         /// <summary>
@@ -569,7 +570,7 @@ namespace SeeingSharp.Views
 
                 // Try to lock the D3DImage
                 var isLocked = false;
-                using (GraphicsCore.Current.PerformanceAnalyzer.Internals.BeginMeasureActivityDuration("Render.Lock"))
+                using (GraphicsCore.Current.PerformanceAnalyzer!.Internals.BeginMeasureActivityDuration("Render.Lock"))
                 {
                     isLocked = _d3dImageSource.TryLock(s_maxImageLockDuration);
                 }

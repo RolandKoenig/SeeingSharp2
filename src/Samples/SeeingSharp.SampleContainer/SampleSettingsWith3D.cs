@@ -13,7 +13,7 @@ namespace SeeingSharp.SampleContainer
             {
                 if (this.RenderLoop == null) { return; }
 
-                if (value != this.RenderLoop?.Configuration.AntialiasingEnabled)
+                if (value != this.RenderLoop.Configuration.AntialiasingEnabled)
                 {
                     this.RenderLoop.Configuration.AntialiasingEnabled = value;
                     this.RaisePropertyChanged(nameof(this.EnableAntialiasing));
@@ -29,7 +29,7 @@ namespace SeeingSharp.SampleContainer
             {
                 if (this.RenderLoop == null) { return; }
 
-                if (value != this.RenderLoop?.Configuration.WireframeEnabled)
+                if (value != this.RenderLoop.Configuration.WireframeEnabled)
                 {
                     this.RenderLoop.Configuration.WireframeEnabled = value;
                     this.RaisePropertyChanged(nameof(this.EnableWireframe));
@@ -45,7 +45,7 @@ namespace SeeingSharp.SampleContainer
             {
                 if (this.RenderLoop == null) { return; }
 
-                if (value != this.RenderLoop?.Configuration.AntialiasingQuality)
+                if (value != this.RenderLoop.Configuration.AntialiasingQuality)
                 {
                     this.RenderLoop.Configuration.AntialiasingQuality = value;
                     this.RaisePropertyChanged(nameof(this.AntialiasingQuality));

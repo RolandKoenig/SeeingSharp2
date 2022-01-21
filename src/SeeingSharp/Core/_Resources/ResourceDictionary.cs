@@ -410,7 +410,13 @@ namespace SeeingSharp.Core
                 // Try to query for existing default resources if given key is empty
                 if (resourceKey.IsEmpty)
                 {
-                    resourceKey = new NamedOrGenericKey(typeof(T).FullName);
+                    var fullTypeName = typeof(T).FullName;
+                    if (string.IsNullOrEmpty(fullTypeName))
+                    {
+                        throw new SeeingSharpException("Unable to get a type name from given resource type!");
+                    }
+
+                    resourceKey = new NamedOrGenericKey(fullTypeName);
                     if (this.ContainsResource(resourceKey)) { result = this.GetResource<T>(resourceKey); }
                 }
 
@@ -517,7 +523,7 @@ namespace SeeingSharp.Core
             /// <returns>
             /// The element in the collection at the current position of the enumerator.
             /// </returns>
-            public Resource Current => _resourceInfoEnumerator.Current!.Resource;
+            public Resource Current => _resourceInfoEnumerator.Current.Resource;
 
             /// <summary>
             /// Gets the element in the collection at the current position of the enumerator.

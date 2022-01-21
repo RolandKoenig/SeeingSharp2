@@ -257,7 +257,7 @@ namespace SeeingSharp.Core
                             }
 
                             // Get all input frames
-                            _host.InputGatherer.QueryForCurrentFrames(inputFrames);
+                            _host.InputGatherer!.QueryForCurrentFrames(inputFrames);
 
                             // Build new UpdateState object
                             var updateTime = renderStopWatch.Elapsed;
@@ -361,7 +361,7 @@ namespace SeeingSharp.Core
                     }
 
                     // Trigger calculation of performance values
-                    _host.PerformanceAnalyzer.CalculateResults();
+                    _host.PerformanceAnalyzer!.CalculateResults();
                 }
             });
 

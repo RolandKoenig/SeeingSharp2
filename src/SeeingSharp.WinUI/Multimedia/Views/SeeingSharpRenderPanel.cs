@@ -52,10 +52,9 @@ namespace SeeingSharp.Views
             set => _painter.DiscardPresent = value;
         }
 
-        public EngineDevice SelectedDevice
+        public EngineDevice? SelectedDevice
         {
             get => _painter.RenderLoop.Device;
-            set => _painter.RenderLoop.SetRenderingDevice(value);
         }
 
         public GraphicsViewConfiguration Configuration => _painter.RenderLoop.Configuration;
@@ -100,7 +99,7 @@ namespace SeeingSharp.Views
 
         public ViewInformation ViewInformation => this.RenderLoop.ViewInformation;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SeeingSharpRenderPanel"/> class.
@@ -112,12 +111,12 @@ namespace SeeingSharp.Views
             _painter.RenderLoop.DeviceChanged += this.OnRenderLoop_DeviceChanged;
         }
 
-        private void OnRenderLoop_DeviceChanged(object sender, EventArgs e)
+        private void OnRenderLoop_DeviceChanged(object? sender, EventArgs e)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.SelectedDevice)));
         }
 
-        private void OnRenderLoop_CurrentViewSizeChanged(object sender, EventArgs e)
+        private void OnRenderLoop_CurrentViewSizeChanged(object? sender, EventArgs e)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CurrentViewSize)));
         }

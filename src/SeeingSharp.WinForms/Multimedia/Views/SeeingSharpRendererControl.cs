@@ -29,18 +29,18 @@ namespace SeeingSharp.Views
         private RenderLoop _renderLoop;
 
         // Resources for Direct3D 11
-        private IDXGISwapChain1 _swapChain;
-        private D3D11.ID3D11Device _renderDevice;
-        private D3D11.ID3D11RenderTargetView _renderTarget;
-        private D3D11.ID3D11DepthStencilView _renderTargetDepth;
-        private D3D11.ID3D11Texture2D _backBuffer;
-        private D3D11.ID3D11Texture2D _depthBuffer;
+        private IDXGISwapChain1? _swapChain;
+        private D3D11.ID3D11Device? _renderDevice;
+        private D3D11.ID3D11RenderTargetView? _renderTarget;
+        private D3D11.ID3D11DepthStencilView? _renderTargetDepth;
+        private D3D11.ID3D11Texture2D? _backBuffer;
+        private D3D11.ID3D11Texture2D? _depthBuffer;
 
         // Generic members
-        private GDI.Brush _backBrush;
-        private GDI.Brush _foreBrushText;
-        private GDI.Brush _backBrushText;
-        private GDI.Pen _borderPen;
+        private GDI.Brush? _backBrush;
+        private GDI.Brush? _foreBrushText;
+        private GDI.Brush? _backBrushText;
+        private GDI.Pen? _borderPen;
 
         // Misc
         private bool _isMouseInside;
@@ -108,7 +108,7 @@ namespace SeeingSharp.Views
         }
 
         [Browsable(false)]
-        public EngineDevice Device => _renderLoop?.Device;
+        public EngineDevice? Device => _renderLoop.Device;
 
         /// <summary>
         /// True if the control is connected with the main rendering loop.
@@ -123,7 +123,7 @@ namespace SeeingSharp.Views
         /// <summary>
         /// Raises when mouse was down a short amount of time.
         /// </summary>
-        public event EventHandler<MouseEventArgs> MouseClickEx;
+        public event EventHandler<MouseEventArgs>? MouseClickEx;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:SeeingSharp.Views.SeeingSharpRendererControl" /> class.
@@ -141,15 +141,22 @@ namespace SeeingSharp.Views
             _lastSizeChange = DateTime.MinValue;
             _mouseButtonDownTime = new Dictionary<MouseButtons, DateTime>();
 
+            // 
+            var syncContext = SynchronizationContext.Current;
+            if (syncContext == null)
+            {
+                throw new SeeingSharpException("Unable to determine the current SynchronizationContext!");
+            }
+
             // Create the render loop
             var backColor = this.BackColor;
-            _renderLoop = new RenderLoop(SynchronizationContext.Current, this, this.DesignMode);
+            _renderLoop = new RenderLoop(syncContext, this, this.DesignMode);
             _renderLoop.ClearColor = backColor.Color4FromGdiColor();
             _renderLoop.DiscardRendering = true;
             _renderLoop.Internals.CallPresentInUIThread = false;
-            this.Disposed += (sender, eArgs) =>
+            this.Disposed += (_, _) =>
             {
-                _renderLoop?.Dispose();
+                _renderLoop.Dispose();
             };
 
             // Perform default initialization logic (if not called before)
@@ -170,7 +177,7 @@ namespace SeeingSharp.Views
         /// <summary>
         /// Gets the scene object below the cursor.
         /// </summary>
-        public async Task<SceneObject> GetObjectBelowCursorAsync()
+        public async Task<SceneObject?> GetObjectBelowCursorAsync()
         {
             if (!_isMouseInside) { return null; }
 
@@ -183,11 +190,11 @@ namespace SeeingSharp.Views
         /// <summary>
         /// Gets all objects that are below the cursor.
         /// </summary>
-        public async Task<List<SceneObject>> GetObjectsBelowCursorAsync()
+        public async Task<List<SceneObject>?> GetObjectsBelowCursorAsync()
         {
             if (!_isMouseInside)
             {
-                return new List<SceneObject>();
+                return null;
             }
 
             return await _renderLoop.PickObjectAsync(
@@ -235,7 +242,7 @@ namespace SeeingSharp.Views
                 _renderLoop.IsDeviceLost)
             {
                 // Paint using System.Drawing
-                e.Graphics.FillRectangle(_backBrush, e.ClipRectangle);
+                e.Graphics.FillRectangle(_backBrush!, e.ClipRectangle);
 
                 // Paint a simple grid on the background to have something for the Designer
                 if (!GraphicsCore.IsLoaded)
@@ -246,16 +253,16 @@ namespace SeeingSharp.Views
                     if (targetRect.Width > 10 &&
                        targetRect.Height > 10)
                     {
-                        e.Graphics.FillRectangle(_backBrushText, targetRect);
+                        e.Graphics.FillRectangle(_backBrushText!, targetRect);
                         e.Graphics.DrawString(
                             TEXT_GRAPHICS_NOT_INITIALIZED, this.Font,
-                            _foreBrushText, targetRect.X, targetRect.Y);
+                            _foreBrushText!, targetRect.X, targetRect.Y);
                     }
                 }
 
                 // Paint a border rectangle
                 e.Graphics.DrawRectangle(
-                    _borderPen,
+                    _borderPen!,
                     new GDI.Rectangle(0, 0, this.Width - 1, this.Height - 1));
             }
         }
@@ -435,12 +442,11 @@ namespace SeeingSharp.Views
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        private void OnDisposed(object sender, EventArgs e)
+        private void OnDisposed(object? sender, EventArgs e)
         {
             if (!this.DesignMode)
             {
                 _renderLoop.Dispose();
-                _renderLoop = null;
             }
         }
 
@@ -509,7 +515,7 @@ namespace SeeingSharp.Views
             if (this.Height <= 0) { return false; }
 
             // Find parent form
-            Form parentForm = null;
+            Form? parentForm = null;
             var actParent = this.Parent;
             while (parentForm == null && actParent != null)
             {
@@ -568,7 +574,7 @@ namespace SeeingSharp.Views
             //Present all rendered stuff on screen
             try
             {
-                _swapChain.Present(0, PresentFlags.DoNotWait, new PresentParameters());
+                _swapChain!.Present(0, PresentFlags.DoNotWait, new PresentParameters());
             }
             catch (SharpGenException ex)
             {

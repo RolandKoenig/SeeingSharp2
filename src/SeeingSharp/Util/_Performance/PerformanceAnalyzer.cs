@@ -252,7 +252,7 @@ namespace SeeingSharp.Util
         {
             public DurationPerformanceCalculator Calculator;
             public RingBuffer<DurationPerformanceResult> Results;
-            public DurationPerformanceResult CurrentResult;
+            public DurationPerformanceResult? CurrentResult;
 
             public CalculatorInfo(DurationPerformanceCalculator calculator, int maxResultCount)
             {

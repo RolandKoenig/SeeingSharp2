@@ -9,8 +9,8 @@ namespace SeeingSharp.Core
 {
     public class DeviceHandlerD3D9 : IDisposable
     {
-        private D3D9.IDirect3DDevice9Ex _deviceEx;
-        private D3D9.IDirect3D9Ex _direct3DEx;
+        private D3D9.IDirect3DDevice9Ex? _deviceEx;
+        private D3D9.IDirect3D9Ex? _direct3DEx;
 
         /// <summary>
         /// Is the device successfully initialized?
@@ -20,12 +20,26 @@ namespace SeeingSharp.Core
         /// <summary>
         /// Gets the initialized device.
         /// </summary>
-        internal D3D9.IDirect3DDevice9Ex Device => _deviceEx;
+        internal D3D9.IDirect3DDevice9Ex Device
+        {
+            get
+            {
+                if (_deviceEx == null) { throw new ObjectDisposedException(nameof(DeviceHandlerD3D9)); }
+                return _deviceEx;
+            }
+        }
 
         /// <summary>
         /// Gets current DirectX context.
         /// </summary>
-        internal D3D9.IDirect3D9Ex Context => _direct3DEx;
+        internal D3D9.IDirect3D9Ex Context
+        {
+            get
+            {
+                if (_direct3DEx == null) { throw new ObjectDisposedException(nameof(DeviceHandlerD3D9)); }
+                return _direct3DEx;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeviceHandlerD3D9"/> class.

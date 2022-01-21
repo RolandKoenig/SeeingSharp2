@@ -9,7 +9,7 @@ namespace SeeingSharp.Drawing2D.Resources
     public class WicBitmapSource : IDisposable
     {
         // Native resources
-        private WicBitmapSourceInternal _wicBitmapSource;
+        private WicBitmapSourceInternal? _wicBitmapSource;
 
         public int Width
         {
@@ -29,7 +29,14 @@ namespace SeeingSharp.Drawing2D.Resources
             }
         }
 
-        internal IWICBitmapSource BitmapSource => _wicBitmapSource.Converter;
+        internal IWICBitmapSource BitmapSource
+        {
+            get
+            {
+                if (_wicBitmapSource == null) { throw new ObjectDisposedException(nameof(WicBitmapSource)); }
+                return _wicBitmapSource.Converter;
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WicBitmapSource"/> class.
@@ -46,7 +53,7 @@ namespace SeeingSharp.Drawing2D.Resources
         /// <param name="resourceLink">The source of the resource.</param>
         public static async Task<WicBitmapSource> FromResourceSourceAsync(ResourceLink resourceLink)
         {
-            WicBitmapSourceInternal wicBitmapSource = null;
+            WicBitmapSourceInternal? wicBitmapSource = null;
 
             using (var inStream = await resourceLink.OpenInputStreamAsync())
             {

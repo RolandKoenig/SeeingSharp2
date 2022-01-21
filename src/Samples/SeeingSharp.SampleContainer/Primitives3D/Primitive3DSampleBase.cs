@@ -14,7 +14,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D
 {
     public abstract class Primitive3DSampleBase : SampleBase
     {
-        private Primitive3DSampleSettings _sampleSettings;
+        private Primitive3DSampleSettings? _sampleSettings;
 
         public override Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
@@ -22,7 +22,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D
 
             _sampleSettings = (Primitive3DSampleSettings) settings;
 
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
 
         public override async Task OnReloadAsync(RenderLoop mainRenderLoop, SampleSettings settings)
@@ -40,7 +40,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D
 
                 // Create material resource
                 NamedOrGenericKey resMaterial;
-                if (_sampleSettings.Textured)
+                if (_sampleSettings!.Textured)
                 {
                     var resTexture = manipulator.AddTextureResource(
                         new AssemblyResourceLink(
@@ -85,7 +85,7 @@ namespace SeeingSharp.SampleContainer.Primitives3D
             // Add object filter for viewbox culling
             mainOrChildRenderLoop.ObjectFilters.Add(new SceneViewboxObjectFilter());
 
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
 
         /// <summary>

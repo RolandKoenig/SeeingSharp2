@@ -5,8 +5,9 @@ using SeeingSharp.Checking;
 namespace SeeingSharp.Util
 {
     public class SingleInstanceCollection<T> : IEnumerable<T>, ICollection<T>
+        where T : notnull
     {
-        private Dictionary<T, object> _dictionary;
+        private Dictionary<T, object?> _dictionary;
 
         /// <summary>
         /// Gets the number of elements contained in the <see cref="T:System.Collections.Generic.ICollection`1"></see>.
@@ -25,7 +26,7 @@ namespace SeeingSharp.Util
         /// </summary>
         public SingleInstanceCollection()
         {
-            _dictionary = new Dictionary<T, object>();
+            _dictionary = new Dictionary<T, object?>();
         }
 
         /// <summary>

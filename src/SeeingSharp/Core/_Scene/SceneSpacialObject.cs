@@ -820,7 +820,7 @@ namespace SeeingSharp.Core
             var renderParameters = this.RenderParameters[renderState.DeviceIndex];
             if (renderParameters == null)
             {
-                renderParameters = renderState.CurrentResources.GetResourceAndEnsureLoaded(
+                renderParameters = renderState.CurrentResources!.GetResourceAndEnsureLoaded(
                     _keySceneRenderParameters,
                     () => new ObjectRenderParameters());
                 this.RenderParameters.AddObject(renderParameters, renderState.DeviceIndex);

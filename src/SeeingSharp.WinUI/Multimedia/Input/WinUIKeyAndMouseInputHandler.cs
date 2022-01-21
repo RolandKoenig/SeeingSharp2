@@ -20,17 +20,17 @@ namespace SeeingSharp.Input
         private static readonly Dictionary<VirtualKey, WinVirtualKey> s_keyMappingDict;
 
         // State variables for camera movement
-        private PointerPoint _lastDragPoint;
+        private PointerPoint? _lastDragPoint;
 
         // Objects from outside
-        private SeeingSharpPanelPainter _painter;
-        private Panel _targetPanel;
-        private IInputEnabledView _viewInterface;
-        private RenderLoop _renderLoop;
-        private DispatcherQueue _dispatcherQueue;
+        private SeeingSharpPanelPainter? _painter;
+        private Panel? _targetPanel;
+        private IInputEnabledView? _viewInterface;
+        private RenderLoop? _renderLoop;
+        private DispatcherQueue? _dispatcherQueue;
 
         // Local resources
-        private Button _dummyButtonForFocus;
+        private Button? _dummyButtonForFocus;
         private bool _hasFocus;
 
         // Input states
@@ -77,7 +77,7 @@ namespace SeeingSharp.Input
         /// Starts input handling.
         /// </summary>
         /// <param name="viewObject">The view object (e. g. Direct3D11Canvas).</param>
-        public void Start(IInputEnabledView viewObject)
+        public void Start(IInputEnabledView? viewObject)
         {
             _painter = viewObject as SeeingSharpPanelPainter;
             if (_painter == null) { throw new ArgumentException("Unable to handle given view object!"); }
@@ -90,6 +90,8 @@ namespace SeeingSharp.Input
 
             _dispatcherQueue = _painter.DispatcherQueue;
             if (_dispatcherQueue == null) { throw new ArgumentException("Unable to get CoreDispatcher from target panel!"); }
+
+            if (_painter.TargetPanel == null) { throw new ArgumentException("Given painter is not attached to a view!"); }
 
             // Delegate start logic to UI thread
             var queued = _dispatcherQueue.TryEnqueue(DispatcherQueuePriority.Normal, () =>
@@ -153,16 +155,16 @@ namespace SeeingSharp.Input
                     dummyButtonForFocus.LostFocus -= this.OnDummyButtonForFocus_LostFocus;
                     dummyButtonForFocus.GotFocus -= this.OnDummyButtonForFocus_GotFocus;
 
-                    _targetPanel.Children.Remove(dummyButtonForFocus);
+                    _targetPanel!.Children.Remove(dummyButtonForFocus);
                 }
 
                 // Deregister all events
-                _targetPanel.PointerExited -= this.OnTargetPanel_PointerExited;
-                _targetPanel.PointerEntered -= this.OnTargetPanel_PointerEntered;
-                _targetPanel.PointerWheelChanged -= this.OnTargetPanel_PointerWheelChanged;
-                _targetPanel.PointerPressed -= this.OnTargetPanel_PointerPressed;
-                _targetPanel.PointerReleased -= this.OnTargetPanel_PointerReleased;
-                _targetPanel.PointerMoved -= this.OnTargetPanel_PointerMoved;
+                _targetPanel!.PointerExited -= this.OnTargetPanel_PointerExited;
+                _targetPanel!.PointerEntered -= this.OnTargetPanel_PointerEntered;
+                _targetPanel!.PointerWheelChanged -= this.OnTargetPanel_PointerWheelChanged;
+                _targetPanel!.PointerPressed -= this.OnTargetPanel_PointerPressed;
+                _targetPanel!.PointerReleased -= this.OnTargetPanel_PointerReleased;
+                _targetPanel!.PointerMoved -= this.OnTargetPanel_PointerMoved;
 
                 _targetPanel = null;
             });

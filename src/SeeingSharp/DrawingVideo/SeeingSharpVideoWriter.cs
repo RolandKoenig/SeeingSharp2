@@ -16,9 +16,9 @@ namespace SeeingSharp.DrawingVideo
         private Size _videoSize;
         private bool _hasStarted;
         private bool _hasFinished;
-        private Exception _startException;
-        private Exception _drawException;
-        private Exception _finishException;
+        private Exception? _startException;
+        private Exception? _drawException;
+        private Exception? _finishException;
 
         /// <summary>
         /// Gets the target file this VideoWriter is writing to.
@@ -38,7 +38,7 @@ namespace SeeingSharp.DrawingVideo
         /// <summary>
         /// The RenderLoop this VideoWriter is currently associated to.
         /// </summary>
-        public RenderLoop AssociatedRenderLoop
+        public RenderLoop? AssociatedRenderLoop
         {
             get;
             internal set;
@@ -49,16 +49,16 @@ namespace SeeingSharp.DrawingVideo
         /// </summary>
         public Size VideoSize => _videoSize;
 
-        public Exception LastStartException => _startException;
+        public Exception? LastStartException => _startException;
 
-        public Exception LastDrawException => _drawException;
+        public Exception? LastDrawException => _drawException;
 
-        public Exception LastFinishException => _finishException;
+        public Exception? LastFinishException => _finishException;
 
         /// <summary>
         /// Occurs when recording was finished (by success or failure).
         /// </summary>
-        public event EventHandler RecordingFinished;
+        public event EventHandler? RecordingFinished;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SeeingSharpVideoWriter"/> class.

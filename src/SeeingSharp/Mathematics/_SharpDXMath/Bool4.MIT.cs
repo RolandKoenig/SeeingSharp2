@@ -241,20 +241,15 @@ namespace SeeingSharp.Mathematics
         /// </returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.CurrentCulture, "X:{0} Y:{1} Z:{2} W:{3}", this.X, this.Y, this.Z, this.W);
+            return this.ToString(null, null);
         }
 
-        /// <summary>
-        /// Returns a <see cref="System.String"/> that represents this instance.
-        /// </summary>
-        /// <param name="format">The format.</param>
-        /// <param name="formatProvider">The format provider.</param>
-        /// <returns>
-        /// A <see cref="System.String"/> that represents this instance.
-        /// </returns>
-        public string ToString(string format, IFormatProvider formatProvider)
+        /// <inheritdoc />
+        public string ToString(string? format, IFormatProvider? formatProvider)
         {
-            return string.Format(formatProvider, format, this.X, this.Y, this.Z, this.W);
+            var checkedFormat = format ?? "X:{0} Y:{1} Z:{2} W:{3}";
+            var checkedFormatProvider = formatProvider ?? (IFormatProvider)CultureInfo.CurrentCulture;
+            return string.Format(checkedFormatProvider, checkedFormat, this.X, this.Y, this.Z, this.W);
         }
 
         /// <summary>
@@ -289,7 +284,7 @@ namespace SeeingSharp.Mathematics
         /// <returns>
         /// <c>true</c> if the specified <see cref = "System.Object" /> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
-        public override bool Equals(object value)
+        public override bool Equals(object? value)
         {
             if (value == null)
             {

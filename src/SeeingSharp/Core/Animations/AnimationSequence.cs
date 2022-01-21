@@ -328,7 +328,7 @@ namespace SeeingSharp.Core.Animations
         /// </summary>
         /// <param name="updateState">The current state of the update pass.</param>
         /// <param name="animationState">The current state of the animation.</param>
-        public AnimationUpdateResult Update(IAnimationUpdateState updateState, AnimationState animationState)
+        public AnimationUpdateResult Update(IAnimationUpdateState updateState, AnimationState? animationState)
         {
             var countAnimationsFinished = 0;
             var prevIgnorePauseState = updateState.IgnorePauseState;

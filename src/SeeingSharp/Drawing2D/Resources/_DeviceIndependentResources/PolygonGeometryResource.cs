@@ -10,7 +10,7 @@ namespace SeeingSharp.Drawing2D.Resources
     public class PolygonGeometryResource : Geometry2DResourceBase
     {
         // resources
-        private D2D.ID2D1PathGeometry _d2dGeometry;
+        private D2D.ID2D1PathGeometry? _d2dGeometry;
 
         public override bool IsDisposed => _d2dGeometry == null;
 
@@ -19,7 +19,8 @@ namespace SeeingSharp.Drawing2D.Resources
         /// </summary>
         public PolygonGeometryResource()
         {
-            _d2dGeometry = GraphicsCore.Current.FactoryD2D.CreatePathGeometry();
+            GraphicsCore.EnsureGraphicsSupportLoaded();
+            _d2dGeometry = GraphicsCore.Current.FactoryD2D!.CreatePathGeometry();
         }
 
         /// <summary>
@@ -38,10 +39,11 @@ namespace SeeingSharp.Drawing2D.Resources
         /// <param name="polygon">The polygon.</param>
         public unsafe void SetContent(Polygon2D polygon)
         {
+            this.EnsureNotNullOrDisposed("this");
             polygon.EnsureNotNull(nameof(polygon));
             polygon.Vertices.EnsureMoreThanZeroElements($"{nameof(polygon)}.{nameof(polygon.Vertices)}");
 
-            using (var geoSink = _d2dGeometry.Open())
+            using (var geoSink = _d2dGeometry!.Open())
             {
                 var vertices = polygon.Vertices;
 
@@ -75,7 +77,7 @@ namespace SeeingSharp.Drawing2D.Resources
             this.EnsureNotNullOrDisposed("this");
             otherGeometry.EnsureNotNullOrDisposed(nameof(otherGeometry));
 
-            var relation = _d2dGeometry.CompareWithGeometry(otherGeometry._d2dGeometry);
+            var relation = _d2dGeometry!.CompareWithGeometry(otherGeometry._d2dGeometry!);
 
             return
                 relation != D2D.GeometryRelation.Unknown &&
@@ -95,7 +97,7 @@ namespace SeeingSharp.Drawing2D.Resources
         /// </summary>
         internal override D2D.ID2D1Geometry GetGeometry()
         {
-            return _d2dGeometry;
+            return _d2dGeometry!;
         }
     }
 }

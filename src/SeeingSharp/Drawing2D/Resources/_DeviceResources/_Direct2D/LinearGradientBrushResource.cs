@@ -103,7 +103,7 @@ namespace SeeingSharp.Drawing2D.Resources
                 // Create the brush
                 result = new LoadedBrushResources
                 {
-                    GradientStops = engineDevice.FakeRenderTarget2D.CreateGradientStopCollection(
+                    GradientStops = engineDevice.FakeRenderTarget2D!.CreateGradientStopCollection(
                         d2dGradientStops,
                         (D2D.Gamma)this.Gamma, (D2D.ExtendMode)this.ExtendMode)
                 };
@@ -120,7 +120,7 @@ namespace SeeingSharp.Drawing2D.Resources
                         new D2D.BrushProperties
                         {
                             Opacity = _opacity,
-                            Transform = *(Matrix3x2*)&identityMatrix
+                            Transform = identityMatrix
                         },
                         result.GradientStops);
                 }
@@ -142,8 +142,8 @@ namespace SeeingSharp.Drawing2D.Resources
         /// </summary>
         private struct LoadedBrushResources
         {
-            public D2D.ID2D1GradientStopCollection GradientStops;
-            public D2D.ID2D1LinearGradientBrush Brush;
+            public D2D.ID2D1GradientStopCollection? GradientStops;
+            public D2D.ID2D1LinearGradientBrush? Brush;
         }
     }
 }

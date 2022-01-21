@@ -298,7 +298,7 @@ namespace SeeingSharp.Core
                 {
                     lastVertexBufferId = actChunk.Template.VertexBufferId;
                     deviceContext.IASetInputLayout(actChunk.InputLayout);
-                    deviceContext.IASetVertexBuffers(0, new D3D11.VertexBufferView(actChunk.Template.VertexBuffer, actChunk.Template.SizePerVertex));
+                    deviceContext.IASetVertexBuffers(0, new D3D11.VertexBufferView(actChunk.Template.VertexBuffer!, actChunk.Template.SizePerVertex));
                 }
 
                 // Apply IndexBuffer

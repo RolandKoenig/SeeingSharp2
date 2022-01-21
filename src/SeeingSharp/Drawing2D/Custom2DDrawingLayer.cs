@@ -5,13 +5,13 @@ namespace SeeingSharp.Drawing2D
 {
     public class Custom2DDrawingLayer
     {
-        private Action<Graphics2D> _draw2DAction;
-        private Action<UpdateState> _updateAction;
+        private Action<Graphics2D>? _draw2DAction;
+        private Action<UpdateState>? _updateAction;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Custom2DDrawingLayer"/> class.
         /// </summary>
-        public Custom2DDrawingLayer()
+        protected Custom2DDrawingLayer()
         {
 
         }

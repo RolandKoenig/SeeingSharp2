@@ -12,7 +12,7 @@ namespace SeeingSharp.Drawing3D.ImportExport
     {
         private Dictionary<NamedOrGenericKey, ExportGeometryInfo> _dicExportGeometry;
         private Dictionary<NamedOrGenericKey, ExportMaterialInfo> _dicExportMaterial;
-        private Dictionary<SceneObject, object> _dicOriginalObjects;
+        private Dictionary<SceneObject, object?> _dicOriginalObjects;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExportModelContainer"/> class.
@@ -21,7 +21,7 @@ namespace SeeingSharp.Drawing3D.ImportExport
         {
             _dicExportMaterial = new Dictionary<NamedOrGenericKey, ExportMaterialInfo>();
             _dicExportGeometry = new Dictionary<NamedOrGenericKey, ExportGeometryInfo>();
-            _dicOriginalObjects = new Dictionary<SceneObject, object>();
+            _dicOriginalObjects = new Dictionary<SceneObject, object?>();
         }
 
         public void AddExportGeometry(ExportGeometryInfo exportGeometry)

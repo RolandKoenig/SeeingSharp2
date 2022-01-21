@@ -5,12 +5,12 @@ namespace SeeingSharp.SampleContainer.Util
 {
     public class DelegateCommand : ICommand
     {
-        private Func<bool> _canExecuteAction;
+        private Func<bool>? _canExecuteAction;
 
         private Action _executeAction;
 
 #pragma warning disable
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged;
 #pragma warning restore
 
         public DelegateCommand(Action executeAction)
@@ -24,13 +24,13 @@ namespace SeeingSharp.SampleContainer.Util
             _canExecuteAction = canExecuteAction;
         }
 
-        public bool CanExecute(object parameter)
+        public bool CanExecute(object? parameter)
         {
             if (_canExecuteAction == null) { return true; }
             return _canExecuteAction();
         }
 
-        public void Execute(object parameter)
+        public void Execute(object? parameter)
         {
             _executeAction();
         }

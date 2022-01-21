@@ -24,9 +24,9 @@ namespace SeeingSharp.SampleContainer.Basics3D.Direct2DTexture
         typeof(Direct2DTextureSampleSettings))]
     public class Direct2DTextureSample : SampleBase
     {
-        private SolidBrushResource _solidBrush;
-        private SolidBrushResource _textBrush;
-        private TextFormatResource _textFormat;
+        private SolidBrushResource? _solidBrush;
+        private SolidBrushResource? _textBrush;
+        private TextFormatResource? _textFormat;
 
         public override async Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
@@ -62,12 +62,12 @@ namespace SeeingSharp.SampleContainer.Basics3D.Direct2DTexture
 
                 // Define Direct2D texture resource
                 var resD2DTexture = manipulator.AddResource(
-                    device => new Direct2DTextureResource(d2DDrawingLayer, 256, 256));
+                    _ => new Direct2DTextureResource(d2DDrawingLayer, 256, 256));
                 var resD2DMaterial = manipulator.AddStandardMaterialResource(resD2DTexture, enableShaderGeneratedBorder: true);
 
                 // Create cube geometry resource
                 var resGeometry = manipulator.AddResource(
-                    device => new GeometryResource(new CubeGeometryFactory()));
+                    _ => new GeometryResource(new CubeGeometryFactory()));
 
                 // Create cube object
                 var cubeMesh = new Mesh(resGeometry, resD2DMaterial);
@@ -99,7 +99,7 @@ namespace SeeingSharp.SampleContainer.Basics3D.Direct2DTexture
             // Add object filter for viewbox culling
             mainOrChildRenderLoop.ObjectFilters.Add(new SceneViewboxObjectFilter());
 
-            return Task.FromResult<object>(null);
+            return Task.FromResult<object?>(null);
         }
 
         public override void OnSampleClosed()

@@ -12,7 +12,7 @@ namespace SeeingSharp.Drawing2D.Resources
     public class SolidBrushResource : BrushResource
     {
         // Resources
-        private D2D.ID2D1SolidColorBrush[] _loadedBrushes;
+        private D2D.ID2D1SolidColorBrush?[] _loadedBrushes;
 
         public Color4 Color { get; }
 
@@ -41,7 +41,7 @@ namespace SeeingSharp.Drawing2D.Resources
         /// <param name="engineDevice">The device for which to unload the resource.</param>
         internal override void UnloadResources(EngineDevice engineDevice)
         {
-            D2D.ID2D1Brush brush = _loadedBrushes[engineDevice.DeviceIndex];
+            D2D.ID2D1Brush? brush = _loadedBrushes[engineDevice.DeviceIndex];
             if (brush != null)
             {
                 engineDevice.DeregisterDeviceResource(this);
@@ -68,7 +68,7 @@ namespace SeeingSharp.Drawing2D.Resources
             if (result == null)
             {
                 // Load the brush
-                result = engineDevice.FakeRenderTarget2D.CreateSolidColorBrush(
+                result = engineDevice.FakeRenderTarget2D!.CreateSolidColorBrush(
                     MathConverter.RawFromColor4(this.Color),
                     new D2D.BrushProperties
                     {

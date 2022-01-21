@@ -5,6 +5,8 @@ using System;
 using System.Runtime.InteropServices;
 using Vortice.DXGI;
 
+#nullable disable
+
 namespace SeeingSharp.Util.SdxTK
 {
     /// <summary>

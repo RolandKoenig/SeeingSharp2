@@ -35,14 +35,14 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     var keyPostprocess = manipulator.AddResource(
-                        device => new FocusPostprocessEffectResource(false, 0f));
+                        _ => new FocusPostprocessEffectResource(false, 0f));
 
                     var defaultLayer = manipulator.GetLayer(Scene.DEFAULT_LAYER_NAME);
                     var focusLayer = manipulator.AddLayer("Focus");
                     focusLayer.PostprocessEffectKey = keyPostprocess;
 
                     var resGeometry = manipulator.AddResource(
-                        device => new GeometryResource(new CubeGeometryFactory()));
+                        _ => new GeometryResource(new CubeGeometryFactory()));
                     var resMaterial = manipulator.AddStandardMaterialResource();
 
                     var frontMesh = manipulator.AddMeshObject(resGeometry, defaultLayer.Name, resMaterial);
@@ -73,7 +73,7 @@ namespace SeeingSharp.Tests
             }
 
             // Finishing checks
-            Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+            Assert.IsTrue(GraphicsCore.Current.MainLoop!.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
         }
 
         [TestMethod]
@@ -95,7 +95,7 @@ namespace SeeingSharp.Tests
                 await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
                 {
                     var keyPostprocess = manipulator.AddResource(
-                        device => new EdgeDetectPostprocessEffectResource
+                        _ => new EdgeDetectPostprocessEffectResource
                         {
                             Thickness = 10f
                         });
@@ -104,7 +104,7 @@ namespace SeeingSharp.Tests
                     defaultLayer.PostprocessEffectKey = keyPostprocess;
 
                     var resGeometry = manipulator.AddResource(
-                        device => new GeometryResource(new CubeGeometryFactory()));
+                        _ => new GeometryResource(new CubeGeometryFactory()));
                     var resMaterial = manipulator.AddStandardMaterialResource();
 
                     var newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
@@ -126,7 +126,7 @@ namespace SeeingSharp.Tests
             }
 
             // Finishing checks
-            Assert.IsTrue(GraphicsCore.Current.MainLoop.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+            Assert.IsTrue(GraphicsCore.Current.MainLoop!.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
         }
     }
 }

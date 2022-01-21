@@ -15,21 +15,23 @@ namespace SeeingSharp.SampleContainer
         [Browsable(false)]
         public bool ThrottleRecreateRequest { get; set; } = true;
 
-        protected RenderLoop RenderLoop
+        protected RenderLoop? RenderLoop
         {
             get;
             private set;
         }
 
-        protected SampleMetadata SampleMetadata
+        protected SampleMetadata? SampleMetadata
         {
             get;
             private set;
         }
-        public event EventHandler RecreateRequest;
+        public event EventHandler? RecreateRequest;
 
         public virtual IEnumerable<SampleCommand> GetCommands()
         {
+            if (this.SampleMetadata == null) { yield break; }
+
             yield return new SampleCommand(
                 "Show Source",
                 () => PlatformDependentMethods.OpenUrlInBrowser(this.SampleMetadata.SourceCodeUrl),

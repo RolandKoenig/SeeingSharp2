@@ -191,7 +191,7 @@ namespace SeeingSharp.Util
             Array.Copy(_backingArray, 0, array, arrayIndex, _size);
         }
 
-        public T Find(Predicate<T> match)
+        public T? Find(Predicate<T> match)
         {
             match.EnsureNotNull(nameof(match));
 
@@ -484,7 +484,7 @@ namespace SeeingSharp.Util
             {
                 Array.Copy(_backingArray, index + 1, _backingArray, index, _size - index);
             }
-            _backingArray[_size] = default;
+            _backingArray[_size] = default!;
             _version++;
         }
 
@@ -525,7 +525,7 @@ namespace SeeingSharp.Util
             this.Sort(0, this.Count, comparer);
         }
 
-        public void Sort(int index, int count, IComparer<T> comparer)
+        public void Sort(int index, int count, IComparer<T>? comparer)
         {
             if (index < 0)
             {
@@ -543,7 +543,7 @@ namespace SeeingSharp.Util
             _version++;
         }
 
-        public void Sort(Comparison<T> comparison)
+        public void Sort(Comparison<T?> comparison)
         {
             comparison.EnsureNotNull(nameof(comparison));
 
@@ -596,7 +596,7 @@ namespace SeeingSharp.Util
                 _mUnsafeList = mUnsafeList;
                 _index = 0;
                 _version = mUnsafeList._version;
-                _current = default;
+                _current = default!;
             }
 
             public void Dispose()
@@ -623,7 +623,7 @@ namespace SeeingSharp.Util
 
                 }
                 _index = _mUnsafeList._size + 1;
-                _current = default;
+                _current = default!;
                 return false;
             }
 
@@ -634,7 +634,7 @@ namespace SeeingSharp.Util
                     throw new InvalidOperationException("Collection was modified while enumerating");
                 }
                 _index = 0;
-                _current = default;
+                _current = default!;
             }
 
             public T Current => _current;
@@ -647,7 +647,7 @@ namespace SeeingSharp.Util
                     {
                         throw new InvalidOperationException();
                     }
-                    return this.Current;
+                    return this.Current!;
                 }
             }
         }
@@ -657,14 +657,14 @@ namespace SeeingSharp.Util
         //*********************************************************************
         private class FunctionComparer : IComparer<T>
         {
-            private Comparison<T> _comparison;
+            private Comparison<T?> _comparison;
 
-            public FunctionComparer(Comparison<T> comparison)
+            public FunctionComparer(Comparison<T?> comparison)
             {
                 _comparison = comparison;
             }
 
-            public int Compare(T x, T y)
+            public int Compare(T? x, T? y)
             {
                 return _comparison(x, y);
             }

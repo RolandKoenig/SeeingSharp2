@@ -75,7 +75,7 @@ namespace SeeingSharp.Drawing3D.ImportExport
         /// </summary>
         /// <param name="inStream">The stream to load the data from.</param>
         /// <param name="originalSource">The original source of the generated geometry.</param>
-        public static Geometry ImportGeometry(Stream inStream, ResourceLink originalSource)
+        public static Geometry ImportGeometry(Stream inStream, ResourceLink? originalSource)
         {
             try
             {
@@ -126,9 +126,8 @@ namespace SeeingSharp.Drawing3D.ImportExport
         /// </summary>
         internal static ACFileInfo LoadFile(Stream inStream)
         {
-            ACFileInfo result = null;
-
-            StreamReader reader = null;
+            ACFileInfo? result = null;
+            StreamReader? reader = null;
             try
             {
                 reader = new StreamReader(inStream);
@@ -147,12 +146,12 @@ namespace SeeingSharp.Drawing3D.ImportExport
                 //Create a loaded objects stack
                 var loadedObjects = new Stack<ACObjectInfo>();
                 var parentObjects = new Stack<ACObjectInfo>();
-                ACSurface currentSurface = null;
+                ACSurface? currentSurface = null;
 
                 //Read the file
                 while (!reader.EndOfStream)
                 {
-                    var actLine = reader.ReadLine().Trim();
+                    var actLine = reader.ReadLine()!.Trim();
 
                     var firstWord = string.Empty;
                     var spaceIndex = actLine.IndexOf(' ');
@@ -245,7 +244,7 @@ namespace SeeingSharp.Drawing3D.ImportExport
                                 var kidCount = 0;
                                 var lineData = actLine.Split(' ');
 
-                                if (lineData != null && lineData.Length >= 1)
+                                if (lineData.Length >= 1)
                                 {
                                     int.TryParse(lineData[1], out kidCount);
                                 }
@@ -453,7 +452,7 @@ namespace SeeingSharp.Drawing3D.ImportExport
 
                                     for (var loop = 0; loop < numberOfVertices; loop++)
                                     {
-                                        var actInnerLine = reader.ReadLine().Trim();
+                                        var actInnerLine = reader.ReadLine()!.Trim();
                                         var splittedVertex = actInnerLine.Split(' ');
 
                                         var position = new Vector3
@@ -508,7 +507,7 @@ namespace SeeingSharp.Drawing3D.ImportExport
 
                                 for (var loop = 0; loop < numberOfRefs; loop++)
                                 {
-                                    var actInnerLine = reader.ReadLine().Trim();
+                                    var actInnerLine = reader.ReadLine()!.Trim();
                                     var splittedRef = actInnerLine.Split(' ');
 
                                     var texCoord = new Vector2();

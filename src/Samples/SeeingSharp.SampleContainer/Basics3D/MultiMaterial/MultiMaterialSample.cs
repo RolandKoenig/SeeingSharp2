@@ -98,7 +98,7 @@ namespace SeeingSharp.SampleContainer.Basics3D.MultiMaterial
             // Add object filter for viewbox culling
             mainOrChildRenderLoop.ObjectFilters.Add(new SceneViewboxObjectFilter());
 
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
 
         /// <summary>

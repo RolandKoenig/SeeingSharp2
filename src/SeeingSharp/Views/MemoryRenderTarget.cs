@@ -22,12 +22,12 @@ namespace SeeingSharp.Views
         private int _pixelHeight;
 
         // All needed direct3d resources
-        private D3D11.ID3D11Device _device;
-        private D3D11.ID3D11DeviceContext _deviceContext;
-        private D3D11.ID3D11Texture2D _renderTarget;
-        private D3D11.ID3D11Texture2D _renderTargetDepth;
-        private D3D11.ID3D11RenderTargetView _renderTargetView;
-        private D3D11.ID3D11DepthStencilView _renderTargetDepthView;
+        private D3D11.ID3D11Device? _device;
+        private D3D11.ID3D11DeviceContext? _deviceContext;
+        private D3D11.ID3D11Texture2D? _renderTarget;
+        private D3D11.ID3D11Texture2D? _renderTargetDepth;
+        private D3D11.ID3D11RenderTargetView? _renderTargetView;
+        private D3D11.ID3D11DepthStencilView? _renderTargetDepthView;
 
         /// <summary>
         /// Gets or sets the scene.
@@ -38,7 +38,7 @@ namespace SeeingSharp.Views
             set => this.RenderLoop.SetScene(value);
         }
 
-        public EngineDevice Device => this.RenderLoop?.Device;
+        public EngineDevice? Device => this.RenderLoop.Device;
 
         public Camera3DBase Camera
         {
@@ -64,7 +64,7 @@ namespace SeeingSharp.Views
         /// <summary>
         /// Raises before the render target starts rendering.
         /// </summary>
-        public event CancelEventHandler BeforeRender;
+        public event CancelEventHandler? BeforeRender;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MemoryRenderTarget" /> class.
@@ -72,7 +72,7 @@ namespace SeeingSharp.Views
         /// <param name="pixelHeight">Height of the offline render target in pixels.</param>
         /// <param name="pixelWidth">Width of the offline render target in pixels.</param>
         /// <param name="syncContext">Sets the SynchronizationContext which should be used by default.</param>
-        public MemoryRenderTarget(int pixelWidth, int pixelHeight, SynchronizationContext syncContext = null)
+        public MemoryRenderTarget(int pixelWidth, int pixelHeight, SynchronizationContext? syncContext = null)
         {
             // Set configuration
             _pixelWidth = pixelWidth;
@@ -93,7 +93,7 @@ namespace SeeingSharp.Views
         {
             if (!this.IsOperational) { return Task.Delay(100); }
 
-            var result = new TaskCompletionSource<object>(TaskCreationOptions.RunContinuationsAsynchronously);
+            var result = new TaskCompletionSource<object?>(TaskCreationOptions.RunContinuationsAsynchronously);
             this.RenderLoop.EnqueueAfterPresentAction(() =>
             {
                 result.TrySetResult(null);
@@ -170,8 +170,8 @@ namespace SeeingSharp.Views
         void IRenderLoopHost.OnRenderLoop_Present(EngineDevice device)
         {
             // Finish rendering of all render tasks
-            _deviceContext.Flush();
-            _deviceContext.ClearState();
+            _deviceContext!.Flush();
+            _deviceContext!.ClearState();
         }
 
         /// <summary>

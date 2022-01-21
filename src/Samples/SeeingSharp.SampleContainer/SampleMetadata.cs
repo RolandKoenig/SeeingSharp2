@@ -59,7 +59,6 @@ namespace SeeingSharp.SampleContainer
         public SampleSettings CreateSampleSettingsObject()
         {
             var settingsType = _description.SettingsType;
-
             if (settingsType == null)
             {
                 return new SampleSettings();
@@ -75,9 +74,8 @@ namespace SeeingSharp.SampleContainer
             return result;
         }
 
-        public AssemblyResourceLink TryGetSampleImageLink()
+        public AssemblyResourceLink? TryGetSampleImageLink()
         {
-            if (_description == null) { return null; }
             if (string.IsNullOrWhiteSpace(_description.SampleImageFileName)) { return null; }
 
             return new AssemblyResourceLink(

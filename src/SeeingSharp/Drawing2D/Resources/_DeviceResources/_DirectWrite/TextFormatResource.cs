@@ -9,7 +9,7 @@ namespace SeeingSharp.Drawing2D.Resources
     public class TextFormatResource : Drawing2DResourceBase
     {
         // Fixed resource parameters (passed on constructor)
-        private DWrite.IDWriteTextFormat[] _loadedTextFormats;
+        private DWrite.IDWriteTextFormat?[] _loadedTextFormats;
         private string _fontFamilyName;
         private float _fontSize;
         private FontWeight _fontWeight;
@@ -146,6 +146,8 @@ namespace SeeingSharp.Drawing2D.Resources
         /// <param name="engineDevice">The device for which to get the brush.</param>
         internal DWrite.IDWriteTextFormat GetTextFormat(EngineDevice engineDevice)
         {
+            GraphicsCore.EnsureGraphicsSupportLoaded();
+
             // Check for disposed state
             if (this.IsDisposed)
             {
@@ -156,7 +158,7 @@ namespace SeeingSharp.Drawing2D.Resources
             if (result == null)
             {
                 // Load the TextFormat object
-                result = GraphicsCore.Current.FactoryDWrite.CreateTextFormat(
+                result = GraphicsCore.Current.FactoryDWrite!.CreateTextFormat(
                     _fontFamilyName,
                     (DWrite.FontWeight)_fontWeight, (DWrite.FontStyle)_fontStyle, (DWrite.FontStretch)_fontStretch, _fontSize);
                 _loadedTextFormats[engineDevice.DeviceIndex] = result;
@@ -169,7 +171,7 @@ namespace SeeingSharp.Drawing2D.Resources
                 _runtimeDataChangedFlags[engineDevice.DeviceIndex] = false;
 
                 SeeingSharpUtil.DisposeObject(result);
-                result = GraphicsCore.Current.FactoryDWrite.CreateTextFormat(
+                result = GraphicsCore.Current.FactoryDWrite!.CreateTextFormat(
                     _fontFamilyName,
                     (DWrite.FontWeight)_fontWeight, (DWrite.FontStyle)_fontStyle, (DWrite.FontStretch)_fontStretch, _fontSize);
                 result.TextAlignment = (DWrite.TextAlignment)_textAlignment;

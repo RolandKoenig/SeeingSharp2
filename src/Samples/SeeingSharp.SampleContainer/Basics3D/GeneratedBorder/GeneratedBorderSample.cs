@@ -20,11 +20,11 @@ namespace SeeingSharp.SampleContainer.Basics3D.GeneratedBorder
         typeof(GeneratedBorderSettings))]
     public class GeneratedBorderSample : SampleBase
     {
-        private GeneratedBorderSettings _settings;
-        private List<Mesh> _cubes = new List<Mesh>();
+        private GeneratedBorderSettings? _castedSettings;
+        private List<Mesh> _cubes = new();
         private NamedOrGenericKey _resBorderMaterial;
 
-        private Scene _scene;
+        private Scene? _scene;
         private volatile bool _isManipulatingInUpdate;
 
         public override async Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
@@ -32,7 +32,7 @@ namespace SeeingSharp.SampleContainer.Basics3D.GeneratedBorder
             mainRenderLoop.EnsureNotNull(nameof(mainRenderLoop));
 
             _scene = mainRenderLoop.Scene;
-            _settings = (GeneratedBorderSettings)settings;
+            _castedSettings = (GeneratedBorderSettings)settings;
 
             await mainRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
@@ -42,7 +42,7 @@ namespace SeeingSharp.SampleContainer.Basics3D.GeneratedBorder
 
                 // Create resources
                 var resGeometry = manipulator.AddResource(
-                    device => new GeometryResource(new CubeGeometryFactory()));
+                    _ => new GeometryResource(new CubeGeometryFactory()));
                 var resMaterial = manipulator.AddStandardMaterialResource();
 
                 // Create a separate material for the cubes with borders
@@ -96,7 +96,7 @@ namespace SeeingSharp.SampleContainer.Basics3D.GeneratedBorder
             // Add object filter for viewbox culling
             mainOrChildRenderLoop.ObjectFilters.Add(new SceneViewboxObjectFilter());
 
-            return Task.FromResult<object>(null);
+            return Task.FromResult<object?>(null);
         }
 
         public override async void Update()
@@ -108,16 +108,16 @@ namespace SeeingSharp.SampleContainer.Basics3D.GeneratedBorder
             try
             {
                 // Do changes on loaded materials using the scene manipulator to ensure thread safety
-                await _scene.ManipulateSceneAsync(manipulator =>
+                await _scene!.ManipulateSceneAsync(manipulator =>
                 {
                     // Query over all loaded resources
                     // (This single resource may be loaded on different devices)
                     foreach (var actLoadedMaterial in manipulator.QueryResources<StandardMaterialResource>(
                         _resBorderMaterial))
                     {
-                        if (_settings.BorderEnabled)
+                        if (_castedSettings!.BorderEnabled)
                         {
-                            actLoadedMaterial.EnableShaderGeneratedBorder(_settings.BorderThickness);
+                            actLoadedMaterial.EnableShaderGeneratedBorder(_castedSettings.BorderThickness);
                         }
                         else
                         {

@@ -37,14 +37,9 @@ namespace SeeingSharp.Util
 
         public double SumAverageMsDouble => this.SumAverage.TotalMilliseconds;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DurationPerformanceResult"/> class.
-        /// </summary>
-        public DurationPerformanceResult(string activityName, DateTime timestampKey, long itemCount, long sumAvgTicks, long sumMaxTicks, long sumMinTicks)
+        public DurationPerformanceResult(string activityName)
         {
             this.ActivityName = activityName;
-
-            this.Update(timestampKey, itemCount, sumAvgTicks, sumMaxTicks, sumMinTicks);
         }
 
         public void Update(DateTime timestampKey, long itemCount, long sumAvgTicks, long sumMaxTicks, long sumMinTicks)

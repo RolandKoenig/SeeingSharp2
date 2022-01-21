@@ -12,9 +12,9 @@ namespace SeeingSharp.WinFormsSamples
 {
     public partial class MainWindow : Form
     {
-        private SampleBase _actSample;
-        private SampleSettings _actSampleSettings;
-        private SampleMetadata _actSampleInfo;
+        private SampleBase? _actSample;
+        private SampleSettings? _actSampleSettings;
+        private SampleMetadata? _actSampleInfo;
         private bool _isChangingSample;
         private List<ToolStripItem> _sampleCommandToolbarItems;
 
@@ -45,18 +45,15 @@ namespace SeeingSharp.WinFormsSamples
             // AddObject all sample pages
             var sampleRepo = new SampleRepository();
             sampleRepo.LoadSampleData();
-            TabPage firstTabPage = null;
-            ListView firstListView = null;
-            ListViewItem firstListViewItem = null;
+            TabPage? firstTabPage = null;
+            ListView? firstListView = null;
+            ListViewItem? firstListViewItem = null;
             foreach (var actSampleGroup in sampleRepo.SampleGroups)
             {
                 var actTabPage = new TabPage(actSampleGroup.GroupName);
                 _tabControlSamples.TabPages.Add(actTabPage);
 
-                if (firstTabPage == null)
-                {
-                    firstTabPage = actTabPage;
-                }
+                firstTabPage ??= actTabPage;
 
                 var actListView = new ListView
                 {
@@ -70,10 +67,7 @@ namespace SeeingSharp.WinFormsSamples
                 actListView.SmallImageList = _images;
                 actTabPage.Controls.Add(actListView);
 
-                if (firstListView == null)
-                {
-                    firstListView = actListView;
-                }
+                firstListView ??= actListView;
 
                 foreach (var actSample in actSampleGroup.Samples)
                 {
@@ -85,10 +79,7 @@ namespace SeeingSharp.WinFormsSamples
                     };
 
                     actListView.Items.Add(newListItem);
-                    if (firstListViewItem == null)
-                    {
-                        firstListViewItem = newListItem;
-                    }
+                    firstListViewItem ??= newListItem;
 
                     // Load the item's image
                     var sampleImageLink = actSample.TryGetSampleImageLink();
@@ -110,7 +101,7 @@ namespace SeeingSharp.WinFormsSamples
 
             if (firstListViewItem != null)
             {
-                firstListView.SelectedIndices.Add(0);
+                firstListView!.SelectedIndices.Add(0);
             }
         }
 
@@ -148,7 +139,7 @@ namespace SeeingSharp.WinFormsSamples
                         await actChildWindow.ClearAsync();
                     }
 
-                    _actSample.OnSampleClosed();
+                    _actSample!.OnSampleClosed();
                 }
                 if (_actSampleSettings != null)
                 {
@@ -215,7 +206,7 @@ namespace SeeingSharp.WinFormsSamples
             }
         }
 
-        private void UpdateSampleCommands(SampleSettings settings)
+        private void UpdateSampleCommands(SampleSettings? settings)
         {
             foreach (var actLastItem in _sampleCommandToolbarItems)
             {
@@ -240,7 +231,7 @@ namespace SeeingSharp.WinFormsSamples
 
                 var actNewToolbarItem = _barTools.Items.Add(actCommandInner.CommandText);
                 actNewToolbarItem.Tag = actCommand;
-                actNewToolbarItem.Click += (sender, eArgs) =>
+                actNewToolbarItem.Click += (_, _) =>
                 {
                     if (actCommandInner.CanExecute(null)) { actCommandInner.Execute(null); }
                 };
@@ -248,7 +239,7 @@ namespace SeeingSharp.WinFormsSamples
             }
         }
 
-        private void OnListView_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        private void OnListView_ItemSelectionChanged(object? sender, ListViewItemSelectionChangedEventArgs e)
         {
             if (!e.IsSelected)
             {
@@ -277,19 +268,19 @@ namespace SeeingSharp.WinFormsSamples
             _renderWindowControlsComponent.UpdateTargetControlStates();
         }
 
-        private async void OnCmdCopyScreenshot_Click(object sender, EventArgs e)
+        private async void OnCmdCopyScreenshot_Click(object? sender, EventArgs e)
         {
             var bitmap = await _ctrlRenderPanel.RenderLoop.GetScreenshotGdiAsync();
             Clipboard.SetImage(bitmap);
         }
 
-        private void OnRenderLoop_PrepareRender(object sender, EventArgs e)
+        private void OnRenderLoop_PrepareRender(object? sender, EventArgs e)
         {
             var actSample = _actSample;
             actSample?.Update();
         }
 
-        private async void OnSampleSettings_RecreateRequest(object sender, EventArgs e)
+        private async void OnSampleSettings_RecreateRequest(object? sender, EventArgs e)
         {
             var sample = _actSample;
             var sampleSettings = _actSampleSettings;
@@ -341,7 +332,10 @@ namespace SeeingSharp.WinFormsSamples
 
             childWindow.Show(this);
 
-            await childWindow.SetRenderingDataAsync(_actSample);
+            if (_actSample != null)
+            {
+                await childWindow.SetRenderingDataAsync(_actSample);
+            }
         }
     }
 }

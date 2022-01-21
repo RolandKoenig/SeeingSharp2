@@ -106,7 +106,7 @@ namespace SeeingSharp.Core
             bitmap.EnsureNotNull(nameof(bitmap));
             mipLevels.EnsurePositiveOrZero(nameof(mipLevels));
 
-            D3D11.ID3D11Texture2D result = null;
+            D3D11.ID3D11Texture2D? result = null;
 
             // Lock bitmap so it can be accessed for texture loading
             var bitmapData = bitmap.LockBits(
@@ -132,7 +132,7 @@ namespace SeeingSharp.Core
                         ArraySize = 1,
                         SampleDescription = new SampleDescription(1, 0)
                     },
-                    new D3D11.SubresourceData[]
+                    new[]
                     {
                         dataRectangle, dataRectangle, dataRectangle, dataRectangle, 
                         dataRectangle, dataRectangle, dataRectangle, dataRectangle, 

@@ -76,7 +76,7 @@ namespace SeeingSharp.Mathematics
         /// </summary>
         public Polygon2D Clone()
         {
-            return new Polygon2D(_vertices.Clone() as Vector2[]);
+            return new Polygon2D((Vector2[])_vertices.Clone());
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace SeeingSharp.Mathematics
         /// <summary>
         /// Merges the with hole.
         /// </summary>
-        public Polygon2D MergeWithHole(Polygon2D actHole, Polygon2DMergeOptions mergeOptions, List<Vector2> cutPoints)
+        public Polygon2D MergeWithHole(Polygon2D actHole, Polygon2DMergeOptions mergeOptions, List<Vector2>? cutPoints)
         {
             //This algorithm uses the method described in http://www.geometrictools.com/Documentation/TriangulationByEarClipping.pdf
 
@@ -111,7 +111,7 @@ namespace SeeingSharp.Mathematics
             var ray2D = new Ray2D(holeVertexWithHighestX, new Vector2(1f, 0f));
 
             //Find the line on current filling polygon with intersects first with the created ray
-            Tuple<int, float, Vector2> foundLine = null;
+            Tuple<int, float, Vector2>? foundLine = null;
             var actLineIndex = 0;
             foreach (var actLine in this.Lines)
             {
