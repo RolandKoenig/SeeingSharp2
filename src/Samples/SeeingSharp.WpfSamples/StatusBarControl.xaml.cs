@@ -15,9 +15,9 @@ namespace SeeingSharp.WpfSamples
         public static readonly DependencyProperty CtrlRendererProperty =
             DependencyProperty.Register(nameof(CtrlRenderer), typeof(SeeingSharpRendererElement), typeof(StatusBarControl), new PropertyMetadata(null));
 
-        private DispatcherTimer _refreshTimer;
+        private DispatcherTimer? _refreshTimer;
 
-        public SeeingSharpRendererElement CtrlRenderer
+        public SeeingSharpRendererElement? CtrlRenderer
         {
             get => (SeeingSharpRendererElement)this.GetValue(CtrlRendererProperty);
             set => this.SetValue(CtrlRendererProperty, value);
@@ -34,14 +34,14 @@ namespace SeeingSharp.WpfSamples
             }
         }
 
-        private void OnRefreshTimer_Tick(object sender, EventArgs e)
+        private void OnRefreshTimer_Tick(object? sender, EventArgs e)
         {
             TxtResourceCount.GetBindingExpression(TextBlock.TextProperty)?.UpdateTarget();
             TxtVisibleObjectCount.GetBindingExpression(TextBlock.TextProperty)?.UpdateTarget();
             TxtCountDrawCalls.GetBindingExpression(TextBlock.TextProperty)?.UpdateTarget();
         }
 
-        private void OnLoaded(object sender, RoutedEventArgs e)
+        private void OnLoaded(object? sender, RoutedEventArgs e)
         {
             _refreshTimer = new DispatcherTimer();
             _refreshTimer.Tick += this.OnRefreshTimer_Tick;
@@ -49,9 +49,10 @@ namespace SeeingSharp.WpfSamples
             _refreshTimer.Start();
         }
 
-        private void OnUnloaded(object sender, RoutedEventArgs e)
+        private void OnUnloaded(object? sender, RoutedEventArgs e)
         {
-            _refreshTimer.Stop();
+            _refreshTimer?.Stop();
+            _refreshTimer = null;
         }
     }
 }

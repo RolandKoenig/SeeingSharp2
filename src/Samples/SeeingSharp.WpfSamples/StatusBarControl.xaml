@@ -57,7 +57,7 @@
         <Image Source="Assets/Icons/Adapter16x16.png"
                Width="16" />
         <ComboBox ItemsSource="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.PossibleDevices}"
-                  SelectedItem="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.SelectedDevice, Mode=TwoWay}"
+                  SelectedItem="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.Device, Mode=TwoWay}"
                   Width="200" />
         <Rectangle Width="1"
                    Fill="Gray" />

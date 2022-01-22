@@ -11,16 +11,13 @@ namespace SeeingSharp.WpfSamples
     {
         private RenderLoop _renderLoop;
         private SampleRepository _sampleRepo;
-        private SampleSettings _sampleSettings;
+        private SampleSettings? _sampleSettings;
         private string _selectedGroup;
-        private SampleViewModel _selectedSample;
+        private SampleViewModel? _selectedSample;
 
-        public EventHandler ReloadRequest;
+        public EventHandler? ReloadRequest;
 
-        public ObservableCollection<string> SampleGroups
-        {
-            get;
-        } = new ObservableCollection<string>();
+        public ObservableCollection<string> SampleGroups { get; } = new();
 
         public string SelectedGroup
         {
@@ -37,12 +34,9 @@ namespace SeeingSharp.WpfSamples
             }
         }
 
-        public ObservableCollection<SampleViewModel> Samples
-        {
-            get;
-        } = new ObservableCollection<SampleViewModel>();
+        public ObservableCollection<SampleViewModel> Samples { get; } = new();
 
-        public SampleViewModel SelectedSample
+        public SampleViewModel? SelectedSample
         {
             get => _selectedSample;
             set
@@ -79,12 +73,9 @@ namespace SeeingSharp.WpfSamples
             }
         }
 
-        public ObservableCollection<SampleCommand> SampleCommands
-        {
-            get;
-        } = new ObservableCollection<SampleCommand>();
+        public ObservableCollection<SampleCommand> SampleCommands { get; } = new();
 
-        public SampleSettings SampleSettings => _sampleSettings;
+        public SampleSettings? SampleSettings => _sampleSettings;
 
         public MainWindowViewModel(SampleRepository sampleRepo, RenderLoop renderLoop)
         {
@@ -102,7 +93,7 @@ namespace SeeingSharp.WpfSamples
             {
                 this.SampleGroups.Add(actSampleGroupName);
             }
-            this.SelectedGroup = this.SampleGroups.FirstOrDefault();
+            this.SelectedGroup = this.SampleGroups.FirstOrDefault() ?? string.Empty;
         }
 
         private void UpdateSampleCollection()
@@ -119,7 +110,7 @@ namespace SeeingSharp.WpfSamples
             this.SelectedSample = this.Samples.FirstOrDefault();
         }
 
-        private void OnSampleSettings_RecreateRequest(object sender, EventArgs e)
+        private void OnSampleSettings_RecreateRequest(object? sender, EventArgs e)
         {
             ReloadRequest?.Invoke(this, EventArgs.Empty);
         }

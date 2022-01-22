@@ -30,7 +30,7 @@ namespace SeeingSharp.WpfSamples
                     sampleRepo.SampleGroups.Add(actGroup);
                 }
 
-                var result = new MainWindowViewModel(sampleRepo, null);
+                var result = new MainWindowViewModel(sampleRepo, null!);
                 return result;
             }
         }
@@ -60,12 +60,12 @@ namespace SeeingSharp.WpfSamples
         {
             public override Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings sampleSettings)
             {
-                return Task.FromResult<object>(null);
+                return Task.CompletedTask;
             }
 
             public override Task OnInitRenderingWindowAsync(RenderLoop mainOrChildRenderLoop)
             {
-                return Task.FromResult<object>(null);
+                return Task.CompletedTask;
             }
         }
     }

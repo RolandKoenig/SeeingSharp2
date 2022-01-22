@@ -10,7 +10,7 @@ namespace SeeingSharp.WpfSamples
     /// </summary>
     public partial class PerformanceOverviewDialog : Window
     {
-        private DispatcherTimer _refreshTimer;
+        private DispatcherTimer? _refreshTimer;
 
         public PerformanceOverviewDialog()
         {
@@ -23,7 +23,7 @@ namespace SeeingSharp.WpfSamples
             }
         }
 
-        private void OnRefreshRefreshTimer_Tick(object sender, EventArgs e)
+        private void OnRefreshRefreshTimer_Tick(object? sender, EventArgs e)
         {
             if (this.DataContext is PerformanceOverviewViewModel viewModel)
             {

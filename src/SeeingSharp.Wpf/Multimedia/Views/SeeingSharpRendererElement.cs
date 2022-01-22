@@ -55,7 +55,15 @@ namespace SeeingSharp.Views
         public RenderLoop RenderLoop { get; }
 
         [Browsable(false)]
-        public EngineDevice? Device => this.RenderLoop.Device;
+        public EngineDevice? Device
+        {
+            get => this.RenderLoop.Device;
+            set
+            {
+                if (value == null) { throw new InvalidOperationException("Cannot set null as device on RenderLoop!"); }
+                this.RenderLoop.SetRenderingDevice(value);
+            }
+        }
 
         /// <summary>
         /// Does the target control have focus?

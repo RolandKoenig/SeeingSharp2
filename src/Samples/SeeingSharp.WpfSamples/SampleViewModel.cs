@@ -7,8 +7,8 @@ namespace SeeingSharp.WpfSamples
 {
     public class SampleViewModel : PropertyChangedBase
     {
-        private BitmapSource _bitmapSource;
-        private Task _bitmapSourceTask;
+        private BitmapSource? _bitmapSource;
+        private Task? _bitmapSourceTask;
 
         public SampleMetadata SampleMetadata { get; }
 
@@ -16,7 +16,7 @@ namespace SeeingSharp.WpfSamples
 
         public string Group => this.SampleMetadata.Group;
 
-        public BitmapSource BitmapSource
+        public BitmapSource? BitmapSource
         {
             get
             {
@@ -39,7 +39,7 @@ namespace SeeingSharp.WpfSamples
 
                         _bitmapSource = source;
                     }).ContinueWith(
-                        task => this.RaisePropertyChanged(nameof(this.BitmapSource)),
+                        _ => this.RaisePropertyChanged(nameof(this.BitmapSource)),
                         TaskScheduler.FromCurrentSynchronizationContext());
                 }
 

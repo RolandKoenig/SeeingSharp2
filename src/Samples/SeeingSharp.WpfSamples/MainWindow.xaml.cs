@@ -12,8 +12,8 @@ namespace SeeingSharp.WpfSamples
 {
     public partial class MainWindow : Window
     {
-        private SampleBase _actSample;
-        private SampleMetadata _actSampleInfo;
+        private SampleBase? _actSample;
+        private SampleMetadata? _actSampleInfo;
         private bool _isChangingSample;
 
         private List<ChildRenderWindow> _childWindows;
@@ -46,7 +46,7 @@ namespace SeeingSharp.WpfSamples
             CtrlRenderer.RenderLoop.PrepareRender += this.OnRenderLoop_PrepareRender;
         }
 
-        private async void OnViewModel_ReloadRequest(object sender, EventArgs e)
+        private async void OnViewModel_ReloadRequest(object? sender, EventArgs e)
         {
             if (!(this.DataContext is MainWindowViewModel viewModel))
             {
@@ -67,7 +67,7 @@ namespace SeeingSharp.WpfSamples
                 }
 
                 // Update the sample
-                await _actSample.OnReloadAsync(CtrlRenderer.RenderLoop, viewModel.SampleSettings);
+                await _actSample.OnReloadAsync(CtrlRenderer.RenderLoop, viewModel.SampleSettings!);
 
                 // Wait for next finished rendering
                 await CtrlRenderer.RenderLoop.WaitForNextFinishedRenderAsync();
@@ -94,7 +94,7 @@ namespace SeeingSharp.WpfSamples
             var selectedSample = viewModel.SelectedSample;
             if (selectedSample == null) { return; }
 
-            this.ApplySample(selectedSample.SampleMetadata, viewModel.SampleSettings);
+            this.ApplySample(selectedSample.SampleMetadata, viewModel.SampleSettings!);
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace SeeingSharp.WpfSamples
                         await actChildWindow.ClearAsync();
                     }
 
-                    _actSample.OnSampleClosed();
+                    _actSample!.OnSampleClosed();
                 }
 
                 // Reset members
@@ -139,24 +139,21 @@ namespace SeeingSharp.WpfSamples
                 _actSampleInfo = null;
 
                 // Apply new sample
-                if (sampleInfo != null)
+                var sampleObject = sampleInfo.CreateSampleObject();
+                await sampleObject.OnStartupAsync(CtrlRenderer.RenderLoop, sampleSettings);
+                await sampleObject.OnInitRenderingWindowAsync(CtrlRenderer.RenderLoop);
+                await sampleObject.OnReloadAsync(CtrlRenderer.RenderLoop, sampleSettings);
+
+                foreach (var actChildWindow in _childWindows)
                 {
-                    var sampleObject = sampleInfo.CreateSampleObject();
-                    await sampleObject.OnStartupAsync(CtrlRenderer.RenderLoop, sampleSettings);
-                    await sampleObject.OnInitRenderingWindowAsync(CtrlRenderer.RenderLoop);
-                    await sampleObject.OnReloadAsync(CtrlRenderer.RenderLoop, sampleSettings);
-
-                    foreach (var actChildWindow in _childWindows)
-                    {
-                        await actChildWindow.SetRenderingDataAsync(sampleObject);
-                    }
-
-                    _actSample = sampleObject;
-                    _actSampleInfo = sampleInfo;
-
-                    await CtrlRenderer.RenderLoop.Register2DDrawingLayerAsync(
-                        new PerformanceMeasureDrawingLayer(170f, CtrlRenderer.ViewInformation));
+                    await actChildWindow.SetRenderingDataAsync(sampleObject);
                 }
+
+                _actSample = sampleObject;
+                _actSampleInfo = sampleInfo;
+
+                await CtrlRenderer.RenderLoop.Register2DDrawingLayerAsync(
+                    new PerformanceMeasureDrawingLayer(170f, CtrlRenderer.ViewInformation));
 
                 // Wait for next finished rendering
                 await CtrlRenderer.RenderLoop.WaitForNextFinishedRenderAsync();
@@ -175,23 +172,23 @@ namespace SeeingSharp.WpfSamples
             }
         }
 
-        private void OnRenderLoop_PrepareRender(object sender, EventArgs e)
+        private void OnRenderLoop_PrepareRender(object? sender, EventArgs e)
         {
             var actSample = _actSample;
             actSample?.Update();
         }
 
-        private void OnMnuCmdPerformance_ItemClick(object sender, RoutedEventArgs e)
+        private void OnMnuCmdPerformance_ItemClick(object? sender, RoutedEventArgs e)
         {
             var perfVM = new PerformanceOverviewViewModel(
-                GraphicsCore.Current.PerformanceAnalyzer);
+                GraphicsCore.Current.PerformanceAnalyzer!);
             var dlgPerformance = new PerformanceOverviewDialog();
             dlgPerformance.DataContext = perfVM;
             dlgPerformance.Owner = this;
             dlgPerformance.Show();
         }
 
-        private async void OnMnuCmdNewChildWindow_Click(object sender, RoutedEventArgs e)
+        private async void OnMnuCmdNewChildWindow_Click(object? sender, RoutedEventArgs e)
         {
             var childWindow = new ChildRenderWindow();
             childWindow.InitializeChildWindow(CtrlRenderer.Scene, CtrlRenderer.Camera.GetViewPoint());
@@ -202,10 +199,13 @@ namespace SeeingSharp.WpfSamples
             childWindow.Owner = this;
             childWindow.Show();
 
-            await childWindow.SetRenderingDataAsync(_actSample);
+            if (_actSample != null)
+            {
+                await childWindow.SetRenderingDataAsync(_actSample);
+            }
         }
 
-        private void OnMnuCmdChangeResolution_Click(object sender, RoutedEventArgs e)
+        private void OnMnuCmdChangeResolution_Click(object? sender, RoutedEventArgs e)
         {
             if(!(sender is MenuItem menuItem)){ return; }
 

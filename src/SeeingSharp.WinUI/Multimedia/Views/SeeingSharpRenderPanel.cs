@@ -52,7 +52,7 @@ namespace SeeingSharp.Views
             set => _painter.DiscardPresent = value;
         }
 
-        public EngineDevice? SelectedDevice
+        public EngineDevice? Device
         {
             get => _painter.RenderLoop.Device;
             set
@@ -118,7 +118,7 @@ namespace SeeingSharp.Views
 
         private void OnRenderLoop_DeviceChanged(object? sender, EventArgs e)
         {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.SelectedDevice)));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.Device)));
         }
 
         private void OnRenderLoop_CurrentViewSizeChanged(object? sender, EventArgs e)
