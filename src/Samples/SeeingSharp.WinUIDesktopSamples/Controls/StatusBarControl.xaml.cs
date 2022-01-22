@@ -13,11 +13,11 @@ namespace SeeingSharp.WinUIDesktopSamples.Controls
         public static readonly DependencyProperty CtrlRendererProperty =
             DependencyProperty.Register(nameof(CtrlRenderer), typeof(SeeingSharpRenderPanel), typeof(StatusBarControl), new PropertyMetadata(null));
 
-        private DispatcherTimer _refreshTimer;
+        private DispatcherTimer? _refreshTimer;
 
-        public SeeingSharpRenderPanel CtrlRenderer
+        public SeeingSharpRenderPanel? CtrlRenderer
         {
-            get => (SeeingSharpRenderPanel)this.GetValue(CtrlRendererProperty);
+            get => (SeeingSharpRenderPanel?)this.GetValue(CtrlRendererProperty);
             set => this.SetValue(CtrlRendererProperty, value);
         }
 
@@ -27,7 +27,7 @@ namespace SeeingSharp.WinUIDesktopSamples.Controls
 
         public int CountDrawCalls => this.CtrlRenderer?.RenderLoop.CountDrawCalls ?? 0;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public StatusBarControl()
         {
@@ -39,7 +39,7 @@ namespace SeeingSharp.WinUIDesktopSamples.Controls
             this.Unloaded += this.OnUnloaded;
         }
 
-        private void OnLoaded(object sender, RoutedEventArgs e)
+        private void OnLoaded(object? sender, RoutedEventArgs e)
         {
             if(_refreshTimer != null){ return; }
 
@@ -49,7 +49,7 @@ namespace SeeingSharp.WinUIDesktopSamples.Controls
             _refreshTimer.Start();
         }
 
-        private void OnUnloaded(object sender, RoutedEventArgs e)
+        private void OnUnloaded(object? sender, RoutedEventArgs e)
         {
             if(_refreshTimer == null){ return; }
 
@@ -57,7 +57,7 @@ namespace SeeingSharp.WinUIDesktopSamples.Controls
             _refreshTimer = null;
         }
 
-        private void OnRefreshTimer_Tick(object sender, object e)
+        private void OnRefreshTimer_Tick(object? sender, object e)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CountResources)));
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CountObjects)));

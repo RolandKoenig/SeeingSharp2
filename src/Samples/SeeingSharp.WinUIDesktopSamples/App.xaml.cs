@@ -11,7 +11,7 @@ namespace SeeingSharp.WinUIDesktopSamples
     [System.Runtime.Versioning.SupportedOSPlatform("windows10.0.19041.0")]
     public partial class App : Application
     {
-        private Window _window;
+        private Window? _window;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code

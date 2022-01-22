@@ -9,8 +9,8 @@ namespace SeeingSharp.WinUIDesktopSamples
 {
     public class SampleViewModel : ViewModelBase
     {
-        private BitmapSource _bitmapSource;
-        private Task _bitmapSourceTask;
+        private BitmapSource? _bitmapSource;
+        private Task? _bitmapSourceTask;
 
         public SampleMetadata SampleMetadata { get; }
 
@@ -18,7 +18,7 @@ namespace SeeingSharp.WinUIDesktopSamples
 
         public string Group => this.SampleMetadata.Group;
 
-        public BitmapSource BitmapSource
+        public BitmapSource? BitmapSource
         {
             get
             {

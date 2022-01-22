@@ -66,7 +66,7 @@ namespace SeeingSharp.Util
         /// <param name="result">The result that should be set during calculation.</param>
         /// <param name="minTimeStamp">The timestamp which is the minimum for current calculation step.</param>
         /// <param name="maxTimeStamp">The maximum timestamp up to which to calculate the next result value.</param>
-        internal void Calculate(ref DurationPerformanceResult result, DateTime minTimeStamp, DateTime maxTimeStamp)
+        internal void Calculate(ref DurationPerformanceResult? result, DateTime minTimeStamp, DateTime maxTimeStamp)
         {
             // Calculate result values
             var minValue = long.MaxValue;
@@ -104,6 +104,10 @@ namespace SeeingSharp.Util
             }
 
             // Update result object
+            if (result == null)
+            {
+                result = new DurationPerformanceResult(this.ActivityName);
+            }
             result.Update(
                 maxTimeStamp, itemCount, 
                 avgValue, maxValue, minValue);

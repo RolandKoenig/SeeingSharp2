@@ -10,18 +10,15 @@ namespace SeeingSharp.WinUIDesktopSamples
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        private RenderLoop _renderLoop;
-        private SampleRepository _sampleRepo;
-        private SampleSettings _sampleSettings;
-        private SampleGroupMetadata _selectedGroup;
-        private SampleViewModel _selectedSample;
+        private RenderLoop? _renderLoop;
+        private SampleRepository? _sampleRepo;
+        private SampleSettings? _sampleSettings;
+        private SampleGroupMetadata? _selectedGroup;
+        private SampleViewModel? _selectedSample;
 
-        public ObservableCollection<SampleGroupMetadata> SampleGroups
-        {
-            get;
-        } = new ObservableCollection<SampleGroupMetadata>();
+        public ObservableCollection<SampleGroupMetadata> SampleGroups { get; } = new();
 
-        public SampleGroupMetadata SelectedGroup
+        public SampleGroupMetadata? SelectedGroup
         {
             get => _selectedGroup;
             set
@@ -36,16 +33,15 @@ namespace SeeingSharp.WinUIDesktopSamples
             }
         }
 
-        public ObservableCollection<SampleViewModel> Samples
-        {
-            get;
-        } = new ObservableCollection<SampleViewModel>();
+        public ObservableCollection<SampleViewModel> Samples { get; } = new();
 
-        public SampleViewModel SelectedSample
+        public SampleViewModel? SelectedSample
         {
             get => _selectedSample;
             set
             {
+                if (_renderLoop == null) { throw new InvalidOperationException("RenderLoop not set!"); }
+
                 if (_selectedSample != value)
                 {
                     _selectedSample = value;
@@ -82,7 +78,7 @@ namespace SeeingSharp.WinUIDesktopSamples
             get;
         } = new ObservableCollection<SampleCommand>();
 
-        public SampleSettings SampleSettings => _sampleSettings;
+        public SampleSettings? SampleSettings => _sampleSettings;
 
         public void LoadSampleData(SampleRepository sampleRepo, RenderLoop renderLoop)
         {
@@ -102,6 +98,7 @@ namespace SeeingSharp.WinUIDesktopSamples
         private void UpdateSampleCollection()
         {
             if (DesignMode.DesignModeEnabled) { return; }
+            if (_sampleRepo == null) { return; }
 
             var sampleGroup = _sampleRepo.SampleGroups
                 .FirstOrDefault(actGroup => actGroup == _selectedGroup);

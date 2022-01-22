@@ -1,15 +1,15 @@
-﻿using System.Reflection;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Reflection;
 
 namespace SeeingSharp.WinUIDesktopSamples
 {
     public class PropertyGridViewModel : ViewModelBase
     {
-        private List<ConfigurablePropertyMetadata> _propertyMetadata;
-        private object _selectedObject;
+        private List<ConfigurablePropertyMetadata>? _propertyMetadata;
+        private object? _selectedObject;
 
-        public object SelectedObject
+        public object? SelectedObject
         {
             get => _selectedObject;
             set
@@ -24,7 +24,7 @@ namespace SeeingSharp.WinUIDesktopSamples
             }
         }
 
-        public List<ConfigurablePropertyMetadata> PropertyMetadata
+        public List<ConfigurablePropertyMetadata>? PropertyMetadata
         {
             get => _propertyMetadata;
             set
@@ -54,8 +54,7 @@ namespace SeeingSharp.WinUIDesktopSamples
                 // Check browsable attribute
                 var browseAttrib = actProperty.GetCustomAttribute<BrowsableAttribute>();
 
-                if (browseAttrib != null &&
-                   !browseAttrib.Browsable)
+                if (browseAttrib is {Browsable: false})
                 {
                     continue;
                 }

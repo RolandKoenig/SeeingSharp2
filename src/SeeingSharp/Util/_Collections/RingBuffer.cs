@@ -12,7 +12,7 @@ namespace SeeingSharp.Util
     public class RingBuffer<T>
     {
         // all buffer properties
-        private T[] _buffer;
+        private T?[] _buffer;
         private int _itemStart;
         private int _itemLength;
 
@@ -76,7 +76,7 @@ namespace SeeingSharp.Util
         /// <summary>
         /// Adds a new item and returns the reference to it.
         /// </summary>
-        public ref T AddByRef()
+        public ref T? AddByRef()
         {
             if (_itemLength < _buffer.Length)
             {
@@ -99,7 +99,7 @@ namespace SeeingSharp.Util
             if (index < 0){ throw new IndexOutOfRangeException(); }
             if (index >= _itemLength) { throw new IndexOutOfRangeException(); }
 
-            return ref _buffer[(_itemStart + index) % _buffer.Length];
+            return ref _buffer[(_itemStart + index) % _buffer.Length]!;
         }
 
         /// <summary>

@@ -18,9 +18,9 @@ namespace SeeingSharp.WinUIDesktopSamples
     [System.Runtime.Versioning.SupportedOSPlatform("windows10.0.19041.0")]
     public sealed partial class MainWindow : Window, INotifyPropertyChanged
     {
-        private SampleBase _actSample;
-        private SampleSettings _actSampleSettings;
-        private SampleMetadata _actSampleInfo;
+        private SampleBase? _actSample;
+        private SampleSettings? _actSampleSettings;
+        private SampleMetadata? _actSampleInfo;
         private bool _isChangingSample;
 
         private List<ChildRenderWindow> _childPages;
@@ -41,9 +41,9 @@ namespace SeeingSharp.WinUIDesktopSamples
 
         public Visibility ProgressRingVisibility => _isChangingSample ? Visibility.Visible : Visibility.Collapsed;
 
-        public MainWindowViewModel ViewModel => this.CtrlMainContent.DataContext as MainWindowViewModel;
+        public MainWindowViewModel ViewModel => (MainWindowViewModel)this.CtrlMainContent.DataContext;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public MainWindow()
         {
@@ -74,7 +74,7 @@ namespace SeeingSharp.WinUIDesktopSamples
         /// <summary>
         /// Applies the given sample.
         /// </summary>
-        private async void ApplySample(SampleMetadata sampleInfo, SampleSettings sampleSettings)
+        private async void ApplySample(SampleMetadata? sampleInfo, SampleSettings sampleSettings)
         {
             if (DesignMode.DesignModeEnabled) { return; }
             if (this.IsChangingSample) { return; }
@@ -106,7 +106,7 @@ namespace SeeingSharp.WinUIDesktopSamples
                         await actChildWindow.ClearAsync();
                     }
 
-                    _actSample.OnSampleClosed();
+                    _actSample!.OnSampleClosed();
                 }
                 if (_actSampleSettings != null)
                 {
@@ -192,24 +192,24 @@ namespace SeeingSharp.WinUIDesktopSamples
                     Title = actSampleCommandInner.CommandText,
                     IsEnabled = actSampleCommandInner.CanExecuteAsProperty,
                 };
-                newBarItem.Tapped += (sender, eArgs) =>
+                newBarItem.Tapped += (_, _) =>
                 {
                     if (!actSampleCommandInner.CanExecuteAsProperty) { return; }
                     actSampleCommandInner.Execute(null);
                 };
                 newBarItem.Tag = "SampleCommand";
-                newBarItem.Style = (Style)App.Current.Resources["MainMenuBarItem"];
+                newBarItem.Style = (Style)Application.Current.Resources["MainMenuBarItem"];
 
                 this.CtrlMainMenuBar.Items.Add(newBarItem);
             }
         }
 
-        private void RaisePropertyChanged([CallerMemberName] string propertyName = null)
+        private void RaisePropertyChanged([CallerMemberName] string? propertyName = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private async void OnSampleSettings_RecreateRequest(object sender, EventArgs e)
+        private async void OnSampleSettings_RecreateRequest(object? sender, EventArgs e)
         {
             var sample = _actSample;
             var sampleSettings = _actSampleSettings;
@@ -254,7 +254,7 @@ namespace SeeingSharp.WinUIDesktopSamples
             }
         }
 
-        private void OnLoaded(object sender, RoutedEventArgs e)
+        private void OnLoaded(object? sender, RoutedEventArgs e)
         {
             if (DesignMode.DesignModeEnabled) { return; }
 
@@ -267,25 +267,25 @@ namespace SeeingSharp.WinUIDesktopSamples
 
             // Start update loop
             CtrlSwapChain.RenderLoop.Configuration.AlphaEnabledSwapChain = true;
-            CtrlSwapChain.RenderLoop.PrepareRender += (innerSender, eArgs) =>
+            CtrlSwapChain.RenderLoop.PrepareRender += (_, _) =>
             {
                 var actSample = _actSample;
                 actSample?.Update();
             };
         }
 
-        private void OnSelectedSampleChanged(object sender, SelectionChangedEventArgs e)
+        private void OnSelectedSampleChanged(object? sender, SelectionChangedEventArgs e)
         {
             if (DesignMode.DesignModeEnabled) { return; }
-            if (!(this.CtrlMainContent.DataContext is MainWindowViewModel viewModel)) { return; }
 
+            var viewModel = this.ViewModel;
             var selectedSample = viewModel.SelectedSample;
             if (selectedSample == null) { return; }
 
-            this.ApplySample(selectedSample.SampleMetadata, viewModel.SampleSettings);
+            this.ApplySample(selectedSample.SampleMetadata, viewModel.SampleSettings!);
         }
 
-        private void OnSampleCommand_Tapped(object sender, TappedRoutedEventArgs e)
+        private void OnSampleCommand_Tapped(object? sender, TappedRoutedEventArgs e)
         {
             if (!(sender is NavigationViewItem navViewItem)) { return; }
             if (!(navViewItem.Tag is SampleCommand sampleCommand)) { return; }

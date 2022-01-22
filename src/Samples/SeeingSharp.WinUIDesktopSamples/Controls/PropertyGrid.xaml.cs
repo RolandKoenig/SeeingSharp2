@@ -43,7 +43,10 @@ namespace SeeingSharp.WinUIDesktopSamples.Controls
         {
             GridMain.Children.Clear();
 
-            var lstProperties = new List<ConfigurablePropertyMetadata>(_propertyGridVM.PropertyMetadata);
+            var lstProperties = _propertyGridVM.PropertyMetadata != null ?
+                new List<ConfigurablePropertyMetadata>(_propertyGridVM.PropertyMetadata) :
+                new List<ConfigurablePropertyMetadata>(0);
+
             lstProperties.Sort((left, right) => string.Compare(left.CategoryName, right.CategoryName, StringComparison.Ordinal));
             var lstPropertyCategories = lstProperties
                 .Select(actProperty => actProperty.CategoryName)
@@ -62,7 +65,7 @@ namespace SeeingSharp.WinUIDesktopSamples.Controls
             // Create all controls
             var actRowIndex = 0;
             var actCategory = string.Empty;
-            foreach (var actProperty in _propertyGridVM.PropertyMetadata)
+            foreach (var actProperty in lstProperties)
             {
                 if (actProperty.CategoryName != actCategory)
                 {
@@ -107,7 +110,7 @@ namespace SeeingSharp.WinUIDesktopSamples.Controls
                 ctrlText.VerticalAlignment = VerticalAlignment.Center;
                 GridMain.Children.Add(ctrlText);
 
-                FrameworkElement ctrlValueEdit = null;
+                FrameworkElement? ctrlValueEdit = null;
 
                 switch (actProperty.ValueType)
                 {

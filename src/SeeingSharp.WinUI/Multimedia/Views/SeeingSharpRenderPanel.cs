@@ -55,6 +55,11 @@ namespace SeeingSharp.Views
         public EngineDevice? SelectedDevice
         {
             get => _painter.RenderLoop.Device;
+            set
+            {
+                if (value == null) { throw new InvalidOperationException("Cannot set null as device on RenderLoop!"); }
+                _painter.RenderLoop.SetRenderingDevice(value);
+            }
         }
 
         public GraphicsViewConfiguration Configuration => _painter.RenderLoop.Configuration;

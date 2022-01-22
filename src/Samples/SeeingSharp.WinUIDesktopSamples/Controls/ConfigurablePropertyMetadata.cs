@@ -9,7 +9,7 @@ namespace SeeingSharp.WinUIDesktopSamples
         private object _hostObject;
         private PropertyInfo _propertyInfo;
 
-        public object ValueAccessor
+        public object? ValueAccessor
         {
             get => this.GetValue();
             set => this.SetValue(value);
@@ -89,16 +89,17 @@ namespace SeeingSharp.WinUIDesktopSamples
             return Enum.GetValues(_propertyInfo.PropertyType);
         }
 
-        public object GetValue()
+        public object? GetValue()
         {
             return _propertyInfo.GetValue(_hostObject);
         }
 
-        public void SetValue(object value)
+        public void SetValue(object? value)
         {
-            var givenType = value.GetType();
+            var givenType = value?.GetType();
             var targetType = _propertyInfo.PropertyType;
-            if (givenType == targetType)
+
+            if ((givenType != null) && (givenType == targetType))
             {
                 _propertyInfo.SetValue(_hostObject, value);
             }
