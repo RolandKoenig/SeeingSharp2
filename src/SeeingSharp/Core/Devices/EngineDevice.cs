@@ -183,8 +183,7 @@ namespace SeeingSharp.Core.Devices
         public long Luid => _adapterInfo.Luid;
 
         public bool Supports2D =>
-            _handlerD2D != null &&
-            _handlerD2D.IsLoaded;
+            _handlerD2D is {IsLoaded: true};
 
         /// <summary>
         /// Gets the main Direct3D 11 context object.
@@ -483,7 +482,7 @@ namespace SeeingSharp.Core.Devices
             if (_handlerD3D11 != null)
             {
                 _handlerD2D = new DeviceHandlerD2D(this.Configuration, _engineFactory, this);
-                this.FakeRenderTarget2D = _handlerD2D.RenderTarget;
+                this.FakeRenderTarget2D = _handlerD2D.IsLoaded ? _handlerD2D.RenderTarget : null;
             }
 
             // Create additional device handlers

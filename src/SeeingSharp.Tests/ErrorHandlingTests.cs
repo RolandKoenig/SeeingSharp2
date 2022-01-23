@@ -106,6 +106,7 @@ namespace SeeingSharp.Tests
 
             var isRenderTargetOperational = true;
             var isGraphicsCoreInitialized = true;
+            var isGraphicsLoaded = true;
             var registeredRenderLoopCount = 1;
             using (GraphicsCore.AutomatedTest_NewTestEnvironment())
             using (GraphicsCore.AutomatedTest_ForceDeviceInitError())
@@ -117,12 +118,14 @@ namespace SeeingSharp.Tests
                 {
                     isRenderTargetOperational = memRenderTarget.IsOperational;
                     isGraphicsCoreInitialized = GraphicsCore.IsLoaded;
+                    isGraphicsLoaded = GraphicsCore.IsGraphicsLoaded;
                     registeredRenderLoopCount = GraphicsCore.Current.RegisteredRenderLoopCount;
                 }
             }
 
             Assert.IsFalse(isRenderTargetOperational);
-            Assert.IsFalse(isGraphicsCoreInitialized);
+            Assert.IsTrue(isGraphicsCoreInitialized);
+            Assert.IsFalse(isGraphicsLoaded);
             Assert.IsTrue(registeredRenderLoopCount == 0);
         }
 

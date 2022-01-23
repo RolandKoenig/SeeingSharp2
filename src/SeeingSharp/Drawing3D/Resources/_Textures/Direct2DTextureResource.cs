@@ -16,6 +16,7 @@ namespace SeeingSharp.Drawing3D.Resources
         private Custom2DDrawingLayer _drawingLayer;
         private int _width;
         private int _height;
+        private bool _notLoadedDueToMissingSupport;
 
         // Resources for Direct3D
         private D3D11.ID3D11Texture2D? _renderTargetTexture;
@@ -28,7 +29,7 @@ namespace SeeingSharp.Drawing3D.Resources
         /// <summary>
         /// Is the resource loaded?
         /// </summary>
-        public override bool IsLoaded => _graphics2D != null;
+        public override bool IsLoaded => (_graphics2D != null) || _notLoadedDueToMissingSupport;
 
         /// <summary>
         /// Gets the texture object.
@@ -94,6 +95,7 @@ namespace SeeingSharp.Drawing3D.Resources
         public void Render(RenderState renderState)
         {
             if (renderState.Device.IsLost) { return; }
+            if (_notLoadedDueToMissingSupport) { return; }
             if (_overlayRenderer!.IsRenderTargetDisposed) { return; }
 
             _overlayRenderer!.BeginDraw();
@@ -136,12 +138,19 @@ namespace SeeingSharp.Drawing3D.Resources
                 device, _width, _height, new GraphicsViewConfiguration { AntialiasingEnabled = false });
             _renderTargetTextureView = device.DeviceD3D11_1.CreateShaderResourceView(_renderTargetTexture);
 
-            _overlayRenderer = new Direct2DOverlayRenderer(
-                device,
-                _renderTargetTexture,
-                _width, _height,
-                DpiScaling.Default);
-            _graphics2D = new Graphics2D(device, _overlayRenderer.RenderTarget2D, new SizeF(_width, _height));
+            if (device.Supports2D)
+            {
+                _overlayRenderer = new Direct2DOverlayRenderer(
+                    device,
+                    _renderTargetTexture,
+                    _width, _height,
+                    DpiScaling.Default);
+                _graphics2D = new Graphics2D(device, _overlayRenderer.RenderTarget2D, new SizeF(_width, _height));
+            }
+            else
+            {
+                _notLoadedDueToMissingSupport = true;
+            }
         }
 
         /// <summary>
@@ -151,8 +160,18 @@ namespace SeeingSharp.Drawing3D.Resources
         /// <param name="resources">The current ResourceDictionary.</param>
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
-            _graphics2D = null;
-            SeeingSharpUtil.SafeDispose(ref _overlayRenderer);
+            if (device.Supports2D)
+            {
+                _graphics2D = null;
+                SeeingSharpUtil.SafeDispose(ref _overlayRenderer);
+
+            }
+            else
+            {
+                _notLoadedDueToMissingSupport = false;
+                return;
+            }
+
             SeeingSharpUtil.SafeDispose(ref _renderTargetTextureView);
             SeeingSharpUtil.SafeDispose(ref _renderTargetTexture);
         }
