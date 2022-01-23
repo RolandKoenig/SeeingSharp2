@@ -48,7 +48,6 @@ namespace SeeingSharp.Drawing3D.ImportExport
         {
             // Get import options
             var stlImportOptions = importOptions as StlImportOptions;
-
             if (stlImportOptions == null)
             {
                 throw new SeeingSharpException("Invalid import options for StlImporter!");
@@ -64,9 +63,12 @@ namespace SeeingSharp.Drawing3D.ImportExport
                 }
 
                 // Read in ASCII format (if binary did not work)
-                using (var inStream = sourceFile.OpenInputStream())
+                if (result == null)
                 {
-                    result = this.TryReadAscii(sourceFile, inStream, stlImportOptions);
+                    using (var inStream = sourceFile.OpenInputStream())
+                    {
+                        result = this.TryReadAscii(sourceFile, inStream, stlImportOptions);
+                    }
                 }
             }
             catch (Exception ex)

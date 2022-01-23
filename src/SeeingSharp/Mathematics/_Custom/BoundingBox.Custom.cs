@@ -26,10 +26,16 @@ namespace SeeingSharp.Mathematics
                 if (maximum.Z < actContainedLocation.Z) { maximum.Z = actContainedLocation.Z; }
             }
 
-            if (!anyInteraction) { throw new SeeingSharpException("No vectors given!"); }
-
-            Minimum = minimum;
-            Maximum = maximum;
+            if (!anyInteraction)
+            {
+                Minimum = default;
+                Maximum = default;
+            }
+            else
+            {
+                Minimum = minimum;
+                Maximum = maximum;
+            }
         }
 
         public void Transform(Matrix4x4 matrix)
