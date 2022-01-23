@@ -41,7 +41,6 @@ dotnet pack -c Release -o ./publish ./src/SeeingSharp /p:ContinuousIntegrationBu
 dotnet pack -c Release -o ./publish ./src/SeeingSharp.AssimpImporter /p:ContinuousIntegrationBuild=true /p:IncludeSymbols=true /p:EmbedUntrackedSources=true -p:SymbolPackageFormat=snupkg
 dotnet pack -c Release -o ./publish ./src/SeeingSharp.WinForms /p:ContinuousIntegrationBuild=true /p:IncludeSymbols=true /p:EmbedUntrackedSources=true -p:SymbolPackageFormat=snupkg
 dotnet pack -c Release -o ./publish ./src/SeeingSharp.Wpf /p:ContinuousIntegrationBuild=true /p:IncludeSymbols=true /p:EmbedUntrackedSources=true -p:SymbolPackageFormat=snupkg
-dotnet pack -c Release -o ./publish ./src/SeeingSharp.WinUI /p:ContinuousIntegrationBuild=true /p:IncludeSymbols=true /p:EmbedUntrackedSources=true -p:SymbolPackageFormat=snupkg
 
 # Build and pack SeeingSharp.Uwp by MSBuild (still old project format)
 &$msbuildExe src/SeeingSharp.Uwp/SeeingSharp.Uwp.csproj /t:Build /p:Configuration=Release /p:ContinuousIntegrationBuild=true
@@ -50,9 +49,9 @@ nuget pack src/SeeingSharp.Uwp/SeeingSharp.Uwp.nuspec -OutputDirectory publish
 &$msbuildExe src\SeeingSharp.WinUI\SeeingSharp.WinUI.csproj /t:Build /p:Configuration=Release /p:ContinuousIntegrationBuild=true /p:IncludeSymbols=true /p:EmbedUntrackedSources=true /t:pack /p:SymbolPackageFormat=snupkg /p:OutputPath=../../publish/SeeingSharp.WinUI
 
 # Publish sample applications
-dotnet publish -c Release -f net5.0-windows -o ./publish/WinFormsSamples ./src/Samples/SeeingSharp.WinFormsSamples
-dotnet publish -c Release -f net5.0-windows -o ./publish/WpfSamples ./src/Samples/SeeingSharp.WpfSamples
-dotnet publish -c Release -f net5.0-windows -o ./publish/ModelViewer ./src/Tools/SeeingSharp.ModelViewer
+dotnet publish -c Release -f net6.0-windows -o ./publish/WinFormsSamples ./src/Samples/SeeingSharp.WinFormsSamples
+dotnet publish -c Release -f net6.0-windows -o ./publish/WpfSamples ./src/Samples/SeeingSharp.WpfSamples
+dotnet publish -c Release -f net6.0-windows -o ./publish/ModelViewer ./src/Tools/SeeingSharp.ModelViewer
 
 # Compress sample applications to have one zip archive for each
 $compress = @{
