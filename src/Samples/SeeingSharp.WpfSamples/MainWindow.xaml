@@ -21,11 +21,12 @@
         <StackPanel Grid.Row="0"
                     Orientation="Vertical"
                     Background="#BBD3D3D3">
-            <Menu Background="Transparent"
-                  Margin="2">
+            <Menu Background="#0975C6" Foreground="White"
+                  Margin="0" Height="25">
                 <Menu.Resources>
                     <Style TargetType="MenuItem">
                         <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="Margin" Value="3" />
                     </Style>
                 </Menu.Resources>
 
@@ -34,20 +35,20 @@
                 <MenuItem Header="New child window"
                       Click="OnMnuCmdNewChildWindow_Click" />
                 <MenuItem Header="Change resolution">
-                    <MenuItem Header="To 800x600"
+                    <MenuItem Header="To 800x600" Foreground="Black"
                           Click="OnMnuCmdChangeResolution_Click"
                           Tag="800x600" />
-                    <MenuItem Header="To 1024x768"
+                    <MenuItem Header="To 1024x768" Foreground="Black"
                           Click="OnMnuCmdChangeResolution_Click"
                           Tag="1024x768" />
-                    <MenuItem Header="To 1280x1024"
+                    <MenuItem Header="To 1280x1024" Foreground="Black"
                           Click="OnMnuCmdChangeResolution_Click"
                           Tag="1280x1024" />
-                    <MenuItem Header="To 1600x1200"
+                    <MenuItem Header="To 1600x1200" Foreground="Black"
                           Click="OnMnuCmdChangeResolution_Click"
                           Tag="1600x1200" />
                     <Separator />
-                    <MenuItem Header="To 1024x1024"
+                    <MenuItem Header="To 1024x1024" Foreground="Black"
                           Click="OnMnuCmdChangeResolution_Click"
                           Tag="1024x1024" />
                 </MenuItem>
@@ -55,7 +56,7 @@
 
             <ListBox HorizontalAlignment="Left"
                  Background="Transparent"
-                 Foreground="White" BorderThickness="0"
+                 BorderThickness="0"
                  ItemsSource="{Binding Path=SampleGroups}"
                  SelectedItem="{Binding Path=SelectedGroup, Mode=TwoWay}">
                 <ListBox.Resources>
@@ -66,7 +67,7 @@
 
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <WrapPanel Background="#0975C6" />
+                        <WrapPanel />
                     </ItemsPanelTemplate>
                 </ListBox.ItemsPanel>
             </ListBox>
