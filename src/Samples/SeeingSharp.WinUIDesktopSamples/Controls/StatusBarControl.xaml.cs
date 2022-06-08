@@ -27,6 +27,9 @@ namespace SeeingSharp.WinUIDesktopSamples.Controls
 
         public int CountDrawCalls => this.CtrlRenderer?.RenderLoop.CountDrawCalls ?? 0;
 
+        public string DpiScaleFactor =>
+            $"{this.CtrlRenderer?.RenderLoop.CurrentDpiScaling.ScaleFactorX:F2}x{this.CtrlRenderer?.RenderLoop.CurrentDpiScaling.ScaleFactorY:F2}";
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public StatusBarControl()
@@ -62,6 +65,7 @@ namespace SeeingSharp.WinUIDesktopSamples.Controls
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CountResources)));
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CountObjects)));
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CountDrawCalls)));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.DpiScaleFactor)));
         }
     }
 }

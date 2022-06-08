@@ -55,5 +55,9 @@
         <TextBlock Text="# Draw calls:" />
         <TextBlock Text="{x:Bind Path=CountDrawCalls, Mode=OneWay}" />
 
+        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE740;" />
+        <TextBlock Text="# Dpi scale factors:" />
+        <TextBlock Text="{x:Bind Path=DpiScaleFactor, Mode=OneWay}" />
+
     </StackPanel>
 </UserControl>
