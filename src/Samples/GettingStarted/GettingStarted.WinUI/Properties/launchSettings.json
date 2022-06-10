@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "GettingStarted.WinUI (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "GettingStarted.WinUI (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}
