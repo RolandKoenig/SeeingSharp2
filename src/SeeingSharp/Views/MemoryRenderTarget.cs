@@ -15,7 +15,7 @@ namespace SeeingSharp.Views
 {
     //For handling of staging resource see
     // http://msdn.microsoft.com/en-us/library/windows/desktop/ff476259(v=vs.85).aspx
-    public class MemoryRenderTarget : IDisposable, ISeeingSharpPainter, IRenderLoopHost
+    public class MemoryRenderTarget : IDisposable, ISeeingSharpPainter, IRenderLoopHost, IDpiScalingProvider
     {
         // Configuration
         private int _pixelWidth;
@@ -84,6 +84,12 @@ namespace SeeingSharp.Views
             this.RenderLoop = new RenderLoop(syncContext, this);
             this.RenderLoop.Camera.SetScreenSize(pixelWidth, pixelHeight);
             this.RenderLoop.RegisterRenderLoop();
+        }
+
+        /// <inheritdoc />
+        public DpiScaling GetCurrentDpiScaling()
+        {
+            return DpiScaling.Default;
         }
 
         /// <summary>

@@ -427,11 +427,9 @@ namespace SeeingSharp.Views
             var viewPort = GraphicsHelper.Internals.CreateDefaultViewport(viewSize.Width, viewSize.Height);
             _lastRefreshTargetSize = new GDI.SizeF(viewSize.Width, viewSize.Height);
 
-            var dpiScaling = new DpiScaling
-            {
-                DpiX = (float)(96.0 * _targetPanel!.CompositionScaleX),
-                DpiY = (float)(96.0 * _targetPanel!.CompositionScaleY)
-            };
+            var dpiScaling = DpiScaling.GetByScaleFactors(
+                _targetPanel!.CompositionScaleX,
+                _targetPanel!.CompositionScaleY);
 
             return Tuple.Create(backBufferForRenderloop, _renderTargetView, _depthBuffer, _renderTargetDepth, viewPort, viewSize, dpiScaling);
         }

@@ -21,7 +21,7 @@ using GDI = System.Drawing;
 
 namespace SeeingSharp.Views
 {
-    public class SeeingSharpRendererControl : Panel, ISeeingSharpPainter, IInputEnabledView, IRenderLoopHost
+    public class SeeingSharpRendererControl : Panel, ISeeingSharpPainter, IInputEnabledView, IRenderLoopHost, IDpiScalingProvider
     {
         private const string TEXT_GRAPHICS_NOT_INITIALIZED = "Graphics not initialized!";
 
@@ -172,6 +172,13 @@ namespace SeeingSharp.Views
             this.Disposed += this.OnDisposed;
 
             this.UpdateDrawingResourcesForFailoverRendering();
+        }
+
+        /// <inheritdoc />
+        public DpiScaling GetCurrentDpiScaling()
+        {
+            // Win.Forms always uses pixel for rendering
+            return DpiScaling.Default;
         }
 
         /// <summary>

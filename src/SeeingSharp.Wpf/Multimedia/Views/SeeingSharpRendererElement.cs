@@ -22,7 +22,7 @@ using GDI = System.Drawing;
 
 namespace SeeingSharp.Views
 {
-    public class SeeingSharpRendererElement : Image, IInputEnabledView, ISeeingSharpPainter, IRenderLoopHost, INotifyPropertyChanged
+    public class SeeingSharpRendererElement : Image, IInputEnabledView, ISeeingSharpPainter, IRenderLoopHost, INotifyPropertyChanged, IDpiScalingProvider
     {
         private static Duration s_maxImageLockDuration = new(TimeSpan.FromMilliseconds(100.0));
 
@@ -241,7 +241,7 @@ namespace SeeingSharp.Views
         /// <summary>
         /// Gets the current DpiScaling mode.
         /// </summary>
-        public DpiScaling GetDpiScaling()
+        public DpiScaling GetCurrentDpiScaling()
         {
             var source = PresentationSource.FromVisual(this);
             var dpiScaleFactorX = 1.0;
@@ -514,7 +514,7 @@ namespace SeeingSharp.Views
             _lastRecreateHeight = height;
 
             // Return all generated objects
-            return Tuple.Create(_backBufferD3D11!, _renderTarget!, _depthBuffer!, _renderTargetDepth!, viewPort, new GDI.Size(width, height), this.GetDpiScaling());
+            return Tuple.Create(_backBufferD3D11!, _renderTarget!, _depthBuffer!, _renderTargetDepth!, viewPort, new GDI.Size(width, height), this.GetCurrentDpiScaling());
         }
 
         /// <summary>

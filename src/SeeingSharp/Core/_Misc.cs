@@ -94,10 +94,22 @@ namespace SeeingSharp.Core
         public float DpiX;
         public float DpiY;
 
-        public DpiScaling(float dpiX, float dpiY)
+        public static DpiScaling GetByDpi(float dpiX, float dpiY)
         {
-            DpiX = dpiX;
-            DpiY = dpiY;
+            return new DpiScaling()
+            {
+                DpiX = dpiX,
+                DpiY = dpiY
+            };
+        }
+
+        public static DpiScaling GetByScaleFactors(float scaleFactorX, float scaleFactorY)
+        {
+            return  new DpiScaling
+            {
+                DpiX = (float)(96.0 * scaleFactorX),
+                DpiY = (float)(96.0 * scaleFactorY)
+            }; 
         }
 
         public float ScaleFactorX => DpiX / 96.0f;

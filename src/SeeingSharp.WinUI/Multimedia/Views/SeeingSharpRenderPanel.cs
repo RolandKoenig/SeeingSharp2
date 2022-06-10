@@ -11,7 +11,7 @@ using SeeingSharp.Input;
 
 namespace SeeingSharp.Views
 {
-    public class SeeingSharpRenderPanel : SwapChainPanel, IInputEnabledView, INotifyPropertyChanged
+    public class SeeingSharpRenderPanel : SwapChainPanel, IInputEnabledView, INotifyPropertyChanged, IDpiScalingProvider
     {
         private SeeingSharpPanelPainter _painter;
 
@@ -124,6 +124,13 @@ namespace SeeingSharp.Views
         private void OnRenderLoop_CurrentViewSizeChanged(object? sender, EventArgs e)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CurrentViewSize)));
+        }
+
+        /// <inheritdoc />
+        public DpiScaling GetCurrentDpiScaling()
+        {
+            return DpiScaling.GetByScaleFactors(
+                this.CompositionScaleX, this.CompositionScaleY);
         }
     }
 }

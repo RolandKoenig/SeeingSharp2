@@ -17,6 +17,7 @@ using SeeingSharp.DrawingVideo;
 using SeeingSharp.Input;
 using SeeingSharp.Mathematics;
 using SeeingSharp.Util;
+using SeeingSharp.Views;
 using SharpGen.Runtime;
 using Vortice.DXGI;
 using BoundingBox = SeeingSharp.Mathematics.BoundingBox;
@@ -30,7 +31,7 @@ namespace SeeingSharp.Core
     /// <summary>
     /// This class controls rendering logic behind each view object.
     /// </summary>
-    public class RenderLoop : IDisposable
+    public class RenderLoop : IDisposable, IDpiScalingProvider
     {
         // Configuration values
         private GraphicsViewConfiguration _configuration;
@@ -355,118 +356,6 @@ namespace SeeingSharp.Core
         }
 
         /// <summary>
-        /// Transforms the given coordinate from pixel to dip (device independent pixel).
-        /// </summary>
-        public float TransformXCoordinateFromPixelToDip(float xCoordinate)
-        {
-            return xCoordinate / Math.Max(_currentDpiScaling.ScaleFactorX, 1f);
-        }
-
-        /// <summary>
-        /// Transforms the given coordinate from pixel to dip (device independent pixel).
-        /// </summary>
-        public float TransformYCoordinateFromPixelToDip(float yCoordinate)
-        {
-            return yCoordinate / Math.Max(_currentDpiScaling.ScaleFactorY, 1f);
-        }
-
-        /// <summary>
-        /// Transforms the given coordinate from dip (device independent pixel) to pixel.
-        /// </summary>
-        public float TransformXCoordinateFromDipToPixel(float xCoordinate)
-        {
-            return xCoordinate * _currentDpiScaling.ScaleFactorX;
-        }
-
-        /// <summary>
-        /// Transforms the given coordinate from dip (device independent pixel) to pixel.
-        /// </summary>
-        public float TransformYCoordinateFromDipToPixel(float yCoordinate)
-        {
-            return yCoordinate * _currentDpiScaling.ScaleFactorY;
-        }
-
-        /// <summary>
-        /// Transforms the given point from pixel to dip (device independent pixel).
-        /// </summary>
-        public Point TransformPointFromPixelToDip(Point point)
-        {
-            return new Point(
-                (int)this.TransformXCoordinateFromPixelToDip(point.X),
-                (int)this.TransformYCoordinateFromPixelToDip(point.Y));
-        }
-
-        /// <summary>
-        /// Transforms the given point from dip (device independent pixel) to pixel.
-        /// </summary>
-        public Point TransformPointFromDipToPixel(Point point)
-        {
-            return new Point(
-                (int)this.TransformXCoordinateFromDipToPixel(point.X),
-                (int)this.TransformYCoordinateFromDipToPixel(point.Y));
-        }
-
-        /// <summary>
-        /// Transforms the given point from pixel to dip (device independent pixel).
-        /// </summary>
-        public PointF TransformPointFromPixelToDip(PointF point)
-        {
-            return new PointF(
-                this.TransformXCoordinateFromPixelToDip(point.X),
-                this.TransformYCoordinateFromPixelToDip(point.Y));
-        }
-
-        /// <summary>
-        /// Transforms the given point from dip (device independent pixel) to pixel.
-        /// </summary>
-        public PointF TransformPointFromDipToPixel(PointF point)
-        {
-            return new PointF(
-                this.TransformXCoordinateFromDipToPixel(point.X),
-                this.TransformYCoordinateFromDipToPixel(point.Y));
-        }
-
-        /// <summary>
-        /// Transforms the given size from pixel to dip (device independent pixel).
-        /// </summary>
-        public Size TransformSizeFromPixelToDip(Size size)
-        {
-            return new Size(
-                (int)this.TransformXCoordinateFromPixelToDip(size.Width),
-                (int)this.TransformYCoordinateFromPixelToDip(size.Height));
-        }
-
-        /// <summary>
-        /// Transforms the given size from dip (device independent pixel) to pixel.
-        /// </summary>
-        public Size TransformSizeFromDipToPixel(Size size)
-        {
-            return new Size(
-                (int)this.TransformXCoordinateFromDipToPixel(size.Width),
-                (int)this.TransformYCoordinateFromDipToPixel(size.Height));
-        }
-
-        /// <summary>
-        /// Transforms the given size from pixel to dip (device independent pixel).
-        /// </summary>
-        public SizeF TransformSizeFromPixelToDip(SizeF size)
-        {
-            return new SizeF(
-                this.TransformXCoordinateFromPixelToDip(size.Width),
-                this.TransformYCoordinateFromPixelToDip(size.Height));
-        }
-
-        /// <summary>
-        /// Transforms the given size from dip (device independent pixel) to pixel.
-        /// </summary>
-        public SizeF TransformSizeFromDipToPixel(SizeF size)
-        {
-            return new SizeF(
-                this.TransformXCoordinateFromDipToPixel(size.Width),
-                this.TransformYCoordinateFromDipToPixel(size.Height));
-        }
-
-        /// <summary>
         /// Dumps states of target buffers during rendering (like color- or depth buffer states).
         /// </summary>
         public Task<RenderPassDump> DumpRenderPassesAsync()
@@ -492,6 +381,9 @@ namespace SeeingSharp.Core
 
             _targetSize = new Size(width, height);
         }
+
+        /// <inheritdoc />
+        public DpiScaling GetCurrentDpiScaling() => _currentDpiScaling;
 
         /// <summary>
         /// Gets the current index of this view within the current scene.
