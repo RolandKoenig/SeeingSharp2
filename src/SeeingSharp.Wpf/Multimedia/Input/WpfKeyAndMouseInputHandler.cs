@@ -282,10 +282,15 @@ namespace SeeingSharp.Input
             {
                 var moveDistance = currentPosition - _lastDragPoint;
                 var renderSize = _rendererElement.RenderSize;
+
+                var currentPositionVector = new Vector2((float) currentPosition.X, (float) currentPosition.Y);
+                var currentMoveDistanceVector = new Vector2((float) moveDistance.X, (float) moveDistance.Y);
+                var currentRenderSizeVector = new Vector2((float) renderSize.Width, (float) renderSize.Height);
+
                 _stateMouseOrPointer.Internals.NotifyMouseLocation(
-                    new Vector2((float)currentPosition.X, (float)currentPosition.Y),
-                    new Vector2((float)moveDistance.X, (float)moveDistance.Y),
-                    new Vector2((float)renderSize.Width, (float)renderSize.Height));
+                    _rendererElement.TransformVector2FromDipToPixel(currentPositionVector),
+                    _rendererElement.TransformVector2FromDipToPixel(currentMoveDistanceVector),
+                    _rendererElement.TransformVector2FromDipToPixel(currentRenderSizeVector));
             }
 
             _lastDragPointValid = true;

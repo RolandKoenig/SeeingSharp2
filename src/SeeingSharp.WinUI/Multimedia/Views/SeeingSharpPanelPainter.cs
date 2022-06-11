@@ -95,15 +95,6 @@ namespace SeeingSharp.Views
         /// </summary>
         public GDI.Size PixelSize => this.GetTargetRenderPixelSize();
 
-        public GDI.Size ActualSize
-        {
-            get
-            {
-                if (_targetPanel == null) { return GDI.Size.Empty; }
-                else{ return new GDI.Size((int)_targetPanel.ActualWidth, (int)_targetPanel.ActualHeight); }
-            }
-        }
-
         /// <summary>
         /// Gets or sets the clear color for the 3D view.
         /// </summary>

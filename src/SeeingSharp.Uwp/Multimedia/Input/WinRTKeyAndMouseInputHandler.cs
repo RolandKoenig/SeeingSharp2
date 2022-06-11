@@ -295,6 +295,7 @@ namespace SeeingSharp.Input
         {
             if (_painter == null) { return; }
             if (_targetPanel == null) { return; }
+            if (_renderLoop == null) { return; }
 
             // Calculate move distance
             var currentPoint = e.GetCurrentPoint(_targetPanel);
@@ -323,9 +324,11 @@ namespace SeeingSharp.Input
                     pointProperties.IsXButton1Pressed,
                     pointProperties.IsXButton2Pressed);
 
-                var actSize = _painter.ActualSize;
+                var actSize = _painter.PixelSize;
                 _stateMouseOrPointer.Internals.NotifyMouseLocation(
-                    currentLocation, moveDistance, new Vector2(actSize.Width, actSize.Height));
+                    _renderLoop.TransformVector2FromDipToPixel(currentLocation), 
+                    _renderLoop.TransformVector2FromDipToPixel(moveDistance), 
+                    new Vector2(actSize.Width, actSize.Height));
             }
 
             // Store last drag point

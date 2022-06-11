@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Numerics;
 
 namespace SeeingSharp.Views
 {
@@ -187,6 +188,30 @@ namespace SeeingSharp.Views
             return new SizeF(
                 dpiScalingProvider.TransformXCoordinateFromDipToPixel(size.Width),
                 dpiScalingProvider.TransformYCoordinateFromDipToPixel(size.Height));
+        }
+
+        /// <summary>
+        /// Transforms the given size from pixel to dip (device independent pixel).
+        /// </summary>
+        public static Vector2 TransformVector2FromPixelToDip(
+            this IDpiScalingProvider dpiScalingProvider,
+            Vector2 vector)
+        {
+            return new Vector2(
+                dpiScalingProvider.TransformXCoordinateFromPixelToDip(vector.X),
+                dpiScalingProvider.TransformYCoordinateFromPixelToDip(vector.Y));
+        }
+
+        /// <summary>
+        /// Transforms the given size from dip (device independent pixel) to pixel.
+        /// </summary>
+        public static Vector2 TransformVector2FromDipToPixel(
+            this IDpiScalingProvider dpiScalingProvider,
+            Vector2 vector)
+        {
+            return new Vector2(
+                dpiScalingProvider.TransformXCoordinateFromDipToPixel(vector.X),
+                dpiScalingProvider.TransformYCoordinateFromDipToPixel(vector.Y));
         }
     }
 }

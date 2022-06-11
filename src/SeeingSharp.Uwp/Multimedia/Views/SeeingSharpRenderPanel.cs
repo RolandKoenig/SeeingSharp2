@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 using SeeingSharp.Core;
@@ -11,7 +12,7 @@ using SeeingSharp.Input;
 
 namespace SeeingSharp.Views
 {
-    public class SeeingSharpRenderPanel : SwapChainPanel, IInputEnabledView, INotifyPropertyChanged
+    public class SeeingSharpRenderPanel : SwapChainPanel, IInputEnabledView, INotifyPropertyChanged, IDpiScalingProvider
     {
         private SeeingSharpPanelPainter _painter;
 
@@ -110,6 +111,26 @@ namespace SeeingSharp.Views
             _painter = new SeeingSharpPanelPainter(this);
             _painter.RenderLoop.CurrentViewSizeChanged += this.OnRenderLoop_CurrentViewSizeChanged;
             _painter.RenderLoop.DeviceChanged += this.OnRenderLoop_DeviceChanged;
+        }
+
+        /// <summary>
+        /// Gets the object on the given location (location local to this control).
+        /// </summary>
+        /// <param name="pickingOptions">Options for picking logic.</param>
+        /// <param name="location">X, Y location of the cursor in DIP.</param>
+        public Task<List<SceneObject>> PickObjectAsync(Windows.Foundation.Point location, PickingOptions pickingOptions)
+        {
+            var pixelPoint = new System.Drawing.Point(
+                (int) this.TransformXCoordinateFromDipToPixel(location.X),
+                (int) this.TransformYCoordinateFromDipToPixel(location.Y));
+            return this.RenderLoop.PickObjectAsync(pixelPoint, pickingOptions);
+        }
+
+        /// <inheritdoc />
+        public DpiScaling GetCurrentDpiScaling()
+        {
+            return DpiScaling.GetByScaleFactors(
+                this.CompositionScaleX, this.CompositionScaleY);
         }
 
         private void OnRenderLoop_DeviceChanged(object sender, EventArgs e)

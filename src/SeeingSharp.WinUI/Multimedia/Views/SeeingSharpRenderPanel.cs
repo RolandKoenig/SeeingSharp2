@@ -130,6 +130,13 @@ namespace SeeingSharp.Views
             return this.RenderLoop.PickObjectAsync(pixelPoint, pickingOptions);
         }
 
+        /// <inheritdoc />
+        public DpiScaling GetCurrentDpiScaling()
+        {
+            return DpiScaling.GetByScaleFactors(
+                this.CompositionScaleX, this.CompositionScaleY);
+        }
+
         private void OnRenderLoop_DeviceChanged(object? sender, EventArgs e)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.Device)));
@@ -138,13 +145,6 @@ namespace SeeingSharp.Views
         private void OnRenderLoop_CurrentViewSizeChanged(object? sender, EventArgs e)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CurrentViewSize)));
-        }
-
-        /// <inheritdoc />
-        public DpiScaling GetCurrentDpiScaling()
-        {
-            return DpiScaling.GetByScaleFactors(
-                this.CompositionScaleX, this.CompositionScaleY);
         }
     }
 }
