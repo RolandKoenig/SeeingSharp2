@@ -9,12 +9,16 @@ namespace SeeingSharp.WinFormsSamples
         [STAThread]
         private static void Main()
         {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+#if NETCOREAPP3_0_OR_GREATER
+            Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
+#endif
+
             GraphicsCore.Loader
                 .SupportWinForms()
                 .Load();
 
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainWindow());
         }
     }
