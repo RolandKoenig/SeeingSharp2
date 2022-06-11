@@ -31,7 +31,7 @@
 
         <Image Source="Assets/Icons/Output16x16.png"
                Width="16" />
-        <TextBlock Text="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.CurrentViewSize}" />
+        <TextBlock Text="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.CurrentViewSizePixel}" />
         <TextBlock Text="px" />
         <Rectangle Width="1"
                    Fill="Gray" />

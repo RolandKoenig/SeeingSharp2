@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Threading;
@@ -90,6 +91,16 @@ namespace SeeingSharp.Views
         public DpiScaling GetCurrentDpiScaling()
         {
             return DpiScaling.Default;
+        }
+
+        /// <summary>
+        /// Gets the object on the given location (location local to this control).
+        /// </summary>
+        /// <param name="pickingOptions">Options for picking logic.</param>
+        /// <param name="location">X, Y location of the cursor in DIP.</param>
+        public Task<List<SceneObject>?> PickObjectAsync(Point location, PickingOptions pickingOptions)
+        {
+            return this.RenderLoop.PickObjectAsync(location, pickingOptions);
         }
 
         /// <summary>

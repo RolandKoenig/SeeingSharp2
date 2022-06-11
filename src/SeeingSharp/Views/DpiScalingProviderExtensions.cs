@@ -50,6 +50,50 @@ namespace SeeingSharp.Views
         }
 
         /// <summary>
+        /// Transforms the given coordinate from pixel to dip (device independent pixel).
+        /// </summary>
+        public static double TransformXCoordinateFromPixelToDip(
+            this IDpiScalingProvider dpiScalingProvider, 
+            double xCoordinate)
+        {
+            var currentDpiScaling = dpiScalingProvider.GetCurrentDpiScaling();
+            return xCoordinate / Math.Max(currentDpiScaling.ScaleFactorX, 1f);
+        }
+
+        /// <summary>
+        /// Transforms the given coordinate from pixel to dip (device independent pixel).
+        /// </summary>
+        public static double TransformYCoordinateFromPixelToDip(
+            this IDpiScalingProvider dpiScalingProvider,
+            double yCoordinate)
+        {
+            var currentDpiScaling = dpiScalingProvider.GetCurrentDpiScaling();
+            return yCoordinate / Math.Max(currentDpiScaling.ScaleFactorY, 1f);
+        }
+
+        /// <summary>
+        /// Transforms the given coordinate from dip (device independent pixel) to pixel.
+        /// </summary>
+        public static double TransformXCoordinateFromDipToPixel(
+            this IDpiScalingProvider dpiScalingProvider,
+            double xCoordinate)
+        {
+            var currentDpiScaling = dpiScalingProvider.GetCurrentDpiScaling();
+            return xCoordinate * currentDpiScaling.ScaleFactorX;
+        }
+
+        /// <summary>
+        /// Transforms the given coordinate from dip (device independent pixel) to pixel.
+        /// </summary>
+        public static double TransformYCoordinateFromDipToPixel(
+            this IDpiScalingProvider dpiScalingProvider,
+            double yCoordinate)
+        {
+            var currentDpiScaling = dpiScalingProvider.GetCurrentDpiScaling();
+            return yCoordinate * currentDpiScaling.ScaleFactorY;
+        }
+
+        /// <summary>
         /// Transforms the given point from pixel to dip (device independent pixel).
         /// </summary>
         public static Point TransformPointFromPixelToDip(

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Interop;
@@ -135,7 +136,10 @@ namespace SeeingSharp.Views
 
         public GraphicsViewConfiguration Configuration => this.RenderLoop.Configuration;
 
-        public Size CurrentViewSize
+        /// <summary>
+        /// Gets the current view size in pixel.
+        /// </summary>
+        public Size CurrentViewSizePixel
         {
             get
             {
@@ -260,43 +264,16 @@ namespace SeeingSharp.Views
         }
 
         /// <summary>
-        /// Gets the pixel size of the given UIElement.
+        /// Gets the object on the given location (location local to this control).
         /// </summary>
-        /// <param name="minSize">The minimum size to be returned.</param>
-        public Size GetPixelSize(Size minSize)
+        /// <param name="pickingOptions">Options for picking logic.</param>
+        /// <param name="location">X, Y location of the cursor in DIP.</param>
+        public Task<List<SceneObject>?> PickObjectAsync(Point location, PickingOptions pickingOptions)
         {
-            var source = PresentationSource.FromVisual(this);
-            var dpiScaleFactorX = 1.0;
-            var dpiScaleFactorY = 1.0;
-            if (source?.CompositionTarget != null)
-            {
-                dpiScaleFactorX = source.CompositionTarget.TransformToDevice.M11;
-                dpiScaleFactorY = source.CompositionTarget.TransformToDevice.M22;
-            }
-
-            return new Size(
-                Math.Max(this.RenderSize.Width * dpiScaleFactorX, 100),
-                Math.Max(this.RenderSize.Height * dpiScaleFactorY, 100));
-        }
-
-        /// <summary>
-        /// Transforms the given wpf point to pure pixel coordinates.
-        /// </summary>
-        /// <param name="wpfPoint">The wpf point to be transformed.</param>
-        public Point GetPixelLocation(Point wpfPoint)
-        {
-            var source = PresentationSource.FromVisual(this);
-            var dpiScaleFactorX = 1.0;
-            var dpiScaleFactorY = 1.0;
-            if (source?.CompositionTarget != null)
-            {
-                dpiScaleFactorX = source.CompositionTarget.TransformToDevice.M11;
-                dpiScaleFactorY = source.CompositionTarget.TransformToDevice.M22;
-            }
-
-            return new Point(
-                wpfPoint.X * dpiScaleFactorX,
-                wpfPoint.Y * dpiScaleFactorY);
+            var pixelPoint = new System.Drawing.Point(
+                (int) this.TransformXCoordinateFromDipToPixel(location.X),
+                (int) this.TransformYCoordinateFromDipToPixel(location.Y));
+            return this.RenderLoop.PickObjectAsync(pixelPoint, pickingOptions);
         }
 
         /// <summary>
@@ -358,7 +335,7 @@ namespace SeeingSharp.Views
 
         private void OnRenderLoop_CurrentViewSizeChanged(object? sender, EventArgs e)
         {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CurrentViewSize)));
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(this.CurrentViewSizePixel)));
         }
 
         /// <summary>

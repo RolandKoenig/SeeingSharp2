@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing.Drawing2D;
@@ -43,7 +42,6 @@ namespace SeeingSharp.Views
         private GDI.Pen? _borderPen;
 
         // Misc
-        private bool _isMouseInside;
         private DateTime _lastSizeChange;
         private Dictionary<MouseButtons, DateTime> _mouseButtonDownTime;
 
@@ -182,31 +180,13 @@ namespace SeeingSharp.Views
         }
 
         /// <summary>
-        /// Gets the scene object below the cursor.
+        /// Gets the object on the given location (location local to this control).
         /// </summary>
-        public async Task<SceneObject?> GetObjectBelowCursorAsync()
+        /// <param name="pickingOptions">Options for picking logic.</param>
+        /// <param name="location">X, Y location of the cursor in DIP.</param>
+        public Task<List<SceneObject>?> PickObjectAsync(GDI.Point location, PickingOptions pickingOptions)
         {
-            if (!_isMouseInside) { return null; }
-
-            var objects = await _renderLoop.PickObjectAsync(
-                this.PointToClient(Cursor.Position),
-                new PickingOptions { OnlyCheckBoundingBoxes = false });
-            return objects?.FirstOrDefault();
-        }
-
-        /// <summary>
-        /// Gets all objects that are below the cursor.
-        /// </summary>
-        public async Task<List<SceneObject>?> GetObjectsBelowCursorAsync()
-        {
-            if (!_isMouseInside)
-            {
-                return null;
-            }
-
-            return await _renderLoop.PickObjectAsync(
-                this.PointToClient(Cursor.Position),
-                new PickingOptions { OnlyCheckBoundingBoxes = false });
+            return this.RenderLoop.PickObjectAsync(location, pickingOptions);
         }
 
         /// <summary>
@@ -372,27 +352,6 @@ namespace SeeingSharp.Views
                     this.MouseClickEx?.Invoke(this, e);
                 }
             }
-        }
-
-        /// <summary>
-        /// Called when the mouse is inside the area of this control.
-        /// </summary>
-        protected override void OnMouseEnter(EventArgs e)
-        {
-            base.OnMouseEnter(e);
-
-            _isMouseInside = true;
-        }
-
-        /// <summary>
-        /// Called when the mouse is outside the area of this control.
-        /// </summary>
-        protected override void OnMouseLeave(EventArgs e)
-        {
-            base.OnMouseLeave(e);
-
-            _isMouseInside = false;
-            _mouseButtonDownTime.Clear();
         }
 
         /// <summary>

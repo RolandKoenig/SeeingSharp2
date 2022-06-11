@@ -36,9 +36,9 @@
         <materialDesign:PackIcon Kind="Monitor" 
                                  Margin="0,2,2,2"/>
         <TextBlock Text="Resolution:" />
-        <TextBlock Text="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.CurrentViewSize.Width}" />
+        <TextBlock Text="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.CurrentViewSizePixel.Width}" />
         <TextBlock Text="x" />
-        <TextBlock Text="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.CurrentViewSize.Height}" />
+        <TextBlock Text="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.CurrentViewSizePixel.Height}" />
         <TextBlock Text="px" />
 
         <materialDesign:PackIcon Kind="PackageVariantClosed" />
