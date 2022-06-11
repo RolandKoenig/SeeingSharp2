@@ -419,7 +419,7 @@ namespace SeeingSharp.Views
                     RenderCapability.Tier >> 16 >= 2)
                 {
                     var handlerD3D9 = engineDevice.TryGetAdditionalDeviceHandler<DeviceHandlerD3D9>();
-                    if (handlerD3D9?.Device != null)
+                    if (handlerD3D9?.IsInitialized == true)
                     {
                         try
                         {

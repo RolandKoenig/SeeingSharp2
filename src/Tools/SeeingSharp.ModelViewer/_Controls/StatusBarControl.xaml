@@ -59,7 +59,7 @@
         <materialDesign:PackIcon Kind="ExpansionCard" />
         <TextBlock Text="Graphics Device:" />
         <ComboBox ItemsSource="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.PossibleDevices}"
-                  SelectedItem="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.SelectedDevice, Mode=TwoWay}"
+                  SelectedItem="{Binding ElementName=CtrlRoot, Path=CtrlRenderer.Device, Mode=TwoWay}"
                   VerticalAlignment="Center"
                   Width="200" />
 
