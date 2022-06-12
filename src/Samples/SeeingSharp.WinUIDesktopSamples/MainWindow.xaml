@@ -13,6 +13,7 @@
 
     <Grid x:Name="CtrlMainContent">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -26,13 +27,33 @@
             </Storyboard>
         </Grid.Resources>
 
-        <MenuBar Grid.Row="0"
+        <!-- Custom title bar -->
+        <Grid Grid.Row="0"
+              x:Name="CtrlAppTitleBar" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <ImageIcon Grid.Column="0" Source="Icon.ico"
+                       Width="32" Height="32" Margin="3" />
+
+            <Border Grid.Column="1" 
+                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <TextBlock  Text="{x:Bind Title}"
+                            VerticalAlignment="Top" 
+                            Margin="8,8,0,0"/>
+            </Border>
+        </Grid>
+
+        <MenuBar Grid.Row="1"
                  Style="{ThemeResource MainMenuBar}" FontWeight="Bold"
                  x:Name="CtrlMainMenuBar">
 
         </MenuBar>
 
-        <NavigationView Grid.Row="1" 
+        <NavigationView Grid.Row="2" 
+                        Background="{ThemeResource GenericAcrylicBrush}"
                         IsBackButtonVisible="Collapsed"
                         IsBackEnabled="False"
                         IsSettingsVisible="False"
@@ -76,7 +97,7 @@
                 <sSharp:SeeingSharpRenderPanel x:Name="CtrlSwapChain" />
                 
                 <ListBox VerticalAlignment="Top"
-                         Background="{ThemeResource SystemControlAcrylicElementBrush}"
+                         Background="{ThemeResource GenericAcrylicBrush}"
                          ItemsSource="{x:Bind ViewModel.Samples}"
                          SelectedItem="{x:Bind ViewModel.SelectedSample, Mode=TwoWay}"
                          SelectionChanged="OnSelectedSampleChanged"
@@ -123,7 +144,7 @@
             </Grid>
         </NavigationView>
 
-        <ProgressRing Grid.Row="1" 
+        <ProgressRing Grid.Row="2" 
                       Visibility="{x:Bind ProgressRingVisibility, Mode=OneWay}"
                       IsActive="True"
                       Width="250" Height="250"/>

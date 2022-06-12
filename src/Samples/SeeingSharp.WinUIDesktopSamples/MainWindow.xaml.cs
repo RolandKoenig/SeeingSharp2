@@ -49,11 +49,14 @@ namespace SeeingSharp.WinUIDesktopSamples
         {
             this.InitializeComponent();
 
+            this.ExtendsContentIntoTitleBar = true;
+            this.SetTitleBar(CtrlAppTitleBar);
+
             _childPages = new List<ChildRenderWindow>();
 
             // Set window title
-            var package = Package.Current;
-            var appName = package.DisplayName;
+            //var package = Package.Current;
+            var appName = "WinUI 3 Samples";// package.DisplayName;
             this.Title = $@"{appName} - Main window - {Assembly.GetExecutingAssembly().GetName().Version}";
 
             this.LoadIcon("Icon.ico");
