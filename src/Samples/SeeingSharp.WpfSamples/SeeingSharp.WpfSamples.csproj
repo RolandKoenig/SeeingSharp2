@@ -5,6 +5,7 @@
     <OutputType>WinExe</OutputType>
     <LangVersion>9.0</LangVersion>
     <ApplicationIcon>Assets\SeeingSharp.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Assets\Icons\Adapter16x16.png" />

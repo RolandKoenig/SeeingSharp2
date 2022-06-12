@@ -11,7 +11,7 @@ namespace SeeingSharp.WinFormsSamples
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-#if NETCOREAPP3_0_OR_GREATER
+#if NET5_0_OR_GREATER
             Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
 #endif
 
