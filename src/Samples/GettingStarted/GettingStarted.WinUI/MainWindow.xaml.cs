@@ -45,6 +45,9 @@ namespace GettingStarted.WinUI
             }
             _sceneLoaded = true;
 
+            // Configuration
+            this.CtrlView3D.Configuration.AlphaEnabledSwapChain = true;
+
             // Build the scene
             var scene = this.CtrlView3D.Scene;
             await scene.ManipulateSceneAsync(manipulator =>
