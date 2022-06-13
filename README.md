@@ -19,11 +19,11 @@
 ### Common Information
 SeeingSharp is a 3D/2D rendering library for C# powered by Direct3D 11. It is meant for desktop applications (Win.Forms, Wpf, WinUI) or Windows Store Apps.
 The base library is separated into the following projects:
- - SeeingSharp (.Net Standard 2.0)
+ - SeeingSharp (.Net Standard 2.0, .Net 5.0, .Net 6.0)
  - SeeingSharp.Uwp (Universal Windows Platform)
- - SeeingSharp.Wpf (.Net Framework 4.8, .Net Core 3.1, .Net 5.0)
- - SeeingSharp.WinForms (.Net Framework 4.8, .Net Core 3.1, .Net 5.0)
- - SeeingSharp.WinUI (.Net 5.0)
+ - SeeingSharp.Wpf (.Net Framework 4.8, .Net 5.0, .Net 6.0)
+ - SeeingSharp.WinForms (.Net Framework 4.8, .Net 5.0, .Net 6.0)
+ - SeeingSharp.WinUI (.Net 5.0, .Net 6.0)
  
 The first one is the core library which contains all logic for 2D/3D-rendering. The others contain classes to integrate SeeingSharp 2 into 
 the particular gui framework. 
