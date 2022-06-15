@@ -45,11 +45,8 @@ namespace SeeingSharp.Util
 
         public void ReRegisterMemoryStream(MemoryStream memoryStream)
         {
-            var buffer = memoryStream.GetBuffer();
-            var newAroundSameBuffer = new MemoryStream(buffer, 0, buffer.Length, true, true);
-            newAroundSameBuffer.SetLength(0);
-
-            _memoryStreams.Push(newAroundSameBuffer);
+            memoryStream.SetLength(0);
+            _memoryStreams.Push(memoryStream);
         }
 
         public void Clear()
