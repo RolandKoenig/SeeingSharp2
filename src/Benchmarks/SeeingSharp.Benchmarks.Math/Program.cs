@@ -1,10 +1,12 @@
-﻿namespace SeeingSharp.Benchmarks.Math
+﻿using BenchmarkDotNet.Running;
+
+namespace SeeingSharp.Benchmarks.Math
 {
     class Program
     {
         static void Main(string[] args)
         {
-            //var summary = BenchmarkRunner.Run<SceneSpacialObject_Transform>();
+            var summary = BenchmarkRunner.Run<RingBufferBenchmark>();
         }
     }
 }
