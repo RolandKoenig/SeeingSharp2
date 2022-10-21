@@ -41,7 +41,7 @@ namespace SeeingSharp.Tests
             Assert.IsTrue(cache.Count == 0);
             MemoryStream? rememberedMemoryStreamFirst = null;
             using (cache.UseMemoryStream(out var memoryStreamFirst, 256))
-            using (var streamWriter = new StreamWriter(memoryStreamFirst))
+            using (var streamWriter = new StreamWriter(memoryStreamFirst, Encoding.UTF8, 1024, true))
             {
                 streamWriter.WriteLine("Test01");
                 streamWriter.WriteLine("Test02");
@@ -54,7 +54,7 @@ namespace SeeingSharp.Tests
             {
                 Assert.IsTrue(memoryStreamSecond.Length == 0);
                 Assert.IsTrue(memoryStreamSecond.Capacity == 256);
-                Assert.IsTrue(memoryStreamSecond != rememberedMemoryStreamFirst);
+                Assert.IsTrue(memoryStreamSecond == rememberedMemoryStreamFirst);
                 rememberedMemoryStreamSecond = memoryStreamSecond;
             }
 
