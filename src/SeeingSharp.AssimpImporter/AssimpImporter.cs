@@ -33,6 +33,8 @@ namespace SeeingSharp.AssimpImporter
             // Load all materials
             ProcessMaterials(modelContainer, scene);
 
+            ProcessTextures(sourceFile, modelContainer, scene);
+
             // Load all scene objects
             var boundBoxCalculator = new ObjectTreeBoundingBoxCalculator();
             ProcessNode(modelContainer, scene, scene.RootNode, null, boundBoxCalculator);
@@ -59,17 +61,47 @@ namespace SeeingSharp.AssimpImporter
                     modelContainer.GetResourceKey("Material", materialIndex.ToString()),
                     _ =>
                     {
-                        var materialResource = new StandardMaterialResource();
+                        var textureKey = NamedOrGenericKey.Empty;
+                        if (actMaterial.HasTextureDiffuse)
+                        {
+                            textureKey =
+                                modelContainer.GetResourceKey("Texture", actMaterial.TextureDiffuse.FilePath);
+                        }
+
+                        var materialResource = new StandardMaterialResource(textureKey);
                         if (actMaterial.HasColorDiffuse)
                         {
                             materialResource.UseVertexColors = false;
                             materialResource.MaterialDiffuseColor =
                                 AssimpHelper.Color4FromAssimp(actMaterial.ColorDiffuse);
                         }
+
                         return materialResource;
                     }));
             }
 
+        }
+
+        private static void ProcessTextures(ResourceLink currentFileLink, ImportedModelContainer modelContainer, Scene scene)
+        {
+            var materialCount = scene.MaterialCount;
+            for (var materialIndex = 0; materialIndex < materialCount; materialIndex++)
+            {
+                var actMaterial = scene.Materials[materialIndex];
+                if(!actMaterial.HasTextureDiffuse){ continue; }
+                if(string.IsNullOrEmpty(actMaterial.TextureDiffuse.FilePath)){ continue; }
+                
+                modelContainer.AddResource(new ImportedResourceInfo(
+                    modelContainer.GetResourceKey("Texture", actMaterial.TextureDiffuse.FilePath),
+                    _ => new StandardTextureResource(
+                        currentFileLink.GetForAnotherFile(actMaterial.TextureDiffuse.FilePath))));
+            }
+
+            // var textureCount = scene.TextureCount;
+            // for (var textureIndex = 0; textureIndex < textureCount; textureIndex++)
+            // {
+            //     var actTexture = scene.Textures[textureIndex];
+            // }
         }
 
         private static void ProcessNode(
@@ -131,7 +163,7 @@ namespace SeeingSharp.AssimpImporter
                         }
                         if (textureCoords1 != null)
                         {
-                            newVertex.TexCoord1 = AssimpHelper.Vector2FromAssimp(textureCoords1[actVertexId]);
+                            newVertex.TexCoord1 = AssimpHelper.TextureCoord2FromAssimp(textureCoords1[actVertexId]);
                         }
 
                         boundingBoxCalc.AddCoordinate(ref newVertex.Position);

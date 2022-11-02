@@ -31,6 +31,11 @@ namespace SeeingSharp.AssimpImporter
             return new Vector2(assimpVector.X, assimpVector.Y);
         }
 
+        public static Vector2 TextureCoord2FromAssimp(Vector3D assimpVector)
+        {
+            return new Vector2(assimpVector.X, -assimpVector.Y);
+        }
+
         public static Color4 Color4FromAssimp(Color4D assimpColor)
         {
             return new Color4(assimpColor.R, assimpColor.G, assimpColor.B, assimpColor.A);
