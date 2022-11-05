@@ -24,6 +24,8 @@
     <None Remove="Basics3D\ExtrudeGeometry\PreviewImage.png" />
     <None Remove="Basics3D\MultiMaterial\PreviewImage.png" />
     <None Remove="Basics3D\MultiMaterial\SimpleTexture.png" />
+    <None Remove="Basics3D\TextureSampling\PreviewImage.png" />
+    <None Remove="Basics3D\TextureSampling\PrimitiveTexture.png" />
     <None Remove="Basics3D\WireframeMaterial\PreviewImage.png" />
     <None Remove="Basics3D\ObjectFiltering\PreviewImage.png" />
     <None Remove="MassScenes\StaticCubes\PreviewImage.png" />
@@ -59,6 +61,8 @@
     <EmbeddedResource Include="Basics3D\ExtrudeGeometry\PreviewImage.png" />
     <EmbeddedResource Include="Basics3D\MultiMaterial\PreviewImage.png" />
     <EmbeddedResource Include="Basics3D\MultiMaterial\SimpleTexture.png" />
+    <EmbeddedResource Include="Basics3D\TextureSampling\PreviewImage.png" />
+    <EmbeddedResource Include="Basics3D\TextureSampling\PrimitiveTexture.png" />
     <EmbeddedResource Include="Basics3D\WireframeMaterial\PreviewImage.png" />
     <EmbeddedResource Include="Basics3D\ObjectFiltering\PreviewImage.png" />
     <EmbeddedResource Include="MassScenes\StaticCubes\PreviewImage.png" />
