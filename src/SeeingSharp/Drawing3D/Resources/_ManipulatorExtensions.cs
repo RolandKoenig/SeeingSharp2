@@ -55,8 +55,8 @@ namespace SeeingSharp.Drawing3D.Resources
         public static NamedOrGenericKey AddStandardMaterialResource(
             this SceneManipulator sceneManipulator,
             NamedOrGenericKey textureKey = default,
-            float clipFactor = 0f,
-            float maxClipDistance = 1000f,
+            float clipFactor = 0.1f,
+            float maxClipDistance = float.MaxValue,
             bool adjustTextureCoordinates = false,
             float addToAlpha = 0f,
             Color4 materialDiffuseColor = default,

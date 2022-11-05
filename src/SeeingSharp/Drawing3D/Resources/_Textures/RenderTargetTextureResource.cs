@@ -233,6 +233,8 @@ namespace SeeingSharp.Drawing3D.Resources
         /// <param name="resources">Parent ResourceDictionary.</param>
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
+            base.UnloadResourceInternal(device, resources);
+
             SeeingSharpUtil.SafeDispose(ref _depthBufferView);
             SeeingSharpUtil.SafeDispose(ref _colorBufferRenderTargetView);
             SeeingSharpUtil.SafeDispose(ref _colorBufferShaderResourceView);

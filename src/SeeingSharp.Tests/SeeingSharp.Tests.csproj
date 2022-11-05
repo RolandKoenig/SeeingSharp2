@@ -49,6 +49,8 @@
     <None Remove="Resources\Drawing3D\SimpleObject_DiffuseColorFromMaterial.png" />
     <None Remove="Resources\Drawing3D\SimpleObject_Ortho.png" />
     <None Remove="Resources\Drawing3D\SimpleObject_StackedGeometry.png" />
+    <None Remove="Resources\Drawing3D\SimpleObject_Textured.png" />
+    <None Remove="Resources\Drawing3D\SimpleObject_Textured_Point_Filter.png" />
     <None Remove="Resources\Drawing3D\SimpleObject_Transparent.png" />
     <None Remove="Resources\Drawing3D\Skybox.png" />
     <None Remove="Resources\ErrorHandling\SimpleObject.png" />
@@ -65,6 +67,7 @@
     <None Remove="Resources\Postprocessing\PostProcess_EdgeDetect.png" />
     <None Remove="Resources\Postprocessing\PostProcess_Focus.png" />
     <None Remove="Resources\Textures\Background.png" />
+    <None Remove="Resources\Textures\PrimitiveTexture.png" />
     <None Remove="Resources\Textures\SkyBox.dds" />
     <None Remove="Resources\TextureUploader\TestTexture.png" />
   </ItemGroup>
@@ -102,6 +105,8 @@
     <EmbeddedResource Include="Resources\Drawing3D\SimpleObject_DiffuseColorFromMaterial.png" />
     <EmbeddedResource Include="Resources\Drawing3D\SimpleObject_Ortho.png" />
     <EmbeddedResource Include="Resources\Drawing3D\SimpleObject_StackedGeometry.png" />
+    <EmbeddedResource Include="Resources\Drawing3D\SimpleObject_Textured.png" />
+    <EmbeddedResource Include="Resources\Drawing3D\SimpleObject_Textured_Point_Filter.png" />
     <EmbeddedResource Include="Resources\Drawing3D\SimpleObject_Transparent.png" />
     <EmbeddedResource Include="Resources\Drawing3D\Skybox.png" />
     <EmbeddedResource Include="Resources\ErrorHandling\SimpleObject.png" />
@@ -118,6 +123,7 @@
     <EmbeddedResource Include="Resources\Postprocessing\PostProcess_EdgeDetect.png" />
     <EmbeddedResource Include="Resources\Postprocessing\PostProcess_Focus.png" />
     <EmbeddedResource Include="Resources\Textures\Background.png" />
+    <EmbeddedResource Include="Resources\Textures\PrimitiveTexture.png" />
     <EmbeddedResource Include="Resources\Textures\SkyBox.dds" />
     <EmbeddedResource Include="Resources\TextureUploader\TestTexture.png" />
   </ItemGroup>

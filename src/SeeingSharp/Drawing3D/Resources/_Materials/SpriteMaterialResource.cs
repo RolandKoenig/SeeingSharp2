@@ -89,14 +89,13 @@ namespace SeeingSharp.Drawing3D.Resources
         /// <exception cref="SeeingSharpGraphicsException">Effect  + this.Effect +  not supported!</exception>
         internal override void Apply(RenderState renderState, MaterialResource? previousMaterial)
         {
-            var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
+            var device = renderState.Device;
+            var deviceContext = device.DeviceImmediateContextD3D11;
             var isResourceSameType =
                 previousMaterial != null &&
                 previousMaterial.ResourceType == this.ResourceType;
             if (!isResourceSameType)
             {
-                deviceContext.PSSetSampler(0, _defaultResources!.GetSamplerState(TextureSamplerQualityLevel.Low));
-
                 deviceContext.VSSetShader(_vertexShader!.VertexShader);
                 deviceContext.PSSetShader(_pixelShader!.PixelShader);
             }
@@ -104,10 +103,12 @@ namespace SeeingSharp.Drawing3D.Resources
             // Set texture resource (if set)
             if (_textureResource != null)
             {
+                _textureResource.ApplySamplerOnPixelShader(device, deviceContext, 0);
                 deviceContext.PSSetShaderResource(0, _textureResource.TextureView);
             }
             else
             {
+                deviceContext.PSSetSampler(0, null!);
                 deviceContext.PSSetShaderResource(0, null!);
             }
         }

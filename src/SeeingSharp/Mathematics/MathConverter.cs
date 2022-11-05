@@ -19,5 +19,10 @@ namespace SeeingSharp.Mathematics
         {
             return *(Vortice.Mathematics.Color4*)(&value);
         }
+
+        internal static unsafe Color4 Color4FromRaw(Vortice.Mathematics.Color4 value)
+        {
+            return *(Color4*)(&value);
+        }
     }
 }

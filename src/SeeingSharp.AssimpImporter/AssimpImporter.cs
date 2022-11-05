@@ -74,6 +74,8 @@ namespace SeeingSharp.AssimpImporter
                             materialResource.UseVertexColors = false;
                             materialResource.MaterialDiffuseColor =
                                 AssimpHelper.Color4FromAssimp(actMaterial.ColorDiffuse);
+                            // materialResource.ClipFactor = 0.1f;
+                            // materialResource.MaxClipDistance = float.MaxValue;
                         }
 
                         return materialResource;
@@ -93,8 +95,13 @@ namespace SeeingSharp.AssimpImporter
                 
                 modelContainer.AddResource(new ImportedResourceInfo(
                     modelContainer.GetResourceKey("Texture", actMaterial.TextureDiffuse.FilePath),
-                    _ => new StandardTextureResource(
-                        currentFileLink.GetForAnotherFile(actMaterial.TextureDiffuse.FilePath))));
+                    _ =>
+                    {
+                        var texture = new StandardTextureResource(
+                            currentFileLink.GetForAnotherFile(actMaterial.TextureDiffuse.FilePath));
+                        texture.Filter = SeeingSharpFilter.MinMagMipPoint;
+                        return texture;
+                    }));
             }
 
             // var textureCount = scene.TextureCount;

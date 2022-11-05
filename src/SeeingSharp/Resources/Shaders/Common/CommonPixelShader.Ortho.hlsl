@@ -11,6 +11,7 @@ PSOutput main(PSInputStandard input)
 	if(Texture0Factor + input.texFact > 0.0)
 	{
 		textureColor = ObjectTexture.Sample(ObjectTextureSampler, input.tex.xy);
+		clip(textureColor.a - ClipFactor - input.texFact);
 	}
 	textureColor.a = clamp(textureColor.a * Texture0Factor + AddToAlpha, 0.0, 1.0);
 
@@ -21,7 +22,7 @@ PSOutput main(PSInputStandard input)
 	pixelColor = textureColor * textureColor.a + pixelColor * (1 - textureColor.a);
 
 	// Clip current pixel based on alpha value
-	clip(textureColor.a - ClipFactor - input.texFact);
+	clip(pixelColor.a - ClipFactor - input.texFact);
 
 	// Apply Accentuation effect on pixel color
 	pixelColor = ApplyAccentuation(pixelColor);

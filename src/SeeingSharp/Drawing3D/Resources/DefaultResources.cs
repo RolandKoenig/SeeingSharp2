@@ -27,11 +27,6 @@ namespace SeeingSharp.Drawing3D.Resources
         private Lazy<D3D11.ID3D11RasterizerState>? _rasterStateBiased;
         private Lazy<D3D11.ID3D11RasterizerState>? _rasterStateWireframe;
 
-        // Sample states
-        private Lazy<D3D11.ID3D11SamplerState>? _samplerStateLow;
-        private Lazy<D3D11.ID3D11SamplerState>? _samplerStateMedium;
-        private Lazy<D3D11.ID3D11SamplerState>? _samplerStateHigh;
-
         /// <summary>
         /// Are resources loaded?
         /// </summary>
@@ -126,15 +121,6 @@ namespace SeeingSharp.Drawing3D.Resources
             {
                 _rasterStateLines.EnsureResourceLoaded(typeof(DefaultResources));
                 return _rasterStateLines!.Value;
-            }
-        }
-
-        internal D3D11.ID3D11SamplerState SamplerStateDefault
-        {
-            get
-            {
-                _samplerStateMedium.EnsureResourceLoaded(typeof(DefaultResources));
-                return _samplerStateMedium!.Value;
             }
         }
 
@@ -245,14 +231,6 @@ namespace SeeingSharp.Drawing3D.Resources
                 rasterDesc.FillMode = D3D11.FillMode.Solid;
                 return device.DeviceD3D11_1.CreateRasterizerState(rasterDesc);
             });
-
-            // Create sampler states
-            _samplerStateLow = new Lazy<D3D11.ID3D11SamplerState>(
-                () => GraphicsHelper.Internals.CreateDefaultTextureSampler(device, TextureSamplerQualityLevel.Low));
-            _samplerStateMedium = new Lazy<D3D11.ID3D11SamplerState>(
-                () => GraphicsHelper.Internals.CreateDefaultTextureSampler(device, TextureSamplerQualityLevel.Medium));
-            _samplerStateHigh = new Lazy<D3D11.ID3D11SamplerState>(
-                () => GraphicsHelper.Internals.CreateDefaultTextureSampler(device, TextureSamplerQualityLevel.High));
         }
 
         /// <summary>
@@ -267,30 +245,6 @@ namespace SeeingSharp.Drawing3D.Resources
             _depthStencilStateDisableZWrites = SeeingSharpUtil.DisposeObjectLazy(_depthStencilStateDisableZWrites);
             _rasterStateLines = SeeingSharpUtil.DisposeObjectLazy(_rasterStateLines);
             _rasterStateDefault = SeeingSharpUtil.DisposeObjectLazy(_rasterStateDefault);
-            _samplerStateLow = SeeingSharpUtil.DisposeObjectLazy(_samplerStateLow);
-            _samplerStateMedium = SeeingSharpUtil.DisposeObjectLazy(_samplerStateMedium);
-            _samplerStateHigh = SeeingSharpUtil.DisposeObjectLazy(_samplerStateHigh);
-        }
-
-        /// <summary>
-        /// Gets the sampler state with the given requested quality level.
-        /// </summary>
-        /// <param name="qualityLevel">The quality level to get the sampler state for.</param>
-        internal D3D11.ID3D11SamplerState GetSamplerState(TextureSamplerQualityLevel qualityLevel)
-        {
-            switch (qualityLevel)
-            {
-                case TextureSamplerQualityLevel.High:
-                    return _samplerStateHigh!.Value;
-
-                case TextureSamplerQualityLevel.Medium:
-                    return _samplerStateMedium!.Value;
-
-                case TextureSamplerQualityLevel.Low:
-                    return _samplerStateLow!.Value;
-            }
-
-            return _samplerStateLow!.Value;
         }
 
         /// <summary>
