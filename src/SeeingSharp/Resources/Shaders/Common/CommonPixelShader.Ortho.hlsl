@@ -21,9 +21,6 @@ PSOutput main(PSInputStandard input)
 	// Calculate final pixel color using texture color
 	pixelColor = textureColor * textureColor.a + pixelColor * (1 - textureColor.a);
 
-	// Clip current pixel based on alpha value
-	clip(pixelColor.a - ClipFactor - input.texFact);
-
 	// Apply Accentuation effect on pixel color
 	pixelColor = ApplyAccentuation(pixelColor);
 
