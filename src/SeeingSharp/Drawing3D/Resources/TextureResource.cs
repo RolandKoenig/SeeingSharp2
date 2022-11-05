@@ -130,6 +130,12 @@ namespace SeeingSharp.Drawing3D.Resources
             get => _samplerDescription.MaxAnisotropy;
             set
             {
+                if (value is < 1 or > 16)
+                {
+                    throw new SeeingSharpGraphicsException(
+                        $"Wrong value for {nameof(this.MaxAnisotropy)}. Valid are values between 1 and 16: Given: {value}");
+                }
+
                 _samplerDescription.MaxAnisotropy = value;
                 _samplerDescriptionChanged = true;
             }
