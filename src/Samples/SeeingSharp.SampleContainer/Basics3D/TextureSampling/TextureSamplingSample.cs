@@ -6,6 +6,7 @@ using SeeingSharp.Components.Input;
 using SeeingSharp.Core;
 using SeeingSharp.Core.Animations;
 using SeeingSharp.Drawing3D;
+using SeeingSharp.Drawing3D.Geometries;
 using SeeingSharp.Drawing3D.Primitives;
 using SeeingSharp.Drawing3D.Resources;
 using SeeingSharp.Mathematics;
@@ -27,15 +28,13 @@ namespace SeeingSharp.SampleContainer.Basics3D.TextureSampling
         public override Task OnStartupAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
             _scene = mainRenderLoop.Scene;
-            _castedSettings = (TextureSamplingSettings)settings;
-
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
         public override async Task OnReloadAsync(RenderLoop mainRenderLoop, SampleSettings settings)
         {
-            await base.OnReloadAsync(mainRenderLoop, settings);
+            _castedSettings = (TextureSamplingSettings)settings;
 
             await mainRenderLoop.Scene.ManipulateSceneAsync(manipulator =>
             {
@@ -44,7 +43,7 @@ namespace SeeingSharp.SampleContainer.Basics3D.TextureSampling
                 // Create floor
                 this.BuildStandardFloor(manipulator, Scene.DEFAULT_LAYER_NAME);
 
-                // Create texture
+                // Create texture and material
                 var resTexture = manipulator.AddResource(_ =>
                 {
                     var textureFileLink = new AssemblyResourceLink(
@@ -54,6 +53,8 @@ namespace SeeingSharp.SampleContainer.Basics3D.TextureSampling
 
                     textureResource.Filter = _castedSettings!.Filter;
                     textureResource.ComparisonFunction = _castedSettings.ComparisonFunction;
+                    textureResource.AddressU = _castedSettings.AddressU;
+                    textureResource.AddressV = _castedSettings.AddressV;
                     textureResource.MaxAnisotropy = _castedSettings.MaxAnisotropy;
                     textureResource.MipLODBias = _castedSettings.MipLODBias;
                     textureResource.MinLOD = _castedSettings.MinLOD;
@@ -61,10 +62,19 @@ namespace SeeingSharp.SampleContainer.Basics3D.TextureSampling
 
                     return textureResource;
                 });
-
-                // Create resources
-                var resGeometry = manipulator.AddGeometryResource(new CubeGeometryFactory());
                 var resMaterial = manipulator.AddStandardMaterialResource(resTexture);
+
+                // Create geometry 
+                var resGeometry = manipulator.AddGeometryResource(new CustomGeometryFactory(_ =>
+                {
+                    var result = new Geometry();
+
+                    var surface = result.CreateSurface();
+                    surface.EnableTextureTileMode(new Vector2(0.25f, 0.25f));
+                    surface.BuildCube(1f, 1f, 1f);
+
+                    return result;
+                }));
 
                 // Create cube object
                 var cubeMesh = new Mesh(resGeometry, resMaterial);
@@ -109,6 +119,8 @@ namespace SeeingSharp.SampleContainer.Basics3D.TextureSampling
         {
             private SeeingSharpFilter _filter = SeeingSharpFilter.Anisotropic;
             private SeeingSharpComparisonFunction _comparisonFunction = SeeingSharpComparisonFunction.Never;
+            private SeeingSharpTextureAddressMode _addressU = SeeingSharpTextureAddressMode.Wrap;
+            private SeeingSharpTextureAddressMode _addressV = SeeingSharpTextureAddressMode.Wrap;
             private bool _isAnimated = true;
             private int _maxAnisotropy = 8;
             private int _mipLODBias = 0;
@@ -144,6 +156,28 @@ namespace SeeingSharp.SampleContainer.Basics3D.TextureSampling
                 set
                 {
                     _comparisonFunction = value;
+                    this.RaiseRecreateRequest();
+                }
+            }
+
+            [Category("Texture sampling")]
+            public SeeingSharpTextureAddressMode AddressU
+            {
+                get => _addressU;
+                set
+                {
+                    _addressU = value;
+                    this.RaiseRecreateRequest();
+                }
+            }
+
+            [Category("Texture sampling")]
+            public SeeingSharpTextureAddressMode AddressV
+            {
+                get => _addressV;
+                set
+                {
+                    _addressV = value;
                     this.RaiseRecreateRequest();
                 }
             }
