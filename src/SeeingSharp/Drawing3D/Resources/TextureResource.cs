@@ -190,6 +190,7 @@ namespace SeeingSharp.Drawing3D.Resources
             {
                 SeeingSharpUtil.SafeDispose(ref _samplerState);
                 _samplerState = device.DeviceD3D11_1.CreateSamplerState(_samplerDescription);
+                _samplerDescriptionChanged = false;
             }
 
             deviceContext.PSSetSampler(slot, _samplerState!);
