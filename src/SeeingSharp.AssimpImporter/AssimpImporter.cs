@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Assimp;
 using SeeingSharp.Core;
 using SeeingSharp.Drawing3D.Geometries;
@@ -17,10 +18,12 @@ namespace SeeingSharp.AssimpImporter
     [SupportedFileFormat("dae", "Collada (*.dae)")]
     [SupportedFileFormat("gltf", "GL Transmission Format (*.gltf)")]
     [SupportedFileFormat("glb", "GL Transmission Format (*.glb)")]
-    public class AssimpImporter : IModelImporter
+    internal class AssimpImporter : IModelImporter
     {
         public ImportedModelContainer ImportModel(ResourceLink sourceFile, ImportOptions importOptions)
         {
+            var assimpImportOptions = importOptions as AssimpImportOptions;
+
             var modelContainer = new ImportedModelContainer(sourceFile, importOptions);
 
             // Load Assimp scene
@@ -30,10 +33,9 @@ namespace SeeingSharp.AssimpImporter
                 sourceFile.FileNameWithExtension,
                 PostProcessPreset.TargetRealTimeFast | PostProcessSteps.SplitLargeMeshes);
 
-            // Load all materials
+            // Load all materials and textures
             ProcessMaterials(modelContainer, scene);
-
-            ProcessTextures(sourceFile, modelContainer, scene);
+            ProcessTextures(sourceFile, modelContainer, scene, assimpImportOptions);
 
             // Load all scene objects
             var boundBoxCalculator = new ObjectTreeBoundingBoxCalculator();
@@ -72,10 +74,8 @@ namespace SeeingSharp.AssimpImporter
                         if (actMaterial.HasColorDiffuse)
                         {
                             materialResource.UseVertexColors = false;
-                            materialResource.MaterialDiffuseColor =
+                            materialResource.MaterialDiffuseColor = 
                                 AssimpHelper.Color4FromAssimp(actMaterial.ColorDiffuse);
-                            // materialResource.ClipFactor = 0.1f;
-                            // materialResource.MaxClipDistance = float.MaxValue;
                         }
 
                         return materialResource;
@@ -84,7 +84,9 @@ namespace SeeingSharp.AssimpImporter
 
         }
 
-        private static void ProcessTextures(ResourceLink currentFileLink, ImportedModelContainer modelContainer, Scene scene)
+        private static void ProcessTextures(
+            ResourceLink currentFileLink, ImportedModelContainer modelContainer, Scene scene,
+            AssimpImportOptions? importOptions)
         {
             var materialCount = scene.MaterialCount;
             for (var materialIndex = 0; materialIndex < materialCount; materialIndex++)
@@ -92,23 +94,21 @@ namespace SeeingSharp.AssimpImporter
                 var actMaterial = scene.Materials[materialIndex];
                 if(!actMaterial.HasTextureDiffuse){ continue; }
                 if(string.IsNullOrEmpty(actMaterial.TextureDiffuse.FilePath)){ continue; }
-                
+
                 modelContainer.AddResource(new ImportedResourceInfo(
                     modelContainer.GetResourceKey("Texture", actMaterial.TextureDiffuse.FilePath),
                     _ =>
                     {
                         var texture = new StandardTextureResource(
                             currentFileLink.GetForAnotherFile(actMaterial.TextureDiffuse.FilePath));
-                        texture.Filter = SeeingSharpFilter.MinMagMipPoint;
+                        texture.AddressU = AssimpHelper.GetTextureAddressMode(actMaterial.TextureDiffuse.WrapModeU);
+                        texture.AddressV = AssimpHelper.GetTextureAddressMode(actMaterial.TextureDiffuse.WrapModeV);
+
+                        importOptions?.ConfigureTextureAction?.Invoke(actMaterial.TextureDiffuse.FilePath, texture);
+
                         return texture;
                     }));
             }
-
-            // var textureCount = scene.TextureCount;
-            // for (var textureIndex = 0; textureIndex < textureCount; textureIndex++)
-            // {
-            //     var actTexture = scene.Textures[textureIndex];
-            // }
         }
 
         private static void ProcessNode(
