@@ -143,6 +143,8 @@ namespace SeeingSharp.Drawing3D.Resources
         /// </summary>
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
+            base.UnloadResourceInternal(device, resources);
+
             _textureView = SeeingSharpUtil.DisposeObject(_textureView);
             _texture = SeeingSharpUtil.DisposeObject(_texture);
 

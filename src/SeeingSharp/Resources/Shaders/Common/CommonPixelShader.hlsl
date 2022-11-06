@@ -6,25 +6,27 @@
 //PixelShader implementation
 PSOutput main(PSInputStandard input)
 {
+	float distanceToCamera = distance(CameraPosition, input.pos3D);
+
 	// Query texture color first
 	float4 textureColor = {0.0, 0.0, 0.0, 0.0};
 	if(Texture0Factor + input.texFact > 0.0)
 	{
+		// Read texture color
 		textureColor = ObjectTexture.Sample(ObjectTextureSampler, input.tex.xy);
+
+		// Clip based on alpha value from the texture
+	    float clipFactorMultiplyer = clamp(MaxClipDistance - distanceToCamera, 0.0, 1.0);
+		clip(textureColor.a - ClipFactor * clipFactorMultiplyer);
 	}
 	float initialTextureA = textureColor.a;
 	textureColor.a = clamp(textureColor.a * Texture0Factor + AddToAlpha, 0.0, 1.0);
 
     // Calculate the pixel color based on vertex colors and border logic
-    float distanceToCamera = distance(CameraPosition, input.pos3D);
     float4 pixelColor = ApplyColorBorders(input.col, distanceToCamera, input.tex.xy);
     
     // Calculate final pixel color using texture color
 	pixelColor = textureColor * textureColor.a + pixelColor * (1- textureColor.a);
-
-    // Clip current pixel based on alpha value
-	float clipFactorMultiplyer = clamp(MaxClipDistance - distanceToCamera, 0.0, 1.0);
-    clip(pixelColor.a - ClipFactor * clipFactorMultiplyer);
 
     // Apply Accentuation effect on pixel color
     pixelColor = ApplyAccentuation(pixelColor);

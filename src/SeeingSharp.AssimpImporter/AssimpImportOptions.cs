@@ -3,5 +3,7 @@
 namespace SeeingSharp.AssimpImporter
 {
     public class AssimpImportOptions : ImportOptions
-    {}
+    {
+        public ConfigureTextureDelegate? ConfigureTextureAction { get; set; }
+    }
 }

@@ -8,6 +8,7 @@ using SeeingSharp.Drawing3D.Resources;
 using SeeingSharp.Resources;
 using SeeingSharp.Util;
 using SeeingSharp.Util.Sdx;
+using Vortice.Direct2D1;
 using Vortice.DXGI;
 using Vortice.WIC;
 using VMath = Vortice.Mathematics;
@@ -728,58 +729,6 @@ namespace SeeingSharp.Core
                 var result = device.DeviceD3D11_1.CreateBuffer(bufferDescriptionIndex, outStreamIndex.DataPointer);
 
                 return result;
-            }
-
-            /// <summary>
-            /// Creates a default texture sampler state.
-            /// </summary>
-            /// <param name="device">The device to create the state for.</param>
-            /// <param name="samplerQualityLevel">The target sampler quality</param>
-            public static D3D11.ID3D11SamplerState CreateDefaultTextureSampler(EngineDevice device, TextureSamplerQualityLevel samplerQualityLevel)
-            {
-                device.EnsureNotNull(nameof(device));
-
-                // Set state parameters
-                var samplerDesk = D3D11.SamplerDescription.Default;
-                switch (device.DriverLevel)
-                {
-                    case HardwareDriverLevel.Direct3D11:
-                    case HardwareDriverLevel.Direct3D10:
-                        switch (samplerQualityLevel)
-                        {
-                            case TextureSamplerQualityLevel.High:
-                                if (!device.IsHighDetailSupported) { goto case TextureSamplerQualityLevel.Low; }
-                                samplerDesk.AddressU = D3D11.TextureAddressMode.Wrap;
-                                samplerDesk.AddressV = D3D11.TextureAddressMode.Wrap;
-                                samplerDesk.Filter = D3D11.Filter.Anisotropic;
-                                samplerDesk.MaxAnisotropy = 16;
-                                break;
-
-                            case TextureSamplerQualityLevel.Medium:
-                                if (!device.IsHighDetailSupported) { goto case TextureSamplerQualityLevel.Low; }
-                                samplerDesk.AddressU = D3D11.TextureAddressMode.Wrap;
-                                samplerDesk.AddressV = D3D11.TextureAddressMode.Wrap;
-                                samplerDesk.Filter = D3D11.Filter.Anisotropic;
-                                samplerDesk.MaxAnisotropy = 8;
-                                break;
-
-                            case TextureSamplerQualityLevel.Low:
-                                samplerDesk.AddressU = D3D11.TextureAddressMode.Wrap;
-                                samplerDesk.AddressV = D3D11.TextureAddressMode.Wrap;
-                                samplerDesk.Filter = D3D11.Filter.MinMagMipLinear;
-                                break;
-                        }
-                        break;
-
-                    default:
-                        samplerDesk.AddressU = D3D11.TextureAddressMode.Wrap;
-                        samplerDesk.AddressV = D3D11.TextureAddressMode.Wrap;
-                        samplerDesk.Filter = D3D11.Filter.MinMagMipLinear;
-                        break;
-                }
-
-                // Create the state object finally
-                return device.DeviceD3D11_1.CreateSamplerState(samplerDesk);
             }
 
             /// <summary>

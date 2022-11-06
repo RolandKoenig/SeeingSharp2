@@ -160,7 +160,8 @@ namespace SeeingSharp.Drawing3D.Resources
         /// <inheritdoc />
         internal override bool NotifyAfterRender(RenderState renderState, string layerName, int passId)
         {
-            var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
+            var device = renderState.Device;
+            var deviceContext = device.DeviceImmediateContextD3D11;
 
             if (renderState.Device.IsHighDetailSupported && !_forceSimpleMethod)
             {
@@ -185,7 +186,7 @@ namespace SeeingSharp.Drawing3D.Resources
                         try
                         {
                             deviceContext.PSSetShaderResource(0, _renderTarget.TextureView);
-                            deviceContext.PSSetSampler(0, _defaultResources.GetSamplerState(TextureSamplerQualityLevel.Low));
+                            _renderTarget.ApplySamplerOnPixelShader(device, deviceContext, 0);
                             deviceContext.PSSetConstantBuffer(2, _cbFirstPass!.ConstantBuffer);
                             deviceContext.PSSetShader(_pixelShaderBlur!.PixelShader);
                             deviceContext.Draw(3, 0);
@@ -201,11 +202,10 @@ namespace SeeingSharp.Drawing3D.Resources
                         try
                         {
                             deviceContext.PSSetShaderResource(0, _renderTarget.TextureView);
-                            deviceContext.PSSetSampler(0, _defaultResources.GetSamplerState(TextureSamplerQualityLevel.Low));
+                            _renderTarget.ApplySamplerOnPixelShader(device, deviceContext, 0);
                             deviceContext.PSSetConstantBuffer(2, _cbSecondPass!.ConstantBuffer);
                             deviceContext.PSSetShader(_pixelShaderBlur!.PixelShader);
                             deviceContext.Draw(3, 0);
-
                         }
                         finally
                         {

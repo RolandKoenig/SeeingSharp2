@@ -168,11 +168,12 @@ namespace SeeingSharp.Drawing3D.Resources
         public StandardMaterialResource(NamedOrGenericKey textureKey = new NamedOrGenericKey(), bool enableShaderGeneratedBorder = false)
         {
             this.TextureKey = textureKey;
-            _maxClipDistance = 1000f;
             _adjustTextureCoordinates = false;
             _addToAlpha = 0f;
             _materialDiffuseColor = Color4.White;
             _useVertexColors = true;
+            _clipFactor = 0.1f;
+            _maxClipDistance = float.MaxValue;
 
             if(enableShaderGeneratedBorder){ this.EnableShaderGeneratedBorder(); }
             else{ this.DisableShaderGeneratedBorder(); }
@@ -256,7 +257,8 @@ namespace SeeingSharp.Drawing3D.Resources
         /// <param name="previousMaterial">The previously applied material.</param>
         internal override void Apply(RenderState renderState, MaterialResource? previousMaterial)
         {
-            var deviceContext = renderState.Device.DeviceImmediateContextD3D11;
+            var device = renderState.Device;
+            var deviceContext = device.DeviceImmediateContextD3D11;
             var isResourceSameType =
                 previousMaterial != null &&
                 previousMaterial.ResourceType == this.ResourceType;
@@ -284,8 +286,6 @@ namespace SeeingSharp.Drawing3D.Resources
             // Set shaders, sampler and constants
             if (!isResourceSameType)
             {
-                deviceContext.PSSetSampler(0, _defaultResources!.GetSamplerState(TextureSamplerQualityLevel.Low));
-
                 deviceContext.VSSetShader(_vertexShader!.VertexShader);
                 if (renderState.Camera!.IsOrthopraphicInternal)
                 {
@@ -303,10 +303,12 @@ namespace SeeingSharp.Drawing3D.Resources
             if (_textureResource != null &&
                 renderState.ViewInformation!.ViewConfiguration.ShowTexturesInternal)
             {
+                _textureResource.ApplySamplerOnPixelShader(device, deviceContext, 0);
                 deviceContext.PSSetShaderResource(0, _textureResource.TextureView);
             }
             else
             {
+                deviceContext.PSSetSampler(0, null!);
                 deviceContext.PSSetShaderResource(0, null!);
             }
         }

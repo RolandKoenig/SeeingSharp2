@@ -86,28 +86,16 @@
                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
 
                         <!-- 3D-View -->
-                        <GroupBox Grid.Column="2"
-                                  Style="{DynamicResource MaterialDesignGroupBox}"
-                                  Header="3D View">
-                            <GroupBox.HeaderTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <materialDesign:PackIcon Kind="Earth" />
-                                        <TextBlock Text="{Binding}"
-                                                   Margin="10,0,0,0" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </GroupBox.HeaderTemplate>
 
-                            <DockPanel LastChildFill="True">
-                                <local:StatusBarControl DockPanel.Dock="Bottom"
-                                                        CtrlRenderer="{Binding ElementName=CtrlRenderer}"
-                                                        IsEnabled="{Binding Path=ControlsEnabled}" />
+                        <DockPanel Grid.Column="2"
+                                   LastChildFill="True">
+                            <local:StatusBarControl DockPanel.Dock="Bottom"
+                                                    Margin="5"
+                                                    CtrlRenderer="{Binding ElementName=CtrlRenderer}"
+                                                    IsEnabled="{Binding Path=ControlsEnabled}" />
 
-                                <sSharp:SeeingSharpRendererElement x:Name="CtrlRenderer" />
-                            </DockPanel>
-                            
-                        </GroupBox>
+                            <sSharp:SeeingSharpRendererElement x:Name="CtrlRenderer" />
+                        </DockPanel>
                     </Grid>
                 </Grid>
 

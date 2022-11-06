@@ -142,6 +142,112 @@ namespace SeeingSharp.Tests
         }
 
         [TestMethod]
+        public async Task Render_SimpleObject_Textured()
+        {
+            await TestUtilities.InitializeWithGraphicsAsync();
+
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            {
+                memRenderTarget.ClearColor = Color4.CornflowerBlue;
+
+                // Get and configure the camera
+                var camera = (PerspectiveCamera3D)memRenderTarget.Camera;
+                camera.Position = new Vector3(0f, 1.5f, -3f);
+                camera.Target = new Vector3(0f, 0f, 0f);
+                camera.UpdateCamera();
+
+                // Define scene
+                await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
+                {
+                    var resTexture = manipulator.AddTextureResource(
+                        new AssemblyResourceLink(
+                            typeof(Drawing3DTests),
+                            "Resources.Textures",
+                            "PrimitiveTexture.png"));
+                    var resMaterial = manipulator.AddStandardMaterialResource(resTexture);
+
+                    var resGeometry = manipulator.AddResource(
+                        _ => new GeometryResource(new CubeGeometryFactory()));
+                    
+
+                    var newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
+                    newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
+                    newMesh.Scaling = new Vector3(2f, 2f, 2f);
+                    newMesh.Color = Color4.RedColor;
+                    newMesh.TrySetInitialVisibility(memRenderTarget.RenderLoop.ViewInformation, true);
+                });
+                await memRenderTarget.AwaitRenderAsync();
+
+                // Take screenshot
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
+
+                // Calculate and check difference
+                var isNearEqual = BitmapComparison.IsNearEqual(
+                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing3D", "SimpleObject_Textured.png"));
+                Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
+            }
+
+            // Finishing checks
+            Assert.IsTrue(GraphicsCore.Current.MainLoop!.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+        }
+
+                [TestMethod]
+        public async Task Render_SimpleObject_Textured_Point_Filter()
+        {
+            await TestUtilities.InitializeWithGraphicsAsync();
+
+            using (var memRenderTarget = new MemoryRenderTarget(1024, 1024))
+            {
+                memRenderTarget.ClearColor = Color4.CornflowerBlue;
+
+                // Get and configure the camera
+                var camera = (PerspectiveCamera3D)memRenderTarget.Camera;
+                camera.Position = new Vector3(0f, 1.5f, -3f);
+                camera.Target = new Vector3(0f, 0f, 0f);
+                camera.UpdateCamera();
+
+                // Define scene
+                await memRenderTarget.Scene.ManipulateSceneAsync(manipulator =>
+                {
+                    var resTexture = manipulator.AddResource(_ =>
+                    {
+                        var textureSource = new AssemblyResourceLink(
+                            typeof(Drawing3DTests),
+                            "Resources.Textures",
+                            "PrimitiveTexture.png");
+                        var textureResource = new StandardTextureResource(textureSource);
+                        textureResource.Filter = SeeingSharpFilter.MinMagMipPoint;
+                        return textureResource;
+                    });
+                    var resMaterial = manipulator.AddStandardMaterialResource(resTexture);
+
+                    var resGeometry = manipulator.AddResource(
+                        _ => new GeometryResource(new CubeGeometryFactory()));
+                    
+                    var newMesh = manipulator.AddMeshObject(resGeometry, resMaterial);
+                    newMesh.RotationEuler = new Vector3(0f, EngineMath.RAD_90DEG / 2f, 0f);
+                    newMesh.Scaling = new Vector3(2f, 2f, 2f);
+                    newMesh.Color = Color4.RedColor;
+                    newMesh.TrySetInitialVisibility(memRenderTarget.RenderLoop.ViewInformation, true);
+                });
+                await memRenderTarget.AwaitRenderAsync();
+
+                // Take screenshot
+                var screenshot = await memRenderTarget.RenderLoop.GetScreenshotGdiAsync();
+                // TestUtilities.DumpToDesktop(screenshot, "Blub.png");
+
+                // Calculate and check difference
+                var isNearEqual = BitmapComparison.IsNearEqual(
+                    screenshot, TestUtilities.LoadBitmapFromResource("Drawing3D", "SimpleObject_Textured_Point_Filter.png"));
+                Assert.IsTrue(isNearEqual, "Difference to reference image is to big!");
+            }
+
+            // Finishing checks
+            Assert.IsTrue(GraphicsCore.Current.MainLoop!.RegisteredRenderLoopCount == 0, "RenderLoops where not disposed correctly!");
+        }
+
+        [TestMethod]
         public async Task QueryInfo_FromSimpleMesh()
         {
             await TestUtilities.InitializeWithGraphicsAsync();

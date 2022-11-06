@@ -6,6 +6,7 @@ using SeeingSharp.Core.Devices;
 using SeeingSharp.Drawing2D;
 using SeeingSharp.Util;
 using SharpGen.Runtime;
+using Vortice.Mathematics;
 using D2D = Vortice.Direct2D1;
 using D3D11 = Vortice.Direct3D11;
 
@@ -150,6 +151,11 @@ namespace SeeingSharp.Drawing3D.Resources
             else
             {
                 _notLoadedDueToMissingSupport = true;
+
+                // Fill render target with a dummy color
+                using var renderTargetView = device.DeviceD3D11_1.CreateRenderTargetView(_renderTargetTexture);
+                device.DeviceImmediateContextD3D11.ClearRenderTargetView(
+                    renderTargetView, Vortice.Mathematics.Color4.White);
             }
         }
 
@@ -160,6 +166,8 @@ namespace SeeingSharp.Drawing3D.Resources
         /// <param name="resources">The current ResourceDictionary.</param>
         protected override void UnloadResourceInternal(EngineDevice device, ResourceDictionary resources)
         {
+            base.UnloadResourceInternal(device, resources);
+
             if (device.Supports2D)
             {
                 _graphics2D = null;

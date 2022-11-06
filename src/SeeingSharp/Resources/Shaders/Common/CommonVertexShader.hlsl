@@ -25,7 +25,6 @@ PSInputStandard main(VSInputStandard input)
 
 	// Apply object color for all color values with low alpha
 	float4 vertexColor = input.col * input.col.a + ObjectColor * (1 - input.col.a);
-	vertexColor.a = input.col.a;
 
 	// Apply output color
 	output.col = (MaterialDiffuseColor * DiffuseColorFactor) + (vertexColor * (1.0 - DiffuseColorFactor));
