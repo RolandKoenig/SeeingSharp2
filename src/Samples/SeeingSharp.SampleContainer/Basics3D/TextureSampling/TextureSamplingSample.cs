@@ -131,66 +131,42 @@ namespace SeeingSharp.SampleContainer.Basics3D.TextureSampling
             public bool IsAnimated
             {
                 get => _isAnimated;
-                set
-                {
-                    _isAnimated = value;
-                    this.RaiseRecreateRequest();
-                }
+                set => base.SetFieldRaisingRecreateRequest(ref _isAnimated, value);
             }
 
             [Category("Texture sampling")]
             public SeeingSharpFilter Filter
             {
                 get => _filter;
-                set
-                {
-                    _filter = value;
-                    base.RaiseRecreateRequest();
-                }
+                set => base.SetFieldRaisingRecreateRequest(ref _filter, value);
             }
 
             [Category("Texture sampling")]
             public SeeingSharpComparisonFunction ComparisonFunction
             {
                 get => _comparisonFunction;
-                set
-                {
-                    _comparisonFunction = value;
-                    this.RaiseRecreateRequest();
-                }
+                set => base.SetFieldRaisingRecreateRequest(ref _comparisonFunction, value);
             }
 
             [Category("Texture sampling")]
             public SeeingSharpTextureAddressMode AddressU
             {
                 get => _addressU;
-                set
-                {
-                    _addressU = value;
-                    this.RaiseRecreateRequest();
-                }
+                set => base.SetFieldRaisingRecreateRequest(ref _addressU, value);
             }
 
             [Category("Texture sampling")]
             public SeeingSharpTextureAddressMode AddressV
             {
                 get => _addressV;
-                set
-                {
-                    _addressV = value;
-                    this.RaiseRecreateRequest();
-                }
+                set => base.SetFieldRaisingRecreateRequest(ref _addressV, value);
             }
 
             [Category("Texture sampling")]
             public int MaxAnisotropy
             {
                 get => _maxAnisotropy;
-                set
-                {
-                    _maxAnisotropy = value;
-                    this.RaiseRecreateRequest();
-                }
+                set => base.SetFieldRaisingRecreateRequest(ref _maxAnisotropy, value);
             }
 
 
@@ -198,33 +174,21 @@ namespace SeeingSharp.SampleContainer.Basics3D.TextureSampling
             public int MipLODBias
             {
                 get => _mipLODBias;
-                set
-                {
-                    _mipLODBias = value;
-                    this.RaiseRecreateRequest();
-                }
+                set => base.SetFieldRaisingRecreateRequest(ref _mipLODBias, value);
             }
 
             [Category("Texture sampling")]
             public float MinLOD
             {
                 get => _minLOD;
-                set
-                {
-                    _minLOD = value;
-                    this.RaiseRecreateRequest();
-                }
+                set => base.SetFieldRaisingRecreateRequest(ref _minLOD, value);
             }
 
             [Category("Texture sampling")]
             public float MaxLOD
             {
                 get => _maxLOD;
-                set
-                {
-                    _maxLOD = value;
-                    this.RaiseRecreateRequest();
-                }
+                set => base.SetFieldRaisingRecreateRequest(ref _maxLOD, value);
             }
         }
     }

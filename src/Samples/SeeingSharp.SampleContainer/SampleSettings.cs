@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using SeeingSharp.Core;
@@ -65,6 +66,18 @@ namespace SeeingSharp.SampleContainer
             {
                 this.RecreateRequest?.Invoke(this, EventArgs.Empty);
             }
+        }
+
+        protected void SetFieldRaisingRecreateRequest<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+        {
+            if (EqualityComparer<T>.Default.Equals(field, value))
+            {
+                return;
+            }
+
+            field = value;
+            this.RaisePropertyChanged(propertyName);
+            this.RaiseRecreateRequest();
         }
     }
 }

@@ -7,7 +7,7 @@ namespace SeeingSharp.SampleContainer.Util
     {
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        protected void RaisePropertyChanged([CallerMemberName] string propName = "")
+        protected void RaisePropertyChanged([CallerMemberName] string? propName = null)
         {
             this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
