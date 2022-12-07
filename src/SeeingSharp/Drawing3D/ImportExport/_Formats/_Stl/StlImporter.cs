@@ -56,19 +56,23 @@ namespace SeeingSharp.Drawing3D.ImportExport
             ImportedModelContainer? result = null;
             try
             {
-                // Try to read in BINARY format first
-                using (var inStream = sourceFile.OpenInputStream())
+                switch (stlImportOptions.Format)
                 {
-                    result = this.TryReadBinary(sourceFile, inStream, stlImportOptions);
-                }
+                    case StlFileFormat.Unknown:
+                        result = this.TryReadBinary(sourceFile, stlImportOptions, true);
+                        if (result == null)
+                        {
+                            result = this.TryReadAscii(sourceFile, stlImportOptions);
+                        }
+                        break;
 
-                // Read in ASCII format (if binary did not work)
-                if (result == null)
-                {
-                    using (var inStream = sourceFile.OpenInputStream())
-                    {
-                        result = this.TryReadAscii(sourceFile, inStream, stlImportOptions);
-                    }
+                    case StlFileFormat.Ascii:
+                        result = this.TryReadAscii(sourceFile, stlImportOptions);
+                        break;
+
+                    case StlFileFormat.Binary:
+                        result = this.TryReadBinary(sourceFile, stlImportOptions, false);
+                        break;
                 }
             }
             catch (Exception ex)
@@ -369,72 +373,76 @@ namespace SeeingSharp.Drawing3D.ImportExport
         /// <summary>
         /// Reads the model in ASCII format from the specified stream.
         /// </summary>
-        private ImportedModelContainer TryReadAscii(ResourceLink source, Stream stream, StlImportOptions importOptions)
+        private ImportedModelContainer TryReadAscii(ResourceLink source, StlImportOptions importOptions)
         {
-            using (var reader = new StreamReader(stream, s_encoding, false, 128, true))
+            using var stream = source.OpenInputStream();
+            using var reader = new StreamReader(stream, s_encoding, false, 128, true);
+
+            var newGeometry = new Geometry();
+
+            while (!reader.EndOfStream)
             {
-                var newGeometry = new Geometry();
+                var line = reader.ReadLine();
 
-                while (!reader.EndOfStream)
+                if (line == null)
                 {
-                    var line = reader.ReadLine();
-
-                    if (line == null)
-                    {
-                        continue;
-                    }
-
-                    line = line.Trim();
-
-                    if (line.Length == 0 || line.StartsWith("\0") || line.StartsWith("#") || line.StartsWith("!")
-                        || line.StartsWith("$"))
-                    {
-                        continue;
-                    }
-
-                    ParseLine(line, out var id, out var values);
-                    switch (id)
-                    {
-                        // Header.. not needed here
-                        case "solid":
-                            break;
-
-                        // Geometry data
-                        case "facet":
-                            this.ReadFacet(reader, values, newGeometry, importOptions);
-                            break;
-
-                        // End of file
-                        case "endsolid":
-                            break;
-                    }
+                    continue;
                 }
 
-                // Generate result container
-                var modelContainer = new ImportedModelContainer(source, importOptions);
-                var resGeometryKey = modelContainer.GetResourceKey(RES_KEY_GEO_CLASS, RES_KEY_GEO_NAME);
-                var resMaterialKey = modelContainer.GetResourceKey(RES_KEY_MAT_CLASS, RES_KEY_MAT_NAME);
-                modelContainer.AddResource(new ImportedResourceInfo(
-                    resGeometryKey,
-                    _ => new GeometryResource(newGeometry)));
-                modelContainer.AddResource(new ImportedResourceInfo(
-                    resMaterialKey,
-                    _ => new StandardMaterialResource()));
-                var loadedMesh = new Mesh(resGeometryKey, resMaterialKey);
-                modelContainer.AddObject(loadedMesh);
+                line = line.Trim();
 
-                // Append an object which transform the whole coordinate system
-                modelContainer.FinishLoading(newGeometry.GenerateBoundingBox());
+                if (line.Length == 0 || 
+                    line.StartsWith("#") || 
+                    line.StartsWith("!") || 
+                    line.StartsWith("$"))
+                {
+                    continue;
+                }
 
-                return modelContainer;
+                ParseLine(line, out var id, out var values);
+                switch (id)
+                {
+                    // Header.. not needed here
+                    case "solid":
+                        break;
+
+                    // Geometry data
+                    case "facet":
+                        this.ReadFacet(reader, values, newGeometry, importOptions);
+                        break;
+
+                    // End of file
+                    case "endsolid":
+                        break;
+                }
             }
+
+            // Generate result container
+            var modelContainer = new ImportedModelContainer(source, importOptions);
+            var resGeometryKey = modelContainer.GetResourceKey(RES_KEY_GEO_CLASS, RES_KEY_GEO_NAME);
+            var resMaterialKey = modelContainer.GetResourceKey(RES_KEY_MAT_CLASS, RES_KEY_MAT_NAME);
+            modelContainer.AddResource(new ImportedResourceInfo(
+                resGeometryKey,
+                _ => new GeometryResource(newGeometry)));
+            modelContainer.AddResource(new ImportedResourceInfo(
+                resMaterialKey,
+                _ => new StandardMaterialResource()));
+            var loadedMesh = new Mesh(resGeometryKey, resMaterialKey);
+            modelContainer.AddObject(loadedMesh);
+
+            // Append an object which transform the whole coordinate system
+            modelContainer.FinishLoading(newGeometry.GenerateBoundingBox());
+
+            return modelContainer;
         }
 
         /// <summary>
         /// Reads the model from the specified binary stream.
         /// </summary>
-        private ImportedModelContainer? TryReadBinary(ResourceLink source, Stream stream, StlImportOptions importOptions)
+        private ImportedModelContainer? TryReadBinary(ResourceLink source, StlImportOptions importOptions, bool checkHeader)
         {
+            using var stream = source.OpenInputStream();
+
             // Check length
             var length = stream.Length;
             if (length < 84)
@@ -442,49 +450,54 @@ namespace SeeingSharp.Drawing3D.ImportExport
                 throw new SeeingSharpException("Incomplete file (smaller that 84 bytes)");
             }
 
-            // Read number of triangles
-            using (var reader = new BinaryReader(stream, Encoding.GetEncoding("us-ascii"), true))
+            using var reader = new BinaryReader(stream, Encoding.GetEncoding("us-ascii"), true);
+
+            // Read header (is not needed)
+            //  (solid stands for Ascii format)
+            var headerBytes = reader.ReadBytes(80);
+            if (checkHeader)
             {
-                // Read header (is not needed)
-                //  (solid stands for Ascii format)
-                var header = s_encoding.GetString(reader.ReadBytes(80), 0, 80).Trim();
-
-                if (header.StartsWith("solid", StringComparison.OrdinalIgnoreCase)) { return null; }
-
-                // Read and check number of triangles
-                var numberTriangles = ReadUInt32(reader);
-                if (length - 84 != numberTriangles * 50)
+                var header = s_encoding.GetString(headerBytes, 0, 80).Trim();
+                if ((header.StartsWith("solid", StringComparison.OrdinalIgnoreCase)) &&
+                    (header.IndexOf("binary", StringComparison.OrdinalIgnoreCase) == -1))
                 {
-                    throw new SeeingSharpException("Incomplete file (smaller that expected byte count)");
+                    return null;
                 }
-
-                // Read geometry data
-                var newGeometry = new Geometry((int)numberTriangles * 3);
-                newGeometry.CreateSurface((int)numberTriangles);
-
-                for (var loop = 0; loop < numberTriangles; loop++)
-                {
-                    ReadTriangle(reader, newGeometry, importOptions);
-                }
-
-                // Generate result container
-                var modelContainer = new ImportedModelContainer(source, importOptions);
-                var resGeometryKey = modelContainer.GetResourceKey(RES_KEY_GEO_CLASS, RES_KEY_GEO_NAME);
-                var resMaterialKey = modelContainer.GetResourceKey(RES_KEY_MAT_CLASS, RES_KEY_MAT_NAME);
-                modelContainer.AddResource(new ImportedResourceInfo(
-                    resGeometryKey,
-                    _ => new GeometryResource(newGeometry)));
-                modelContainer.AddResource(new ImportedResourceInfo(
-                    resMaterialKey,
-                    _ => new StandardMaterialResource()));
-                var loadedMesh = new Mesh(resGeometryKey, resMaterialKey);
-                modelContainer.AddObject(loadedMesh);
-
-                // Append an object which transform the whole coordinate system
-                modelContainer.FinishLoading(newGeometry.GenerateBoundingBox());
-
-                return modelContainer;
             }
+
+            // Read and check number of triangles
+            var numberTriangles = ReadUInt32(reader);
+            if (length - 84 != numberTriangles * 50)
+            {
+                throw new SeeingSharpException("Incomplete file (smaller that expected byte count)");
+            }
+
+            // Read geometry data
+            var newGeometry = new Geometry((int) numberTriangles * 3);
+            newGeometry.CreateSurface((int) numberTriangles);
+
+            for (var loop = 0; loop < numberTriangles; loop++)
+            {
+                ReadTriangle(reader, newGeometry, importOptions);
+            }
+
+            // Generate result container
+            var modelContainer = new ImportedModelContainer(source, importOptions);
+            var resGeometryKey = modelContainer.GetResourceKey(RES_KEY_GEO_CLASS, RES_KEY_GEO_NAME);
+            var resMaterialKey = modelContainer.GetResourceKey(RES_KEY_MAT_CLASS, RES_KEY_MAT_NAME);
+            modelContainer.AddResource(new ImportedResourceInfo(
+                resGeometryKey,
+                _ => new GeometryResource(newGeometry)));
+            modelContainer.AddResource(new ImportedResourceInfo(
+                resMaterialKey,
+                _ => new StandardMaterialResource()));
+            var loadedMesh = new Mesh(resGeometryKey, resMaterialKey);
+            modelContainer.AddObject(loadedMesh);
+
+            // Append an object which transform the whole coordinate system
+            modelContainer.FinishLoading(newGeometry.GenerateBoundingBox());
+
+            return modelContainer;
         }
     }
 }
