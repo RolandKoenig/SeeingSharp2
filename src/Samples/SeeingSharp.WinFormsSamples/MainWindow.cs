@@ -241,6 +241,8 @@ namespace SeeingSharp.WinFormsSamples
 
         private void OnListView_ItemSelectionChanged(object? sender, ListViewItemSelectionChangedEventArgs e)
         {
+            if (e.Item == null) { return; }
+
             if (!e.IsSelected)
             {
                 e.Item.BackColor = Color.Transparent;
