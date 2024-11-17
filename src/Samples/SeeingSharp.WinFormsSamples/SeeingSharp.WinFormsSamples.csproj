@@ -6,6 +6,7 @@
     <OutputType>WinExe</OutputType>
     <UseWindowsForms>true</UseWindowsForms>
     <StartupObject />
+    <Platforms>AnyCPU;ARM64</Platforms>
   </PropertyGroup>
 
 	<ItemGroup>

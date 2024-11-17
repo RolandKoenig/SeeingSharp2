@@ -5,6 +5,7 @@
     <TargetFrameworks>net48;net6.0;net8.0</TargetFrameworks>
 	  <LangVersion>9.0</LangVersion>
     <Nullable>disable</Nullable>
+    <Platforms>AnyCPU;ARM64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>
