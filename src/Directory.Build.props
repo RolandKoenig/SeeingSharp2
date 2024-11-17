@@ -23,5 +23,8 @@
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<WarningsAsErrors />
 		<NoWarn>1701,1702,1591</NoWarn>
+		
+		<!-- Page security warning -->
+        <WarningsNotAsErrors>NU1903</WarningsNotAsErrors>
 	</PropertyGroup>
 </Project>

@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-	  <TargetFrameworks>net5.0-windows10.0.19041.0;net6.0-windows10.0.19041.0</TargetFrameworks>
+	  <TargetFrameworks>net6.0-windows10.0.19041.0</TargetFrameworks>
     <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
     <LangVersion>9.0</LangVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -33,8 +33,8 @@
   </ItemGroup>
 
   <ItemGroup>
-	  <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.1.5" />
-	  <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.755" />
+	  <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240923002" />
+	  <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
     <PackageReference Include="Vortice.WinUI" Version="1.9.143" />
   </ItemGroup>

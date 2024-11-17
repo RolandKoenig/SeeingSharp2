@@ -2,7 +2,9 @@
     x:Class="SeeingSharp.WinUIDesktopSamples.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:SeeingSharp.WinUIDesktopSamples">
+    xmlns:local="using:SeeingSharp.WinUIDesktopSamples"
+    RequestedTheme="Light">
+    
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -21,6 +23,7 @@
                             <AcrylicBrush x:Key="GenericAcrylicBrush"
                                           FallbackColor="{ThemeResource SystemAltMediumColor}"
                                           TintColor="{ThemeResource SystemAltMediumColor}"
+                                          TintLuminosityOpacity="0.5"
                                           TintOpacity=".6" />
 
                             <Style TargetType="MenuBar"

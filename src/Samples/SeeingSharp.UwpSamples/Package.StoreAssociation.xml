@@ -374,5 +374,5 @@
     <MainPackageIdentityName>35049RolandK.RKSensorMonitor</MainPackageIdentityName>
     <MainPackageIdentityName>35049RolandK.SeeingSamples</MainPackageIdentityName>
   </AccountPackageIdentityNames>
-  <PackageInfoList LandingUrl="https://developer.microsoft.com/dashboard/Application?appId=9N9HH8G8W1Q1" />
+  <PackageInfoList LandingUrl="https://devcenterapi.dce.mp.microsoft.com/dashboard/Application?appId=9N9HH8G8W1Q1" />
 </StoreAssociation>

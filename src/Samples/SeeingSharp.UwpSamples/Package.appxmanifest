@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="35049RolandK.Seeing2Samples" Publisher="CN=RolandK" Version="0.8.0.0" />
-  <mp:PhoneIdentity PhoneProductId="1bbdedb6-2a13-44c3-9abe-448353c4bc66" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Identity Name="35049RolandK.Seeing2Samples" Publisher="CN=rolan" Version="0.8.0.0" />
+  <mp:PhoneIdentity PhoneProductId="db5b19e4-428d-457a-9bcc-3b94466902ec" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>SeeingSharp 2 UWP Samples</DisplayName>
     <PublisherDisplayName>RolandK</PublisherDisplayName>

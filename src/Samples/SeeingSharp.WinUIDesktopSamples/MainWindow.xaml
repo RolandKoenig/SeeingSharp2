@@ -36,7 +36,7 @@
             </Grid.ColumnDefinitions>
 
             <ImageIcon Grid.Column="0" Source="Icon.ico"
-                       Width="32" Height="32" Margin="3" />
+                       Width="24" Height="24" Margin="6" />
 
             <Border Grid.Column="1" 
                     HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
