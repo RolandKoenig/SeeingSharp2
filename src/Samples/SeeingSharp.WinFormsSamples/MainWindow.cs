@@ -241,6 +241,8 @@ namespace SeeingSharp.WinFormsSamples
 
         private void OnListView_ItemSelectionChanged(object? sender, ListViewItemSelectionChangedEventArgs e)
         {
+            if(e.Item == null) { return; }
+
             if (!e.IsSelected)
             {
                 e.Item.BackColor = Color.Transparent;
@@ -252,7 +254,7 @@ namespace SeeingSharp.WinFormsSamples
             actListView.EnsureNotNull(nameof(actListView));
             e.Item.EnsureNotNull($"{nameof(e)}.{nameof(e.Item)}");
 
-            var sampleInfo = (SampleMetadata)e.Item.Tag;
+            var sampleInfo = (SampleMetadata)e.Item.Tag!;
             sampleInfo.EnsureNotNull(nameof(sampleInfo));
 
             var sampleSettings = sampleInfo.CreateSampleSettingsObject();

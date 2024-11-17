@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
   <PropertyGroup>
-    <TargetFrameworks>net5.0-windows;net6.0-windows;net48</TargetFrameworks>
+    <TargetFrameworks>net48;net6.0-windows;net8.0-windows</TargetFrameworks>
     <LangVersion>9.0</LangVersion>
     <UseWindowsForms>true</UseWindowsForms>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
