@@ -28,7 +28,7 @@
 	  </PackageReference>
 
 	  <!-- For GitHub -->
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <!-- Package icon -->
@@ -91,7 +91,7 @@
     <None Include="..\..\LICENSE.md" Link="LICENSE.md" Pack="true" PackagePath="LICENSE.md" />
   </ItemGroup>
   <ItemGroup>
-	  <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+	  <PackageReference Include="System.Numerics.Vectors" Version="4.6.0" />
     <PackageReference Include="Vortice.D3DCompiler" Version="1.9.143" />
     <PackageReference Include="Vortice.Direct2D1" Version="1.9.143" />
     <PackageReference Include="Vortice.Direct3D11" Version="1.9.143" />

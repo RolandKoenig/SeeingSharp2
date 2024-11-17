@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <!-- For GitHub -->
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="All" />
   </ItemGroup>
 
   <PropertyGroup Label="Globals">
@@ -38,7 +38,7 @@
   <ItemGroup>
 	  <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240923002" />
 	  <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
-    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+    <PackageReference Include="System.Numerics.Vectors" Version="4.6.0" />
     <PackageReference Include="Vortice.WinUI" Version="1.9.143" />
   </ItemGroup>
 
